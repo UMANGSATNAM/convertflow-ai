@@ -1,0 +1,43 @@
+{
+  "scripts": {
+    "dev": "remix dev",
+    "build": "remix build",
+    "start": "remix-serve build",
+    "typecheck": "tsc",
+    "lint": "eslint --ignore-path .gitignore .",
+    "db:setup": "psql -f database/schema.sql",
+    "db:seed": "psql -f database/seed-all-sections.sql",
+    "db:migrate": "npm run db:setup && npm run db:seed",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "deploy": "npm run build && npm run start",
+    "analyze": "npx bundle-analyzer",
+    "lighthouse": "lighthouse https://yourapp.com --view"
+  },
+  "dependencies": {
+    "@remix-run/node": "^2.0.0",
+    "@remix-run/react": "^2.0.0",
+    "@remix-run/serve": "^2.0.0",
+    "@shopify/shopify-api": "^7.0.0",
+    "pg": "^8.11.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-colorful": "^5.6.1",
+    "@hello-pangea/dnd": "^16.3.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.40.0",
+    "typescript": "^5.0.0",
+    "vitest": "^0.34.0",
+    "@testing-library/react": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
