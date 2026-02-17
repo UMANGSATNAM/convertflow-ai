@@ -1,8 +1,8 @@
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { authenticate } from "../../shopify.server";
-import db from "../../db.server";
-import { hasActiveSubscription } from "../../utils/billing.server";
+import { authenticate } from "../shopify.server";
+import db from "../db.server";
+import { hasActiveSubscription } from "../utils/billing.server";
 
 export const loader = async ({ request, params }) => {
     const { session } = await authenticate.admin(request);

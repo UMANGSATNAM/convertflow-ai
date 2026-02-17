@@ -1,12 +1,12 @@
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate, useFetcher } from "@remix-run/react";
 import { useState, useEffect } from "react";
-import { authenticate } from "../../shopify.server";
-import db from "../../db.server";
-import { hasActiveSubscription } from "../../utils/billing.server";
-import ColorPicker from "../../components/ColorPicker.jsx";
-import FontSelector from "../../components/FontSelector.jsx";
-import ImageUploader from "../../components/ImageUploader.jsx";
+import { authenticate } from "../shopify.server";
+import db from "../db.server";
+import { hasActiveSubscription } from "../utils/billing.server";
+import ColorPicker from "../components/ColorPicker.jsx";
+import FontSelector from "../components/FontSelector.jsx";
+import ImageUploader from "../components/ImageUploader.jsx";
 
 export const loader = async ({ request, params }) => {
     const { session } = await authenticate.admin(request);
