@@ -11,13 +11,19 @@ const PORT = process.env.PORT || 3000;
 // Serve static files from build/client
 app.use(express.static(path.join(__dirname, "build/client"), {
     maxAge: "1h",
-    immutable: true,
 }));
 
 // Handle all requests with Remix
-const build = await import("./build/server/index.js");
-app.all("*", createRequestHandler({ build }));
+try {
+    const build = await import("./build/server/index.js");
+    app.all("*", createRequestHandler({ build }));
+} catch (err) {
+    console.error("Failed to load Remix build:", err);
+    app.all("*", (req, res) => {
+        res.status(500).send("Server starting up... please try again in a moment.");
+    });
+}
 
 app.listen(PORT, "0.0.0.0", () => {
-    console.log(`✅ ConvertFlow AI server running on port ${PORT}`);
+    console.log(`ConvertFlow AI server running on port ${PORT}`);
 });
