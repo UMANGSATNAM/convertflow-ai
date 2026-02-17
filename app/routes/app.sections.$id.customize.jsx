@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { authenticate } from "../../shopify.server";
 import db from "../../db.server";
 import { hasActiveSubscription } from "../../utils/billing.server";
-import ColorPicker from "../../components/ColorPicker";
-import FontSelector from "../../components/FontSelector";
-import ImageUploader from "../../components/ImageUploader";
+import ColorPicker from "../../components/ColorPicker.jsx";
+import FontSelector from "../../components/FontSelector.jsx";
+import ImageUploader from "../../components/ImageUploader.jsx";
 
 export const loader = async ({ request, params }) => {
     const { session } = await authenticate.admin(request);
@@ -136,8 +136,8 @@ export default function SectionCustomize() {
                                 <button
                                     onClick={() => setPreviewMode('desktop')}
                                     className={`p-2 rounded transition ${previewMode === 'desktop'
-                                            ? 'bg-white shadow text-blue-600'
-                                            : 'text-gray-600 hover:text-gray-900'
+                                        ? 'bg-white shadow text-blue-600'
+                                        : 'text-gray-600 hover:text-gray-900'
                                         }`}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,8 +147,8 @@ export default function SectionCustomize() {
                                 <button
                                     onClick={() => setPreviewMode('mobile')}
                                     className={`p-2 rounded transition ${previewMode === 'mobile'
-                                            ? 'bg-white shadow text-blue-600'
-                                            : 'text-gray-600 hover:text-gray-900'
+                                        ? 'bg-white shadow text-blue-600'
+                                        : 'text-gray-600 hover:text-gray-900'
                                         }`}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,8 +161,8 @@ export default function SectionCustomize() {
                                 onClick={handleSave}
                                 disabled={!hasChanges}
                                 className={`px-6 py-2 rounded-lg font-medium transition ${hasChanges
-                                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow'
-                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700 shadow'
+                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                     }`}
                             >
                                 {hasChanges ? '💾 Save Changes' : '✓ Saved'}
@@ -195,8 +195,8 @@ export default function SectionCustomize() {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition ${activeTab === tab.id
-                                            ? 'bg-white text-blue-600 shadow'
-                                            : 'text-gray-600 hover:text-gray-900'
+                                        ? 'bg-white text-blue-600 shadow'
+                                        : 'text-gray-600 hover:text-gray-900'
                                         }`}
                                 >
                                     <span className="mr-2">{tab.icon}</span>
@@ -351,8 +351,8 @@ export default function SectionCustomize() {
                                                 type="button"
                                                 onClick={() => updateSetting('alignment', align)}
                                                 className={`py-3 rounded-lg font-medium capitalize transition ${settings.alignment === align
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                     }`}
                                             >
                                                 {align}
