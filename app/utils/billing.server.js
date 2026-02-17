@@ -1,7 +1,7 @@
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 
-const SUBSCRIPTION_PLAN = {
+export const SUBSCRIPTION_PLAN = {
     name: "ConvertFlow AI Premium",
     price: 20.00,
     currencyCode: "USD",
