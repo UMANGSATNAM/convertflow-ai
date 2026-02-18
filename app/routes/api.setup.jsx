@@ -33,9 +33,73 @@ export const loader = async ({ request }) => {
             const sections = [];
 
             // --- HELPER TO GENERATE SECTIONS ---
+            const createLiquidCode = (settings) => {
+                return `
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.paddingTop }}px;
+    padding-bottom: {{ section.settings.paddingBottom }}px;
+    background: {{ section.settings.backgroundColor }};
+    color: {{ section.settings.textColor }};
+    text-align: {{ section.settings.alignment }};
+  }
+  #shopify-section-{{ section.id }} h2 {
+    color: {{ section.settings.textColor }};
+    font-family: {{ section.settings.headingFont.family }}, serif;
+    font-weight: {{ section.settings.headingFont.weight }};
+  }
+  #shopify-section-{{ section.id }} .btn-primary {
+    background: {{ section.settings.primaryColor }};
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: {{ section.settings.borderRadius }}px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: transform 0.2s;
+  }
+  #shopify-section-{{ section.id }} .btn-primary:hover {
+     transform: translateY(-2px);
+     filter: brightness(110%);
+  }
+{%- endstyle -%}
+
+<div class="section-container">
+  {% if section.settings.heading != blank %}
+    <h2 class="text-3xl mb-4">{{ section.settings.heading }}</h2>
+  {% endif %}
+  
+  {% if section.settings.description != blank %}
+    <div class="rte mb-6 text-lg opacity-90">{{ section.settings.description }}</div>
+  {% endif %}
+
+  {% if section.settings.buttonText != blank %}
+    <a href="#" class="btn-primary">{{ section.settings.buttonText }}</a>
+  {% endif %}
+  
+  {% if section.settings.image != blank %}
+     <img src="{{ section.settings.image }}" alt="" 
+          style="max-width:100%; height:auto; border-radius: {{ section.settings.borderRadius }}px; margin-top: 20px;">
+  {% endif %}
+</div>
+
+{% schema %}
+${JSON.stringify({ settings: settings })}
+{% endschema %}
+`;
+            };
+
             const createSection = (name, category, varNum, settings) => {
-                const schema = { settings };
-                return `('${name}', '${category}', ${varNum}, '{% comment %}Liquid code{% endcomment %}', '${JSON.stringify(schema)}', null, true)`;
+                // Ensure default objects for nested properties if missing
+                if (!settings.headingFont) settings.headingFont = { family: "Playfair Display", weight: 700 };
+                if (!settings.bodyFont) settings.bodyFont = { family: "Inter", weight: 400 };
+
+                // Escape single quotes in SQL
+                const safeName = name.replace(/'/g, "''");
+                const safeLiquid = createLiquidCode(settings).replace(/'/g, "''");
+                const safeSchema = JSON.stringify({ settings: settings }).replace(/'/g, "''");
+
+                return `('${safeName}', '${category}', ${varNum}, '${safeLiquid}', '${safeSchema}', null, true)`;
             };
 
             // --- 1. HERO SECTIONS (10 Variations) ---

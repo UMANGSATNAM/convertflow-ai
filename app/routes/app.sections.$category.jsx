@@ -9,16 +9,13 @@ export const loader = async ({ request, params }) => {
     const shop = session.shop;
     const { category } = params;
 
-    // Check subscription
     const hasSubscription = await hasActiveSubscription(shop);
 
-    // Decode category from URL
     const decodedCategory = category.replace(/-/g, ' ')
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-    // Get sections for this category
     const sections = await db.sections.getByCategory(decodedCategory);
 
     return json({
@@ -33,127 +30,139 @@ export default function CategorySections() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 font-['Montserrat']">
             {/* Header */}
-            <div className="bg-white border-b border-gray-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => navigate('/app/dashboard')}
-                            className="text-gray-600 hover:text-gray-900"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">{category}</h1>
-                            <p className="mt-1 text-sm text-gray-500">{sections.length} variations available</p>
+            <div className="bg-white border-b border-gray-200 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#1e3a8a] via-[#d97706] to-[#1e3a8a]"></div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => navigate('/app/dashboard')}
+                                className="p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-[#1e3a8a] transition-colors"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                            </button>
+                            <div>
+                                <h1 className="text-3xl font-bold text-[#1e3a8a] font-['Playfair_Display']">{category}</h1>
+                                <p className="mt-1 text-sm text-gray-500 font-light tracking-wide">{sections.length} premium variations available</p>
+                            </div>
                         </div>
+                        {!hasSubscription && (
+                            <button
+                                onClick={() => navigate('/subscribe')}
+                                className="flex items-center gap-2 px-5 py-2 bg-[#d97706] text-white text-sm font-bold rounded shadow hover:bg-[#b45309] transition"
+                            >
+                                <span>🔒 Unlock All</span>
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
 
             {/* Sections Grid */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {!hasSubscription && (
-                    <div className="mb-8 bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                        <div className="flex">
-                            <div className="flex-shrink-0">
-                                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                </svg>
-                            </div>
-                            <div className="ml-3">
-                                <p className="text-sm text-yellow-700">
-                                    <button
-                                        onClick={() => navigate('/app/subscribe')}
-                                        className="font-medium underline hover:text-yellow-600"
-                                    >
-                                        Subscribe now
-                                    </button>
-                                    {' '}to customize and install these sections.
-                                </p>
-                            </div>
+                    <div className="mb-10 bg-gradient-to-r from-[#fffbeb] to-[#fff7ed] border border-[#fcd34d] rounded-lg p-6 flex items-start gap-4">
+                        <div className="flex-shrink-0 mt-1">
+                            <span className="text-2xl">🔒</span>
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-bold text-[#92400e] font-['Playfair_Display']">Premium Collection Locked</h3>
+                            <p className="mt-1 text-sm text-[#b45309]">
+                                You are viewing a preview of our premium {category} templates.
+                                <button onClick={() => navigate('/subscribe')} className="ml-1 underline font-bold hover:text-[#78350f]">Upgrade to Premium</button>
+                                to unlock customization and installation.
+                            </p>
                         </div>
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
                     {sections.map((section) => (
                         <div
                             key={section.id}
-                            className="section-preview"
+                            className={`group bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col ${!hasSubscription ? 'opacity-90' : ''}`}
                             onClick={() => hasSubscription && navigate(`/app/sections/${section.id}/customize`)}
                         >
-                            {/* Preview Image */}
-                            <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-gray-100 to-gray-200">
+                            {/* Preview Area */}
+                            <div className="aspect-[16/10] bg-gray-100 relative overflow-hidden group-hover:bg-[#f8fafc] transition-colors">
                                 {section.preview_image ? (
                                     <img
                                         src={section.preview_image}
                                         alt={section.name}
-                                        className="object-cover w-full h-full"
+                                        className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
                                     />
                                 ) : (
-                                    <div className="flex items-center justify-center text-gray-400">
-                                        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="text-center">
+                                            <div className="text-5xl mb-2 opacity-20">✨</div>
+                                        </div>
                                     </div>
                                 )}
-                            </div>
 
-                            {/* Section Info */}
-                            <div className="p-4 bg-white">
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <h3 className="font-semibold text-gray-900">{section.name}</h3>
-                                        <p className="mt-1 text-sm text-gray-500">Variation #{section.variation_number}</p>
-                                    </div>
-                                    {section.is_premium && (
-                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                                            Premium
-                                        </span>
+                                {/* Overlay Actions */}
+                                <div className={`absolute inset-0 bg-[#1e3a8a]/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm`}>
+                                    {hasSubscription ? (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate(`/app/sections/${section.id}/customize`);
+                                            }}
+                                            className="bg-white text-[#1e3a8a] font-bold py-3 px-8 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:scale-105"
+                                        >
+                                            Customize Design
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate('/subscribe');
+                                            }}
+                                            className="bg-[#d97706] text-white font-bold py-3 px-8 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-[#b45309]"
+                                        >
+                                            Unlock Premium &rarr;
+                                        </button>
                                     )}
                                 </div>
-
-                                {hasSubscription && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            navigate(`/app/sections/${section.id}/customize`);
-                                        }}
-                                        className="mt-4 w-full bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded hover:bg-blue-700 transition"
-                                    >
-                                        Customize & Install
-                                    </button>
-                                )}
                             </div>
 
-                            {!hasSubscription && (
-                                <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            navigate('/app/subscribe');
-                                        }}
-                                        className="bg-white text-gray-900 font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-gray-100 transition"
-                                    >
-                                        🔒 Unlock Section
-                                    </button>
+                            {/* Card Body */}
+                            <div className="p-6 flex-1 flex flex-col justify-between relative bg-white">
+                                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[#1e3a8a] to-[#d97706] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+
+                                <div>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h3 className="font-bold text-lg text-gray-900 font-['Playfair_Display'] group-hover:text-[#1e3a8a] transition-colors">
+                                            {section.name}
+                                        </h3>
+                                        {section.is_premium && (
+                                            <span className="bg-[#fef3c7] text-[#d97706] text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                                                PRO
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-sm text-gray-500 line-clamp-2">
+                                        Premium variation #{section.variation_number}. Optimized for high conversion rates.
+                                    </p>
                                 </div>
-                            )}
+
+                                <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between text-xs font-medium text-gray-400 uppercase tracking-widest">
+                                    <span>High Conversion</span>
+                                    {hasSubscription && <span className="text-green-600">Ready to install</span>}
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
 
                 {sections.length === 0 && (
-                    <div className="text-center py-12">
-                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">No sections found</h3>
-                        <p className="mt-1 text-sm text-gray-500">Check back later for new sections.</p>
+                    <div className="text-center py-24 bg-white rounded-xl border border-dashed border-gray-300">
+                        <div className="text-6xl mb-4">✨</div>
+                        <h3 className="text-xl font-medium text-gray-900 font-['Playfair_Display']">Collection Empty</h3>
+                        <p className="mt-2 text-gray-500">We are curating the finest sections. Please check back soon.</p>
                     </div>
                 )}
             </div>
