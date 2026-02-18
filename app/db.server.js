@@ -1,12 +1,15 @@
 import mysql from 'mysql2/promise';
 
 // Database configuration
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306'),
-  database: process.env.DB_NAME || 'convertflow_ai',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+// Parse DATABASE_URL if individual variables are missing
+const dbUrl = process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL) : null;
+
+const dbConfig = {
+  host: process.env.DB_HOST || dbUrl?.hostname || 'localhost',
+  port: parseInt(process.env.DB_PORT || dbUrl?.port || '3306'),
+  database: process.env.DB_NAME || dbUrl?.pathname.substring(1) || 'convertflow_ai',
+  user: process.env.DB_USER || dbUrl?.username || 'root',
+  password: process.env.DB_PASSWORD || dbUrl?.password || '',
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,
@@ -14,7 +17,16 @@ const pool = mysql.createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0
+};
+
+console.log("🔌 Database Config:", {
+  host: dbConfig.host,
+  port: dbConfig.port,
+  database: dbConfig.database,
+  user: dbConfig.user ? "***" : "MISSING"
 });
+
+const pool = mysql.createPool(dbConfig);
 
 // Test connection
 pool.getConnection()
