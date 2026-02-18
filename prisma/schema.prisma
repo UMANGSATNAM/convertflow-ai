@@ -32,3 +32,65 @@ model Session {
   refreshToken        String?
   refreshTokenExpires DateTime?
 }
+
+model Shop {
+  id                  Int       @id @default(autoincrement())
+  shop_domain         String    @unique @map("shop_domain")
+  access_token        String?   @map("access_token") @db.Text
+  subscription_status String?   @default("inactive") @map("subscription_status")
+  subscription_id     String?   @map("subscription_id")
+  created_at          DateTime  @default(now()) @map("created_at")
+  updated_at          DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  customizations      Customization[]
+  subscription_history SubscriptionHistory[]
+
+  @@map("shops")
+}
+
+model Section {
+  id               Int      @id @default(autoincrement())
+  name             String
+  category         String
+  variation_number Int      @map("variation_number")
+  liquid_code      String   @map("liquid_code") @db.Text
+  schema_json      Json     @map("schema_json")
+  preview_image    String?  @map("preview_image")
+  is_premium       Boolean  @default(true) @map("is_premium")
+  created_at       DateTime @default(now()) @map("created_at")
+
+  customizations   Customization[]
+
+  @@unique([category, variation_number])
+  @@map("sections")
+}
+
+model Customization {
+  id              Int      @id @default(autoincrement())
+  shop_id         Int      @map("shop_id")
+  section_id      Int      @map("section_id")
+  custom_settings Json?    @map("custom_settings")
+  is_active       Boolean  @default(true) @map("is_active")
+  created_at      DateTime @default(now()) @map("created_at")
+  updated_at      DateTime @default(now()) @updatedAt @map("updated_at")
+
+  shop            Shop     @relation(fields: [shop_id], references: [id], onDelete: Cascade)
+  section         Section  @relation(fields: [section_id], references: [id], onDelete: Cascade)
+
+  @@map("customizations")
+}
+
+model SubscriptionHistory {
+  id              Int      @id @default(autoincrement())
+  shop_id         Int      @map("shop_id")
+  event_type      String   @map("event_type")
+  subscription_id String?  @map("subscription_id")
+  amount          Decimal? @map("amount") @db.Decimal(10, 2)
+  currency        String?  @map("currency")
+  event_data      Json?    @map("event_data")
+  created_at      DateTime @default(now()) @map("created_at")
+
+  shop            Shop     @relation(fields: [shop_id], references: [id], onDelete: Cascade)
+
+  @@map("subscription_history")
+}
