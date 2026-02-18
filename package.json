@@ -5,7 +5,7 @@
     "postinstall": "npx prisma generate || true",
     "dev": "remix dev",
     "build": "npx prisma generate && npx prisma db push --accept-data-loss || true && npx remix vite:build",
-    "start": "npx remix-serve ./build/server/index.js",
+    "start": "node app.js",
     "typecheck": "tsc",
     "lint": "eslint --ignore-path .gitignore .",
     "db:setup": "npx prisma db push",
