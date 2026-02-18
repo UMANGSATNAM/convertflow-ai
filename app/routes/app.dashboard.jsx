@@ -68,7 +68,7 @@ export default function Dashboard() {
                                 </div>
                             ) : (
                                 <button
-                                    onClick={() => navigate('/subscribe')}
+                                    onClick={() => navigate('/app/subscribe')}
                                     className="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-none shadow-md text-white bg-[#1e3a8a] hover:bg-[#1e40af] transition-all duration-300 ring-1 ring-offset-2 ring-[#1e3a8a] hover:ring-offset-4"
                                 >
                                     <span className="mr-2">✨</span> Unlock Premium Access
@@ -130,7 +130,7 @@ export default function Dashboard() {
                                 </p>
                             </div>
                             <button
-                                onClick={() => navigate('/subscribe')}
+                                onClick={() => navigate('/app/subscribe')}
                                 className="flex-shrink-0 px-8 py-4 bg-[#d97706] text-white font-bold rounded shadow-lg hover:bg-[#b45309] transition-transform transform hover:-translate-y-1 active:translate-y-0"
                             >
                                 Get Started Now
@@ -144,7 +144,7 @@ export default function Dashboard() {
                     {categoryList.map((category) => (
                         <div
                             key={category}
-                            onClick={() => navigate(`/sections/${category.toLowerCase().replace(/\s+/g, '-')}`)}
+                            onClick={() => navigate(`/app/sections/${category.toLowerCase().replace(/\s+/g, '-')}`)}
                             className="group cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden transform hover:-translate-y-1"
                         >
                             <div className="h-48 bg-gray-50 relative flex items-center justify-center p-8 group-hover:bg-[#f8fafc] transition-colors">
