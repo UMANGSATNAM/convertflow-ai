@@ -1,3 +1,6 @@
+// Load environment variables from .env file
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 
@@ -23,7 +26,6 @@ async function startServer() {
     } catch (err) {
         console.error("Failed to start Remix server:", err);
 
-        // Fallback - still serve something
         app.all("*", (req, res) => {
             res.status(500).send("<h1>Server Error</h1><p>Check logs for details.</p><pre>" + err.message + "</pre>");
         });
