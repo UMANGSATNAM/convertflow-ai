@@ -1,5 +1,5 @@
-// Load environment variables from .env file
-require("dotenv").config();
+// Load environment variables from .env file (override system env vars)
+require("dotenv").config({ override: true });
 
 const express = require("express");
 const path = require("path");
