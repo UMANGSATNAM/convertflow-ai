@@ -4,7 +4,7 @@ import db from "../db.server";
 export const loader = async ({ request }) => {
     const url = new URL(request.url);
     const key = url.searchParams.get("key");
-    const action = url.searchParams.get("action"); // 'setup' (default) or 'seed'
+    const action = url.searchParams.get("action"); // 'setup' (default), 'seed', or 'unlock'
 
     if (key !== "convertflow123") {
         return json({ error: "Unauthorized" }, { status: 401 });
@@ -17,7 +17,6 @@ export const loader = async ({ request }) => {
 
             // Check if sections exist
             const result = await db.query("SELECT COUNT(*) as count FROM sections");
-            // Handle different mysql2 return formats
             let sectionCount = 0;
             if (result.rows && result.rows[0]) {
                 sectionCount = result.rows[0].count || 0;
@@ -59,6 +58,20 @@ INSERT INTO sections (name, category, variation_number, liquid_code, schema_json
             await db.query(others.trim());
 
             return json({ message: "Database seeded successfully!" });
+        }
+
+        // --- UNLOCK LOGIC (Dev) ---
+        if (action === "unlock") {
+            console.log("🔓 Unlocking Premium Features for ALL shops...");
+            await db.query("UPDATE shops SET subscription_status = 'active'");
+
+            // Verify
+            const result = await db.query("SELECT shop_domain, subscription_status FROM shops");
+
+            return json({
+                message: "Premium Unlocked via Dev Mode! 🔓",
+                shops: result.rows
+            });
         }
 
         // --- SETUP LOGIC (Default) ---
@@ -125,7 +138,7 @@ INSERT INTO sections (name, category, variation_number, liquid_code, schema_json
         const result = await db.query("SHOW TABLES");
 
         return json({
-            message: "Setup Success! Tables created. To seed data, add &action=seed to URL.",
+            message: "Setup Success! Tables created. To seed, add &action=seed. To unlock, add &action=unlock.",
             tables: result.rows,
             env: {
                 host: process.env.DB_HOST ? "msg" : "from-url",

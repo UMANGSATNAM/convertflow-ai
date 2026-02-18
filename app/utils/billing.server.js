@@ -63,7 +63,7 @@ export async function createSubscription(admin, shop) {
 
         // Log subscription event
         await db.query(
-            'INSERT INTO subscription_history (shop_id, event_type, subscription_id, amount, currency, event_data) VALUES ($1, $2, $3, $4, $5, $6)',
+            'INSERT INTO subscription_history (shop_id, event_type, subscription_id, amount, currency, event_data) VALUES (?, ?, ?, ?, ?, ?)',
             [shopRecord.id, 'subscription_created', appSubscription.id, SUBSCRIPTION_PLAN.price, SUBSCRIPTION_PLAN.currencyCode, JSON.stringify(appSubscription)]
         );
     }
@@ -122,7 +122,7 @@ export async function cancelSubscription(admin, shop) {
 
     // Log cancellation
     await db.query(
-        'INSERT INTO subscription_history (shop_id, event_type, subscription_id, event_data) VALUES ($1, $2, $3, $4)',
+        'INSERT INTO subscription_history (shop_id, event_type, subscription_id, event_data) VALUES (?, ?, ?, ?)',
         [shopRecord.id, 'subscription_cancelled', shopRecord.subscription_id, JSON.stringify(appSubscription)]
     );
 
@@ -143,7 +143,7 @@ export async function handleSubscriptionUpdate(subscriptionId, status, shop) {
 
     // Log status change
     await db.query(
-        'INSERT INTO subscription_history (shop_id, event_type, subscription_id, event_data) VALUES ($1, $2, $3, $4)',
+        'INSERT INTO subscription_history (shop_id, event_type, subscription_id, event_data) VALUES (?, ?, ?, ?)',
         [shopRecord.id, 'subscription_updated', subscriptionId, JSON.stringify({ status })]
     );
 }
