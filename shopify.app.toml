@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "dac9349fe9b90fb7a99f582884179a58"
+client_id = "be72106e1e34364c9be4208d54e782d5"
 name = "convertflow-ai"
 application_url = "https://tan-chamois-659862.hostingersite.com"
 embedded = true
