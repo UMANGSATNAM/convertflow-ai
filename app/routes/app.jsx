@@ -8,9 +8,19 @@ import { authenticate } from "../shopify.server";
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
+  console.log("👉 App Loader Hit:", request.url);
+  try {
+    await authenticate.admin(request);
+    console.log("✅ Authenticate Admin Success");
+  } catch (error) {
+    console.error("❌ Authenticate Admin Error:", error);
+    throw error;
+  }
 
-  return { apiKey: process.env.SHOPIFY_API_KEY || "" };
+  const apiKey = process.env.SHOPIFY_API_KEY || "";
+  console.log("🔑 API Key in Loader:", apiKey ? apiKey.substring(0, 10) + "..." : "MISSING");
+
+  return { apiKey };
 };
 
 export default function App() {
