@@ -4,8 +4,11 @@ import mysql from 'mysql2/promise';
 // Parse DATABASE_URL if individual variables are missing
 const dbUrl = process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL) : null;
 
+// Force IPv4 for localhost to avoid ::1 resolution issues on Hostinger
+const resolveHost = (host) => (host === 'localhost' ? '127.0.0.1' : host);
+
 const dbConfig = {
-  host: process.env.DB_HOST || dbUrl?.hostname || 'localhost',
+  host: resolveHost(process.env.DB_HOST || dbUrl?.hostname || '127.0.0.1'),
   port: parseInt(process.env.DB_PORT || dbUrl?.port || '3306'),
   database: process.env.DB_NAME || dbUrl?.pathname.substring(1) || 'convertflow_ai',
   user: process.env.DB_USER || dbUrl?.username || 'root',
