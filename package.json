@@ -2,7 +2,7 @@
   "name": "convertflow-ai",
   "private": true,
   "scripts": {
-    "postinstall": "npx prisma generate || true",
+    "postinstall": "npx prisma generate || true && npx remix vite:build",
     "dev": "remix dev",
     "build": "npx prisma generate && npx prisma db push --accept-data-loss || true && npx remix vite:build",
     "start": "node app.js",
