@@ -32,10 +32,32 @@ export const loader = async ({ request, params }) => {
     const customizations = await db.customizations.getByShop(shopRecord.id);
     const existingCustomization = customizations.find(c => c.section_id === parseInt(id));
 
+    // Parse JSON fields safely (handle potential string returns from DB)
+    let defaultSettings = {};
+    try {
+        const schema = typeof section.schema_json === 'string'
+            ? JSON.parse(section.schema_json)
+            : section.schema_json;
+        defaultSettings = schema?.settings || {};
+    } catch (e) {
+        console.error("Error parsing schema_json:", e);
+    }
+
+    let savedSettings = null;
+    if (existingCustomization?.custom_settings) {
+        try {
+            savedSettings = typeof existingCustomization.custom_settings === 'string'
+                ? JSON.parse(existingCustomization.custom_settings)
+                : existingCustomization.custom_settings;
+        } catch (e) {
+            console.error("Error parsing custom_settings:", e);
+        }
+    }
+
     return json({
         section,
         shopId: shopRecord.id,
-        existingSettings: existingCustomization?.custom_settings || section.schema_json.settings,
+        existingSettings: savedSettings || defaultSettings || {},
     });
 };
 
