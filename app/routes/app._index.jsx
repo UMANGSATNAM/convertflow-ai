@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate, useRouteError } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
 import { hasActiveSubscription } from "../utils/billing.server";
@@ -198,4 +198,22 @@ function getCategoryIcon(category) {
     'Retention Tools': '🎁',
   };
   return icons[category] || '📦';
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  console.error("ErrorBoundary caught:", error);
+  return (
+    <div className="p-8 bg-red-50 border border-red-200 rounded-lg m-4">
+      <h1 className="text-2xl font-bold text-red-700 mb-4">Application Error 🚨</h1>
+      <p className="text-red-600 mb-2">Something went wrong while loading the dashboard.</p>
+      <div className="bg-white p-4 rounded overflow-auto border border-red-100 font-mono text-sm text-red-800">
+        <p><strong>Error:</strong> {error?.message || "Unknown error"}</p>
+        {error?.stack && <pre className="mt-2 text-xs">{error.stack}</pre>}
+      </div>
+      <p className="mt-4 text-sm text-gray-600">
+        Please try refreshing the page or reinstalling the app.
+      </p>
+    </div>
+  );
 }
