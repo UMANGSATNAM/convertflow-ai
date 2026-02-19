@@ -12,6 +12,7 @@ import { headerSections } from "../sections/header-sections";
 import { productSections } from "../sections/product-sections";
 import { statsSections } from "../sections/stats-sections";
 import { footerSections } from "../sections/footer-sections";
+import { productGridSections } from "../sections/product-grid-sections";
 
 export const loader = async ({ request }) => {
     const url = new URL(request.url);
@@ -45,6 +46,7 @@ export const loader = async ({ request }) => {
                     { category: "Product Highlights", data: productSections },
                     { category: "Stats & Metrics", data: statsSections },
                     { category: "Footer Sections", data: footerSections },
+                    { category: "Product Grid", data: productGridSections },
                 ];
 
                 let totalInserted = 0;
