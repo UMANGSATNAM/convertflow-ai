@@ -116,6 +116,38 @@ export const db = {
       const result = await db.query('SELECT * FROM sections WHERE id = ?', [id]);
       return result.rows[0];
     },
+
+    // New: Search sections by name
+    search: async (query) => {
+      const result = await db.query(
+        'SELECT * FROM sections WHERE name LIKE ? ORDER BY conversion_score DESC LIMIT 20',
+        [`%${query}%`]
+      );
+      return result.rows;
+    },
+
+    // New: Get top converting sections across all categories
+    getTopConverting: async (limit = 6) => {
+      const result = await db.query(
+        'SELECT * FROM sections ORDER BY conversion_score DESC LIMIT ?',
+        [limit]
+      );
+      return result.rows;
+    },
+
+    // New: Get category stats (count + avg conversion score)
+    getCategories: async () => {
+      const result = await db.query(
+        `SELECT category, 
+                COUNT(*) as section_count, 
+                ROUND(AVG(conversion_score)) as avg_score,
+                MAX(conversion_score) as top_score
+         FROM sections 
+         GROUP BY category 
+         ORDER BY avg_score DESC`
+      );
+      return result.rows;
+    },
   },
 
   // Customization queries

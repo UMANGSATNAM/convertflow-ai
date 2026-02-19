@@ -1,304 +1,293 @@
-import { authenticate } from "../shopify.server";
+/**
+ * Theme Installation Engine — ConvertFlow AI
+ * 
+ * Installs premium HTML/CSS sections directly into Shopify OS 2.0 themes
+ * using the GraphQL Admin API's asset management.
+ */
 
 /**
- * Install a section to the merchant's theme using GraphQL Admin API
- * This creates an App Block in the merchant's OS 2.0 theme
+ * Install a section's HTML/CSS to the merchant's active theme.
+ * Wraps the raw HTML in a Liquid section file with a proper schema.
  */
-export async function installSectionToTheme(admin, sectionCode, sectionSettings) {
-    try {
-        // Get the active theme
-        const themesResponse = await admin.graphql(
-            `#graphql
-        query {
-          themes(first: 1, roles: [MAIN]) {
-            nodes {
-              id
-              name
-              role
-            }
-          }
-        }`
-        );
+export async function installSectionToTheme(admin, section, customSettings = {}) {
+  try {
+    // 1. Get the active (main) theme
+    const themesResponse = await admin.graphql(
+      `#graphql
+            query {
+                themes(first: 1, roles: [MAIN]) {
+                    nodes {
+                        id
+                        name
+                        role
+                    }
+                }
+            }`
+    );
 
-        const themesData = await themesResponse.json();
-        const activeTheme = themesData.data.themes.nodes[0];
+    const themesData = await themesResponse.json();
+    const activeTheme = themesData.data.themes.nodes[0];
 
-        if (!activeTheme) {
-            throw new Error('No active theme found');
-        }
-
-        // Create App Block (Online Store 2.0 compatible)
-        const appBlockCode = generateAppBlock(sectionCode, sectionSettings);
-
-        // Use Asset API to add the section file
-        const assetResponse = await admin.graphql(
-            `#graphql
-        mutation CreateAsset($input: OnlineStoreAssetUpsertInput!) {
-          onlineStoreAssetUpsert(input: $input) {
-            asset {
-              key
-              value
-            }
-            userErrors {
-              field
-              message
-            }
-          }
-        }`,
-            {
-                variables: {
-                    input: {
-                        themeId: activeTheme.id,
-                        key: `sections/convertflow-ai-section-${Date.now()}.liquid`,
-                        value: appBlockCode,
-                    },
-                },
-            }
-        );
-
-        const assetData = await assetResponse.json();
-
-        if (assetData.data.onlineStoreAssetUpsert.userErrors.length > 0) {
-            throw new Error(assetData.data.onlineStoreAssetUpsert.userErrors[0].message);
-        }
-
-        return {
-            success: true,
-            assetKey: assetData.data.onlineStoreAssetUpsert.asset.key,
-            themeName: activeTheme.name,
-        };
-    } catch (error) {
-        console.error('Section installation failed:', error);
-        throw error;
+    if (!activeTheme) {
+      throw new Error("No active theme found. Please publish a theme first.");
     }
+
+    // 2. Generate the Liquid section wrapper for the HTML code
+    const sectionFileName = generateSectionFileName(section.name);
+    const liquidCode = wrapHtmlInLiquidSection(section, customSettings);
+
+    // 3. Upload as a theme asset
+    const assetResponse = await admin.graphql(
+      `#graphql
+            mutation CreateAsset($input: OnlineStoreThemeFileBodyInputAssetUpsert!) {
+                onlineStoreThemeFilesUpsert(
+                    themeId: "${activeTheme.id}",
+                    files: [$input]
+                ) {
+                    upsertedThemeFiles {
+                        filename
+                    }
+                    userErrors {
+                        field
+                        message
+                    }
+                }
+            }`,
+      {
+        variables: {
+          input: {
+            filename: `sections/${sectionFileName}.liquid`,
+            body: {
+              type: "TEXT",
+              value: liquidCode,
+            },
+          },
+        },
+      }
+    );
+
+    const assetData = await assetResponse.json();
+
+    // Check for errors
+    if (assetData.errors) {
+      // Fallback: try with REST API approach via asset key
+      return await installViaRestFallback(admin, activeTheme.id, sectionFileName, liquidCode);
+    }
+
+    const userErrors = assetData.data?.onlineStoreThemeFilesUpsert?.userErrors || [];
+    if (userErrors.length > 0) {
+      throw new Error(userErrors.map(e => e.message).join(', '));
+    }
+
+    return {
+      success: true,
+      sectionFile: `sections/${sectionFileName}.liquid`,
+      themeName: activeTheme.name,
+      themeId: activeTheme.id,
+      message: `Section "${section.name}" installed to theme "${activeTheme.name}". Go to Customize Theme → Add Section to use it.`,
+    };
+  } catch (error) {
+    console.error("❌ Theme installation error:", error);
+    return {
+      success: false,
+      error: error.message || "Installation failed. Please check your theme settings.",
+    };
+  }
 }
 
 /**
- * Generate Liquid App Block code with schema
+ * Fallback installation method — uses the REST-style asset PUT approach
  */
-function generateAppBlock(sectionCode, settings) {
-    const schema = {
-        name: "ConvertFlow AI Section",
-        target: "section",
-        settings: [
-            {
-                type: "text",
-                id: "heading",
-                label: "Heading",
-                default: settings.heading || "Your Heading Here",
-            },
-            {
-                type: "textarea",
-                id: "description",
-                label: "Description",
-                default: settings.description || "",
-            },
-            {
-                type: "text",
-                id: "button_text",
-                label: "Button Text",
-                default: settings.buttonText || "Shop Now",
-            },
-            {
-                type: "color",
-                id: "primary_color",
-                label: "Primary Color",
-                default: settings.primaryColor || "#667eea",
-            },
-            {
-                type: "color",
-                id: "text_color",
-                label: "Text Color",
-                default: settings.textColor || "#1a202c",
-            },
-            {
-                type: "color_background",
-                id: "background_color",
-                label: "Background",
-                default: settings.backgroundColor || "#ffffff",
-            },
-            {
-                type: "image_picker",
-                id: "image",
-                label: "Image",
-            },
-            {
-                type: "range",
-                id: "padding_top",
-                min: 0,
-                max: 200,
-                step: 10,
-                unit: "px",
-                label: "Top Padding",
-                default: settings.paddingTop || 80,
-            },
-            {
-                type: "range",
-                id: "padding_bottom",
-                min: 0,
-                max: 200,
-                step: 10,
-                unit: "px",
-                label: "Bottom Padding",
-                default: settings.paddingBottom || 80,
-            },
-            {
-                type: "select",
-                id: "alignment",
-                label: "Text Alignment",
-                options: [
-                    { value: "left", label: "Left" },
-                    { value: "center", label: "Center" },
-                    { value: "right", label: "Right" },
-                ],
-                default: settings.alignment || "center",
-            },
-        ],
-        presets: [
-            {
-                name: "ConvertFlow AI Section",
-            },
-        ],
-    };
+async function installViaRestFallback(admin, themeId, sectionFileName, liquidCode) {
+  try {
+    // Extract numeric theme ID from GID
+    const numericId = themeId.replace(/.*\//, '');
 
-    return `
-{% comment %}
-  ConvertFlow AI - Premium Section
-  Auto-generated from ConvertFlow AI App
+    const response = await admin.rest.put({
+      path: `themes/${numericId}/assets`,
+      data: {
+        asset: {
+          key: `sections/${sectionFileName}.liquid`,
+          value: liquidCode,
+        },
+      },
+    });
+
+    return {
+      success: true,
+      sectionFile: `sections/${sectionFileName}.liquid`,
+      message: `Section installed via REST API. Go to Customize Theme → Add Section to use it.`,
+    };
+  } catch (restError) {
+    console.error("❌ REST fallback also failed:", restError);
+    throw new Error("Both GraphQL and REST installation methods failed. Ensure write_themes scope is granted.");
+  }
+}
+
+/**
+ * Wraps the raw HTML/CSS from the database into a proper Liquid section
+ * with a schema block so it appears in the theme customizer.
+ */
+function wrapHtmlInLiquidSection(section, customSettings = {}) {
+  const sectionName = section.name || "ConvertFlow AI Section";
+  const category = section.category || "Custom";
+
+  const schema = {
+    name: `CF: ${sectionName}`,
+    class: "convertflow-section",
+    tag: "section",
+    settings: [
+      {
+        type: "header",
+        content: `${sectionName}`
+      },
+      {
+        type: "paragraph",
+        content: `Premium section by ConvertFlow AI • ${category} • Score: ${section.conversion_score || 0}%`
+      },
+      {
+        type: "checkbox",
+        id: "section_visible",
+        label: "Show this section",
+        default: true
+      },
+      {
+        type: "range",
+        id: "padding_top",
+        min: 0, max: 200, step: 4, unit: "px",
+        label: "Top padding",
+        default: 0
+      },
+      {
+        type: "range",
+        id: "padding_bottom",
+        min: 0, max: 200, step: 4, unit: "px",
+        label: "Bottom padding",
+        default: 0
+      },
+    ],
+    presets: [
+      {
+        name: `CF: ${sectionName}`,
+        category: `ConvertFlow AI - ${category}`,
+      },
+    ],
+  };
+
+  return `{% comment %}
+  ConvertFlow AI — Premium Section
+  Name: ${sectionName}
+  Category: ${category}
+  Conversion Score: ${section.conversion_score || 0}%
+  Auto-installed by ConvertFlow AI Conversion Engine
 {% endcomment %}
 
-<div class="convertflow-section" 
-     style="
-       background: {{ section.settings.background_color }};
-       padding-top: {{ section.settings.padding_top }}px;
-       padding-bottom: {{ section.settings.padding_bottom }}px;
-       text-align: {{ section.settings.alignment }};
-     ">
-  <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-    
-    {% if section.settings.image != blank %}
-      <div class="image-wrapper" style="margin-bottom: 2rem;">
-        <img 
-          src="{{ section.settings.image | img_url: '1200x' }}" 
-          alt="{{ section.settings.heading }}"
-          loading="lazy"
-          style="width: 100%; height: auto; border-radius: 8px;"
-        >
-      </div>
-    {% endif %}
-
-    {% if section.settings.heading != blank %}
-      <h2 
-        style="
-          color: {{ section.settings.text_color }};
-          font-size: clamp(2rem, 5vw, 3rem);
-          font-weight: 700;
-          margin-bottom: 1rem;
-          font-family: {{ settings.headingFont.family | default: 'inherit' }};
-        "
-      >
-        {{ section.settings.heading }}
-      </h2>
-    {% endif %}
-
-    {% if section.settings.description != blank %}
-      <p 
-        style="
-          color: {{ section.settings.text_color }};
-          font-size: clamp(1rem, 2vw, 1.25rem);
-          margin-bottom: 2rem;
-          opacity: 0.9;
-          font-family: {{ settings.bodyFont.family | default: 'inherit' }};
-        "
-      >
-        {{ section.settings.description }}
-      </p>
-    {% endif %}
-
-    {% if section.settings.button_text != blank %}
-      <a 
-        href="{{ section.settings.button_link | default: '#' }}"
-        class="convertflow-button"
-        style="
-          display: inline-block;
-          background: {{ section.settings.primary_color }};
-          color: white;
-          padding: 1rem 2.5rem;
-          border-radius: 8px;
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 1.125rem;
-          transition: all 0.3s ease;
-        "
-      >
-        {{ section.settings.button_text }}
-      </a>
-    {% endif %}
-
-  </div>
+{% if section.settings.section_visible %}
+<div class="cf-section-wrapper" style="padding-top:{{ section.settings.padding_top }}px; padding-bottom:{{ section.settings.padding_bottom }}px;">
+${section.html_code || '<!-- No content -->'}
 </div>
-
-<style>
-  .convertflow-button:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  }
-
-  @media (max-width: 768px) {
-    .convertflow-section {
-      padding-top: calc({{ section.settings.padding_top }}px * 0.6) !important;
-      padding-bottom: calc({{ section.settings.padding_bottom }}px * 0.6) !important;
-    }
-  }
-</style>
+{% endif %}
 
 {% schema %}
 ${JSON.stringify(schema, null, 2)}
 {% endschema %}
-  `.trim();
+`;
 }
 
 /**
- * Remove a section from theme
+ * Generate a safe filename from the section name.
  */
-export async function removeSectionFromTheme(admin, assetKey) {
-    try {
-        const response = await admin.graphql(
-            `#graphql
-        mutation DeleteAsset($input: OnlineStoreAssetDeleteInput!) {
-          onlineStoreAssetDelete(input: $input) {
-            deletedAssetId
-            userErrors {
-              field
-              message
-            }
-          }
-        }`,
-            {
-                variables: {
-                    input: {
-                        assetKeys: [assetKey],
-                    },
-                },
-            }
-        );
-
-        const data = await response.json();
-
-        if (data.data.onlineStoreAssetDelete.userErrors.length > 0) {
-            throw new Error(data.data.onlineStoreAssetDelete.userErrors[0].message);
-        }
-
-        return { success: true };
-    } catch (error) {
-        console.error('Section removal failed:', error);
-        throw error;
-    }
+function generateSectionFileName(name) {
+  return 'cf-' + name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .substring(0, 50);
 }
 
-export default {
-    installSectionToTheme,
-    removeSectionFromTheme,
-    generateAppBlock,
-};
+/**
+ * Remove a ConvertFlow AI section from the theme
+ */
+export async function removeSectionFromTheme(admin, sectionFileName) {
+  try {
+    const themesResponse = await admin.graphql(
+      `#graphql
+            query {
+                themes(first: 1, roles: [MAIN]) {
+                    nodes { id name }
+                }
+            }`
+    );
+
+    const themesData = await themesResponse.json();
+    const activeTheme = themesData.data.themes.nodes[0];
+    if (!activeTheme) throw new Error("No active theme found.");
+
+    const response = await admin.graphql(
+      `#graphql
+            mutation DeleteAsset($themeId: ID!, $files: [String!]!) {
+                onlineStoreThemeFilesDelete(themeId: $themeId, files: $files) {
+                    deletedThemeFiles
+                    userErrors { field message }
+                }
+            }`,
+      {
+        variables: {
+          themeId: activeTheme.id,
+          files: [`sections/${sectionFileName}.liquid`],
+        },
+      }
+    );
+
+    const data = await response.json();
+    const userErrors = data.data?.onlineStoreThemeFilesDelete?.userErrors || [];
+    if (userErrors.length > 0) {
+      throw new Error(userErrors.map(e => e.message).join(', '));
+    }
+
+    return { success: true, message: `Section removed from "${activeTheme.name}"` };
+  } catch (error) {
+    console.error("❌ Section removal failed:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * List all ConvertFlow AI sections currently installed in the theme
+ */
+export async function listInstalledSections(admin) {
+  try {
+    const themesResponse = await admin.graphql(
+      `#graphql
+            query {
+                themes(first: 1, roles: [MAIN]) {
+                    nodes {
+                        id
+                        name
+                        files(filenames: ["sections/*"]) {
+                            nodes {
+                                filename
+                                size
+                            }
+                        }
+                    }
+                }
+            }`
+    );
+
+    const data = await themesResponse.json();
+    const theme = data.data?.themes?.nodes?.[0];
+    if (!theme) return { sections: [], themeName: "Unknown" };
+
+    const cfSections = (theme.files?.nodes || [])
+      .filter(f => f.filename.startsWith("sections/cf-"));
+
+    return {
+      sections: cfSections,
+      themeName: theme.name,
+    };
+  } catch (error) {
+    console.error("❌ Failed to list installed sections:", error);
+    return { sections: [], error: error.message };
+  }
+}
