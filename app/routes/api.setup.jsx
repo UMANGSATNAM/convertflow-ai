@@ -27,57 +27,78 @@ export const loader = async ({ request }) => {
         if (action === "seed") {
             console.log("🌱 Running MASSIVE Database Seeding — 200 Premium Sections...");
 
-            // 1. Clear existing sections
-            await db.query("DELETE FROM sections");
+            // 1. Clear existing sections (use raw pool query for DDL)
+            const conn = await db.getClient();
+            try {
+                await conn.query("DELETE FROM customizations");
+                await conn.query("DELETE FROM sections");
 
-            // 2. Map category names to section arrays
-            const categoryMap = [
-                { category: "Hero Sections", data: heroSections },
-                { category: "Announcement Bars", data: announcementSections },
-                { category: "Testimonials", data: testimonialSections },
-                { category: "CTA Sections", data: ctaSections },
-                { category: "Feature Sections", data: featureSections },
-                { category: "Trust Badges", data: trustSections },
-                { category: "Headers & Navigation", data: headerSections },
-                { category: "Product Highlights", data: productSections },
-                { category: "Stats & Metrics", data: statsSections },
-                { category: "Footer Sections", data: footerSections },
-            ];
+                // 2. Map category names to section arrays
+                const categoryMap = [
+                    { category: "Hero Sections", data: heroSections },
+                    { category: "Announcement Bars", data: announcementSections },
+                    { category: "Testimonials", data: testimonialSections },
+                    { category: "CTA Sections", data: ctaSections },
+                    { category: "Feature Sections", data: featureSections },
+                    { category: "Trust Badges", data: trustSections },
+                    { category: "Headers & Navigation", data: headerSections },
+                    { category: "Product Highlights", data: productSections },
+                    { category: "Stats & Metrics", data: statsSections },
+                    { category: "Footer Sections", data: footerSections },
+                ];
 
-            let totalInserted = 0;
+                let totalInserted = 0;
+                let errors = [];
 
-            // 3. Insert in batches per category
-            for (const { category, data } of categoryMap) {
-                console.log(`  📦 Inserting ${data.length} sections for "${category}"...`);
+                // 3. Insert with parameterized queries (safe for HTML/CSS with special chars)
+                for (const { category, data } of categoryMap) {
+                    console.log(`  📦 Inserting ${data.length} sections for "${category}"...`);
 
-                for (const section of data) {
-                    const safeName = section.name.replace(/'/g, "''");
-                    const safeHtml = section.html_code.replace(/'/g, "''");
-                    const score = section.conversion_score || 85;
-                    const variation = section.variation;
+                    for (const section of data) {
+                        try {
+                            const schemaJson = JSON.stringify({
+                                name: section.name,
+                                category: category,
+                                conversion_score: section.conversion_score || 85,
+                            });
 
-                    // Build a simple schema_json for compatibility
-                    const schemaJson = JSON.stringify({
-                        name: section.name,
-                        category: category,
-                        conversion_score: score
-                    }).replace(/'/g, "''");
-
-                    await db.query(`
-                        INSERT INTO sections 
-                        (name, category, variation_number, liquid_code, schema_json, preview_image, is_premium, conversion_score, html_code)
-                        VALUES 
-                        ('${safeName}', '${category}', ${variation}, '', '${schemaJson}', null, true, ${score}, '${safeHtml}')
-                    `);
-                    totalInserted++;
+                            await conn.query(
+                                `INSERT INTO sections 
+                                (name, category, variation_number, liquid_code, schema_json, preview_image, is_premium, conversion_score, html_code)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                                [
+                                    section.name,
+                                    category,
+                                    section.variation,
+                                    '',
+                                    schemaJson,
+                                    null,
+                                    true,
+                                    section.conversion_score || 85,
+                                    section.html_code || '',
+                                ]
+                            );
+                            totalInserted++;
+                        } catch (err) {
+                            console.error(`  ❌ Failed to insert "${section.name}":`, err.message);
+                            errors.push({ name: section.name, category, error: err.message });
+                        }
+                    }
                 }
-            }
 
-            return json({
-                message: `🎉 SEED COMPLETE! ${totalInserted} Premium Sections Added across ${categoryMap.length} categories.`,
-                count: totalInserted,
-                categories: categoryMap.map(c => ({ name: c.category, count: c.data.length }))
-            });
+                conn.release();
+
+                return json({
+                    message: `🎉 SEED COMPLETE! ${totalInserted} Premium Sections Added across ${categoryMap.length} categories.`,
+                    count: totalInserted,
+                    errors: errors.length > 0 ? errors : undefined,
+                    categories: categoryMap.map(c => ({ name: c.category, count: c.data.length })),
+                });
+            } catch (err) {
+                conn.release();
+                console.error("❌ Seed failed:", err);
+                return json({ error: "Seed failed: " + err.message }, { status: 500 });
+            }
         }
 
         // --- UNLOCK LOGIC (Dev) ---
@@ -88,6 +109,8 @@ export const loader = async ({ request }) => {
 
         // --- SETUP LOGIC (Default) ---
         console.log("🛠️ Running Emergency Database Setup...");
+
+        // 1. Create tables if they don't exist
         const tables = [
             `CREATE TABLE IF NOT EXISTS shops (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -142,6 +165,31 @@ export const loader = async ({ request }) => {
         ];
 
         for (const q of tables) await db.query(q);
+
+        // 2. Perform Schema Migrations (add columns if missing)
+        try {
+            // Add html_code if missing
+            await db.query(`
+                SELECT html_code FROM sections LIMIT 1;
+            `).catch(async () => {
+                console.log("⚠️ Column html_code missing. Adding it...");
+                await db.query("ALTER TABLE sections ADD COLUMN html_code LONGTEXT;");
+            });
+
+            // Add conversion_score if missing
+            await db.query(`
+                SELECT conversion_score FROM sections LIMIT 1;
+            `).catch(async () => {
+                console.log("⚠️ Column conversion_score missing. Adding it...");
+                await db.query("ALTER TABLE sections ADD COLUMN conversion_score INT DEFAULT 85;");
+                await db.query("CREATE INDEX idx_sections_score ON sections(conversion_score);");
+            });
+
+            console.log("✅ Schema migration checks complete.");
+        } catch (e) {
+            console.error("⚠️ Migration warning (safe to ignore if columns exist):", e.message);
+        }
+
         const res = await db.query("SHOW TABLES");
         return json({ message: "Setup Success! Tables created. Use &action=seed to populate 200 premium sections.", tables: res.rows });
 
