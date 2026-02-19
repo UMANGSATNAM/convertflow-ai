@@ -1,17 +1,14 @@
 /**
  * Theme Installation Engine — ConvertFlow AI
- * 
- * Installs premium HTML/CSS sections directly into Shopify OS 2.0 themes
- * using the GraphQL Admin API's asset management.
+ * Uses REST Admin API for reliable theme asset management
  */
 
 /**
- * Install a section's HTML/CSS to the merchant's active theme.
- * Wraps the raw HTML in a Liquid section file with a proper schema.
+ * Install a section's HTML/CSS to the merchant's active theme via REST API.
  */
 export async function installSectionToTheme(admin, section, customSettings = {}) {
   try {
-    // 1. Get the active (main) theme
+    // 1. Get the active (main) theme via GraphQL
     const themesResponse = await admin.graphql(
       `#graphql
             query {
@@ -26,83 +23,21 @@ export async function installSectionToTheme(admin, section, customSettings = {})
     );
 
     const themesData = await themesResponse.json();
-    const activeTheme = themesData.data.themes.nodes[0];
+    const activeTheme = themesData.data?.themes?.nodes?.[0];
 
     if (!activeTheme) {
-      throw new Error("No active theme found. Please publish a theme first.");
+      return { success: false, error: "No active theme found. Please publish a theme first." };
     }
 
-    // 2. Generate the Liquid section wrapper for the HTML code
+    // 2. Extract numeric theme ID from GID (e.g., "gid://shopify/OnlineStoreTheme/123456" -> "123456")
+    const themeGid = activeTheme.id;
+    const numericId = themeGid.split('/').pop();
+
+    // 3. Generate section file
     const sectionFileName = generateSectionFileName(section.name);
     const liquidCode = wrapHtmlInLiquidSection(section, customSettings);
 
-    // 3. Upload as a theme asset
-    const assetResponse = await admin.graphql(
-      `#graphql
-            mutation CreateAsset($input: OnlineStoreThemeFileBodyInputAssetUpsert!) {
-                onlineStoreThemeFilesUpsert(
-                    themeId: "${activeTheme.id}",
-                    files: [$input]
-                ) {
-                    upsertedThemeFiles {
-                        filename
-                    }
-                    userErrors {
-                        field
-                        message
-                    }
-                }
-            }`,
-      {
-        variables: {
-          input: {
-            filename: `sections/${sectionFileName}.liquid`,
-            body: {
-              type: "TEXT",
-              value: liquidCode,
-            },
-          },
-        },
-      }
-    );
-
-    const assetData = await assetResponse.json();
-
-    // Check for errors
-    if (assetData.errors) {
-      // Fallback: try with REST API approach via asset key
-      return await installViaRestFallback(admin, activeTheme.id, sectionFileName, liquidCode);
-    }
-
-    const userErrors = assetData.data?.onlineStoreThemeFilesUpsert?.userErrors || [];
-    if (userErrors.length > 0) {
-      throw new Error(userErrors.map(e => e.message).join(', '));
-    }
-
-    return {
-      success: true,
-      sectionFile: `sections/${sectionFileName}.liquid`,
-      themeName: activeTheme.name,
-      themeId: activeTheme.id,
-      message: `Section "${section.name}" installed to theme "${activeTheme.name}". Go to Customize Theme → Add Section to use it.`,
-    };
-  } catch (error) {
-    console.error("❌ Theme installation error:", error);
-    return {
-      success: false,
-      error: error.message || "Installation failed. Please check your theme settings.",
-    };
-  }
-}
-
-/**
- * Fallback installation method — uses the REST-style asset PUT approach
- */
-async function installViaRestFallback(admin, themeId, sectionFileName, liquidCode) {
-  try {
-    // Extract numeric theme ID from GID
-    const numericId = themeId.replace(/.*\//, '');
-
+    // 4. Install via REST API (most reliable method)
     const response = await admin.rest.put({
       path: `themes/${numericId}/assets`,
       data: {
@@ -113,20 +48,37 @@ async function installViaRestFallback(admin, themeId, sectionFileName, liquidCod
       },
     });
 
+    const result = response.body;
+
     return {
       success: true,
       sectionFile: `sections/${sectionFileName}.liquid`,
-      message: `Section installed via REST API. Go to Customize Theme → Add Section to use it.`,
+      themeName: activeTheme.name,
+      themeId: numericId,
+      message: `✅ "${section.name}" installed to "${activeTheme.name}"! Go to Online Store → Customize → Add Section → search for "CF:" to find it.`,
     };
-  } catch (restError) {
-    console.error("❌ REST fallback also failed:", restError);
-    throw new Error("Both GraphQL and REST installation methods failed. Ensure write_themes scope is granted.");
+  } catch (error) {
+    console.error("❌ Theme installation error:", error);
+
+    // Provide helpful error message
+    let userMessage = error.message || "Installation failed.";
+    if (userMessage.includes("401") || userMessage.includes("403")) {
+      userMessage = "Permission denied. Make sure your app has write_themes scope.";
+    } else if (userMessage.includes("404")) {
+      userMessage = "Theme not found. Make sure you have an active theme.";
+    } else if (userMessage.includes("422")) {
+      userMessage = "Invalid section code. The HTML may contain syntax errors.";
+    }
+
+    return {
+      success: false,
+      error: userMessage,
+    };
   }
 }
 
 /**
- * Wraps the raw HTML/CSS from the database into a proper Liquid section
- * with a schema block so it appears in the theme customizer.
+ * Wraps raw HTML/CSS in a Liquid section file with schema
  */
 function wrapHtmlInLiquidSection(section, customSettings = {}) {
   const sectionName = section.name || "ConvertFlow AI Section";
@@ -134,21 +86,21 @@ function wrapHtmlInLiquidSection(section, customSettings = {}) {
 
   const schema = {
     name: `CF: ${sectionName}`,
-    class: "convertflow-section",
+    class: "cf-section",
     tag: "section",
     settings: [
       {
         type: "header",
-        content: `${sectionName}`
+        content: sectionName
       },
       {
         type: "paragraph",
-        content: `Premium section by ConvertFlow AI • ${category} • Score: ${section.conversion_score || 0}%`
+        content: `ConvertFlow AI • ${category} • Score: ${section.conversion_score || 0}%`
       },
       {
         type: "checkbox",
         id: "section_visible",
-        label: "Show this section",
+        label: "Show section",
         default: true
       },
       {
@@ -169,7 +121,7 @@ function wrapHtmlInLiquidSection(section, customSettings = {}) {
     presets: [
       {
         name: `CF: ${sectionName}`,
-        category: `ConvertFlow AI - ${category}`,
+        category: `ConvertFlow AI`,
       },
     ],
   };
@@ -178,8 +130,7 @@ function wrapHtmlInLiquidSection(section, customSettings = {}) {
   ConvertFlow AI — Premium Section
   Name: ${sectionName}
   Category: ${category}
-  Conversion Score: ${section.conversion_score || 0}%
-  Auto-installed by ConvertFlow AI Conversion Engine
+  Score: ${section.conversion_score || 0}%
 {% endcomment %}
 
 {% if section.settings.section_visible %}
@@ -195,7 +146,7 @@ ${JSON.stringify(schema, null, 2)}
 }
 
 /**
- * Generate a safe filename from the section name.
+ * Generate safe filename
  */
 function generateSectionFileName(name) {
   return 'cf-' + name
@@ -206,7 +157,7 @@ function generateSectionFileName(name) {
 }
 
 /**
- * Remove a ConvertFlow AI section from the theme
+ * Remove a section from theme via REST API
  */
 export async function removeSectionFromTheme(admin, sectionFileName) {
   try {
@@ -220,74 +171,19 @@ export async function removeSectionFromTheme(admin, sectionFileName) {
     );
 
     const themesData = await themesResponse.json();
-    const activeTheme = themesData.data.themes.nodes[0];
-    if (!activeTheme) throw new Error("No active theme found.");
+    const activeTheme = themesData.data?.themes?.nodes?.[0];
+    if (!activeTheme) return { success: false, error: "No active theme found." };
 
-    const response = await admin.graphql(
-      `#graphql
-            mutation DeleteAsset($themeId: ID!, $files: [String!]!) {
-                onlineStoreThemeFilesDelete(themeId: $themeId, files: $files) {
-                    deletedThemeFiles
-                    userErrors { field message }
-                }
-            }`,
-      {
-        variables: {
-          themeId: activeTheme.id,
-          files: [`sections/${sectionFileName}.liquid`],
-        },
-      }
-    );
+    const numericId = activeTheme.id.split('/').pop();
 
-    const data = await response.json();
-    const userErrors = data.data?.onlineStoreThemeFilesDelete?.userErrors || [];
-    if (userErrors.length > 0) {
-      throw new Error(userErrors.map(e => e.message).join(', '));
-    }
+    await admin.rest.delete({
+      path: `themes/${numericId}/assets`,
+      query: { "asset[key]": `sections/${sectionFileName}.liquid` },
+    });
 
     return { success: true, message: `Section removed from "${activeTheme.name}"` };
   } catch (error) {
     console.error("❌ Section removal failed:", error);
     return { success: false, error: error.message };
-  }
-}
-
-/**
- * List all ConvertFlow AI sections currently installed in the theme
- */
-export async function listInstalledSections(admin) {
-  try {
-    const themesResponse = await admin.graphql(
-      `#graphql
-            query {
-                themes(first: 1, roles: [MAIN]) {
-                    nodes {
-                        id
-                        name
-                        files(filenames: ["sections/*"]) {
-                            nodes {
-                                filename
-                                size
-                            }
-                        }
-                    }
-                }
-            }`
-    );
-
-    const data = await themesResponse.json();
-    const theme = data.data?.themes?.nodes?.[0];
-    if (!theme) return { sections: [], themeName: "Unknown" };
-
-    const cfSections = (theme.files?.nodes || [])
-      .filter(f => f.filename.startsWith("sections/cf-"));
-
-    return {
-      sections: cfSections,
-      themeName: theme.name,
-    };
-  } catch (error) {
-    console.error("❌ Failed to list installed sections:", error);
-    return { sections: [], error: error.message };
   }
 }
