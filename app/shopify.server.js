@@ -4,12 +4,11 @@ import {
   AppDistribution,
   shopifyApp,
 } from "@shopify/shopify-app-remix/server";
-import { MemorySessionStorage } from "@shopify/shopify-app-session-storage-memory";
+import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
+import prisma from "./prisma.server";
 
-console.log("[Init] Initializing Shopify App with:");
-console.log("   API Key:", process.env.SHOPIFY_API_KEY ? process.env.SHOPIFY_API_KEY.substring(0, 5) + "..." : "MISSING");
-console.log("   App URL:", process.env.SHOPIFY_APP_URL);
-console.log("   Scopes:", process.env.SCOPES);
+// Use Prisma-based session storage (persists across restarts)
+const sessionStorage = new PrismaSessionStorage(prisma);
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
@@ -18,11 +17,10 @@ const shopify = shopifyApp({
   scopes: process.env.SCOPES?.split(",").map(scope => scope.trim()),
   appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/auth",
-  sessionStorage: new MemorySessionStorage(),
+  sessionStorage,
   distribution: AppDistribution.AppStore,
   future: {
     unstable_newEmbeddedAuthStrategy: true,
-    expiringOfflineAccessTokens: true,
   },
   ...(process.env.SHOP_CUSTOM_DOMAIN
     ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
@@ -36,4 +34,4 @@ export const authenticate = shopify.authenticate;
 export const unauthenticated = shopify.unauthenticated;
 export const login = shopify.login;
 export const registerWebhooks = shopify.registerWebhooks;
-export const sessionStorage = shopify.sessionStorage;
+export { sessionStorage };

@@ -114,6 +114,26 @@ export const loader = async ({ request }) => {
 
         // 1. Create tables if they don't exist
         const tables = [
+            `CREATE TABLE IF NOT EXISTS Session (
+                id VARCHAR(255) PRIMARY KEY,
+                shop VARCHAR(255) NOT NULL,
+                state VARCHAR(255) NOT NULL,
+                isOnline BOOLEAN DEFAULT false,
+                scope VARCHAR(1024),
+                expires DATETIME,
+                accessToken VARCHAR(1024) NOT NULL,
+                userId BIGINT,
+                firstName VARCHAR(255),
+                lastName VARCHAR(255),
+                email VARCHAR(255),
+                accountOwner BOOLEAN DEFAULT false,
+                locale VARCHAR(50),
+                collaborator BOOLEAN DEFAULT false,
+                emailVerified BOOLEAN DEFAULT false,
+                refreshToken VARCHAR(1024),
+                refreshTokenExpires DATETIME,
+                INDEX idx_session_shop (shop)
+            ) ENGINE=InnoDB;`,
             `CREATE TABLE IF NOT EXISTS shops (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 shop_domain VARCHAR(255) UNIQUE NOT NULL,
