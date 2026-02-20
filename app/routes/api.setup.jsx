@@ -26,7 +26,7 @@ export const loader = async ({ request }) => {
     try {
         // --- SEEDING LOGIC ---
         if (action === "seed") {
-            console.log("🌱 Running MASSIVE Database Seeding — 200 Premium Sections...");
+            console.log("[Seed] Running MASSIVE Database Seeding - 200 Premium Sections...");
 
             // 1. Clear existing sections (use raw pool query for DDL)
             const conn = await db.getClient();
@@ -54,7 +54,7 @@ export const loader = async ({ request }) => {
 
                 // 3. Insert with parameterized queries (safe for HTML/CSS with special chars)
                 for (const { category, data } of categoryMap) {
-                    console.log(`  📦 Inserting ${data.length} sections for "${category}"...`);
+                    console.log(`  [Seed] Inserting ${data.length} sections for "${category}"...`);
 
                     for (const section of data) {
                         try {
@@ -82,7 +82,7 @@ export const loader = async ({ request }) => {
                             );
                             totalInserted++;
                         } catch (err) {
-                            console.error(`  ❌ Failed to insert "${section.name}":`, err.message);
+                            console.error(`  [Error] Failed to insert "${section.name}":`, err.message);
                             errors.push({ name: section.name, category, error: err.message });
                         }
                     }
@@ -91,14 +91,14 @@ export const loader = async ({ request }) => {
                 conn.release();
 
                 return json({
-                    message: `🎉 SEED COMPLETE! ${totalInserted} Premium Sections Added across ${categoryMap.length} categories.`,
+                    message: `SEED COMPLETE! ${totalInserted} Premium Sections Added across ${categoryMap.length} categories.`,
                     count: totalInserted,
                     errors: errors.length > 0 ? errors : undefined,
                     categories: categoryMap.map(c => ({ name: c.category, count: c.data.length })),
                 });
             } catch (err) {
                 conn.release();
-                console.error("❌ Seed failed:", err);
+                console.error("[Error] Seed failed:", err);
                 return json({ error: "Seed failed: " + err.message }, { status: 500 });
             }
         }
@@ -110,7 +110,7 @@ export const loader = async ({ request }) => {
         }
 
         // --- SETUP LOGIC (Default) ---
-        console.log("🛠️ Running Emergency Database Setup...");
+        console.log("[Setup] Running Emergency Database Setup...");
 
         // 1. Create tables if they don't exist
         const tables = [
@@ -174,7 +174,7 @@ export const loader = async ({ request }) => {
             await db.query(`
                 SELECT html_code FROM sections LIMIT 1;
             `).catch(async () => {
-                console.log("⚠️ Column html_code missing. Adding it...");
+                console.log("[Warn] Column html_code missing. Adding it...");
                 await db.query("ALTER TABLE sections ADD COLUMN html_code LONGTEXT;");
             });
 
@@ -182,21 +182,21 @@ export const loader = async ({ request }) => {
             await db.query(`
                 SELECT conversion_score FROM sections LIMIT 1;
             `).catch(async () => {
-                console.log("⚠️ Column conversion_score missing. Adding it...");
+                console.log("[Warn] Column conversion_score missing. Adding it...");
                 await db.query("ALTER TABLE sections ADD COLUMN conversion_score INT DEFAULT 85;");
                 await db.query("CREATE INDEX idx_sections_score ON sections(conversion_score);");
             });
 
-            console.log("✅ Schema migration checks complete.");
+            console.log("[OK] Schema migration checks complete.");
         } catch (e) {
-            console.error("⚠️ Migration warning (safe to ignore if columns exist):", e.message);
+            console.error("[Warn] Migration warning (safe to ignore if columns exist):", e.message);
         }
 
         const res = await db.query("SHOW TABLES");
         return json({ message: "Setup Success! Tables created. Use &action=seed to populate 200 premium sections.", tables: res.rows });
 
     } catch (error) {
-        console.error("❌ Setup/Seed Error:", error);
+        console.error("[Error] Setup/Seed Error:", error);
         return json({ error: error.message, stack: error.stack }, { status: 500 });
     }
 };
