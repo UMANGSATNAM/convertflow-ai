@@ -201,7 +201,7 @@ export function preloadResources(resources) {
  */
 export function logBundleSize(bundleName, sizeInKb) {
     if (process.env.NODE_ENV !== 'production') {
-        console.log(`📦 ${bundleName}: ${sizeInKb.toFixed(2)} KB`);
+        console.log(`[Bundle] ${bundleName}: ${sizeInKb.toFixed(2)} KB`);
     }
 }
 
@@ -233,7 +233,7 @@ export class PerformanceMonitor {
         const duration = this.end(name);
 
         if (process.env.NODE_ENV !== 'production') {
-            console.log(`⏱️ ${name}: ${duration}ms`);
+            console.log(`[Perf] ${name}: ${duration}ms`);
         }
 
         return result;
@@ -245,7 +245,7 @@ export class PerformanceMonitor {
         const duration = this.end(name);
 
         if (process.env.NODE_ENV !== 'production') {
-            console.log(`⏱️ ${name}: ${duration}ms`);
+            console.log(`[Perf] ${name}: ${duration}ms`);
         }
 
         return result;
