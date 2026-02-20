@@ -6,7 +6,7 @@ import {
 } from "@shopify/shopify-app-remix/server";
 import { MemorySessionStorage } from "@shopify/shopify-app-session-storage-memory";
 
-console.log("🛠️ Initializing Shopify App with:");
+console.log("[Init] Initializing Shopify App with:");
 console.log("   API Key:", process.env.SHOPIFY_API_KEY ? process.env.SHOPIFY_API_KEY.substring(0, 5) + "..." : "MISSING");
 console.log("   App URL:", process.env.SHOPIFY_APP_URL);
 console.log("   Scopes:", process.env.SCOPES);

@@ -25,4 +25,8 @@ api_version = "2026-04"
 scopes = "write_themes,read_themes,write_products,read_products"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+  "https://tan-chamois-659862.hostingersite.com/auth/callback",
+  "https://tan-chamois-659862.hostingersite.com/auth/shopify/callback",
+  "https://tan-chamois-659862.hostingersite.com/api/auth/callback"
+]
