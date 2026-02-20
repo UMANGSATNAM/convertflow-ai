@@ -22,7 +22,7 @@ const dbConfig = {
   keepAliveInitialDelay: 0
 };
 
-console.log("🔌 Database Config:", {
+console.log("[DB] Database Config:", {
   host: dbConfig.host,
   port: dbConfig.port,
   database: dbConfig.database,

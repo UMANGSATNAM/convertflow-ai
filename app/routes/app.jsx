@@ -8,17 +8,17 @@ import { authenticate } from "../shopify.server";
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }) => {
-  console.log("👉 App Loader Hit:", request.url);
+  console.log("[App] Loader Hit:", request.url);
   try {
     await authenticate.admin(request);
-    console.log("✅ Authenticate Admin Success");
+    console.log("[App] Authenticate Admin Success");
   } catch (error) {
-    console.error("❌ Authenticate Admin Error:", error);
+    console.error("[App] Authenticate Admin Error:", error);
     throw error;
   }
 
   const apiKey = process.env.SHOPIFY_API_KEY || "";
-  console.log("🔑 API Key in Loader:", apiKey ? apiKey.substring(0, 10) + "..." : "MISSING");
+  console.log("[App] API Key in Loader:", apiKey ? apiKey.substring(0, 10) + "..." : "MISSING");
 
   return { apiKey };
 };
