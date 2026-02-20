@@ -20,11 +20,26 @@ export const loader = async ({ request }) => {
   const apiKey = process.env.SHOPIFY_API_KEY || "";
   console.log("[App] API Key in Loader:", apiKey ? apiKey.substring(0, 10) + "..." : "MISSING");
 
+  if (!apiKey) {
+    return { apiKey: "", error: "SHOPIFY_API_KEY is missing in server environment" };
+  }
+
   return { apiKey };
 };
 
 export default function App() {
-  const { apiKey } = useLoaderData();
+  const { apiKey, error } = useLoaderData();
+
+  if (error || !apiKey) {
+    return (
+      <div style={{ padding: "20px", fontFamily: "system-ui" }}>
+        <h1>Configuration Error</h1>
+        <p style={{ color: "red", fontWeight: "bold" }}>{error || "SHOPIFY_API_KEY is missing"}</p>
+        <p>Please check your .env file on Hostinger and ensure SHOPIFY_API_KEY is set.</p>
+        <pre>{JSON.stringify({ apiKey }, null, 2)}</pre>
+      </div>
+    );
+  }
 
   return (
     <AppProvider isEmbeddedApp apiKey={apiKey}>
