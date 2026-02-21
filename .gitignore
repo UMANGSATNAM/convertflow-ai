@@ -11,9 +11,10 @@ node_modules
 /prisma/dev.sqlite-journal
 database.sqlite
 
-# .env tracked for Hostinger auto-deploy
-
-
+# Environment variables (NEVER commit real credentials)
+.env
+.env.local
+.env.production
 
 
 
