@@ -1,13 +1,7 @@
-// Load environment variables from .env file
-import dotenv from "dotenv";
-dotenv.config();
+require("dotenv").config();
 
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require("express");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,7 +26,7 @@ async function startServer() {
         console.error("Failed to start Remix server:", err);
 
         app.all("*", (req, res) => {
-            res.status(500).send("<h1>Server Error</h1><p>Check logs for details.</p><pre>" + err.message + "</pre>");
+            res.status(500).send("<h1>Server Error</h1><pre>" + err.message + "</pre>");
         });
 
         app.listen(PORT, "0.0.0.0", () => {
