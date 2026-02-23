@@ -1,6 +1,6 @@
-client_id = "c93d794edb930ae53c752669f71b285f"
+client_id = "7c23ec0e48187aef7a215451536fc8f3"
 name = "convertflow-ai"
-application_url = "https://limegreen-gorilla-249027.hostingersite.com"
+application_url = "https://olivedrab-mosquito-163393.hostingersite.com"
 embedded = true
 
 [build]
@@ -22,7 +22,7 @@ scopes = "read_themes,write_themes,read_products,write_products,read_content,wri
 
 [auth]
 redirect_urls = [
-  "https://limegreen-gorilla-249027.hostingersite.com/auth/callback",
-  "https://limegreen-gorilla-249027.hostingersite.com/auth/shopify/callback",
-  "https://limegreen-gorilla-249027.hostingersite.com/api/auth/callback"
+  "https://olivedrab-mosquito-163393.hostingersite.com/auth/callback",
+  "https://olivedrab-mosquito-163393.hostingersite.com/auth/shopify/callback",
+  "https://olivedrab-mosquito-163393.hostingersite.com/api/auth/callback"
 ]
