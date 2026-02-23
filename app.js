@@ -1,13 +1,5 @@
-// Save Passenger-assigned PORT before dotenv can override it
-const PASSENGER_PORT = process.env.PORT;
-
 // Load environment variables from .env file (override system env vars)
 require("dotenv").config({ override: true });
-
-// Restore Passenger's PORT if it was set (Passenger uses its own port)
-if (PASSENGER_PORT && PASSENGER_PORT !== '3000') {
-    process.env.PORT = PASSENGER_PORT;
-}
 
 const express = require("express");
 const path = require("path");
