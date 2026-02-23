@@ -18,9 +18,6 @@ const shopify = shopifyApp({
   authPathPrefix: "/auth",
   sessionStorage,
   distribution: AppDistribution.AppStore,
-  future: {
-    unstable_newEmbeddedAuthStrategy: true,
-  },
   ...(process.env.SHOP_CUSTOM_DOMAIN
     ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
     : {}),
