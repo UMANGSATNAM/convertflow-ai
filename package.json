@@ -1,6 +1,7 @@
 {
   "name": "convertflow-ai",
   "private": true,
+  "type": "module",
   "scripts": {
     "postinstall": "npx prisma generate && npx remix vite:build",
     "dev": "remix dev",

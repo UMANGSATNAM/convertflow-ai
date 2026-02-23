@@ -1,8 +1,13 @@
-// Load environment variables from .env file (override system env vars)
-require("dotenv").config({ override: true });
+// Load environment variables from .env file
+import dotenv from "dotenv";
+dotenv.config();
 
-const express = require("express");
-const path = require("path");
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
