@@ -4,11 +4,10 @@ import {
   AppDistribution,
   shopifyApp,
 } from "@shopify/shopify-app-remix/server";
-import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
-import prisma from "./prisma.server";
+import { MySQLSessionStorage } from "./mysql-session-storage.server";
 
-// Use Prisma-based session storage (persists across restarts)
-const sessionStorage = new PrismaSessionStorage(prisma);
+// Use direct MySQL session storage (bypasses Prisma engine crashes on shared hosting)
+const sessionStorage = new MySQLSessionStorage(process.env.DATABASE_URL);
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
