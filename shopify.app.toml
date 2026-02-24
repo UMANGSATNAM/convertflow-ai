@@ -1,8 +1,7 @@
 client_id = "7c23ec0e48187aef7a215451536fc8f3"
 name = "convertflow-ai"
 application_url = "https://olivedrab-mosquito-163393.hostingersite.com"
-embedded = true
-distribution = "custom"
+embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
