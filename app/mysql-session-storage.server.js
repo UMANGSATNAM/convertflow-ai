@@ -28,10 +28,34 @@ export class MySQLSessionStorage {
 
             // Verify connection
             const conn = await this.pool.getConnection();
+
+            // Create Session table if it doesn't exist
+            await conn.execute(`
+                CREATE TABLE IF NOT EXISTS Session (
+                    id                  VARCHAR(255) NOT NULL PRIMARY KEY,
+                    shop                VARCHAR(255) NOT NULL,
+                    state               VARCHAR(255) NOT NULL,
+                    isOnline            BOOLEAN      NOT NULL DEFAULT FALSE,
+                    scope               VARCHAR(255),
+                    expires             DATETIME,
+                    accessToken         VARCHAR(255) NOT NULL,
+                    userId              BIGINT,
+                    firstName           VARCHAR(255),
+                    lastName            VARCHAR(255),
+                    email               VARCHAR(255),
+                    accountOwner        BOOLEAN      NOT NULL DEFAULT FALSE,
+                    locale              VARCHAR(255),
+                    collaborator        BOOLEAN      DEFAULT FALSE,
+                    emailVerified       BOOLEAN      DEFAULT FALSE,
+                    refreshToken        VARCHAR(255),
+                    refreshTokenExpires DATETIME
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            `);
+
             conn.release();
-            console.log("[MySQLSessionStorage] Connected to MySQL");
+            console.log("[MySQLSessionStorage] Connected and Session table verified");
         } catch (err) {
-            console.error("[MySQLSessionStorage] Failed to connect:", err.message);
+            console.error("[MySQLSessionStorage] Initialization failure:", err.message);
             throw err;
         }
     }
