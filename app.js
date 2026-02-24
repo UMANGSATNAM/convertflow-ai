@@ -6,18 +6,7 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CRITICAL: Allow Shopify admin to embed this app in an iframe
-// Hostinger's CDN adds its own CSP that strips Shopify's frame-ancestors header,
-// so we must set it explicitly as middleware before any response goes out.
-app.use((req, res, next) => {
-    res.setHeader(
-        "Content-Security-Policy",
-        "frame-ancestors https://*.myshopify.com https://admin.shopify.com https://partners.shopify.com;"
-    );
-    // Remove X-Frame-Options if present (conflicts with frame-ancestors)
-    res.removeHeader("X-Frame-Options");
-    next();
-});
+// Shopify Remix package automatically handles Content-Security-Policy headers
 
 // Serve static files from build/client
 app.use(express.static(path.join(__dirname, "build/client"), {
