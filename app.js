@@ -1,12 +1,13 @@
-require("dotenv").config();
+import "dotenv/config";
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const express = require("express");
-const path = require("path");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Shopify Remix package automatically handles Content-Security-Policy headers
 
 // Serve static files from build/client
 app.use(express.static(path.join(__dirname, "build/client"), {
@@ -19,7 +20,7 @@ async function startServer() {
         const { createRequestHandler } = await import("@remix-run/express");
         const build = await import("./build/server/index.js");
 
-        app.all("*", createRequestHandler({ build }));
+        app.all("*", createRequestHandler({ build: build.default }));
 
         app.listen(PORT, "0.0.0.0", () => {
             console.log(`ConvertFlow AI running on port ${PORT}`);

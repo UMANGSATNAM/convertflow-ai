@@ -8,9 +8,9 @@ const dbUrl = process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL) : nul
 const resolveHost = (host) => (host === 'localhost' ? '127.0.0.1' : host);
 
 const dbConfig = {
-  host: resolveHost(process.env.DB_HOST || dbUrl?.hostname || '127.0.0.1'),
+  host: process.env.DB_HOST || dbUrl?.hostname || '127.0.0.1',
   port: parseInt(process.env.DB_PORT || dbUrl?.port || '3306'),
-  database: process.env.DB_NAME || dbUrl?.pathname.substring(1) || 'convertflow_ai',
+  database: process.env.DB_NAME || (dbUrl?.pathname ? dbUrl.pathname.substring(1) : 'convertflow_ai'),
   user: process.env.DB_USER || dbUrl?.username || 'root',
   password: process.env.DB_PASSWORD || dbUrl?.password || '',
   waitForConnections: true,
@@ -22,9 +22,8 @@ const dbConfig = {
   keepAliveInitialDelay: 0
 };
 
-console.log("[DB] Database Config:", {
+console.log("[DB] Connecting to:", {
   host: dbConfig.host,
-  port: dbConfig.port,
   database: dbConfig.database,
   user: dbConfig.user ? "***" : "MISSING"
 });
