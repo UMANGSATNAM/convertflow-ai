@@ -1,6 +1,6 @@
 client_id = "836548ca6f78ccc46a506f1ccf2bbebf"
 name = "convertflow-ai"
-application_url = "https://olivedrab-mosquito-163393.hostingersite.com"
+application_url = "https://convertflow-ai-production.up.railway.app"
 embedded = true
 
 [build]
@@ -22,7 +22,7 @@ scopes = "read_themes,write_themes,read_products,write_products,read_content,wri
 
 [auth]
 redirect_urls = [
-  "https://olivedrab-mosquito-163393.hostingersite.com/auth/callback",
-  "https://olivedrab-mosquito-163393.hostingersite.com/auth/shopify/callback",
-  "https://olivedrab-mosquito-163393.hostingersite.com/api/auth/callback"
+  "https://convertflow-ai-production.up.railway.app/auth/callback",
+  "https://convertflow-ai-production.up.railway.app/auth/shopify/callback",
+  "https://convertflow-ai-production.up.railway.app/api/auth/callback"
 ]
