@@ -7,8 +7,7 @@ export const loader = async ({ request }) => {
   const shop = url.searchParams.get("shop");
 
   if (shop) {
-    // Auto redirect to auth with all shopify params preserved
-    throw redirect(`/auth?${url.searchParams.toString()}`);
+    throw redirect(`/app?${url.searchParams.toString()}`);
   }
 
   return { showForm: Boolean(login) };
