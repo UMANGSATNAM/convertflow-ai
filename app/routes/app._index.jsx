@@ -1,10 +1,9 @@
-import { redirect } from "@remix-run/node";
 import { useRouteError } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }) => {
   // Redirect to the Theme Editor — the new primary experience
-  await authenticate.admin(request);
+  const { redirect } = await authenticate.admin(request);
   return redirect("/app/theme-editor");
 };
 
