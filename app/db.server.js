@@ -7,6 +7,14 @@ const dbUrl = process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL) : nul
 // Force IPv4 for localhost to avoid ::1 resolution issues on Hostinger
 const resolveHost = (host) => (host === 'localhost' ? '127.0.0.1' : host);
 
+console.log("[DB] Env Check:", {
+  hasUrl: !!process.env.DATABASE_URL,
+  urlStart: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 15) + "..." : "NONE",
+  dbHost: process.env.DB_HOST || "NONE",
+  dbUser: process.env.DB_USER || "NONE",
+  env: process.env.NODE_ENV
+});
+
 const dbConfig = {
   host: process.env.DB_HOST || dbUrl?.hostname || '127.0.0.1',
   port: parseInt(process.env.DB_PORT || dbUrl?.port || '3306'),
@@ -22,10 +30,14 @@ const dbConfig = {
   keepAliveInitialDelay: 0
 };
 
-console.log("[DB] Connecting to:", {
+if (dbConfig.host === '127.0.0.1' && process.env.NODE_ENV === 'production') {
+  console.warn("⚠️ [DB] WARNING: Connecting to 127.0.0.1 in PRODUCTION. This will likely fail if the DB is on Hostinger.");
+}
+
+console.log("[DB] Final Resolved Config:", {
   host: dbConfig.host,
   database: dbConfig.database,
-  user: dbConfig.user ? "***" : "MISSING"
+  user: dbConfig.user
 });
 
 const pool = mysql.createPool(dbConfig);
