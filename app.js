@@ -18,7 +18,15 @@ app.use(express.static(path.join(__dirname, "build/client"), {
 async function startServer() {
     try {
         const { createRequestHandler } = await import("@remix-run/express");
-        const build = await import("./build/server/index.js");
+        const buildModule = await import("./build/server/index.js");
+
+        console.log("[Remix] Build module keys:", Object.keys(buildModule));
+        console.log("[Remix] Has routes:", !!buildModule.routes);
+        console.log("[Remix] Has entry:", !!buildModule.entry);
+        console.log("[Remix] Has assets:", !!buildModule.assets);
+
+        // Convert module namespace to plain object for Remix compatibility
+        const build = Object.assign({}, buildModule);
 
         app.all("*", createRequestHandler({ build }));
 
