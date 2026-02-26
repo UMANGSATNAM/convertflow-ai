@@ -20,7 +20,7 @@ async function startServer() {
         const { createRequestHandler } = await import("@remix-run/express");
         const build = await import("./build/server/index.js");
 
-        app.all("*", createRequestHandler({ build: build.default }));
+        app.all("*", createRequestHandler({ build }));
 
         app.listen(PORT, "0.0.0.0", () => {
             console.log(`ConvertFlow AI running on port ${PORT}`);
