@@ -3,9 +3,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "postinstall": "npx prisma generate && npx remix vite:build",
+    "postinstall": "npx remix vite:build",
     "dev": "remix dev",
-    "build": "npx prisma generate && npx remix vite:build",
+    "build": "npx remix vite:build",
     "start": "node app.js",
     "typecheck": "tsc",
     "lint": "eslint --ignore-path .gitignore .",
