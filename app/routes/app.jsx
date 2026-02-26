@@ -44,10 +44,9 @@ export default function App() {
   return (
     <AppProvider isEmbeddedApp apiKey={apiKey}>
       <NavMenu>
-        <Link to="/app" rel="home">
-          Home
-        </Link>
-        <Link to="/app/theme-editor">Theme Editor</Link>
+        <Link to="/app" rel="home">Home</Link>
+        <Link to="/app/theme-editor">Code Injector</Link>
+        <Link to="/app/visual-editor">Visual Editor</Link>
         <Link to="/app/dashboard">Sections Library</Link>
       </NavMenu>
       <Outlet />

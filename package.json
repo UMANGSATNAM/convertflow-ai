@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "npx remix vite:build",
-    "dev": "remix dev",
+    "dev": "vite dev",
     "build": "npx remix vite:build",
     "start": "node app.js",
     "typecheck": "tsc",
