@@ -9,7 +9,7 @@ export const loader = async ({ request }) => {
         const { admin, session } = await authenticate.admin(request);
 
         // Fetch the active theme's index.json
-        const structureResult = await getThemeStructure(admin, 'templates/index.json');
+        const structureResult = await getThemeStructure(admin, session, 'templates/index.json');
 
         if (!structureResult.success) {
             return json({ success: false, error: structureResult.error }, { status: 400 });
@@ -19,23 +19,19 @@ export const loader = async ({ request }) => {
         const parsedSections = [];
         const jsonContent = structureResult.structure || {};
 
-        if (jsonContent.order && Array.isArray(jsonContent.order) && jsonContent.blocks) {
-            jsonContent.order.forEach((blockId, index) => {
-                const blockData = jsonContent.blocks[blockId];
-                if (blockData) {
-                    // Determine category/name based on Shopify standard types
-                    const type = blockData.type || 'unknown';
+        // Format 1: Shopify OS2.0 "sections" + "order" format (most common)
+        if (jsonContent.sections && jsonContent.order && Array.isArray(jsonContent.order)) {
+            jsonContent.order.forEach((sectionId, index) => {
+                const sectionData = jsonContent.sections[sectionId];
+                if (sectionData) {
+                    const type = sectionData.type || 'unknown';
                     let friendlyName = type.split(/[-_]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-
-                    // If it's a convertflow section, label it
                     const isCF = type.startsWith('cf-');
-                    if (isCF) {
-                        friendlyName = "ConvertFlow Section";
-                    }
+                    if (isCF) friendlyName = "ConvertFlow Section";
 
                     parsedSections.push({
-                        id: blockId, // The UUID assigned by Shopify JSON
-                        type: type, // e.g. "image_banner", "featured_collection"
+                        id: sectionId,
+                        type: type,
                         name: friendlyName,
                         isCF: isCF,
                         order: index
@@ -43,6 +39,45 @@ export const loader = async ({ request }) => {
                 }
             });
         }
+        // Format 2: "blocks" + "order" format (less common, some themes)
+        else if (jsonContent.blocks && jsonContent.order && Array.isArray(jsonContent.order)) {
+            jsonContent.order.forEach((blockId, index) => {
+                const blockData = jsonContent.blocks[blockId];
+                if (blockData) {
+                    const type = blockData.type || 'unknown';
+                    let friendlyName = type.split(/[-_]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    const isCF = type.startsWith('cf-');
+                    if (isCF) friendlyName = "ConvertFlow Section";
+
+                    parsedSections.push({
+                        id: blockId,
+                        type: type,
+                        name: friendlyName,
+                        isCF: isCF,
+                        order: index
+                    });
+                }
+            });
+        }
+        // Format 3: Just "sections" without "order" (fallback)
+        else if (jsonContent.sections) {
+            Object.entries(jsonContent.sections).forEach(([sectionId, sectionData], index) => {
+                const type = sectionData.type || 'unknown';
+                let friendlyName = type.split(/[-_]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                const isCF = type.startsWith('cf-');
+                if (isCF) friendlyName = "ConvertFlow Section";
+
+                parsedSections.push({
+                    id: sectionId,
+                    type: type,
+                    name: friendlyName,
+                    isCF: isCF,
+                    order: index
+                });
+            });
+        }
+
+        console.log(`[ThemeEditor] Parsed ${parsedSections.length} sections from ${structureResult.themeName}`);
 
         return json({
             success: true,

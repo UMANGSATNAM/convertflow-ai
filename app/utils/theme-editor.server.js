@@ -17,7 +17,7 @@ function generateBlockId() {
 /**
  * Fetch the exact structure of a JSON template (default: templates/index.json)
  */
-export async function getThemeStructure(admin, template = 'templates/index.json') {
+export async function getThemeStructure(admin, session, template = 'templates/index.json') {
     try {
         // 1. Get the active (main) theme via GraphQL
         const themesResponse = await admin.graphql(
@@ -43,16 +43,8 @@ export async function getThemeStructure(admin, template = 'templates/index.json'
         const numericId = activeTheme.id.split('/').pop();
 
         // 2. Fetch the JSON template file using REST Asset API
-        // We use GraphQL to get the asset if it's simpler, or REST. Let's use REST to ensure we get the full value.
-        const assetResponse = await admin.rest.resources.Asset.all({
-            session: admin.session,
-            theme_id: numericId,
-            asset: { key: template }
-        });
-
-        // Fallback: If REST lib isn't perfectly mapped, use fetch directly
-        const shop = admin.session.shop;
-        const accessToken = admin.session.accessToken;
+        const shop = session.shop;
+        const accessToken = session.accessToken;
 
         const restUrl = `https://${shop}/admin/api/2025-01/themes/${numericId}/assets.json?asset[key]=${template}`;
         const rawResponse = await fetch(restUrl, {
@@ -86,35 +78,41 @@ export async function getThemeStructure(admin, template = 'templates/index.json'
  */
 export async function replaceSectionInTheme(admin, session, oldBlockId, cfSectionCode, cfSectionId, template = 'templates/index.json') {
     try {
-        const structureResult = await getThemeStructure(admin, template);
+        const structureResult = await getThemeStructure(admin, session, template);
         if (!structureResult.success) throw new Error(structureResult.error);
 
         let jsonContent = structureResult.structure;
 
-        // 1. Ensure the old block exists
-        if (!jsonContent.blocks || !jsonContent.blocks[oldBlockId]) {
+        // Determine which format the template uses
+        const useSections = !!jsonContent.sections;
+        const container = useSections ? jsonContent.sections : jsonContent.blocks;
+
+        if (!container || !container[oldBlockId]) {
             throw new Error(`Section ID ${oldBlockId} not found in ${template}`);
         }
 
-        // 2. Create the new section type reference
+        // 2. Create the new section/block entry
         const newBlockId = `cf_${generateBlockId()}`;
-
-        // Create the new block object replacing the old type
         const newBlock = {
-            type: cfSectionId, // e.g. "cf-hero-1"
-            settings: {} // Empty settings initially, will take defaults from schema
+            type: cfSectionId,
+            settings: {}
         };
 
-        // 3. Update the blocks object
-        const newBlocks = {};
-        for (const [key, value] of Object.entries(jsonContent.blocks)) {
+        // 3. Update the container (sections or blocks)
+        const newContainer = {};
+        for (const [key, value] of Object.entries(container)) {
             if (key === oldBlockId) {
-                newBlocks[newBlockId] = newBlock;
+                newContainer[newBlockId] = newBlock;
             } else {
-                newBlocks[key] = value;
+                newContainer[key] = value;
             }
         }
-        jsonContent.blocks = newBlocks;
+
+        if (useSections) {
+            jsonContent.sections = newContainer;
+        } else {
+            jsonContent.blocks = newContainer;
+        }
 
         // 4. Update the order array
         if (jsonContent.order && Array.isArray(jsonContent.order)) {
