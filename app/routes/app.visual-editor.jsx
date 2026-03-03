@@ -277,9 +277,25 @@ export default function VisualEditor() {
                                         {displaySections.map(section => (
                                             <div key={section.id} style={S.cfSectionCard}>
                                                 <div style={S.cfSectionPreview}>
-                                                    <div style={S.wireframeBox}>
-                                                        <CustomIcon name="layout" size={32} color="#cbd5e1" />
-                                                    </div>
+                                                    {section.html_code ? (
+                                                        <iframe
+                                                            srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;padding:0;overflow:hidden;font-family:'Inter',system-ui,sans-serif;}</style></head><body>${section.html_code}</body></html>`}
+                                                            style={{
+                                                                width: '200%',
+                                                                height: '200%',
+                                                                border: 'none',
+                                                                transform: 'scale(0.5)',
+                                                                transformOrigin: 'top left',
+                                                                pointerEvents: 'none',
+                                                            }}
+                                                            sandbox="allow-same-origin"
+                                                            title={section.name}
+                                                        />
+                                                    ) : (
+                                                        <div style={S.wireframeBox}>
+                                                            <CustomIcon name="layout" size={32} color="#cbd5e1" />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div style={S.cfSectionInfo}>
                                                     <div style={S.cfSectionName}>{section.name}</div>
@@ -399,7 +415,7 @@ const S = {
         border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden',
         transition: 'transform 0.2s, box-shadow 0.2s', ':hover': { transform: 'translateY(-2px)', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }
     },
-    cfSectionPreview: { height: 140, background: '#f8fafc', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    cfSectionPreview: { height: 160, background: '#f8fafc', borderBottom: '1px solid #e2e8f0', overflow: 'hidden', position: 'relative' },
     wireframeBox: { width: 120, height: 80, background: '#fff', border: '2px dashed #cbd5e1', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' },
     cfSectionInfo: { padding: 16 },
     cfSectionName: { fontSize: 14, fontWeight: 600, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
