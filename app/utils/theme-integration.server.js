@@ -135,19 +135,21 @@ function buildLiquidSection(section, customSettings = {}) {
   const score = section.conversion_score || 0;
   const htmlCode = section.html_code || '<!-- Empty section -->';
 
+  const safeName = name.length > 21 ? name.substring(0, 18) + '...' : name;
+
   const schema = {
-    name: `CF: ${name}`,
+    name: `CF: ${safeName}`,
     class: "cf-section",
     tag: "section",
     settings: [
-      { type: "header", content: name },
+      { type: "header", content: safeName },
       { type: "paragraph", content: `ConvertFlow AI | ${category} | Conversion Score: ${score}%` },
       { type: "checkbox", id: "section_visible", label: "Show this section", default: true },
       { type: "color", id: "cf_bg_color", label: "Background color", default: "transparent" },
       { type: "range", id: "padding_top", min: 0, max: 200, step: 4, unit: "px", label: "Top padding", default: customSettings.paddingTop || 0 },
       { type: "range", id: "padding_bottom", min: 0, max: 200, step: 4, unit: "px", label: "Bottom padding", default: customSettings.paddingBottom || 0 },
     ],
-    presets: [{ name: `CF: ${name}`, category: "ConvertFlow AI" }],
+    presets: [{ name: `CF: ${safeName}`, category: "ConvertFlow AI" }],
   };
 
   return `{% comment %}
