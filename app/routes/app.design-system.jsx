@@ -110,7 +110,7 @@ export default function DesignSystem() {
     useEffect(() => {
         if (fetcher.data && fetcher.state === 'idle') {
             if (fetcher.data.success) {
-                setNotification({ type: 'success', text: '✅ Design saved! Your store is updated.' });
+                setNotification({ type: 'success', text: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Design saved! Your store is updated.' });
             } else {
                 setNotification({ type: 'error', text: fetcher.data.error || 'Save failed' });
             }
@@ -149,7 +149,7 @@ export default function DesignSystem() {
                         onClick={() => setActiveTab(tab)}
                         style={{ ...S.tab, ...(activeTab === tab ? S.tabActive : {}) }}
                     >
-                        {tab === 'presets' && '✨ '}{tab === 'colors' && '🎨 '}{tab === 'typography' && '🔤 '}{tab === 'buttons' && '🔘 '}
+                        {tab === 'presets' && '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg> '}{tab === 'colors' && '🎨 '}{tab === 'typography' && '🔤 '}{tab === 'buttons' && '🔘 '}
                         {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </button>
                 ))}
@@ -350,7 +350,7 @@ export default function DesignSystem() {
                                             height: 60, background: `${colors.secondary}22`, borderRadius: 6,
                                             marginBottom: 10, display: 'flex', alignItems: 'center',
                                             justifyContent: 'center', fontSize: 24
-                                        }}>🛍️</div>
+                                        }}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
                                         <div style={{
                                             fontSize: 13, fontWeight: 700, color: colors.text,
                                             fontFamily: `'${headingFont}', sans-serif`

@@ -106,7 +106,7 @@ function generateFreeShippingBar(config) {
 .cf-shipping-bar.hidden{transform:translateY(100%)}
 </style>
 <div class="cf-shipping-bar" id="cf-shipping-bar">
-🚚 ${message.replace('${threshold}', threshold)}
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> ${message.replace('${threshold}', threshold)}
 <button class="close-btn" onclick="document.getElementById('cf-shipping-bar').classList.add('hidden')">&times;</button>
 </div>`;
 }
@@ -151,10 +151,10 @@ function generateTrustBadges(config) {
 .cf-trust-badges .badge-icon{font-size:18px}
 </style>
 <div class="cf-trust-badges">
-<span class="badge"><span class="badge-icon">🔒</span>Secure Checkout</span>
-<span class="badge"><span class="badge-icon">🚚</span>Free Shipping</span>
-<span class="badge"><span class="badge-icon">↩️</span>30-Day Returns</span>
-<span class="badge"><span class="badge-icon">💳</span>All Cards Accepted</span>
+<span class="badge"><span class="badge-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>Secure Checkout</span>
+<span class="badge"><span class="badge-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>Free Shipping</span>
+<span class="badge"><span class="badge-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg></span>30-Day Returns</span>
+<span class="badge"><span class="badge-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>All Cards Accepted</span>
 </div>
 ${position === 'below_atc' ? `<script>
 (function(){var btn=document.querySelector('[name="add"]')||document.querySelector('.product-form__submit')||document.querySelector('[type="submit"]');if(btn){var badges=document.querySelector('.cf-trust-badges');if(badges&&btn.parentElement){btn.parentElement.insertBefore(badges, btn.nextSibling)}}})();
@@ -176,7 +176,7 @@ function generateSocialProof(config) {
 .cf-social-proof .info .time{font-size:11px;color:#9ca3af;margin-top:2px}
 </style>
 <div class="cf-social-proof" id="cf-social-proof">
-<div class="avatar">🛒</div>
+<div class="avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></div>
 <div class="info">
 <div class="name" id="cf-sp-name">Someone</div>
 <div class="detail" id="cf-sp-detail">just purchased something</div>

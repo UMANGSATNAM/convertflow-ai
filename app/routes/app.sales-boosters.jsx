@@ -9,7 +9,7 @@ const WIDGETS = [
     {
         id: 'shipping-bar',
         name: 'Free Shipping Bar',
-        icon: '🚚',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
         desc: 'Show a fixed bottom bar encouraging larger orders with free shipping threshold.',
         color: '#059669',
         fields: [
@@ -22,7 +22,7 @@ const WIDGETS = [
     {
         id: 'countdown-timer',
         name: 'Countdown Timer',
-        icon: '⏳',
+        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 14 14"/><path d="M9 2h6M9 22h6"/></svg>',
         desc: 'Create urgency with a countdown timer banner at the top of your store.',
         color: '#dc2626',
         fields: [
@@ -35,7 +35,7 @@ const WIDGETS = [
     {
         id: 'trust-badges',
         name: 'Trust Badges',
-        icon: '🛡️',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
         desc: 'Add trust badges (Secure Checkout, Free Shipping, Returns) below the Add to Cart button.',
         color: '#6366f1',
         fields: [
@@ -45,7 +45,7 @@ const WIDGETS = [
     {
         id: 'social-proof',
         name: 'Social Proof Popup',
-        icon: '🔔',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg>',
         desc: 'Show "Someone just purchased..." notifications to increase buyer confidence and FOMO.',
         color: '#f59e0b',
         fields: [
@@ -140,7 +140,7 @@ export default function SalesBoosters() {
         <div style={S.root}>
             <div style={S.header}>
                 <div>
-                    <h1 style={S.title}>💰 Sales Boosters</h1>
+                    <h1 style={S.title}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Sales Boosters</h1>
                     <p style={S.subtitle}>One-click widgets to increase conversions on your {themeName || 'store'}.</p>
                 </div>
             </div>
@@ -167,7 +167,7 @@ export default function SalesBoosters() {
                                         </div>
                                     </div>
                                     <div style={S.statusBadge(isInstalled)}>
-                                        {isInstalled ? '✓ Active' : 'Inactive'}
+                                        {isInstalled ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Active' : 'Inactive'}
                                     </div>
                                 </div>
 
@@ -202,7 +202,7 @@ export default function SalesBoosters() {
 
                                         <div style={S.actionRow}>
                                             <button onClick={() => handleInstall(widget.id)} style={S.installBtn(widget.color)}>
-                                                {isInstalled ? '🔄 Reinstall' : '⚡ Install to Store'}
+                                                {isInstalled ? '🔄 Reinstall' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg> Install to Store'}
                                             </button>
                                             {isInstalled && (
                                                 <button onClick={() => handleUninstall(widget.id)} style={S.uninstallBtn}>
@@ -220,7 +220,7 @@ export default function SalesBoosters() {
                 {/* Right info panel */}
                 <div style={S.infoPanel}>
                     <div style={S.infoCard}>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 12px', color: '#1e293b' }}>⚡ How It Works</h3>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 12px', color: '#1e293b' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg> How It Works</h3>
                         <ol style={{ margin: 0, paddingLeft: 20, color: '#475569', fontSize: 14, lineHeight: 2 }}>
                             <li>Expand a widget card</li>
                             <li>Configure colors and settings</li>
