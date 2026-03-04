@@ -4,11 +4,11 @@ import { authenticate } from "../shopify.server";
 import db from "../db.server";
 
 export const loader = async ({ request }) => {
-    console.log("👉 Setup Loader Hit:", request.url);
+    console.log("[Setup] Loader Hit:", request.url);
     await authenticate.admin(request);
 
     try {
-        console.log("🛠️ Running Database Setup (MySQL)...");
+        console.log("[Setup] Running Database Setup (MySQL)...");
 
         // 1. Create shops table
         const createShops = `
@@ -79,7 +79,7 @@ export const loader = async ({ request }) => {
 
         return json({ message: "Database tables created successfully!" });
     } catch (error) {
-        console.error("❌ Setup Error:", error);
+        console.error("[Error] Setup Error:", error);
         return json({ error: error.message, stack: error.stack }, { status: 500 });
     }
 };

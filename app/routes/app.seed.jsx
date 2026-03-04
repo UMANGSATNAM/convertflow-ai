@@ -4,7 +4,7 @@ import { authenticate } from "../shopify.server";
 import db from "../db.server";
 
 export const loader = async ({ request }) => {
-    console.log("👉 Seed Loader Hit:", request.url);
+    console.log("[Seed] Loader Hit:", request.url);
     await authenticate.admin(request);
 
     try {
@@ -28,7 +28,7 @@ export const loader = async ({ request }) => {
             return json({ message: "Database already seeded!", count });
         }
 
-        console.log("🌱 Seeding database...");
+        console.log("[Seed] Seeding database...");
 
         // Hero Sections
         const heros = `
@@ -65,7 +65,7 @@ INSERT INTO sections (name, category, variation_number, liquid_code, schema_json
 
         return json({ message: "Database seeded successfully!" });
     } catch (error) {
-        console.error("❌ Seed Error:", error);
+        console.error("[Error] Seed Error:", error);
         return json({ error: error.message }, { status: 500 });
     }
 };

@@ -2,9 +2,9 @@ import { useRouteError } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }) => {
-  // Redirect to the Theme Editor — the new primary experience
+  // Redirect to dashboard — the main experience
   const { redirect } = await authenticate.admin(request);
-  return redirect("/app/theme-editor");
+  return redirect("/app/dashboard");
 };
 
 export default function Index() {
