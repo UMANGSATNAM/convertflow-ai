@@ -152,7 +152,7 @@ export default function StoreBuilder() {
                 </div>
                 <div style={{ width: 300 }}>
                     <div style={{ background: 'rgba(255,255,255,0.05)', height: 6, borderRadius: 3, overflow: 'hidden' }}>
-                        <div style={{ background: 'linear-gradient(90deg, #6366f1, #a855f7)', width: \`\${progress}%\`, height: '100%', transition: 'width 0.4s' }} />
+                        <div style={{ background: 'linear-gradient(90deg, #6366f1, #a855f7)', width: `${progress}%`, height: '100%', transition: 'width 0.4s' }} />
                     </div>
                 </div>
                 <button
