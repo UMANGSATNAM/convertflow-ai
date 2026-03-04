@@ -46,9 +46,7 @@ export default function App() {
       <NavMenu>
         <Link to="/app" rel="home">Home</Link>
         <Link to="/app/dashboard">Sections Library</Link>
-        <Link to="/app/store-builder">Store Builder</Link>
-        <Link to="/app/visual-editor">Theme Builder</Link>
-        <Link to="/app/theme-editor">Section Installer</Link>
+        <Link to="/app/builder">Store & Theme Builder</Link>
         <Link to="/app/design-system">Design System</Link>
         <Link to="/app/sales-boosters">Sales Boosters</Link>
         <Link to="/app/subscribe">Subscribe</Link>
