@@ -14,6 +14,97 @@ function generateBlockId() {
     return result;
 }
 
+// Friendly labels for template files
+const TEMPLATE_LABELS = {
+    'templates/index.json': { label: 'Homepage', icon: '🏠', order: 0 },
+    'templates/product.json': { label: 'Product Page', icon: '🛍️', order: 1 },
+    'templates/collection.json': { label: 'Collection', icon: '📦', order: 2 },
+    'templates/collection.list.json': { label: 'Collection List', icon: '📋', order: 3 },
+    'templates/cart.json': { label: 'Cart', icon: '🛒', order: 4 },
+    'templates/blog.json': { label: 'Blog', icon: '📝', order: 5 },
+    'templates/article.json': { label: 'Article', icon: '📰', order: 6 },
+    'templates/page.json': { label: 'Page', icon: '📄', order: 7 },
+    'templates/page.contact.json': { label: 'Contact Page', icon: '✉️', order: 8 },
+    'templates/search.json': { label: 'Search', icon: '🔍', order: 9 },
+    'templates/404.json': { label: '404 Page', icon: '❌', order: 10 },
+    'templates/password.json': { label: 'Password', icon: '🔒', order: 11 },
+    'templates/gift_card.liquid': { label: 'Gift Card', icon: '🎁', order: 12 },
+    'templates/customers/account.json': { label: 'Account', icon: '👤', order: 13 },
+    'templates/customers/login.json': { label: 'Login', icon: '🔐', order: 14 },
+    'templates/customers/register.json': { label: 'Register', icon: '📝', order: 15 },
+    'templates/customers/order.json': { label: 'Order Details', icon: '📋', order: 16 },
+};
+
+/**
+ * Get the active (main) theme ID and name
+ */
+async function getActiveTheme(admin) {
+    const themesResponse = await admin.graphql(
+        `#graphql
+        query {
+            themes(first: 1, roles: [MAIN]) {
+                nodes { id name role }
+            }
+        }`
+    );
+    const themesData = await themesResponse.json();
+    const activeTheme = themesData.data?.themes?.nodes?.[0];
+    if (!activeTheme) return null;
+    return {
+        id: activeTheme.id.split('/').pop(),
+        name: activeTheme.name,
+        gid: activeTheme.id
+    };
+}
+
+/**
+ * List ALL JSON template files available in the active theme
+ */
+export async function listAllTemplates(admin, session) {
+    try {
+        const theme = await getActiveTheme(admin);
+        if (!theme) return { success: false, error: "No active theme found." };
+
+        // Fetch all assets from the theme
+        const restUrl = `https://${session.shop}/admin/api/2025-01/themes/${theme.id}/assets.json`;
+        const response = await fetch(restUrl, {
+            method: 'GET',
+            headers: { 'X-Shopify-Access-Token': session.accessToken, 'Content-Type': 'application/json' },
+        });
+
+        if (!response.ok) {
+            return { success: false, error: `Failed to list assets: ${response.statusText}` };
+        }
+
+        const data = await response.json();
+        const allAssets = data.assets || [];
+
+        // Filter for JSON template files only
+        const jsonTemplates = allAssets
+            .filter(a => a.key.startsWith('templates/') && a.key.endsWith('.json'))
+            .map(a => {
+                const meta = TEMPLATE_LABELS[a.key];
+                return {
+                    key: a.key,
+                    label: meta?.label || a.key.replace('templates/', '').replace('.json', '').split(/[-_.]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                    icon: meta?.icon || '📄',
+                    order: meta?.order ?? 99
+                };
+            })
+            .sort((a, b) => a.order - b.order);
+
+        return {
+            success: true,
+            themeName: theme.name,
+            themeId: theme.id,
+            templates: jsonTemplates
+        };
+    } catch (error) {
+        console.error("Error listing templates:", error);
+        return { success: false, error: error.message };
+    }
+}
+
 /**
  * Fetch the exact structure of a JSON template (default: templates/index.json)
  */
