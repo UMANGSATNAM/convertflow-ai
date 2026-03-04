@@ -222,3 +222,77 @@ function generateSlug(name) {
     .replace(/^-+|-+$/g, '')
     .substring(0, 50);
 }
+
+/**
+ * Batch install an entire store flow (13 sections) into the homepage
+ */
+export async function batchInstallStoreBuilder(admin, session, sectionsArray) {
+  try {
+    const shop = session.shop;
+    const accessToken = session.accessToken;
+    if (!accessToken) throw new Error('Missing access token');
+
+    const themesResponse = await admin.graphql(`#graphql
+        query { themes(first: 1, roles: [MAIN]) { nodes { id name } } }`);
+    const themesData = await themesResponse.json();
+    const activeTheme = themesData.data?.themes?.nodes?.[0];
+    if (!activeTheme) throw new Error('No active theme found.');
+    const themeId = activeTheme.id.split('/').pop();
+
+    // 1. Upload all 13 liquid sections concurrently
+    const uploadedBlocks = [];
+    const uploadPromises = sectionsArray.map(async (sec, index) => {
+      const safeName = sec.name.length > 21 ? sec.name.substring(0, 18) + '...' : sec.name;
+      const slug = generateSlug(sec.name) + '-' + index; // ensure unique slug
+      const key = `sections/cf-${slug}.liquid`;
+      const liquidCode = buildLiquidSection(sec);
+
+      const res = await fetch(`https://${shop}/admin/api/2025-01/themes/${themeId}/assets.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': accessToken },
+        body: JSON.stringify({ asset: { key, value: liquidCode } })
+      });
+      if (!res.ok) throw new Error('Failed to upload ' + sec.name);
+
+      uploadedBlocks.push({ id: `cf_${slug}`, type: `cf-${slug}`, settings: {} });
+    });
+
+    await Promise.all(uploadPromises);
+
+    // 2. Fetch the existing templates/index.json
+    const getRes = await fetch(`https://${shop}/admin/api/2025-01/themes/${themeId}/assets.json?asset[key]=templates/index.json`, {
+      headers: { 'X-Shopify-Access-Token': accessToken }
+    });
+    const getData = await getRes.json();
+    let indexJson = { sections: {}, order: [] };
+    if (getData.asset && getData.asset.value) {
+      try { indexJson = JSON.parse(getData.asset.value); } catch (e) { }
+    }
+
+    // 3. Clear existing blocks and inject our new 13 sections in exactly the parsed order
+    indexJson.sections = {};
+    indexJson.order = [];
+
+    // Sort blocks into exact original order
+    sectionsArray.forEach((sec, idx) => {
+      const slug = generateSlug(sec.name) + '-' + idx;
+      const blockId = `cf_${slug}`;
+      indexJson.sections[blockId] = { type: `cf-${slug}`, settings: {} };
+      indexJson.order.push(blockId);
+    });
+
+    // 4. Put the modified index.json back
+    const putRes = await fetch(`https://${shop}/admin/api/2025-01/themes/${themeId}/assets.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': accessToken },
+      body: JSON.stringify({ asset: { key: 'templates/index.json', value: JSON.stringify(indexJson, null, 2) } })
+    });
+
+    if (!putRes.ok) throw new Error('Failed to update index.json');
+
+    return { success: true };
+  } catch (err) {
+    console.error('Batch installation failed:', err);
+    return { success: false, error: err.message };
+  }
+}

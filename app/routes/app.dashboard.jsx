@@ -151,6 +151,45 @@ export default function Dashboard() {
                             </div>
                         ))}
                     </div>
+
+                    {/* Massive Ultimate Store Builder CTA */}
+                    <div style={{
+                        marginTop: 24, padding: '32px 40px',
+                        background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1))',
+                        border: '1px solid rgba(99,102,241,0.3)', borderRadius: 24,
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        position: 'relative', overflow: 'hidden'
+                    }}>
+                        <div style={{
+                            position: 'absolute', top: -50, right: -50, width: 200, height: 200,
+                            background: '#6366f1', filter: 'blur(100px)', opacity: 0.2, borderRadius: '50%'
+                        }} />
+                        <div style={{ position: 'relative', zIndex: 1, maxWidth: 600 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                                <span style={{ padding: '4px 10px', background: '#6366f1', color: '#fff', borderRadius: 100, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1 }}>New Feature</span>
+                                <span style={{ color: '#a1a1aa', fontSize: 14 }}>The Ultimate Agency Experience</span>
+                            </div>
+                            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#fff', margin: '0 0 12px', letterSpacing: '-0.5px' }}>
+                                Build a Complete Store in 2 Minutes
+                            </h2>
+                            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: 1.5 }}>
+                                Don't just add one section. Use our 13-step guided wizard to architect an entire, extremely high-converting homepage instantly.
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => navigate(hasSubscription ? '/app/store-builder' : '/app/subscribe')}
+                            style={{
+                                position: 'relative', zIndex: 1, padding: '16px 32px',
+                                background: '#fff', color: '#000', border: 'none', borderRadius: 14,
+                                fontSize: 16, fontWeight: 700, cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', gap: 10,
+                                boxShadow: '0 8px 30px rgba(0,0,0,0.2)'
+                            }}
+                        >
+                            Launch Store Builder ✨
+                        </button>
+                    </div>
+
                 </div>
             </div>
 
@@ -243,10 +282,10 @@ export default function Dashboard() {
                         </div>
                     )}
                 </div>
-            </div>
+            </div >
 
             {/* — TOP CONVERTING ROW — */}
-            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 0' }}>
+            < div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 0' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                     <div>
                         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.5px' }}>
@@ -331,10 +370,10 @@ export default function Dashboard() {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div >
 
             {/* — CATEGORY GRID — */}
-            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 80px' }}>
+            < div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 80px' }}>
                 <div style={{ marginBottom: 24 }}>
                     <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.5px' }}>
                         📂 Browse by Category
@@ -401,57 +440,61 @@ export default function Dashboard() {
                     ))}
                 </div>
 
-                {categoryStats.length === 0 && (
-                    <div style={{
-                        textAlign: 'center', padding: '80px 0',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px dashed rgba(255,255,255,0.1)',
-                        borderRadius: 16,
-                    }}>
-                        <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
-                        <h3 style={{ color: '#fff', fontSize: 18, fontWeight: 600 }}>Library Initializing...</h3>
-                        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
-                            Run the seed command to populate 200+ premium sections.
-                        </p>
-                    </div>
-                )}
-            </div>
+                {
+                    categoryStats.length === 0 && (
+                        <div style={{
+                            textAlign: 'center', padding: '80px 0',
+                            background: 'rgba(255,255,255,0.03)',
+                            border: '1px dashed rgba(255,255,255,0.1)',
+                            borderRadius: 16,
+                        }}>
+                            <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
+                            <h3 style={{ color: '#fff', fontSize: 18, fontWeight: 600 }}>Library Initializing...</h3>
+                            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
+                                Run the seed command to populate 200+ premium sections.
+                            </p>
+                        </div>
+                    )
+                }
+            </div >
 
             {/* — UPSELL BANNER (if no subscription) — */}
-            {!hasSubscription && (
-                <div style={{
-                    maxWidth: 1200, margin: '0 auto 80px', padding: '0 32px',
-                }}>
+            {
+                !hasSubscription && (
                     <div style={{
-                        background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                        borderRadius: 20, padding: '48px 40px',
-                        textAlign: 'center', position: 'relative', overflow: 'hidden',
+                        maxWidth: 1200, margin: '0 auto 80px', padding: '0 32px',
                     }}>
                         <div style={{
-                            position: 'absolute', inset: 0, opacity: 0.1,
-                            background: 'radial-gradient(circle at 30% 50%, #fff 0%, transparent 50%), radial-gradient(circle at 70% 50%, #fff 0%, transparent 50%)',
-                        }} />
-                        <div style={{ position: 'relative', zIndex: 1 }}>
-                            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 12 }}>
-                                Unlock the Full Engine
-                            </h2>
-                            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.8)', marginBottom: 28, maxWidth: 500, margin: '0 auto 28px' }}>
-                                Get instant access to all {totalSections}+ premium sections, live HTML preview, and one-click theme installation.
-                            </p>
-                            <button
-                                onClick={() => navigate('/app/subscribe')}
-                                style={{
-                                    padding: '16px 40px', background: '#fff', color: '#6366f1',
-                                    border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 800,
-                                    cursor: 'pointer', boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-                                }}
-                            >
-                                Get Started — $20/mo →
-                            </button>
+                            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                            borderRadius: 20, padding: '48px 40px',
+                            textAlign: 'center', position: 'relative', overflow: 'hidden',
+                        }}>
+                            <div style={{
+                                position: 'absolute', inset: 0, opacity: 0.1,
+                                background: 'radial-gradient(circle at 30% 50%, #fff 0%, transparent 50%), radial-gradient(circle at 70% 50%, #fff 0%, transparent 50%)',
+                            }} />
+                            <div style={{ position: 'relative', zIndex: 1 }}>
+                                <h2 style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 12 }}>
+                                    Unlock the Full Engine
+                                </h2>
+                                <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.8)', marginBottom: 28, maxWidth: 500, margin: '0 auto 28px' }}>
+                                    Get instant access to all {totalSections}+ premium sections, live HTML preview, and one-click theme installation.
+                                </p>
+                                <button
+                                    onClick={() => navigate('/app/subscribe')}
+                                    style={{
+                                        padding: '16px 40px', background: '#fff', color: '#6366f1',
+                                        border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 800,
+                                        cursor: 'pointer', boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                                    }}
+                                >
+                                    Get Started — $20/mo →
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* — FOOTER — */}
             <div style={{
@@ -473,7 +516,7 @@ export default function Dashboard() {
                 * { box-sizing: border-box; }
                 ::placeholder { color: rgba(255,255,255,0.3); }
             `}</style>
-        </div>
+        </div >
     );
 }
 
