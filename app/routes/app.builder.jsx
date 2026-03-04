@@ -57,6 +57,24 @@ export default function BuilderHub() {
                         </ul>
                     </div>
 
+                    {/* Option 0b: Page Builder */}
+                    <div style={S.card} onClick={() => navigate('/app/page-builder')}>
+                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)' }}>
+                            <SVG name="layout" color="#fff" />
+                        </div>
+                        <h2 style={S.cardTitle}>Full Page Builder</h2>
+                        <p style={S.cardDesc}>
+                            Pick from 20 complete page designs for each page type — Home, Product, Collection, Blog, Cart & more.
+                            Plus inject custom Liquid code into any page.
+                        </p>
+                        <ul style={S.featureList}>
+                            <li>📄 20 designs per page type</li>
+                            <li>🔄 Replace entire pages in one click</li>
+                            <li>{'{ }'} Custom Liquid code injector</li>
+                        </ul>
+                        <button style={{ ...S.cardBtn, background: 'linear-gradient(135deg, #f59e0b, #ef4444)' }}>Open Page Builder</button>
+                    </div>
+
                     {/* Option 1: Store Builder */}
                     <div style={S.card} onClick={() => navigate('/app/store-builder')}>
                         <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)' }}>
