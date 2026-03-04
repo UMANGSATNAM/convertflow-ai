@@ -206,7 +206,7 @@ export default function SalesBoosters() {
                                             </button>
                                             {isInstalled && (
                                                 <button onClick={() => handleUninstall(widget.id)} style={S.uninstallBtn}>
-                                                    🗑️ Remove
+                                                    🗑 Remove
                                                 </button>
                                             )}
                                         </div>
@@ -230,7 +230,7 @@ export default function SalesBoosters() {
                     </div>
                     <div style={{ ...S.infoCard, background: '#fffbeb', border: '1px solid #fef3c7', marginTop: 16 }}>
                         <p style={{ margin: 0, fontSize: 13, color: '#92400e', fontWeight: 500 }}>
-                            ⚠️ All widgets inject directly into your active theme. Click "Remove" to cleanly uninstall.
+                            ⚠ All widgets inject directly into your active theme. Click "Remove" to cleanly uninstall.
                         </p>
                     </div>
                     <div style={{ ...S.infoCard, marginTop: 16 }}>
