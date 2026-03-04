@@ -173,7 +173,13 @@ export default function VisualEditor() {
 
     const getActiveLabel = () => {
         const t = templates.find(t => t.key === activeTemplate);
-        return t ? `${t.icon} ${t.label}` : activeTemplate;
+        if (!t) return activeTemplate;
+        return (
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span dangerouslySetInnerHTML={{ __html: t.icon }} style={{ display: 'inline-flex' }} />
+                {t.label}
+            </span>
+        );
     };
 
     return (
@@ -205,7 +211,7 @@ export default function VisualEditor() {
                                 ...(activeTemplate === t.key ? S.tabActive : {})
                             }}
                         >
-                            <span style={{ fontSize: 16 }}>{t.icon}</span>
+                            <span style={{ fontSize: 16, display: 'inline-flex', alignItems: 'center' }} dangerouslySetInnerHTML={{ __html: t.icon }} />
                             <span>{t.label}</span>
                         </button>
                     ))}
@@ -323,7 +329,7 @@ export default function VisualEditor() {
 
                         <div style={{ marginTop: 20, padding: 14, background: '#fffbeb', borderRadius: 8, border: '1px solid #fef3c7' }}>
                             <p style={{ margin: 0, fontSize: 13, color: '#92400e', fontWeight: 500 }}>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg> Changes made here go live immediately on your active theme.
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z" /></svg> Changes made here go live immediately on your active theme.
                             </p>
                         </div>
                     </div>
