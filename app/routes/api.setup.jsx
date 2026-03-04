@@ -13,6 +13,8 @@ import { productSections } from "../sections/product-sections";
 import { statsSections } from "../sections/stats-sections";
 import { footerSections } from "../sections/footer-sections";
 import { productGridSections } from "../sections/product-grid-sections";
+import { productPageSections } from "../sections/product-page-sections";
+import { collectionSections } from "../sections/collection-sections";
 
 export const loader = async ({ request }) => {
     const url = new URL(request.url);
@@ -47,6 +49,8 @@ export const loader = async ({ request }) => {
                     { category: "Stats & Metrics", data: statsSections },
                     { category: "Footer Sections", data: footerSections },
                     { category: "Product Grid", data: productGridSections },
+                    { category: "Product Page", data: productPageSections },
+                    { category: "Collection Pages", data: collectionSections },
                 ];
 
                 let totalInserted = 0;
