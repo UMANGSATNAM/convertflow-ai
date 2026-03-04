@@ -4,12 +4,32 @@ import { useState, useEffect } from "react";
 import { authenticate } from "../shopify.server";
 import { Spinner } from "@shopify/polaris";
 
+// ═══════ SVG ICON HELPER ═══════
+const Icon = ({ svg, size = 24 }) => (
+    <span style={{ display: 'inline-flex', width: size, height: size }} dangerouslySetInnerHTML={{ __html: svg }} />
+);
+
+// ═══════ SVG ICONS ═══════
+const ICONS = {
+    truck: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+    clock: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    shield: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>`,
+    bell: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`,
+    zap: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    check: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
+    cart: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>`,
+    refresh: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>`,
+    trash: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>`,
+    alert: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    star: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg>`,
+};
+
 // ═══════ WIDGET CONFIG ═══════
 const WIDGETS = [
     {
         id: 'shipping-bar',
         name: 'Free Shipping Bar',
-        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+        icon: ICONS.truck,
         desc: 'Show a fixed bottom bar encouraging larger orders with free shipping threshold.',
         color: '#059669',
         fields: [
@@ -22,7 +42,7 @@ const WIDGETS = [
     {
         id: 'countdown-timer',
         name: 'Countdown Timer',
-        icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 14 14"/><path d="M9 2h6M9 22h6"/></svg>',
+        icon: ICONS.clock,
         desc: 'Create urgency with a countdown timer banner at the top of your store.',
         color: '#dc2626',
         fields: [
@@ -35,7 +55,7 @@ const WIDGETS = [
     {
         id: 'trust-badges',
         name: 'Trust Badges',
-        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+        icon: ICONS.shield,
         desc: 'Add trust badges (Secure Checkout, Free Shipping, Returns) below the Add to Cart button.',
         color: '#6366f1',
         fields: [
@@ -45,7 +65,7 @@ const WIDGETS = [
     {
         id: 'social-proof',
         name: 'Social Proof Popup',
-        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg>',
+        icon: ICONS.bell,
         desc: 'Show "Someone just purchased..." notifications to increase buyer confidence and FOMO.',
         color: '#f59e0b',
         fields: [
@@ -85,7 +105,6 @@ export default function SalesBoosters() {
     }, []);
 
     useEffect(() => {
-        // Init default configs
         const c = {};
         WIDGETS.forEach(w => {
             c[w.id] = {};
@@ -116,7 +135,6 @@ export default function SalesBoosters() {
         if (fetcher.data && fetcher.state === 'idle') {
             if (fetcher.data.success) {
                 setNotification({ type: 'success', text: fetcher.data.message });
-                // Refresh installed status
                 fetch('/api/sales-boosters').then(r => r.json()).then(d => { if (d.success) setInstalled(d.installed || {}); });
             } else {
                 setNotification({ type: 'error', text: fetcher.data.error || 'Action failed' });
@@ -140,7 +158,7 @@ export default function SalesBoosters() {
         <div style={S.root}>
             <div style={S.header}>
                 <div>
-                    <h1 style={S.title}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg> Sales Boosters</h1>
+                    <h1 style={S.title}><Icon svg={ICONS.cart} size={22} /> Sales Boosters</h1>
                     <p style={S.subtitle}>One-click widgets to increase conversions on your {themeName || 'store'}.</p>
                 </div>
             </div>
@@ -158,8 +176,8 @@ export default function SalesBoosters() {
                             }}>
                                 <div style={S.cardHeader}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        <div style={{ ...S.cardIcon, background: `${widget.color}15` }}>
-                                            <span style={{ fontSize: 28 }}>{widget.icon}</span>
+                                        <div style={{ ...S.cardIcon, background: `${widget.color}15`, color: widget.color }}>
+                                            <Icon svg={widget.icon} size={28} />
                                         </div>
                                         <div>
                                             <h3 style={S.cardName}>{widget.name}</h3>
@@ -167,11 +185,11 @@ export default function SalesBoosters() {
                                         </div>
                                     </div>
                                     <div style={S.statusBadge(isInstalled)}>
-                                        {isInstalled ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Active' : 'Inactive'}
+                                        {isInstalled && <Icon svg={ICONS.check} size={14} />}
+                                        {isInstalled ? ' Active' : 'Inactive'}
                                     </div>
                                 </div>
 
-                                {/* Config: show on expand */}
                                 <button onClick={() => setExpandedWidget(isExpanded ? null : widget.id)} style={S.expandBtn}>
                                     {isExpanded ? '▲ Hide Settings' : '▼ Configure & Install'}
                                 </button>
@@ -202,11 +220,12 @@ export default function SalesBoosters() {
 
                                         <div style={S.actionRow}>
                                             <button onClick={() => handleInstall(widget.id)} style={S.installBtn(widget.color)}>
-                                                {isInstalled ? '🔄 Reinstall' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg> Install to Store'}
+                                                <Icon svg={isInstalled ? ICONS.refresh : ICONS.zap} size={16} />
+                                                {isInstalled ? ' Reinstall' : ' Install to Store'}
                                             </button>
                                             {isInstalled && (
                                                 <button onClick={() => handleUninstall(widget.id)} style={S.uninstallBtn}>
-                                                    🗑 Remove
+                                                    <Icon svg={ICONS.trash} size={14} /> Remove
                                                 </button>
                                             )}
                                         </div>
@@ -220,7 +239,9 @@ export default function SalesBoosters() {
                 {/* Right info panel */}
                 <div style={S.infoPanel}>
                     <div style={S.infoCard}>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 12px', color: '#1e293b' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg> How It Works</h3>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 12px', color: '#1e293b', display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <Icon svg={ICONS.zap} size={18} /> How It Works
+                        </h3>
                         <ol style={{ margin: 0, paddingLeft: 20, color: '#475569', fontSize: 14, lineHeight: 2 }}>
                             <li>Expand a widget card</li>
                             <li>Configure colors and settings</li>
@@ -229,15 +250,16 @@ export default function SalesBoosters() {
                         </ol>
                     </div>
                     <div style={{ ...S.infoCard, background: '#fffbeb', border: '1px solid #fef3c7', marginTop: 16 }}>
-                        <p style={{ margin: 0, fontSize: 13, color: '#92400e', fontWeight: 500 }}>
-                            ⚠ All widgets inject directly into your active theme. Click "Remove" to cleanly uninstall.
+                        <p style={{ margin: 0, fontSize: 13, color: '#92400e', fontWeight: 500, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                            <Icon svg={ICONS.alert} size={16} />
+                            All widgets inject directly into your active theme. Click "Remove" to cleanly uninstall.
                         </p>
                     </div>
                     <div style={{ ...S.infoCard, marginTop: 16 }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                             {WIDGETS.map(w => (
                                 <div key={w.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-                                    <span>{w.icon}</span>
+                                    <span style={{ color: w.color }}><Icon svg={w.icon} size={16} /></span>
                                     <span style={{ flex: 1, color: '#334155', fontWeight: 600 }}>{w.name}</span>
                                     <span style={{
                                         fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 12,
@@ -274,7 +296,7 @@ export default function SalesBoosters() {
 const S = {
     root: { minHeight: '100vh', background: '#f8fafc', fontFamily: "system-ui, -apple-system, sans-serif" },
     header: { background: '#fff', padding: '24px 32px', borderBottom: '1px solid #e2e8f0' },
-    title: { margin: 0, fontSize: 24, fontWeight: 800, color: '#0f172a' },
+    title: { margin: 0, fontSize: 24, fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 10 },
     subtitle: { margin: '6px 0 0', fontSize: 14, color: '#64748b' },
 
     content: { display: 'flex', gap: 24, padding: '24px 32px', maxWidth: 1400, margin: '0 auto', alignItems: 'flex-start' },
@@ -291,6 +313,7 @@ const S = {
 
     statusBadge: (active) => ({
         padding: '4px 12px', borderRadius: 12, fontSize: 12, fontWeight: 700,
+        display: 'flex', alignItems: 'center', gap: 4,
         background: active ? '#d1fae5' : '#f1f5f9', color: active ? '#059669' : '#94a3b8'
     }),
 
@@ -312,11 +335,13 @@ const S = {
     actionRow: { display: 'flex', gap: 12, marginTop: 20, paddingTop: 16, borderTop: '1px solid #e2e8f0' },
     installBtn: (color) => ({
         flex: 1, padding: '12px 20px', background: color, color: '#fff',
-        border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer'
+        border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
     }),
     uninstallBtn: {
         padding: '12px 20px', background: '#fff', color: '#dc2626',
-        border: '1px solid #fecaca', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer'
+        border: '1px solid #fecaca', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', gap: 6
     },
 
     infoPanel: { width: 320, position: 'sticky', top: 24, flexShrink: 0 },
