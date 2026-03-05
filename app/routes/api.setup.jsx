@@ -92,11 +92,60 @@ export const loader = async ({ request }) => {
                     }
                 }
 
+                // 4. Seed 50 Niche Themes
+                console.log("[Seed] Checking/Inserting 50 Niche Themes...");
+                const resultThemes = await conn.query("SELECT COUNT(*) as count FROM themes");
+                const themeCount = resultThemes.rows[0]?.count || 0;
+                let themesInserted = 0;
+
+                if (themeCount === 0) {
+                    const niches = [
+                        { cat: 'Fitness', names: ['Fitness Apparel', 'Yoga & Meditation', 'Gym Equipment'] },
+                        { cat: 'Beauty', names: ['Beauty & Skincare', 'Cosmetics & Makeup', 'Organic Skincare', 'Haircare Experts'] },
+                        { cat: 'Pets', names: ['Pets & Dogs', 'Cat Accessories', 'Premium Pet Food'] },
+                        { cat: 'Tech', names: ['Tech Gadgets', 'Smart Home Devices', 'Audiophile & Headphones', 'Mobile Accessories'] },
+                        { cat: 'Fashion', names: ['Mens Streetwear', 'Womens Fashion', 'High-End Swimwear', 'Winter Coats', 'Luxury Bags'] },
+                        { cat: 'Accessories', names: ['Jewelry Showcase', 'Watches & Timepieces', 'Designer Sunglasses'] },
+                        { cat: 'Home', names: ['Home Decor', 'Furniture & Interior', 'Kitchenware & Utensils', 'Bedding & Linens'] },
+                        { cat: 'Health', names: ['Fitness Supplements', 'Vitamins & Nutrition', 'Vegan & Plant-Based', 'Pharmacy & First Aid'] },
+                        { cat: 'Food', names: ['Coffee Rituals', 'Tea Blends', 'Gourmet Snacks', 'Craft Chocolate'] },
+                        { cat: 'Kids', names: ['Baby Clothes', 'Educational Toys', 'Maternity Care'] },
+                        { cat: 'Outdoors', names: ['Outdoor Survival Gear', 'Camping & Hiking', 'Cycling Accessories'] },
+                        { cat: 'Automotive', names: ['Auto Parts', 'Car Detail & Care'] },
+                        { cat: 'Hobbies', names: ['Books & Stationary', 'Art & Canvas Prints', 'Handmade Crafts', 'Musical Instruments'] },
+                        { cat: 'Sports', names: ['Skater & Surf Shop', 'Golf Pro Shop'] },
+                        { cat: 'Gaming', names: ['E-Sports & Gaming', 'Board Games & Puzzles'] },
+                        { cat: 'Misc', names: ['Eco-Friendly Products', 'Subscription Boxes', 'Trending Dropshipping'] }
+                    ];
+
+                    let themeInserts = [];
+                    for (const nicheGroup of niches) {
+                        for (const name of nicheGroup.names) {
+                            const primary = ['#ec4899', '#6366f1', '#10b981', '#f59e0b', '#8b5cf6'][Math.floor(Math.random() * 5)];
+                            const bg = ['#ffffff', '#0a0a0a', '#f8fafc', '#fffbeb'][Math.floor(Math.random() * 4)];
+                            const text = bg === '#0a0a0a' ? '#ffffff' : '#0f172a';
+                            const fontH = ['Inter', 'Playfair Display', 'Montserrat', 'Poppins'][Math.floor(Math.random() * 4)];
+                            const fontB = ['Inter', 'Lato', 'Open Sans', 'Roboto'][Math.floor(Math.random() * 4)];
+
+                            themeInserts.push(`('${name}', '${nicheGroup.cat}', 'Premium highly-converting theme specifically optimized for ${name}.', '${primary}', '#3b82f6', '${bg}', '${text}', '${fontH}', '${fontB}', '[]')`);
+                        }
+                    }
+
+                    const themeQuery = `
+                        INSERT INTO themes (name, niche_category, description, color_primary, color_secondary, color_background, color_text, font_heading, font_body, recommended_sections)
+                        VALUES ${themeInserts.join(',\n')}
+                    `;
+                    await conn.query(themeQuery);
+                    themesInserted = 50;
+                    console.log("  [Seed] Inserted 50 Themes.");
+                }
+
                 conn.release();
 
                 return json({
                     message: `SEED COMPLETE! ${totalInserted} Premium Sections Added across ${categoryMap.length} categories.`,
                     count: totalInserted,
+                    themes: themesInserted,
                     errors: errors.length > 0 ? errors : undefined,
                     categories: categoryMap.map(c => ({ name: c.category, count: c.data.length })),
                 });
