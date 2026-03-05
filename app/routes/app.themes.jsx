@@ -1,119 +1,40 @@
 import { json } from "@remix-run/node";
-import { useLoaderData, useNavigate, useFetcher, useNavigation } from "@remix-run/react";
-import { useState, useEffect } from "react";
+import { useLoaderData, useNavigate, useFetcher } from "@remix-run/react";
+import { useState } from "react";
 import { authenticate } from "../shopify.server";
-import { batchInstallStoreBuilder } from "../utils/theme-integration.server";
-import db from "../db.server";
+import { installRealTheme } from "../utils/real-theme-installer.server";
+import { NICHE_THEMES } from "../sections/liquid/themes-config";
 
 export const loader = async ({ request }) => {
     await authenticate.admin(request);
-
-    // Fetch all themes from DB
-    const themes = await db.themes.getAll();
-    return json({ themes });
+    return json({ themes: NICHE_THEMES });
 };
 
 export const action = async ({ request }) => {
     try {
         const { session, admin } = await authenticate.admin(request);
         const formData = await request.formData();
+        const themeIndex = parseInt(formData.get("themeIndex"));
 
-        if (formData.get("_action") !== "install_theme") {
-            return json({ success: false, message: "Invalid action" });
+        if (isNaN(themeIndex) || !NICHE_THEMES[themeIndex]) {
+            return json({ success: false, message: "Invalid theme selected." });
         }
 
-        const themeId = formData.get("themeId");
-        if (!themeId) return json({ success: false, message: "No theme selected." });
+        const themeConfig = NICHE_THEMES[themeIndex];
+        const result = await installRealTheme(admin, session, themeConfig);
 
-        const theme = await db.themes.getById(themeId);
-        if (!theme) return json({ success: false, message: "Theme not found." });
-
-        // Fetch top sections for this niche
-        const allSections = await db.sections.getAll();
-
-        const categories = [
-            "Headers", "Hero Sections", "Trust Indicators", "Features & Benefits",
-            "Products", "Social Proof", "FAQ & Accordions", "Call to Action", "Footers"
-        ];
-
-        const selectedSections = [];
-
-        // 1. We create a "Theme Global Variables" section that applies the theme's colors and fonts globally
-        const globalStyleSection = {
-            name: "Theme Styles - " + theme.name,
-            category: "Global Setup",
-            conversion_score: 100,
-            html_code: `
-                <style>
-                    :root {
-                        --cf-primary: ${theme.color_primary};
-                        --cf-secondary: ${theme.color_secondary};
-                        --cf-background: ${theme.color_background};
-                        --cf-text: ${theme.color_text};
-                        --cf-font-heading: '${theme.font_heading}', sans-serif;
-                        --cf-font-body: '${theme.font_body}', sans-serif;
-                    }
-
-                    .cf-section-wrapper h1, .cf-section-wrapper h2, .cf-section-wrapper h3 {
-                        font-family: var(--cf-font-heading) !important;
-                        color: var(--cf-text) !important;
-                    }
-                    
-                    .cf-section-wrapper p, .cf-section-wrapper span, .cf-section-wrapper a {
-                        font-family: var(--cf-font-body) !important;
-                        color: var(--cf-text) !important;
-                    }
-
-                    .cf-section-wrapper button {
-                        background: var(--cf-primary) !important;
-                        color: #ffffff !important;
-                        border-radius: 8px !important;
-                        font-family: var(--cf-font-heading) !important;
-                    }
-                </style>
-                <div style="display:none;">ConvertFlow Theme Styles Engine Active</div>
-            `
-        };
-        selectedSections.push(globalStyleSection);
-
-        for (const cat of categories) {
-            const matches = allSections
-                .filter(s => s.category.includes(cat) || cat.includes(s.category))
-                .sort((a, b) => b.conversion_score - a.conversion_score);
-
-            if (matches.length > 0) {
-                // Try to find a niche specific one
-                let bestMatch = matches[0];
-                const nicheMatches = matches.filter(s => s.name.toLowerCase().includes(theme.niche_category.toLowerCase()));
-                if (nicheMatches.length > 0) {
-                    bestMatch = nicheMatches[0];
-                }
-
-                // Deep copy
-                const cloned = JSON.parse(JSON.stringify(bestMatch));
-
-                // If theme has a specific background color logic, we can apply it.
-                // For now, we rely on the global CSS vars above to cascade down.
-                selectedSections.push(cloned);
-            }
-        }
-
-        // Install to Active Theme
-        const installResult = await batchInstallStoreBuilder(admin, session, selectedSections);
-
-        if (installResult.success) {
-            return json({
-                success: true,
-                message: `Successfully installed the "${theme.name}" Theme architecture.`
-            });
-        } else {
-            return json({ success: false, message: installResult.error || "Batch installation failed." });
-        }
-
+        return json(result);
     } catch (error) {
-        console.error("API / Theme Install error:", error);
-        return json({ success: false, message: error.message || "An unexpected error occurred." });
+        console.error("Theme Install Error:", error);
+        return json({ success: false, message: error.message });
     }
+};
+
+const ICONS = {
+    Fitness: "💪", Beauty: "💄", Pets: "🐾", Tech: "⚡",
+    Fashion: "👗", Accessories: "💎", Home: "🏡", Health: "🌿",
+    Food: "☕", Kids: "🧸", Outdoors: "🏔️", Automotive: "🏎️",
+    Hobbies: "🎨", Sports: "🏆", Gaming: "🎮", Misc: "🚀",
 };
 
 export default function ThemesBrowser() {
@@ -121,132 +42,182 @@ export default function ThemesBrowser() {
     const navigate = useNavigate();
     const fetcher = useFetcher();
 
-    const [filterMenu, setFilterMenu] = useState('All');
+    const [filter, setFilter] = useState('All');
+    const [installingIdx, setInstallingIdx] = useState(null);
+    const [installedIdx, setInstalledIdx] = useState(null);
 
-    // Group themes by category
     const categories = ['All', ...new Set(themes.map(t => t.niche_category))].sort();
+    const filtered = filter === 'All' ? themes : themes.filter(t => t.niche_category === filter);
 
-    const filteredThemes = filterMenu === 'All'
-        ? themes
-        : themes.filter(t => t.niche_category === filterMenu);
-
-    const isInstalling = fetcher.state !== "idle";
-
-    useEffect(() => {
-        if (fetcher.data && fetcher.state === 'idle') {
-            if (fetcher.data.success) {
-                alert("✨ Magic Complete! Your Theme is ready!\\n\\n" + fetcher.data.message);
-            } else {
-                alert("Error: " + fetcher.data.message);
-            }
-        }
-    }, [fetcher.data, fetcher.state]);
-
-    const handleInstall = (themeId) => {
-        if (confirm("This will configure your homepage with sections optimized for this theme. Continue?")) {
-            fetcher.submit(
-                { themeId, _action: "install_theme" },
-                { method: "post" }
-            );
-        }
+    const handleInstall = (theme, idx) => {
+        if (installingIdx !== null) return;
+        setInstallingIdx(idx);
+        const fd = new FormData();
+        fd.append("themeIndex", NICHE_THEMES.indexOf(theme));
+        fetcher.submit(fd, { method: "POST" });
     };
 
+    if (fetcher.state === 'idle' && installingIdx !== null && fetcher.data) {
+        if (fetcher.data.success) {
+            setInstalledIdx(installingIdx);
+        }
+        setInstallingIdx(null);
+    }
+
+    const styles = `
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        * { box-sizing: border-box; }
+        .nt-root { font-family: 'Inter', sans-serif; background: #0a0a0f; min-height: 100vh; color: #fff; padding: 0; }
+        .nt-header { background: linear-gradient(135deg, #1a0533 0%, #0d1f3c 100%); padding: 32px 32px 0; border-bottom: 1px solid #ffffff12; }
+        .nt-header__back { background: none; border: 1px solid #ffffff22; color: #9ca3af; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; transition: all .2s; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 6px; }
+        .nt-header__back:hover { border-color: #ffffff44; color: #fff; }
+        .nt-header__top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 0; }
+        .nt-header__title { font-size: 28px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .nt-header__sub { color: #9ca3af; font-size: 14px; margin-top: 6px; }
+        .nt-header__edit-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; font-family: 'Inter', sans-serif; transition: opacity .2s; white-space: nowrap; }
+        .nt-header__edit-btn:hover { opacity: .85; }
+        .nt-cats { display: flex; gap: 8px; padding: 16px 0 0; overflow-x: auto; scrollbar-width: none; padding-bottom: 1px; }
+        .nt-cats::-webkit-scrollbar { display: none; }
+        .nt-cat { background: none; border: none; padding: 8px 18px; border-radius: 50px; cursor: pointer; font-size: 13px; font-weight: 600; color: #9ca3af; transition: all .2s; font-family: 'Inter', sans-serif; white-space: nowrap; border-bottom: 2px solid transparent; border-radius: 0; }
+        .nt-cat.active { color: #a78bfa; border-bottom-color: #a78bfa; }
+        .nt-cat:hover:not(.active) { color: #e5e7eb; }
+        .nt-body { padding: 32px; }
+        .nt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .nt-card { background: #111118; border: 1px solid #ffffff0f; border-radius: 16px; overflow: hidden; transition: transform .25s, box-shadow .25s, border-color .25s; position: relative; cursor: default; }
+        .nt-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); border-color: #ffffff1a; }
+        .nt-card.installed { border-color: #4ade8055; }
+        .nt-card__preview { height: 160px; display: flex; align-items: flex-end; justify-content: flex-start; padding: 16px; position: relative; overflow: hidden; }
+        .nt-card__hero-mock {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px;
+        }
+        .nt-card__hero-title { font-size: 13px; font-weight: 800; text-align: center; line-height: 1.2; opacity: 0.9; }
+        .nt-card__hero-btn { font-size: 10px; padding: 5px 14px; border-radius: 20px; font-weight: 700; }
+        .nt-card__hero-products { display: flex; gap: 4px; margin-top: 4px; }
+        .nt-card__hero-prod { width: 32px; height: 32px; border-radius: 6px; opacity: 0.7; }
+        .nt-card__badge { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; }
+        .nt-card__badge.installed { background: #4ade8033; color: #4ade80; border: 1px solid #4ade8055; }
+        .nt-card__badge.new { background: #60a5fa22; color: #60a5fa; border: 1px solid #60a5fa44; }
+        .nt-card__body { padding: 16px; }
+        .nt-card__niche { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #6b7280; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+        .nt-card__name { font-size: 16px; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; }
+        .nt-card__desc { font-size: 12px; color: #6b7280; line-height: 1.5; margin-bottom: 14px; min-height: 36px; }
+        .nt-card__fonts { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+        .nt-card__font-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #1f2937; color: #9ca3af; border: 1px solid #ffffff09; }
+        .nt-card__actions { display: flex; gap: 8px; }
+        .nt-card__install-btn { flex: 1; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; transition: all .2s; font-family: 'Inter', sans-serif; }
+        .nt-card__install-btn.primary { color: #000; }
+        .nt-card__install-btn.primary:hover { filter: brightness(1.1); }
+        .nt-card__install-btn.loading { background: #374151; color: #9ca3af; cursor: not-allowed; }
+        .nt-card__install-btn.done { background: #4ade8022; color: #4ade80; border: 1px solid #4ade8055; }
+        .nt-card__edit-btn { padding: 10px 12px; border-radius: 10px; background: #1f2937; color: #9ca3af; border: 1px solid #ffffff0f; cursor: pointer; font-size: 13px; transition: all .2s; font-family: 'Inter', sans-serif; }
+        .nt-card__edit-btn:hover { background: #374151; color: #fff; border-color: #6366f1; }
+        .nt-success-toast { position: fixed; bottom: 32px; right: 32px; background: #4ade80; color: #022c22; padding: 14px 24px; border-radius: 12px; font-weight: 700; font-size: 14px; z-index: 9999; box-shadow: 0 8px 30px rgba(74,222,128,.3); animation: slide-in .3s ease; }
+        @keyframes slide-in { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @media(max-width: 660px) { .nt-body { padding: 16px; } .nt-header { padding: 20px 16px 0; } .nt-header__title { font-size: 20px; } }
+    `;
+
     return (
-        <div style={{ minHeight: '100vh', background: '#09090b', color: '#fff', fontFamily: "system-ui, -apple-system, sans-serif" }}>
-            {/* Header */}
-            <div style={{ padding: '24px 32px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', width: 36, height: 36, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5" /><path d="m12 19-7-7 7-7" /></svg>
-                    </button>
-                    <div>
-                        <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span style={{ color: '#ec4899' }}>🎨</span> Premium Niche Themes
-                        </h1>
-                        <p style={{ fontSize: 13, color: '#a1a1aa', margin: '4px 0 0' }}>Browse 50+ conversion-optimized themes for specific industries.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div style={{ padding: '40px 32px', maxWidth: 1400, margin: '0 auto' }}>
-
-                {/* Filters */}
-                <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 24, marginBottom: 24, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                    {categories.map(cat => (
-                        <button
-                            key={cat}
-                            onClick={() => setFilterMenu(cat)}
-                            style={{
-                                padding: '8px 16px', borderRadius: 100, border: '1px solid',
-                                borderColor: filterMenu === cat ? '#6366f1' : 'rgba(255,255,255,0.1)',
-                                background: filterMenu === cat ? 'rgba(99,102,241,0.1)' : 'transparent',
-                                color: filterMenu === cat ? '#fff' : '#a1a1aa',
-                                fontWeight: filterMenu === cat ? 600 : 400,
-                                cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s'
-                            }}
-                        >
-                            {cat}
+        <>
+            <style>{styles}</style>
+            <div className="nt-root">
+                <div className="nt-header">
+                    <button className="nt-header__back" onClick={() => navigate('/app')}>← Back to Dashboard</button>
+                    <div className="nt-header__top">
+                        <div>
+                            <div className="nt-header__title">🎨 Real Niche Themes</div>
+                            <div className="nt-header__sub">
+                                {themes.length} complete themes — real Liquid code, product auto-fetch, 1-click install
+                            </div>
+                        </div>
+                        <button className="nt-header__edit-btn" onClick={() => navigate('/app/theme-editor')}>
+                            ✏️ Edit Installed Theme
                         </button>
-                    ))}
+                    </div>
+                    <div className="nt-cats">
+                        {categories.map(cat => (
+                            <button key={cat} className={`nt-cat ${filter === cat ? 'active' : ''}`} onClick={() => setFilter(cat)}>
+                                {cat !== 'All' && ICONS[cat] ? `${ICONS[cat]} ` : ''}{cat}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                {isInstalling ? (
-                    <div style={{ textAlign: 'center', padding: '100px 0' }}>
-                        <div className="ai-loader" style={{ width: 80, height: 80, margin: '0 auto 32px', border: '4px solid rgba(99,102,241,0.2)', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                        <h2 style={{ fontSize: 28, fontWeight: 800, margin: '0 0 16px', background: 'linear-gradient(to right, #6366f1, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                            Installing Theme Architecture...
-                        </h2>
-                        <p style={{ fontSize: 16, color: '#a1a1aa' }}>Injecting premium layouts and configuring global color/font variables to your store.</p>
-                    </div>
-                ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 24 }}>
-                        {filteredThemes.map(theme => (
-                            <div key={theme.id} style={{ background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                                {/* Preview Banner using Theme Colors */}
-                                <div style={{ height: 160, background: theme.color_background, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(0,0,0,0.5)', padding: '4px 8px', borderRadius: 6, fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: 1, textTransform: 'uppercase' }}>
-                                        {theme.niche_category}
-                                    </div>
-                                    <h3 style={{ fontFamily: `"${theme.font_heading}", sans-serif`, color: theme.color_text, margin: 0, fontSize: 32, fontWeight: 800, letterSpacing: '-1px' }}>
-                                        {theme.name}
-                                    </h3>
-                                    {/* Abstract shapes for decoration based on primary color */}
-                                    <div style={{ position: 'absolute', bottom: -20, left: -20, width: 80, height: 80, borderRadius: '50%', background: theme.color_primary, opacity: 0.2, filter: 'blur(10px)' }} />
-                                    <div style={{ position: 'absolute', top: 20, right: 20, width: 40, height: 40, borderRadius: '50%', background: theme.color_secondary, opacity: 0.3, filter: 'blur(5px)' }} />
-                                </div>
+                <div className="nt-body">
+                    {fetcher.data?.success === false && (
+                        <div style={{ background: '#ef444422', border: '1px solid #ef444455', color: '#fca5a5', padding: '14px 20px', borderRadius: '10px', marginBottom: '20px', fontSize: '14px' }}>
+                            ❌ {fetcher.data.message || fetcher.data.error}
+                        </div>
+                    )}
+                    <div className="nt-grid">
+                        {filtered.map((theme, idx) => {
+                            const realIdx = NICHE_THEMES.indexOf(theme);
+                            const isInstalling = installingIdx === realIdx;
+                            const isInstalled = installedIdx === realIdx;
+                            const bg = theme.color_background;
+                            const primary = theme.color_primary;
+                            const text = theme.color_text;
+                            const isDark = bg.length > 4 && bg !== '#ffffff' && bg !== '#fafafa' && bg !== '#f8fafc' && bg !== '#fff';
 
-                                <div style={{ padding: 24, flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                    <h4 style={{ fontSize: 18, fontWeight: 700, margin: '0 0 8px', color: '#fff' }}>{theme.name}</h4>
-                                    <p style={{ fontSize: 14, color: '#a1a1aa', margin: '0 0 24px', lineHeight: 1.5, flex: 1 }}>{theme.description}</p>
-
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-                                        <div style={{ fontSize: 12, color: '#71717a', fontWeight: 600, textTransform: 'uppercase' }}>Colors:</div>
-                                        <div style={{ display: 'flex', gap: 4 }}>
-                                            <div style={{ width: 24, height: 24, borderRadius: '50%', background: theme.color_primary, border: '1px solid rgba(255,255,255,0.2)' }} title="Primary" />
-                                            <div style={{ width: 24, height: 24, borderRadius: '50%', background: theme.color_secondary, border: '1px solid rgba(255,255,255,0.2)' }} title="Secondary" />
-                                            <div style={{ width: 24, height: 24, borderRadius: '50%', background: theme.color_background, border: '1px solid rgba(255,255,255,0.2)' }} title="Background" />
+                            return (
+                                <div key={realIdx} className={`nt-card ${isInstalled ? 'installed' : ''}`}>
+                                    <div className="nt-card__preview" style={{ background: bg }}>
+                                        <div className="nt-card__hero-mock">
+                                            <div className="nt-card__hero-title" style={{ color: text, fontFamily: theme.font_heading + ', sans-serif' }}>
+                                                {theme.name}
+                                            </div>
+                                            <div className="nt-card__hero-btn" style={{ background: primary, color: isDark ? '#000' : '#fff' }}>
+                                                Shop Now →
+                                            </div>
+                                            <div className="nt-card__hero-products">
+                                                {[1, 2, 3].map(i => (
+                                                    <div key={i} className="nt-card__hero-prod" style={{ background: primary + '55' }} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className={`nt-card__badge ${isInstalled ? 'installed' : 'new'}`}>
+                                            {isInstalled ? '✓ Installed' : 'Real Liquid'}
                                         </div>
                                     </div>
-
-                                    <button
-                                        className="theme-install-btn"
-                                        onClick={() => handleInstall(theme.id)}
-                                        style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1))', border: '1px solid rgba(99,102,241,0.3)', color: '#c4b5fd', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
-                                    >
-                                        1-Click Install Theme
-                                    </button>
+                                    <div className="nt-card__body">
+                                        <div className="nt-card__niche">
+                                            {ICONS[theme.niche_category]} {theme.niche_category}
+                                        </div>
+                                        <div className="nt-card__name">{theme.name}</div>
+                                        <div className="nt-card__desc">{theme.description}</div>
+                                        <div className="nt-card__fonts">
+                                            <span className="nt-card__font-tag">{theme.font_heading}</span>
+                                            <span className="nt-card__font-tag">{theme.font_body}</span>
+                                            <span className="nt-card__font-tag" style={{ background: primary + '22', color: primary, borderColor: primary + '44' }}>
+                                                10 Sections
+                                            </span>
+                                        </div>
+                                        <div className="nt-card__actions">
+                                            <button
+                                                className={`nt-card__install-btn ${isInstalling ? 'loading' : isInstalled ? 'done' : 'primary'}`}
+                                                style={!isInstalling && !isInstalled ? { background: primary } : {}}
+                                                onClick={() => handleInstall(theme, realIdx)}
+                                                disabled={isInstalling}
+                                            >
+                                                {isInstalling ? '⏳ Installing...' : isInstalled ? '✓ Installed!' : '🚀 Install Theme'}
+                                            </button>
+                                            <button className="nt-card__edit-btn" onClick={() => navigate('/app/theme-editor')}>
+                                                ✏️
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {fetcher.data?.success && (
+                    <div className="nt-success-toast">
+                        ✅ {fetcher.data.message || 'Theme installed successfully!'}
                     </div>
                 )}
             </div>
-
-            <style>{`
-                @keyframes spin { to { transform: rotate(360deg); } }
-                button.theme-install-btn:hover { background: #6366f1 !important; color: #fff !important; }
-                button:hover { filter: brightness(1.2); }
-            `}</style>
-        </div>
+        </>
     );
 }
