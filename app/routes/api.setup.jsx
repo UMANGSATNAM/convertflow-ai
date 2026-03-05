@@ -94,8 +94,8 @@ export const loader = async ({ request }) => {
 
                 // 4. Seed 50 Niche Themes
                 console.log("[Seed] Checking/Inserting 50 Niche Themes...");
-                const resultThemes = await conn.query("SELECT COUNT(*) as count FROM themes");
-                const themeCount = resultThemes.rows[0]?.count || 0;
+                const [themeCountRows] = await conn.query("SELECT COUNT(*) as count FROM themes");
+                const themeCount = themeCountRows[0]?.count || 0;
                 let themesInserted = 0;
 
                 if (themeCount === 0) {
