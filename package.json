@@ -16,6 +16,7 @@
     "deploy": "npm run build && npm run start"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@hello-pangea/dnd": "^16.3.0",
     "@prisma/client": "^5.10.2",
     "@remix-run/dev": "^2.0.0",
