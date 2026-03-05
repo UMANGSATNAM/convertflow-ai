@@ -14,13 +14,12 @@ export const action = async ({ request }) => {
     try {
         const { session, admin } = await authenticate.admin(request);
         const formData = await request.formData();
-        const themeIndex = parseInt(formData.get("themeIndex"));
+        const themeName = formData.get("themeName");
+        const themeConfig = NICHE_THEMES.find(t => t.name === themeName);
 
-        if (isNaN(themeIndex) || !NICHE_THEMES[themeIndex]) {
-            return json({ success: false, message: "Invalid theme selected." });
+        if (!themeConfig) {
+            return json({ success: false, message: `Theme "${themeName}" not found.` });
         }
-
-        const themeConfig = NICHE_THEMES[themeIndex];
         const result = await installRealTheme(admin, session, themeConfig);
 
         return json(result);
@@ -53,7 +52,7 @@ export default function ThemesBrowser() {
         if (installingIdx !== null) return;
         setInstallingIdx(idx);
         const fd = new FormData();
-        fd.append("themeIndex", NICHE_THEMES.indexOf(theme));
+        fd.append("themeName", theme.name);
         fetcher.submit(fd, { method: "POST" });
     };
 
