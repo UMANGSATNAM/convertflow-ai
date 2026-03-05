@@ -1,0 +1,1 @@
+require('dotenv').config(); import('./app/db.server.js').then(module => module.default.query('SELECT COUNT(*) as count FROM sections').then(res => console.log(TOTAL SECTIONS: )).catch(console.error).finally(() => process.exit(0)))
