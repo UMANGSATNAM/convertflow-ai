@@ -48,16 +48,18 @@ async function getActiveTheme(admin, session) {
  */
 async function uploadSection(theme, sectionKey, liquidCode) {
     const url = `https://${theme.shop}/admin/api/2025-01/themes/${theme.id}/assets.json`;
+    // sectionKey already includes 'cf-' prefix (e.g. 'cf-announcement')
+    const assetKey = `sections/${sectionKey}.liquid`;
     const res = await fetch(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': theme.token },
-        body: JSON.stringify({ asset: { key: `sections/cf-${sectionKey}.liquid`, value: liquidCode } }),
+        body: JSON.stringify({ asset: { key: assetKey, value: liquidCode } }),
     });
     if (!res.ok) {
         const err = await res.text();
         throw new Error(`Failed to upload ${sectionKey}: ${err}`);
     }
-    return `sections/cf-${sectionKey}.liquid`;
+    return assetKey;
 }
 
 /**
@@ -68,10 +70,11 @@ function buildIndexJson(sectionOrder, sectionDefaults = {}) {
     const order = [];
 
     for (const key of sectionOrder) {
-        const blockId = `cf_${key.replace(/-/g, '_')}`;
+        // key is already 'cf-announcement', 'cf-hero', etc.
+        const blockId = key.replace(/-/g, '_'); // 'cf_announcement'
         const settings = sectionDefaults[key] || {};
         sections[blockId] = {
-            type: `cf-${key}`,
+            type: key, // 'cf-announcement' — matches the .liquid filename
             settings: settings,
             ...(key === 'cf-trust-badges' ? {
                 blocks: {
