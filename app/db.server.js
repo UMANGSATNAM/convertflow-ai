@@ -161,6 +161,22 @@ export const db = {
     },
   },
 
+  // Theme queries (New Feature 2)
+  themes: {
+    getAll: async () => {
+      const result = await db.query('SELECT * FROM themes ORDER BY created_at DESC');
+      return result.rows;
+    },
+    getByCategory: async (category) => {
+      const result = await db.query('SELECT * FROM themes WHERE niche_category = ? ORDER BY created_at DESC', [category]);
+      return result.rows;
+    },
+    getById: async (id) => {
+      const result = await db.query('SELECT * FROM themes WHERE id = ?', [id]);
+      return result.rows[0];
+    }
+  },
+
   // Customization queries
   customizations: {
     getByShop: async (shopId) => {

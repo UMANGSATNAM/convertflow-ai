@@ -73,7 +73,7 @@ export default function BuilderHub() {
                         <button style={{ ...S.cardBtn, background: '#6366f1' }}>Open Live Builder</button>
                     </div>
 
-                    {/* Option 1: 13-Step Store Builder */}
+                    {/* Option 0b: Page Builder */}
                     <div style={S.card} onClick={() => navigate('/app/page-builder')}>
                         <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)' }}>
                             <SVG name="layout" color="#fff" />
@@ -89,6 +89,23 @@ export default function BuilderHub() {
                             <li>{'{ }'} Custom Liquid code injector</li>
                         </ul>
                         <button style={{ ...S.cardBtn, background: 'linear-gradient(135deg, #f59e0b, #ef4444)' }}>Open Page Builder</button>
+                    </div>
+
+                    {/* Prebuilt Themes Library */}
+                    <div style={S.card} onClick={() => navigate('/app/themes')}>
+                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #ec4899, #f43f5e)' }}>
+                            <span style={{ fontSize: 32 }}>🎨</span>
+                        </div>
+                        <h2 style={S.cardTitle}>50 Prebuilt Niche Themes</h2>
+                        <p style={S.cardDesc}>
+                            1-click install an entire premium store architecture customized for specific industries like Fitness, Beauty, Tech, and more.
+                        </p>
+                        <ul style={S.featureList}>
+                            <li>🛍️ 50 unique niches covered</li>
+                            <li>🎨 Global color & font injections</li>
+                            <li>⚡ Installs all recommended sections</li>
+                        </ul>
+                        <button style={{ ...S.cardBtn, background: 'linear-gradient(135deg, #ec4899, #f43f5e)' }}>Browse Themes Gallery</button>
                     </div>
 
                     {/* Option 1: 13-Step Manual Builder */}

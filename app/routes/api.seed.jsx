@@ -12,22 +12,33 @@ export const loader = async ({ request }) => {
     try {
         console.log("🌱 Database Seeding via API...");
 
-        // Check if sections exist
-        const result = await db.query("SELECT COUNT(*) as count FROM sections");
-        const count = result.rows[0].count; // mysql2 returns object like { count: 0 } or row array
+        // Check if sections & themes exist
+        const resultSections = await db.query("SELECT COUNT(*) as count FROM sections");
+        const sectionCount = resultSections.rows[0]?.count || 0;
 
-        // Handle different return types from raw query
-        let sectionCount = 0;
-        if (typeof count === 'number') {
-            sectionCount = count;
-        } else if (result.rows && result.rows[0]) {
-            // Depending on driver, rows might be array of objects or single object
-            // Let's assume standard behavior: rows[0].count
-            sectionCount = result.rows[0].count || 0;
-        }
+        // Ensure Themes table exists
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS themes (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                niche_category VARCHAR(100),
+                description TEXT,
+                color_primary VARCHAR(20),
+                color_secondary VARCHAR(20),
+                color_background VARCHAR(20),
+                color_text VARCHAR(20),
+                font_heading VARCHAR(100),
+                font_body VARCHAR(100),
+                recommended_sections JSON,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
 
-        if (sectionCount > 0) {
-            return json({ message: "Database already seeded!", count: sectionCount });
+        const resultThemes = await db.query("SELECT COUNT(*) as count FROM themes");
+        const themeCount = resultThemes.rows[0]?.count || 0;
+
+        if (sectionCount > 0 && themeCount >= 50) {
+            return json({ message: "Database already fully seeded!", sections: sectionCount, themes: themeCount });
         }
 
         console.log("🌱 Inserting initial sections...");
@@ -61,11 +72,58 @@ INSERT INTO sections (name, category, variation_number, liquid_code, schema_json
 ('Newsletter Signup', 'Retention Tools', 2, '{% comment %}Liquid code{% endcomment %}', '{"settings": {"heading": "Join Our VIP List", "description": "Get exclusive deals and early access to new products", "buttonText": "Subscribe", "backgroundColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", "textColor": "#ffffff", "primary Color": "#ffffff", "headingFont": {"family": "Montserrat", "weight": 700}, "bodyFont": {"family": "Raleway", "weight": 400}, "paddingTop": 60, "paddingBottom": 60, "alignment": "center", "borderRadius": 0}}', null, true);
         `;
 
-        await db.query(heros.trim());
-        await db.query(announcements.trim());
-        await db.query(others.trim());
+        if (sectionCount === 0) {
+            await db.query(heros.trim());
+            await db.query(announcements.trim());
+            await db.query(others.trim());
+            console.log("🌱 Inserted initial sections.");
+        }
 
-        return json({ message: "Database seeded successfully!" });
+        if (themeCount === 0) {
+            console.log("🌱 Inserting 50 Niche Themes...");
+
+            const niches = [
+                { cat: 'Fitness', names: ['Fitness Apparel', 'Yoga & Meditation', 'Gym Equipment'] },
+                { cat: 'Beauty', names: ['Beauty & Skincare', 'Cosmetics & Makeup', 'Organic Skincare', 'Haircare Experts'] },
+                { cat: 'Pets', names: ['Pets & Dogs', 'Cat Accessories', 'Premium Pet Food'] },
+                { cat: 'Tech', names: ['Tech Gadgets', 'Smart Home Devices', 'Audiophile & Headphones', 'Mobile Accessories'] },
+                { cat: 'Fashion', names: ['Mens Streetwear', 'Womens Fashion', 'High-End Swimwear', 'Winter Coats', 'Luxury Bags'] },
+                { cat: 'Accessories', names: ['Jewelry Showcase', 'Watches & Timepieces', 'Designer Sunglasses'] },
+                { cat: 'Home', names: ['Home Decor', 'Furniture & Interior', 'Kitchenware & Utensils', 'Bedding & Linens'] },
+                { cat: 'Health', names: ['Fitness Supplements', 'Vitamins & Nutrition', 'Vegan & Plant-Based', 'Pharmacy & First Aid'] },
+                { cat: 'Food', names: ['Coffee Rituals', 'Tea Blends', 'Gourmet Snacks', 'Craft Chocolate'] },
+                { cat: 'Kids', names: ['Baby Clothes', 'Educational Toys', 'Maternity Care'] },
+                { cat: 'Outdoors', names: ['Outdoor Survival Gear', 'Camping & Hiking', 'Cycling Accessories'] },
+                { cat: 'Automotive', names: ['Auto Parts', 'Car Detail & Care'] },
+                { cat: 'Hobbies', names: ['Books & Stationary', 'Art & Canvas Prints', 'Handmade Crafts', 'Musical Instruments'] },
+                { cat: 'Sports', names: ['Skater & Surf Shop', 'Golf Pro Shop'] },
+                { cat: 'Gaming', names: ['E-Sports & Gaming', 'Board Games & Puzzles'] },
+                { cat: 'Misc', names: ['Eco-Friendly Products', 'Subscription Boxes', 'Trending Dropshipping'] }
+            ];
+
+            let themeInserts = [];
+            for (const nicheGroup of niches) {
+                for (const name of nicheGroup.names) {
+                    const primary = ['#ec4899', '#6366f1', '#10b981', '#f59e0b', '#8b5cf6'][Math.floor(Math.random() * 5)];
+                    const bg = ['#ffffff', '#0a0a0a', '#f8fafc', '#fffbeb'][Math.floor(Math.random() * 4)];
+                    const text = bg === '#0a0a0a' ? '#ffffff' : '#0f172a';
+                    const fontH = ['Inter', 'Playfair Display', 'Montserrat', 'Poppins'][Math.floor(Math.random() * 4)];
+                    const fontB = ['Inter', 'Lato', 'Open Sans', 'Roboto'][Math.floor(Math.random() * 4)];
+
+                    themeInserts.push(`('${name}', '${nicheGroup.cat}', 'Premium highly-converting theme specifically optimized for ${name}.', '${primary}', '#3b82f6', '${bg}', '${text}', '${fontH}', '${fontB}', '[]')`);
+                }
+            }
+
+            // Insert 50 rows in chunks to be safe with MySQL payload sizes
+            const themeQuery = `
+                INSERT INTO themes (name, niche_category, description, color_primary, color_secondary, color_background, color_text, font_heading, font_body, recommended_sections)
+                VALUES ${themeInserts.join(',\n')}
+            `;
+            await db.query(themeQuery);
+            console.log("🌱 Inserted 50 Themes.");
+        }
+
+        return json({ message: "Database fully seeded!" });
     } catch (error) {
         console.error("❌ Seed Error:", error);
         return json({ error: error.message, stack: error.stack }, { status: 500 });
