@@ -7,7 +7,7 @@ const ICONS = {
     wand: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>`,
     layout: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>`,
     click: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9c0-1.1.9-2 2-2h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/></svg>`,
-    ai: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Z" opacity="0.4"/><path d="M12 8a4 4 0 1 0 4 4 4 4 0 0 0-4-4Z"/></svg>`
+    ai: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" opacity="0.3"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>`
 };
 
 function SVG({ name, color = 'currentColor' }) {
@@ -24,140 +24,102 @@ export const loader = async ({ request }) => {
 export default function BuilderHub() {
     const navigate = useNavigate();
 
+    const tools = [
+        {
+            key: 'ai', icon: 'ai', color: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+            badge: '🚀 60-Second Magic',
+            title: '1-Click AI Store Builder',
+            desc: 'Tell us your product and niche. Our AI generates a complete, conversion-optimized homepage with tailored copy and premium sections — in 60 seconds.',
+            features: ['🧠 AI-generated conversion copy', '🔄 Optimal layout selection', '⚡ Built in under 60 seconds', '🛡️ Auto-installs winning sections'],
+            btn: 'Generate My Store ✨',
+            path: '/app/ai-builder',
+            featured: true,
+        },
+        {
+            key: 'page', icon: 'layout', color: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+            title: 'Full Page Builder',
+            desc: 'Pick from 20+ complete page designs for Home, Product, Collection, Blog, Cart & more. Or inject custom Liquid code into any page.',
+            features: ['📄 20+ designs per page type', '🔄 Replace entire pages in one click', '{ } Custom Liquid code injector'],
+            btn: 'Open Page Builder',
+            path: '/app/page-builder',
+        },
+        {
+            key: 'themes', icon: 'wand', color: 'linear-gradient(135deg, #ec4899, #f43f5e)',
+            title: '50 Prebuilt Niche Themes',
+            desc: '1-click install a complete premium store tailored for specific industries — Fitness, Beauty, Tech, Pets, and 46 more niches.',
+            features: ['🛍️ 50 unique niches', '🎨 Global color & font injection', '⚡ Installs all recommended sections'],
+            btn: 'Browse Themes Gallery',
+            path: '/app/themes',
+        },
+        {
+            key: 'live', icon: 'click', color: 'linear-gradient(135deg, #6366f1, #a855f7)',
+            title: 'Live Section Picker',
+            desc: 'Click any section on your theme and instantly browse premium alternative designs — one-click apply to your live theme.',
+            features: ['👆 Click & swap visual editor', '🎨 10–20 premium designs per type', '📱 Works on all devices'],
+            btn: 'Open Live Builder',
+            path: '/app/live-builder',
+        },
+    ];
+
     return (
         <div style={S.root}>
-            <div style={S.container}>
-                <div style={S.header}>
-                    <h1 style={S.title}>Store & Theme Builder Hub</h1>
-                    <p style={S.subtitle}>Choose how you want to build and customize your Shopify store today.</p>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                .cf-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+                .cf-card:hover { transform: translateY(-4px); box-shadow: 0 32px 60px rgba(0,0,0,0.4) !important; }
+                .cf-btn:hover { opacity: 0.88; }
+                @media (max-width: 768px) {
+                    .cf-grid { grid-template-columns: 1fr !important; }
+                    .cf-hero { flex-direction: column !important; gap: 24px !important; }
+                    .cf-header h1 { font-size: 28px !important; }
+                    .cf-container { padding: 32px 16px !important; }
+                }
+            `}</style>
+
+            <div className="cf-container" style={S.container}>
+                {/* Header */}
+                <div className="cf-header" style={S.header}>
+                    <div style={S.pill}>⚡ ConvertFlow Builder Hub</div>
+                    <h1 style={S.title}>Build Your Perfect Shopify Store</h1>
+                    <p style={S.subtitle}>Four powerful tools to create, customize, and optimize your store — without writing a single line of code.</p>
                 </div>
 
-                <div style={{ ...S.grid, gridTemplateColumns: 'repeat(3, 1fr)' }}>
-                    {/* ⭐ AI Store Builder (The 1-Click Engine) */}
-                    <div style={{ ...S.card, gridColumn: '1 / -1', flexDirection: 'row', gap: 40, background: 'linear-gradient(135deg, #09090b 0%, #1e1b4b 100%)', border: '1px solid #6366f1' }} onClick={() => navigate('/app/ai-builder')}>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ display: 'inline-flex', gap: 6, alignItems: 'center', background: '#ec4899', color: '#fff', fontSize: 10, fontWeight: 800, padding: '4px 12px', borderRadius: 100, letterSpacing: 1, marginBottom: 20, textTransform: 'uppercase' }}>
-                                🚀 The 60-Second Magic
+                {/* Cards Grid */}
+                <div className="cf-grid" style={S.grid}>
+                    {tools.map((tool, i) => (
+                        <div
+                            key={tool.key}
+                            className="cf-card"
+                            style={{
+                                ...S.card,
+                                ...(tool.featured ? S.featuredCard : {}),
+                            }}
+                            onClick={() => navigate(tool.path)}
+                        >
+                            {tool.badge && (
+                                <div style={S.badge}>{tool.badge}</div>
+                            )}
+                            <div className="cf-hero" style={tool.featured ? S.heroRow : {}}>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ ...S.iconBox, background: tool.color }}>
+                                        <SVG name={tool.icon} color="#fff" />
+                                    </div>
+                                    <h2 style={{ ...S.cardTitle, fontSize: tool.featured ? 26 : 20 }}>{tool.title}</h2>
+                                    <p style={S.cardDesc}>{tool.desc}</p>
+                                    <ul style={S.featureList}>
+                                        {tool.features.map(f => <li key={f} style={S.featureItem}>{f}</li>)}
+                                    </ul>
+                                    <button className="cf-btn" style={{ ...S.cardBtn, background: tool.color }}>{tool.btn}</button>
+                                </div>
                             </div>
-                            <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', width: 56, height: 56 }}>
-                                <SVG name="ai" color="#fff" />
-                            </div>
-                            <h2 style={{ ...S.cardTitle, fontSize: 28 }}>1-Click AI Store Builder</h2>
-                            <p style={{ ...S.cardDesc, maxWidth: 500 }}>
-                                Tell us your product and niche. Our AI engine builds an entire conversion-optimized, responsive homepage with intelligently written copy, pre-configured layouts, and dynamic conversion boosters — in exactly 60 seconds.
-                            </p>
-                            <button style={{ ...S.cardBtn, maxWidth: 260, background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', boxShadow: '0 4px 15px rgba(236,72,153,0.4)' }}>Generate Store Instance ✨</button>
                         </div>
-                        <ul style={{ ...S.featureList, margin: 'auto 0', minWidth: 250, color: '#fbcfe8' }}>
-                            <li>🧠 AI-generated conversion copy</li>
-                            <li>🔄 Automated optimal layout selection</li>
-                            <li>⚡ Built in under 60 seconds</li>
-                            <li>🤖 Target audience-tailored tones</li>
-                            <li>🛡️ Injects winning layouts automatically</li>
-                        </ul>
-                    </div>
+                    ))}
+                </div>
 
-                    {/* Live Section Picker */}
-                    <div style={S.card} onClick={() => navigate('/app/live-builder')}>
-                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
-                            <SVG name="click" color="#fff" />
-                        </div>
-                        <h2 style={S.cardTitle}>Live Section Picker</h2>
-                        <p style={S.cardDesc}>
-                            Click any section on your theme and instantly browse premium alternative designs — one-click apply to the live theme.
-                        </p>
-                        <ul style={S.featureList}>
-                            <li>👆 Click & swap visual editor</li>
-                            <li>🎨 10–20 premium designs per type</li>
-                        </ul>
-                        <button style={{ ...S.cardBtn, background: '#6366f1' }}>Open Live Builder</button>
-                    </div>
-
-                    {/* Option 0b: Page Builder */}
-                    <div style={S.card} onClick={() => navigate('/app/page-builder')}>
-                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)' }}>
-                            <SVG name="layout" color="#fff" />
-                        </div>
-                        <h2 style={S.cardTitle}>Full Page Builder</h2>
-                        <p style={S.cardDesc}>
-                            Pick from 20 complete page designs for each page type — Home, Product, Collection, Blog, Cart & more.
-                            Plus inject custom Liquid code into any page.
-                        </p>
-                        <ul style={S.featureList}>
-                            <li>📄 20 designs per page type</li>
-                            <li>🔄 Replace entire pages in one click</li>
-                            <li>{'{ }'} Custom Liquid code injector</li>
-                        </ul>
-                        <button style={{ ...S.cardBtn, background: 'linear-gradient(135deg, #f59e0b, #ef4444)' }}>Open Page Builder</button>
-                    </div>
-
-                    {/* Prebuilt Themes Library */}
-                    <div style={S.card} onClick={() => navigate('/app/themes')}>
-                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #ec4899, #f43f5e)' }}>
-                            <span style={{ fontSize: 32 }}>🎨</span>
-                        </div>
-                        <h2 style={S.cardTitle}>50 Prebuilt Niche Themes</h2>
-                        <p style={S.cardDesc}>
-                            1-click install an entire premium store architecture customized for specific industries like Fitness, Beauty, Tech, and more.
-                        </p>
-                        <ul style={S.featureList}>
-                            <li>🛍️ 50 unique niches covered</li>
-                            <li>🎨 Global color & font injections</li>
-                            <li>⚡ Installs all recommended sections</li>
-                        </ul>
-                        <button style={{ ...S.cardBtn, background: 'linear-gradient(135deg, #ec4899, #f43f5e)' }}>Browse Themes Gallery</button>
-                    </div>
-
-                    {/* Option 1: 13-Step Manual Builder */}
-                    <div style={S.card} onClick={() => navigate('/app/store-builder')}>
-                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #4ade80 0%, #10b981 100%)' }}>
-                            <SVG name="wand" color="#fff" />
-                        </div>
-                        <h2 style={S.cardTitle}>13-Step Manual Builder</h2>
-                        <p style={S.cardDesc}>
-                            Use our guided 13-step wizard to manually assemble a high-converting homepage section by section.
-                        </p>
-                        <ul style={S.featureList}>
-                            <li>✨ Guided step-by-step workflow</li>
-                            <li>🎨 Total control of the architecture</li>
-                            <li>💼 Best for Agencies</li>
-                        </ul>
-                        <button style={{ ...S.cardBtn, background: '#10b981' }}>Launch Manual Builder</button>
-                    </div>
-
-                    {/* Option 0b: Page Builder */}
-                    <div style={S.card} onClick={() => navigate('/app/page-builder')}>
-                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)' }}>
-                            <SVG name="layout" color="#fff" />
-                        </div>
-                        <h2 style={S.cardTitle}>Full Page Builder</h2>
-                        <p style={S.cardDesc}>
-                            Pick from 20 complete page designs for Home, Product, Collection, Blog, Cart & more.
-                        </p>
-                        <ul style={S.featureList}>
-                            <li>📄 20 designs per page type</li>
-                            <li>🔄 Entire page replacements</li>
-                        </ul>
-                        <button style={{ ...S.cardBtn, background: 'linear-gradient(135deg, #f59e0b, #ef4444)' }}>Open Page Builder</button>
-                    </div>
-
-                    {/* Option 2: Theme Builder (Visual Editor) */}
-                    <div style={S.card} onClick={() => navigate('/app/visual-editor')}>
-                        <div style={{ ...S.iconBox, background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
-                            <SVG name="layout" color="#fff" />
-                        </div>
-                        <h2 style={S.cardTitle}>Visual Theme Editor</h2>
-                        <p style={S.cardDesc}>
-                            Map out your existing theme pages and swap, add, or delete individual sections.
-                            Better for surgically upgrading specific parts of your current design.
-                        </p>
-                        <ul style={S.featureList}>
-                            <li>🗺️ See your entire theme structure</li>
-                            <li>🔄 Swap sections in one click</li>
-                            <li>📱 Works on any page (Product, Collection, etc.)</li>
-                        </ul>
-                        <button style={{ ...S.cardBtn, background: '#10b981' }}>Open Theme Editor</button>
-                    </div>
+                {/* Bottom tips */}
+                <div style={S.footer}>
+                    <span style={{ color: '#52525b', fontSize: 13 }}>💡 Tip: Start with the AI Builder for the fastest store launch, then use Page Builder & Themes to refine.</span>
                 </div>
             </div>
         </div>
@@ -166,31 +128,56 @@ export default function BuilderHub() {
 
 // ═══════ STYLES ═══════
 const S = {
-    root: { minHeight: '100vh', background: '#09090b', color: '#fff', fontFamily: "system-ui, -apple-system, sans-serif" },
-    container: { maxWidth: 1000, margin: '0 auto', padding: '60px 32px' },
+    root: {
+        minHeight: '100vh', background: '#09090b', color: '#fff',
+        fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
+    },
+    container: { maxWidth: 1040, margin: '0 auto', padding: '56px 28px' },
 
-    header: { textAlign: 'center', marginBottom: 60 },
-    title: { fontSize: 36, fontWeight: 800, margin: '0 0 16px', letterSpacing: '-1px' },
-    subtitle: { fontSize: 16, color: '#a1a1aa', maxWidth: 600, margin: '0 auto', lineHeight: 1.6 },
+    header: { textAlign: 'center', marginBottom: 56 },
+    pill: {
+        display: 'inline-block', fontSize: 11, fontWeight: 800, letterSpacing: 1.5,
+        textTransform: 'uppercase', padding: '6px 16px', borderRadius: 100,
+        background: 'rgba(99,102,241,0.15)', color: '#818cf8', border: '1px solid rgba(99,102,241,0.3)',
+        marginBottom: 24
+    },
+    title: { fontSize: 38, fontWeight: 900, letterSpacing: '-1.5px', margin: '0 0 16px', lineHeight: 1.1 },
+    subtitle: { fontSize: 16, color: '#71717a', maxWidth: 540, margin: '0 auto', lineHeight: 1.7 },
 
-    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 32 },
+    grid: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24, marginBottom: 40 },
 
     card: {
-        background: '#111114', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: 40,
-        display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'all 0.3s ease',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.2)', position: 'relative', overflow: 'hidden'
+        background: '#111114', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 24,
+        padding: 36, display: 'flex', flexDirection: 'column', cursor: 'pointer',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.25)', position: 'relative', overflow: 'hidden'
+    },
+    featuredCard: {
+        gridColumn: '1 / -1', background: 'linear-gradient(135deg, #0c0c14 0%, #1a1040 100%)',
+        border: '1px solid rgba(99,102,241,0.4)',
+        boxShadow: '0 10px 40px rgba(99,102,241,0.15)'
+    },
+    heroRow: { display: 'flex', flexDirection: 'row', gap: 32 },
+    badge: {
+        display: 'inline-block', fontSize: 10, fontWeight: 800, letterSpacing: 1,
+        textTransform: 'uppercase', background: '#ec4899', color: '#fff',
+        padding: '4px 12px', borderRadius: 100, marginBottom: 20
     },
     iconBox: {
-        width: 64, height: 64, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        marginBottom: 24, boxShadow: '0 10px 20px rgba(0,0,0,0.2)'
+        width: 56, height: 56, borderRadius: 14, display: 'flex',
+        alignItems: 'center', justifyContent: 'center',
+        marginBottom: 20, boxShadow: '0 8px 20px rgba(0,0,0,0.25)'
     },
-    cardTitle: { fontSize: 24, fontWeight: 700, margin: '0 0 16px', color: '#fff' },
-    cardDesc: { color: '#a1a1aa', fontSize: 14, lineHeight: 1.6, marginBottom: 32, flex: 1 },
-
-    featureList: { listStyle: 'none', padding: 0, margin: '0 0 40px', display: 'flex', flexDirection: 'column', gap: 12 },
-
+    cardTitle: { fontWeight: 800, margin: '0 0 12px', color: '#f4f4f5', lineHeight: 1.2 },
+    cardDesc: { color: '#71717a', fontSize: 14, lineHeight: 1.7, marginBottom: 24 },
+    featureList: { listStyle: 'none', padding: 0, margin: '0 0 32px', display: 'flex', flexDirection: 'column', gap: 10 },
+    featureItem: { fontSize: 13, color: '#a1a1aa' },
     cardBtn: {
-        width: '100%', padding: '16px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: 12,
-        fontSize: 15, fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', textAlign: 'center'
+        display: 'block', width: '100%', padding: '14px 20px', color: '#fff', border: 'none',
+        borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', textAlign: 'center',
+        letterSpacing: 0.2
+    },
+    footer: {
+        textAlign: 'center', padding: '20px 0',
+        borderTop: '1px solid rgba(255,255,255,0.05)'
     }
 };

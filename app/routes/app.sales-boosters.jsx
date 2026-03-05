@@ -181,6 +181,17 @@ export default function SalesBoosters() {
 
     return (
         <div style={S.root}>
+            <style>{`
+                * { box-sizing: border-box; }
+                .sb-topbar { flex-wrap: wrap; }
+                @media (max-width: 600px) {
+                    .sb-topbar h1 { font-size: 16px !important; }
+                    .sb-grid { grid-template-columns: 1fr !important; }
+                }
+                @media (min-width: 601px) and (max-width: 900px) {
+                    .sb-grid { grid-template-columns: repeat(2, 1fr) !important; }
+                }
+            `}</style>
             {/* ══ TOP BAR ══ */}
             <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '16px 32px', display: 'flex', alignItems: 'center', gap: 16 }}>
                 <button onClick={() => navigate('/app/builder')} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', padding: 0 }}>←</button>
@@ -280,7 +291,7 @@ export default function SalesBoosters() {
 // ═══════ STYLES ═══════
 const S = {
     root: { minHeight: '100vh', background: '#f8fafc', fontFamily: "system-ui, -apple-system, sans-serif" },
-    content: { padding: '40px 32px', maxWidth: 1200, margin: '0 auto' },
+    content: { padding: 'clamp(20px, 4vw, 40px) clamp(16px, 3vw, 32px)', maxWidth: 1200, margin: '0 auto' },
 
     // Grid matches Debutify screenshot: 4 columns
     grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 24 },

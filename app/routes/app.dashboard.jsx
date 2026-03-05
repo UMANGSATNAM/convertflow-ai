@@ -82,6 +82,30 @@ export default function Dashboard() {
 
     return (
         <div style={{ minHeight: '100vh', background: '#0a0a0a', fontFamily: "'Inter', system-ui, sans-serif" }}>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+                * { box-sizing: border-box; }
+                ::-webkit-scrollbar { width: 5px; }
+                ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+                @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+                @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+                .cf-section-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+                .cf-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
+                .cf-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+                .cf-lead-table { width: 100%; overflow-x: auto; }
+                @media (max-width: 900px) {
+                    .cf-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+                    .cf-section-grid { grid-template-columns: repeat(2, 1fr) !important; }
+                }
+                @media (max-width: 600px) {
+                    .cf-stats-grid { grid-template-columns: 1fr !important; }
+                    .cf-section-grid { grid-template-columns: 1fr !important; }
+                    .cf-header-inner { flex-direction: column !important; gap: 16px !important; }
+                    .cf-header-inner h1 { font-size: 24px !important; }
+                    .cf-header-inner > div { padding: 24px 16px !important; }
+                    .cf-cta-row { flex-direction: column !important; text-align: center !important; }
+                }
+            `}</style>
             {/* — HEADER — */}
             <div style={{
                 background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%)',

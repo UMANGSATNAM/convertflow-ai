@@ -422,6 +422,17 @@ export default function PageBuilder() {
                 *{box-sizing:border-box}
                 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.07);border-radius:4px}
                 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+                .pb-left { flex-shrink: 0; }
+                .pb-right { flex-shrink: 0; }
+                @media (max-width: 900px) {
+                    .pb-right { display: none !important; }
+                    .pb-left { width: 180px !important; }
+                }
+                @media (max-width: 600px) {
+                    .pb-left { display: none !important; }
+                    .pb-topbar { flex-wrap: wrap; height: auto !important; padding: 10px !important; gap: 8px !important; }
+                    .pb-topbar > div:last-child { width: 100%; overflow-x: auto; }
+                }
             `}</style>
         </div>
     );
