@@ -23,17 +23,33 @@ export const loader = async ({ request }) => {
         db.sections.getAll(),
     ]);
 
+    // Ensure table exists (just in case)
+    await db.query(`
+        CREATE TABLE IF NOT EXISTS leads (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            shop_domain VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            source VARCHAR(50) DEFAULT 'spin_wheel',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY unique_lead (shop_domain, email)
+        )
+    `);
+
+    const leadsResult = await db.query('SELECT * FROM leads WHERE shop_domain = ? ORDER BY created_at DESC LIMIT 50', [shop]);
+    const leads = leadsResult.rows;
+
     return json({
         shop: shopRecord,
         hasSubscription,
         categoryStats,
         topConverting,
         totalSections: allSections.length,
+        leads
     });
 };
 
 export default function Dashboard() {
-    const { shop, hasSubscription, categoryStats, topConverting, totalSections } = useLoaderData();
+    const { shop, hasSubscription, categoryStats, topConverting, totalSections, leads } = useLoaderData();
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState(null);
@@ -371,6 +387,58 @@ export default function Dashboard() {
                     ))}
                 </div>
             </div >
+
+            {/* — CAPTURED LEADS ROW — */}
+            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                    <div>
+                        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.5px' }}>
+                            📧 Captured Leads
+                        </h2>
+                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', margin: '4px 0 0' }}>
+                            Emails collected from Conversion Boosters (Spin Wheel, etc.)
+                        </p>
+                    </div>
+                </div>
+
+                <div style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: 16, overflow: 'hidden'
+                }}>
+                    {leads && leads.length > 0 ? (
+                        <table style={{ width: '100%', borderCollapse: 'collapse', color: '#fff', fontSize: 14 }}>
+                            <thead>
+                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', textAlign: 'left', background: 'rgba(0,0,0,0.2)' }}>
+                                    <th style={{ padding: '16px 24px', fontWeight: 600 }}>Email Address</th>
+                                    <th style={{ padding: '16px 24px', fontWeight: 600 }}>Source</th>
+                                    <th style={{ padding: '16px 24px', fontWeight: 600 }}>Captured On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {leads.map(lead => (
+                                    <tr key={lead.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                                        <td style={{ padding: '16px 24px', fontWeight: 500 }}>{lead.email}</td>
+                                        <td style={{ padding: '16px 24px' }}>
+                                            <span style={{ padding: '4px 10px', background: 'rgba(236,72,153,0.15)', color: '#f472b6', borderRadius: 100, fontSize: 12, fontWeight: 700, textTransform: 'uppercase' }}>
+                                                {lead.source.replace('_', ' ')}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '16px 24px', color: 'rgba(255,255,255,0.6)' }}>
+                                            {new Date(lead.created_at).toLocaleDateString()}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <div style={{ padding: 48, textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>
+                            <div style={{ fontSize: 40, marginBottom: 12 }}>🎯</div>
+                            No leads captured yet. Install the Spin Wheel to start collecting emails!
+                        </div>
+                    )}
+                </div>
+            </div>
 
             {/* — CATEGORY GRID — */}
             < div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 32px 80px' }}>

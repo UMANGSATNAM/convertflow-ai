@@ -307,14 +307,16 @@ function generateVolumeDiscount(config) {
 }
 
 function generateSpinWheel(config) {
-    const { color = '#ec4899' } = config;
+    const { color = '#ec4899', appUrl = '' } = config;
     return `<!-- ConvertFlow: Spin Wheel -->
 <style>
 .cf-spin-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:none;align-items:center;justify-content:center}
 .cf-spin-modal{background:#fff;border-radius:24px;width:90%;max-width:800px;display:flex;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.25);position:relative;animation:spinPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
 .cf-spin-close{position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.05);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;color:#64748b;z-index:10}
-.cf-spin-left{flex:1;background:radial-gradient(circle, ${color} 0%, #1e1b4b 100%);padding:40px;display:flex;align-items:center;justify-content:center;position:relative}
+.cf-spin-left{flex:1;background:radial-gradient(circle, ${color} 0%, #1e1b4b 100%);padding:40px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .cf-spin-wheel{width:280px;height:280px;border-radius:50%;border:8px solid #fff;background:conic-gradient(#fff 0 45deg, #f1f5f9 45deg 90deg, #fff 90deg 135deg, #f1f5f9 135deg 180deg, #fff 180deg 225deg, #f1f5f9 225deg 270deg, #fff 270deg 315deg, #f1f5f9 315deg 360deg);position:relative;transition:transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);box-shadow:0 10px 25px rgba(0,0,0,0.3)}
+.cf-spin-slice{position:absolute;top:0;left:50%;width:60px;margin-left:-30px;height:140px;transform-origin:50% 140px;display:flex;justify-content:center;padding-top:12px;font-family:'Inter',system-ui,sans-serif;font-weight:900;font-size:16px;color:#0f172a;}
+.cf-spin-slice span{display:inline-block;transform:rotate(-90deg) translate(-10px, 0);transform-origin:center;text-align:right;width:80px}
 .cf-spin-pointer{position:absolute;top:50%;right:-15px;transform:translateY(-50%);width:0;height:0;border-top:15px solid transparent;border-bottom:15px solid transparent;border-right:25px solid #ef4444;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
 .cf-spin-right{flex:1;padding:48px 40px;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;justify-content:center}
 .cf-spin-title{font-size:32px;font-weight:900;color:#0f172a;margin:0 0 12px;line-height:1.2;text-transform:uppercase}
@@ -331,7 +333,16 @@ function generateSpinWheel(config) {
         <button class="cf-spin-close" onclick="cfCloseSpin()">&times;</button>
         <div class="cf-spin-left">
             <div class="cf-spin-pointer"></div>
-            <div class="cf-spin-wheel" id="cf-spin-wheel"></div>
+            <div class="cf-spin-wheel" id="cf-spin-wheel">
+                <div class="cf-spin-slice" style="transform: rotate(22.5deg)"><span style="color:#ef4444">10%</span></div>
+                <div class="cf-spin-slice" style="transform: rotate(67.5deg)"><span>5%</span></div>
+                <div class="cf-spin-slice" style="transform: rotate(112.5deg)"><span style="color:#ef4444">15%</span></div>
+                <div class="cf-spin-slice" style="transform: rotate(157.5deg)"><span style="font-size:12px">AGAIN</span></div>
+                <div class="cf-spin-slice" style="transform: rotate(202.5deg)"><span style="color:#ef4444">20%</span></div>
+                <div class="cf-spin-slice" style="transform: rotate(247.5deg)"><span>5%</span></div>
+                <div class="cf-spin-slice" style="transform: rotate(292.5deg)"><span style="color:#ef4444">15%</span></div>
+                <div class="cf-spin-slice" style="transform: rotate(337.5deg)"><span>10%</span></div>
+            </div>
         </div>
         <div class="cf-spin-right" id="cf-spin-form">
             <h2 class="cf-spin-title">Unlock an Exclusive Discount</h2>
@@ -353,6 +364,13 @@ window.cfSpinIt = function() {
     var form = document.getElementById('cf-spin-form');
     // Rotate 5 full times (1800deg) + land on winning slice
     wheel.style.transform = 'rotate(' + (1800 + 45) + 'deg)';
+    
+    fetch('${appUrl}/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, source: 'spin_wheel', shop: window.Shopify ? Shopify.shop : location.hostname })
+    }).catch(function(){});
+    
     setTimeout(function(){
         form.innerHTML = '<h2 class="cf-spin-title" style="color:${color}">🎉 YOU WON 15% OFF!</h2><p class="cf-spin-desc">Use code at checkout to claim your reward.</p><div style="background:#f1f5f9;padding:16px;font-size:24px;font-weight:900;text-align:center;border:2px dashed #cbd5e1;border-radius:12px;letter-spacing:2px;color:#0f172a">LUCKY15</div><button class="cf-spin-btn" style="margin-top:24px" onclick="cfCloseSpin()">Continue Shopping</button>';
     }, 4000);
@@ -411,6 +429,9 @@ export const action = async ({ request }) => {
             const config = JSON.parse(fd.get("config") || '{}');
             const generator = WIDGET_GENERATORS[widgetId];
             if (!generator) return json({ success: false, error: "Unknown widget" });
+
+            const url = new URL(request.url);
+            config.appUrl = `${url.protocol}//${url.host}`;
 
             const html = generator(config);
             await injectSnippet(session, theme.id, widgetId, html);
