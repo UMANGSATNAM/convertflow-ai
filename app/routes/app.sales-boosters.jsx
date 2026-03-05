@@ -1,76 +1,101 @@
 import { json } from "@remix-run/node";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { authenticate } from "../shopify.server";
 import { Spinner } from "@shopify/polaris";
 
 // ═══════ SVG ICON HELPER ═══════
 const Icon = ({ svg, size = 24 }) => (
-    <span style={{ display: 'inline-flex', width: size, height: size }} dangerouslySetInnerHTML={{ __html: svg }} />
+    <span style={{ display: 'inline-flex', width: size, height: size, alignItems: 'center', justifyContent: 'center' }} dangerouslySetInnerHTML={{ __html: svg }} />
 );
 
-// ═══════ SVG ICONS ═══════
+// ═══════ DEBUTIFY-STYLE ICONS ═══════
 const ICONS = {
-    truck: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
-    clock: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
-    shield: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>`,
-    bell: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`,
-    zap: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    gift: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>`,
+    arrowUp: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`, // House/Arrow up variation
+    cookie: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0-3 18.5"/><path d="M12 2a10 10 0 0 1 3 18.5"/><circle cx="9" cy="14" r="1"/><circle cx="14" cy="11" r="1"/><circle cx="15" cy="16" r="1"/><circle cx="9.5" cy="9" r="1"/></svg>`, // Cookie-ish
+    clock: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    megaphone: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5c-4 0-7 2.69-7 6 0 1.25.4 2.42 1.09 3.38L4 18l3.62-1.09A6.974 6.974 0 0 0 11 17c4 0 7-2.69 7-6s-3-2.69-7-6z"/><path d="M20.59 13.41l-2.09 2.09"/><path d="M22 9h-3"/><path d="M20.59 4.59l-2.09 2.09"/></svg>`,
+    tag: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`,
+    wheel: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="19.07" y2="4.93"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`,
     check: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
-    cart: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>`,
-    refresh: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>`,
-    trash: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>`,
-    alert: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-    star: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l2.4 7.4H22l-6 4.6 2.4 7.4L12 17l-6.4 4.4L8 14 2 9.4h7.6z"/></svg>`,
+    arrowRight: `<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>`
 };
 
-// ═══════ WIDGET CONFIG ═══════
+// ═══════ WIDGET CONFIG (7 APPS FROM PRD) ═══════
 const WIDGETS = [
     {
-        id: 'shipping-bar',
-        name: 'Free Shipping Bar',
-        icon: ICONS.truck,
-        desc: 'Show a fixed bottom bar encouraging larger orders with free shipping threshold.',
-        color: '#059669',
+        id: 'spending-goal',
+        name: 'ConvertFlow Spending Goal',
+        icon: ICONS.gift,
+        desc: 'Encourage bigger purchases',
+        color: '#8b5cf6',
         fields: [
-            { key: 'threshold', label: 'Threshold ($)', type: 'number', default: 50 },
-            { key: 'message', label: 'Message', type: 'text', default: 'Free shipping on orders over $${threshold}!' },
-            { key: 'barColor', label: 'Bar Color', type: 'color', default: '#059669' },
-            { key: 'textColor', label: 'Text Color', type: 'color', default: '#ffffff' },
+            { key: 'goal', label: 'Goal Threshold ($)', type: 'number', default: 50 },
+            { key: 'color', label: 'Progress Color', type: 'color', default: '#8b5cf6' },
         ]
     },
     {
-        id: 'countdown-timer',
-        name: 'Countdown Timer',
+        id: 'back-to-top',
+        name: 'ConvertFlow Back To Top',
+        icon: ICONS.arrowUp,
+        desc: 'Quick-scroll navigation button',
+        color: '#8b5cf6',
+        fields: [
+            { key: 'color', label: 'Button Color', type: 'color', default: '#8b5cf6' },
+        ]
+    },
+    {
+        id: 'gdpr-cookie',
+        name: 'ConvertFlow GDPR Cookie Consent Banner',
+        icon: ICONS.cookie,
+        desc: 'Display cookie consent notices',
+        color: '#8b5cf6',
+        fields: [
+            { key: 'color', label: 'Accept Button Color', type: 'color', default: '#8b5cf6' },
+        ]
+    },
+    {
+        id: 'urgency-timer',
+        name: 'ConvertFlow Urgency Countdown Timer',
         icon: ICONS.clock,
-        desc: 'Create urgency with a countdown timer banner at the top of your store.',
-        color: '#dc2626',
+        desc: 'Create time-sensitive urgency',
+        color: '#8b5cf6',
         fields: [
-            { key: 'title', label: 'Title', type: 'text', default: 'Flash Sale Ends In' },
-            { key: 'endDate', label: 'End Date', type: 'datetime-local', default: '' },
-            { key: 'barColor', label: 'Bar Color', type: 'color', default: '#dc2626' },
+            { key: 'minutes', label: 'Countdown (Minutes)', type: 'number', default: 15 },
+            { key: 'color', label: 'Accent Color', type: 'color', default: '#ef4444' },
+        ]
+    },
+    {
+        id: 'announcement-bar',
+        name: 'ConvertFlow Announcement Bar & Banner',
+        icon: ICONS.megaphone,
+        desc: 'Share updates with storefront banners',
+        color: '#8b5cf6',
+        fields: [
+            { key: 'text', label: 'Announcement Text', type: 'text', default: '🔥 HUGE SALE: 50% OFF EVERYTHING TODAY ONLY!' },
+            { key: 'bgColor', label: 'Background Color', type: 'color', default: '#0f172a' },
             { key: 'textColor', label: 'Text Color', type: 'color', default: '#ffffff' },
         ]
     },
     {
-        id: 'trust-badges',
-        name: 'Trust Badges',
-        icon: ICONS.shield,
-        desc: 'Add trust badges (Secure Checkout, Free Shipping, Returns) below the Add to Cart button.',
-        color: '#6366f1',
+        id: 'volume-discounts',
+        name: 'ConvertFlow Volume Discount Bundles',
+        icon: ICONS.tag,
+        desc: 'Reward multi-item purchases',
+        color: '#8b5cf6',
         fields: [
-            { key: 'position', label: 'Position', type: 'select', options: ['below_atc', 'footer'], default: 'below_atc' },
+            { key: 'color', label: 'Active Choice Color', type: 'color', default: '#3b82f6' },
         ]
     },
     {
-        id: 'social-proof',
-        name: 'Social Proof Popup',
-        icon: ICONS.bell,
-        desc: 'Show "Someone just purchased..." notifications to increase buyer confidence and FOMO.',
-        color: '#f59e0b',
+        id: 'spin-wheel',
+        name: 'ConvertFlow Spin Wheel Email Pop Up',
+        icon: ICONS.wheel,
+        desc: 'Gamify email capture strategy',
+        color: '#8b5cf6',
         fields: [
-            { key: 'interval', label: 'Show every (ms)', type: 'number', default: 8000 },
-            { key: 'bgColor', label: 'Background Color', type: 'color', default: '#ffffff' },
+            { key: 'color', label: 'Theme Color', type: 'color', default: '#ec4899' },
         ]
     }
 ];
@@ -84,12 +109,12 @@ export const loader = async ({ request }) => {
 // ═══════ MAIN COMPONENT ═══════
 export default function SalesBoosters() {
     const fetcher = useFetcher();
+    const navigate = useNavigate();
     const [installed, setInstalled] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [themeName, setThemeName] = useState('');
     const [configs, setConfigs] = useState({});
     const [notification, setNotification] = useState(null);
-    const [expandedWidget, setExpandedWidget] = useState(null);
+    const [configModal, setConfigModal] = useState(null); // Which widget is currently being configured?
 
     useEffect(() => {
         fetch('/api/sales-boosters')
@@ -97,7 +122,6 @@ export default function SalesBoosters() {
             .then(data => {
                 if (data.success) {
                     setInstalled(data.installed || {});
-                    setThemeName(data.themeName);
                 }
             })
             .catch(err => console.error(err))
@@ -120,10 +144,11 @@ export default function SalesBoosters() {
         fd.append("widgetId", widgetId);
         fd.append("config", JSON.stringify(configs[widgetId] || {}));
         fetcher.submit(fd, { method: "post", action: "/api/sales-boosters" });
+        setConfigModal(null);
     };
 
     const handleUninstall = (widgetId) => {
-        if (!confirm("Remove this widget from your store?")) return;
+        if (!window.confirm("Remove this widget from your store?")) return;
         setNotification({ type: 'loading', text: `Removing ${widgetId}...` });
         const fd = new FormData();
         fd.append("intent", "uninstall");
@@ -156,10 +181,12 @@ export default function SalesBoosters() {
 
     return (
         <div style={S.root}>
-            <div style={S.header}>
-                <div>
-                    <h1 style={S.title}><Icon svg={ICONS.cart} size={22} /> Sales Boosters</h1>
-                    <p style={S.subtitle}>One-click widgets to increase conversions on your {themeName || 'store'}.</p>
+            {/* ══ TOP BAR ══ */}
+            <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '16px 32px', display: 'flex', alignItems: 'center', gap: 16 }}>
+                <button onClick={() => navigate('/app/builder')} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', padding: 0 }}>←</button>
+                <div style={{ flex: 1 }}>
+                    <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#0f172a' }}>Conversion Booster Apps</h1>
+                    <p style={{ margin: '4px 0 0', fontSize: 13, color: '#64748b' }}>One-click widgets to increase your store's conversion rate instantly.</p>
                 </div>
             </div>
 
@@ -167,123 +194,81 @@ export default function SalesBoosters() {
                 <div style={S.grid}>
                     {WIDGETS.map(widget => {
                         const isInstalled = installed[widget.id];
-                        const isExpanded = expandedWidget === widget.id;
 
                         return (
-                            <div key={widget.id} style={{
-                                ...S.card,
-                                borderTop: `4px solid ${widget.color}`
-                            }}>
-                                <div style={S.cardHeader}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        <div style={{ ...S.cardIcon, background: `${widget.color}15`, color: widget.color }}>
-                                            <Icon svg={widget.icon} size={28} />
-                                        </div>
-                                        <div>
-                                            <h3 style={S.cardName}>{widget.name}</h3>
-                                            <p style={S.cardDesc}>{widget.desc}</p>
-                                        </div>
-                                    </div>
-                                    <div style={S.statusBadge(isInstalled)}>
-                                        {isInstalled && <Icon svg={ICONS.check} size={14} />}
-                                        {isInstalled ? ' Active' : 'Inactive'}
-                                    </div>
+                            <div key={widget.id} style={S.card}>
+                                {isInstalled && <div style={S.activeBadge}><Icon svg={ICONS.check} size={14} /> Installed</div>}
+
+                                <div style={S.cardIconWrap}>
+                                    <Icon svg={widget.icon} size={28} />
                                 </div>
+                                <h3 style={S.cardName}>{widget.name}</h3>
+                                <p style={S.cardDesc}>{widget.desc}</p>
 
-                                <button onClick={() => setExpandedWidget(isExpanded ? null : widget.id)} style={S.expandBtn}>
-                                    {isExpanded ? '▲ Hide Settings' : '▼ Configure & Install'}
-                                </button>
-
-                                {isExpanded && (
-                                    <div style={S.configSection}>
-                                        {widget.fields.map(field => (
-                                            <div key={field.key} style={S.fieldRow}>
-                                                <label style={S.fieldLabel}>{field.label}</label>
-                                                {field.type === 'select' ? (
-                                                    <select
-                                                        value={configs[widget.id]?.[field.key] || field.default}
-                                                        onChange={e => updateConfig(widget.id, field.key, e.target.value)}
-                                                        style={S.fieldInput}
-                                                    >
-                                                        {field.options.map(o => <option key={o} value={o}>{o}</option>)}
-                                                    </select>
-                                                ) : (
-                                                    <input
-                                                        type={field.type}
-                                                        value={configs[widget.id]?.[field.key] || field.default}
-                                                        onChange={e => updateConfig(widget.id, field.key, field.type === 'number' ? Number(e.target.value) : e.target.value)}
-                                                        style={field.type === 'color' ? S.colorInputField : S.fieldInput}
-                                                    />
-                                                )}
-                                            </div>
-                                        ))}
-
-                                        <div style={S.actionRow}>
-                                            <button onClick={() => handleInstall(widget.id)} style={S.installBtn(widget.color)}>
-                                                <Icon svg={isInstalled ? ICONS.refresh : ICONS.zap} size={16} />
-                                                {isInstalled ? ' Reinstall' : ' Install to Store'}
-                                            </button>
-                                            {isInstalled && (
-                                                <button onClick={() => handleUninstall(widget.id)} style={S.uninstallBtn}>
-                                                    <Icon svg={ICONS.trash} size={14} /> Remove
-                                                </button>
-                                            )}
-                                        </div>
+                                {isInstalled ? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', marginTop: 24 }}>
+                                        <button onClick={() => setConfigModal(widget)} style={{ ...S.installBtn, background: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0' }}>
+                                            Configure Settings
+                                        </button>
+                                        <button onClick={() => handleUninstall(widget.id)} style={{ ...S.installBtn, background: '#fff', color: '#ef4444', border: '1px solid #fee2e2' }}>
+                                            Uninstall
+                                        </button>
                                     </div>
+                                ) : (
+                                    <>
+                                        <button onClick={() => setConfigModal(widget)} style={S.installBtn}>
+                                            Install <Icon svg={ICONS.arrowRight} size={16} style={{ marginLeft: 6 }} />
+                                        </button>
+                                        <a href="#" onClick={(e) => { e.preventDefault(); setConfigModal(widget); }} style={S.learnMoreLink}>
+                                            Learn More
+                                        </a>
+                                    </>
                                 )}
                             </div>
                         );
                     })}
                 </div>
+            </div>
 
-                {/* Right info panel */}
-                <div style={S.infoPanel}>
-                    <div style={S.infoCard}>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 12px', color: '#1e293b', display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <Icon svg={ICONS.zap} size={18} /> How It Works
-                        </h3>
-                        <ol style={{ margin: 0, paddingLeft: 20, color: '#475569', fontSize: 14, lineHeight: 2 }}>
-                            <li>Expand a widget card</li>
-                            <li>Configure colors and settings</li>
-                            <li>Click <strong>Install to Store</strong></li>
-                            <li>Widget goes live immediately!</li>
-                        </ol>
-                    </div>
-                    <div style={{ ...S.infoCard, background: '#fffbeb', border: '1px solid #fef3c7', marginTop: 16 }}>
-                        <p style={{ margin: 0, fontSize: 13, color: '#92400e', fontWeight: 500, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                            <Icon svg={ICONS.alert} size={16} />
-                            All widgets inject directly into your active theme. Click "Remove" to cleanly uninstall.
-                        </p>
-                    </div>
-                    <div style={{ ...S.infoCard, marginTop: 16 }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                            {WIDGETS.map(w => (
-                                <div key={w.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-                                    <span style={{ color: w.color }}><Icon svg={w.icon} size={16} /></span>
-                                    <span style={{ flex: 1, color: '#334155', fontWeight: 600 }}>{w.name}</span>
-                                    <span style={{
-                                        fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 12,
-                                        background: installed[w.id] ? '#d1fae5' : '#f1f5f9',
-                                        color: installed[w.id] ? '#059669' : '#94a3b8'
-                                    }}>
-                                        {installed[w.id] ? 'Active' : 'Off'}
-                                    </span>
+            {/* Config Modal */}
+            {configModal && (
+                <div style={S.modalOverlay} onClick={() => setConfigModal(null)}>
+                    <div style={S.modal} onClick={e => e.stopPropagation()}>
+                        <div style={S.modalHeader}>
+                            <h2 style={{ fontSize: 18, margin: 0, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <span style={{ color: '#8b5cf6' }}><Icon svg={configModal.icon} size={24} /></span>
+                                {configModal.name} Configure
+                            </h2>
+                            <button onClick={() => setConfigModal(null)} style={{ background: 'none', border: 'none', fontSize: 24, cursor: 'pointer', color: '#64748b' }}>&times;</button>
+                        </div>
+                        <div style={S.modalBody}>
+                            <p style={{ color: '#64748b', fontSize: 14, marginBottom: 20 }}>{configModal.desc}. Configure your settings below before installing.</p>
+
+                            {configModal.fields.map(field => (
+                                <div key={field.key} style={S.fieldRow}>
+                                    <label style={S.fieldLabel}>{field.label}</label>
+                                    <input
+                                        type={field.type}
+                                        value={configs[configModal.id]?.[field.key] || field.default}
+                                        onChange={e => updateConfig(configModal.id, field.key, field.type === 'number' ? Number(e.target.value) : e.target.value)}
+                                        style={field.type === 'color' ? S.colorInputField : S.fieldInput}
+                                    />
                                 </div>
                             ))}
                         </div>
+                        <div style={S.modalFooter}>
+                            <button onClick={() => setConfigModal(null)} style={{ padding: '10px 16px', borderRadius: 8, background: '#f1f5f9', color: '#64748b', fontWeight: 600, border: 'none', cursor: 'pointer' }}>Cancel</button>
+                            <button onClick={() => handleInstall(configModal.id)} style={{ padding: '10px 24px', borderRadius: 8, background: '#8b5cf6', color: '#fff', fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+                                {installed[configModal.id] ? 'Save & Reinstall' : 'Install Widget'}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Notification */}
             {notification && (
-                <div style={{
-                    position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
-                    padding: '14px 24px', borderRadius: 12, fontWeight: 600, fontSize: 14,
-                    color: '#fff', display: 'flex', alignItems: 'center', gap: 10,
-                    background: notification.type === 'success' ? '#059669' : notification.type === 'error' ? '#dc2626' : '#2563eb',
-                    boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
-                }}>
+                <div style={S.toast(notification.type)}>
                     {notification.type === 'loading' && <Spinner size="small" />}
                     {notification.text}
                 </div>
@@ -295,58 +280,61 @@ export default function SalesBoosters() {
 // ═══════ STYLES ═══════
 const S = {
     root: { minHeight: '100vh', background: '#f8fafc', fontFamily: "system-ui, -apple-system, sans-serif" },
-    header: { background: '#fff', padding: '24px 32px', borderBottom: '1px solid #e2e8f0' },
-    title: { margin: 0, fontSize: 24, fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 10 },
-    subtitle: { margin: '6px 0 0', fontSize: 14, color: '#64748b' },
+    content: { padding: '40px 32px', maxWidth: 1200, margin: '0 auto' },
 
-    content: { display: 'flex', gap: 24, padding: '24px 32px', maxWidth: 1400, margin: '0 auto', alignItems: 'flex-start' },
-    grid: { flex: 1, display: 'flex', flexDirection: 'column', gap: 16 },
+    // Grid matches Debutify screenshot: 4 columns
+    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 24 },
 
+    // Card matches Debutify styling: tall white card, centered text, purple icon block
     card: {
-        background: '#fff', borderRadius: 12, border: '1px solid #e2e8f0',
-        overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
-    },
-    cardHeader: { padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-    cardIcon: { width: 52, height: 52, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-    cardName: { margin: 0, fontSize: 16, fontWeight: 700, color: '#0f172a' },
-    cardDesc: { margin: '4px 0 0', fontSize: 13, color: '#64748b', lineHeight: 1.5 },
-
-    statusBadge: (active) => ({
-        padding: '4px 12px', borderRadius: 12, fontSize: 12, fontWeight: 700,
-        display: 'flex', alignItems: 'center', gap: 4,
-        background: active ? '#d1fae5' : '#f1f5f9', color: active ? '#059669' : '#94a3b8'
-    }),
-
-    expandBtn: {
-        width: '100%', padding: '10px 24px', background: '#f8fafc', border: 'none',
-        borderTop: '1px solid #e2e8f0', fontSize: 13, fontWeight: 600,
-        color: '#6366f1', cursor: 'pointer', textAlign: 'center'
+        background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0',
+        padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center',
+        textAlign: 'center', position: 'relative', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.01)'
     },
 
-    configSection: { padding: '20px 24px', background: '#fafbfc', borderTop: '1px solid #e2e8f0' },
-    fieldRow: { display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 },
-    fieldLabel: { fontSize: 13, fontWeight: 600, color: '#374151', minWidth: 140 },
-    fieldInput: {
-        flex: 1, padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8,
-        fontSize: 14, fontFamily: 'inherit', outline: 'none'
-    },
-    colorInputField: { width: 44, height: 36, border: '1px solid #d1d5db', borderRadius: 8, padding: 2, cursor: 'pointer' },
-
-    actionRow: { display: 'flex', gap: 12, marginTop: 20, paddingTop: 16, borderTop: '1px solid #e2e8f0' },
-    installBtn: (color) => ({
-        flex: 1, padding: '12px 20px', background: color, color: '#fff',
-        border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
-    }),
-    uninstallBtn: {
-        padding: '12px 20px', background: '#fff', color: '#dc2626',
-        border: '1px solid #fecaca', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer',
-        display: 'flex', alignItems: 'center', gap: 6
+    activeBadge: {
+        position: 'absolute', top: 12, right: 12, background: '#d1fae5', color: '#059669',
+        padding: '4px 10px', borderRadius: 20, fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4
     },
 
-    infoPanel: { width: 320, position: 'sticky', top: 24, flexShrink: 0 },
-    infoCard: {
-        background: '#fff', borderRadius: 12, padding: 20,
-        border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
-    }
+    cardIconWrap: {
+        width: 48, height: 48, borderRadius: 12, background: '#8b5cf6', color: '#fff',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20
+    },
+    cardName: { margin: '0 0 8px', fontSize: 16, fontWeight: 700, color: '#0f172a', lineHeight: 1.3 },
+    cardDesc: { margin: '0 0 28px', fontSize: 14, color: '#64748b', lineHeight: 1.5, flex: 1 },
+
+    // The [ Install -> ] button
+    installBtn: {
+        width: '140px', padding: '10px 0', background: 'transparent',
+        border: '1.5px solid #a78bfa', borderRadius: '30px', color: '#0f172a',
+        fontSize: 14, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        cursor: 'pointer', transition: 'all 0.2s', margin: '0 auto 16px'
+    },
+
+    learnMoreLink: {
+        color: '#0f172a', fontSize: 13, fontWeight: 700, textDecoration: 'underline',
+        textUnderlineOffset: 4, decorationThickness: 2
+    },
+
+    // Modal
+    modalOverlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 },
+    modal: { background: '#fff', borderRadius: 16, width: 440, maxWidth: '90%', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' },
+    modalHeader: { padding: '20px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+    modalBody: { padding: '24px' },
+    modalFooter: { padding: '16px 24px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: 12, background: '#f8fafc', borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+
+    fieldRow: { display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 },
+    fieldLabel: { fontSize: 13, fontWeight: 600, color: '#334155' },
+    fieldInput: { padding: '10px 14px', border: '1px solid #cbd5e1', borderRadius: 8, fontSize: 14, outline: 'none' },
+    colorInputField: { width: 60, height: 40, border: '1px solid #cbd5e1', borderRadius: 8, padding: 3, cursor: 'pointer' },
+
+    // Toast
+    toast: (type) => ({
+        position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
+        padding: '14px 24px', borderRadius: 12, fontWeight: 600, fontSize: 14,
+        color: '#fff', display: 'flex', alignItems: 'center', gap: 10,
+        background: type === 'success' ? '#059669' : type === 'error' ? '#dc2626' : '#2563eb',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
+    })
 };
