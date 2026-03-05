@@ -41,6 +41,8 @@ export const loader = async ({ request }) => {
             return json({ message: "Database already fully seeded!", sections: sectionCount, themes: themeCount });
         }
 
+        let messages = [];
+
         console.log("🌱 Inserting initial sections...");
 
         // Hero Sections
@@ -77,6 +79,9 @@ INSERT INTO sections (name, category, variation_number, liquid_code, schema_json
             await db.query(announcements.trim());
             await db.query(others.trim());
             console.log("🌱 Inserted initial sections.");
+            messages.push("Inserted initial sections.");
+        } else {
+            messages.push(`Sections already seeded (${sectionCount}).`);
         }
 
         if (themeCount === 0) {
@@ -114,16 +119,18 @@ INSERT INTO sections (name, category, variation_number, liquid_code, schema_json
                 }
             }
 
-            // Insert 50 rows in chunks to be safe with MySQL payload sizes
             const themeQuery = `
                 INSERT INTO themes (name, niche_category, description, color_primary, color_secondary, color_background, color_text, font_heading, font_body, recommended_sections)
                 VALUES ${themeInserts.join(',\n')}
             `;
             await db.query(themeQuery);
             console.log("🌱 Inserted 50 Themes.");
+            messages.push("Inserted 50 Niche Themes.");
+        } else {
+            messages.push(`Themes already seeded (${themeCount}).`);
         }
 
-        return json({ message: "Database fully seeded!" });
+        return json({ message: "Seed Check Complete!", results: messages, sections: sectionCount, themes: themeCount });
     } catch (error) {
         console.error("❌ Seed Error:", error);
         return json({ error: error.message, stack: error.stack }, { status: 500 });
