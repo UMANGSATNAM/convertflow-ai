@@ -55,3 +55,29 @@ CREATE INDEX idx_shops_domain ON shops(shop_domain);
 CREATE INDEX idx_sections_category ON sections(category);
 CREATE INDEX idx_customizations_shop ON customizations(shop_id);
 CREATE INDEX idx_subscription_history_shop ON subscription_history(shop_id);
+
+-- CreateTable: Themes (Niche Packages)
+CREATE TABLE IF NOT EXISTS themes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    niche_category VARCHAR(100),
+    description TEXT,
+    color_primary VARCHAR(20),
+    color_secondary VARCHAR(20),
+    color_background VARCHAR(20),
+    color_text VARCHAR(20),
+    font_heading VARCHAR(100),
+    font_body VARCHAR(100),
+    recommended_sections JSON,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable: Spin Wheel Leads
+CREATE TABLE IF NOT EXISTS leads (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    shop_domain VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    source VARCHAR(50) DEFAULT 'spin_wheel',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_lead (shop_domain, email)
+);

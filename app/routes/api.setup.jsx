@@ -187,6 +187,28 @@ export const loader = async ({ request }) => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (shop_id) REFERENCES shops(id) ON DELETE CASCADE,
                 INDEX idx_subscription_history_shop (shop_id)
+            ) ENGINE=InnoDB;`,
+            `CREATE TABLE IF NOT EXISTS themes (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                niche_category VARCHAR(100),
+                description TEXT,
+                color_primary VARCHAR(20),
+                color_secondary VARCHAR(20),
+                color_background VARCHAR(20),
+                color_text VARCHAR(20),
+                font_heading VARCHAR(100),
+                font_body VARCHAR(100),
+                recommended_sections JSON,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB;`,
+            `CREATE TABLE IF NOT EXISTS leads (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                shop_domain VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                source VARCHAR(50) DEFAULT 'spin_wheel',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY unique_lead (shop_domain, email)
             ) ENGINE=InnoDB;`
         ];
 

@@ -4,7 +4,7 @@
 
 ### Prerequisites
 - Shopify Partner account
-- PostgreSQL database (production-ready)
+- MySQL database (production-ready)
 - Domain with SSL certificate
 - Node.js 18+ on server
 - Git repository
@@ -23,9 +23,7 @@ cp .env.example .env
 #### Configure Environment Variables
 ```env
 # Database
-DATABASE_URL=postgresql://user:password@host:5432/convertflow_ai_prod
-DATABASE_POOL_MIN=2
-DATABASE_POOL_MAX=20
+DATABASE_URL=mysql://u352022980_cfdata:password@host:3306/convertflow_ai_prod
 
 # Shopify App Credentials
 SHOPIFY_API_KEY=your_production_api_key
@@ -49,21 +47,23 @@ ANALYTICS_ID=your_ga_id
 ### Step 2: Database Setup
 
 #### 1. Create Production Database
+*(Example using MySQL CLI)*
 ```sql
 CREATE DATABASE convertflow_ai_prod;
-CREATE USER convertflow_admin WITH ENCRYPTED PASSWORD 'secure_password';
-GRANT ALL PRIVILEGES ON DATABASE convertflow_ai_prod TO convertflow_admin;
+CREATE USER 'convertflow_admin'@'%' IDENTIFIED BY 'secure_password';
+GRANT ALL PRIVILEGES ON convertflow_ai_prod.* TO 'convertflow_admin'@'%';
+FLUSH PRIVILEGES;
 ```
 
 #### 2. Run Schema Migration
 ```bash
-psql -U convertflow_admin -d convertflow_ai_prod -f database/schema.sql
+mysql -u convertflow_admin -p convertflow_ai_prod < database/schema_mysql.sql
 ```
 
-#### 3. Seed Section Library
-```bash
-psql -U convertflow_admin -d convertflow_ai_prod -f database/seed-all-sections.sql
-```
+#### 3. Automatic Seeding
+Once the app is running, visit:
+`https://yourapp.com/api/setup?key=convertflow123&action=seed`
+This will automatically seed the 200 premium sections and 50 premium themes into your database.
 
 #### 4. Verify Data
 ```sql
