@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, Link } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { authenticate } from "../shopify.server";
 import { readSectionFile, publishSection, checkDepsInstalled, installAllDeps } from "../lib/shopify.server";
@@ -274,18 +274,11 @@ export default function AppIndex() {
                       <p style={S.secName}>{sec.name}</p>
                       <p style={S.secFile}>{sec.file}</p>
                     </div>
-                    <fetcher.Form method="post">
-                      <input type="hidden" name="intent" value="publish_section" />
-                      <input type="hidden" name="sectionId" value={sec.id} />
-                      <button type="submit" className="pub-btn" disabled={isBusy}
-                        style={{ ...S.publishBtn, opacity: isBusy ? 0.7 : 1, background: isDone ? '#059669' : '#4f46e5' }}>
-                        <span style={S.btnInner}>
-                          {isBusy ? <span style={S.btnSpinner} />
-                            : isDone ? <><I.Check width={14} height={14} /> Published</>
-                              : <><I.Upload width={14} height={14} /> Publish</>}
-                        </span>
-                      </button>
-                    </fetcher.Form>
+                    <Link to={`/app/editor/${sec.id}`} className="pub-btn" style={S.publishBtn}>
+                      <span style={S.btnInner}>
+                        <I.Layout width={14} height={14} /> Customize & Inject
+                      </span>
+                    </Link>
                   </div>
                 );
               })}

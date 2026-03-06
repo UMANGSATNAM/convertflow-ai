@@ -1,6 +1,6 @@
-// Server-only utility for publishing sections and dependencies to Shopify themes
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { resolve, extname } from 'path';
+import { removeSchemaTranslations } from './schema-fixer.server';
 
 const API_VERSION = '2025-01';
 
@@ -74,8 +74,65 @@ export async function uploadAsset(shop, accessToken, themeId, assetKey, content)
 export async function publishSection(shop, accessToken, sectionKey, liquidContent) {
     const theme = await getActiveTheme(shop, accessToken);
     if (!theme) throw new Error('No active theme found');
-    await uploadAsset(shop, accessToken, theme.id, `sections/${sectionKey}.liquid`, liquidContent);
+
+    // Auto-fix schema translations before uploading
+    const fixedLiquid = removeSchemaTranslations(liquidContent);
+
+    await uploadAsset(shop, accessToken, theme.id, `sections/${sectionKey}.liquid`, fixedLiquid);
     return { themeId: theme.id, assetKey: `sections/${sectionKey}.liquid` };
+}
+
+/** Get a specific asset from the theme */
+export async function getThemeAsset(shop, accessToken, themeId, assetKey) {
+    const res = await fetch(
+        `https://${shop}/admin/api/${API_VERSION}/themes/${themeId}/assets.json?asset[key]=${assetKey}`,
+        { headers: { 'X-Shopify-Access-Token': accessToken } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.asset?.value || null;
+}
+
+/** 
+ * Inject a published section directly into the homepage (index.json) 
+ * so the user doesn't have to open the Shopify Theme Editor.
+ */
+export async function injectSectionIntoTheme(shop, accessToken, themeId, sectionKey, settings = {}) {
+    try {
+        // 1. Fetch current templates/index.json
+        const indexJsonStr = await getThemeAsset(shop, accessToken, themeId, 'templates/index.json');
+        if (!indexJsonStr) throw new Error("Could not read templates/index.json from active theme");
+
+        const indexJson = JSON.parse(indexJsonStr);
+
+        // 2. Generate a unique block ID for this section instance
+        const blockId = `cf_${sectionKey.replace('cf-', '')}_${Math.random().toString(36).substring(2, 8)}`;
+
+        // 3. Add to the sections object
+        indexJson.sections = indexJson.sections || {};
+        indexJson.sections[blockId] = {
+            type: sectionKey,
+            settings: settings
+        };
+
+        // 4. Add to the order array (at the top, just below header if possible, or append)
+        indexJson.order = indexJson.order || [];
+        // Just push it to the end for now (above footer if we can detect it, but simple append is safest)
+        const footerIndex = indexJson.order.findIndex(id => id.includes('footer'));
+        if (footerIndex !== -1) {
+            indexJson.order.splice(footerIndex, 0, blockId);
+        } else {
+            indexJson.order.push(blockId);
+        }
+
+        // 5. Upload the modified index.json back to Shopify
+        await uploadAsset(shop, accessToken, themeId, 'templates/index.json', JSON.stringify(indexJson, null, 2));
+
+        return { success: true, blockId };
+    } catch (e) {
+        console.error("Failed to inject section into theme:", e);
+        throw e;
+    }
 }
 
 /** Bulk publish all snippets to the theme */
