@@ -146,10 +146,95 @@ export default function AppIndex() {
           </div>
         )}
 
+        {/* Hero Section (Bento Grid) */}
+        {!activeCategory && !isSettingUp && (
+          <div style={S.heroContainer}>
+            <div style={S.heroHeader}>
+              <h2 style={S.heroTitle}>Build High-Converting Pages Faster</h2>
+              <p style={S.heroSubtitle}>Premium sections designed for clarity, conversion, and perfect mobile responsiveness.</p>
+            </div>
+
+            <div style={S.bentoGrid}>
+              {/* Feature 1 (Wide) */}
+              <div style={S.bentoCardWide}>
+                <div style={S.bentoContent}>
+                  <h3 style={S.bentoTitle}>Full Structural Control for Conversion</h3>
+                  <p style={S.bentoDesc}><strong>ConvertFlow AI</strong> lets you control add-to-cart visibility, trust badge placement, product information hierarchy, and CTA prominence seamlessly.</p>
+                </div>
+                <div style={S.bentoImageMock}>
+                  <div style={S.mockWindow}>
+                    <div style={S.mockHeader}>
+                      <span style={S.mockDotRed} />
+                      <span style={S.mockDotYellow} />
+                      <span style={S.mockDotGreen} />
+                    </div>
+                    <div style={S.mockBody}>
+                      <div style={S.mockSidebar}>
+                        <div style={S.mockBlock} /><div style={S.mockBlock} /><div style={S.mockBlock} />
+                      </div>
+                      <div style={S.mockCanvas}>
+                        <div style={S.mockHero} />
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <div style={S.mockSectionHalf} /><div style={S.mockSectionHalf} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 2 (Square) */}
+              <div style={S.bentoCardSquare1}>
+                <h3 style={S.bentoTitle}>Built to Work With Shopify's Ecosystem</h3>
+                <p style={S.bentoDesc}>Seamlessly integrate with Shopify themes and apps without slowing down performance. 100% native Liquid blocks.</p>
+                <div style={S.mockIntegrations}>
+                  <div style={S.mockTag}><I.Zap width={12} height={12} /> Live App Block</div>
+                  <div style={S.mockTag}><I.Layout width={12} height={12} /> Theme Editor</div>
+                </div>
+              </div>
+
+              {/* Bottom Row */}
+              <div style={S.bentoCardTall}>
+                <h3 style={S.bentoTitle}>Customize for Clarity, Not Just Design</h3>
+                <p style={S.bentoDesc}>Structure product information to reduce confusion and increase purchase confidence.</p>
+                <ul style={S.bentoList}>
+                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Parameter for almost every style</li>
+                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Global styles</li>
+                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Option Swatches</li>
+                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Custom Code Editor</li>
+                </ul>
+              </div>
+
+              <div style={S.bentoCardTallAI}>
+                <div style={S.aiBadge}><span style={{ fontSize: 14 }}>✨</span> New: AI Sales Page</div>
+                <p style={S.bentoDesc}>Build personalized sales pages designed to improve add-to-cart rate by aligning content with visitor intent.</p>
+                <div style={S.mockAiBox}>
+                  <div style={S.mockAiLine} />
+                  <div style={S.mockAiLine} />
+                  <div style={{ ...S.mockAiLine, width: '60%' }} />
+                </div>
+              </div>
+
+              <div style={S.bentoCardTallLight}>
+                <h3 style={S.bentoTitle}>Responsive for Mobile Conversion</h3>
+                <p style={S.bentoDesc}>Ensure your key conversion elements remain visible and optimized across devices.</p>
+                <div style={S.mockDevices}>
+                  <I.Layout width={16} height={16} />
+                  <I.Grid width={16} height={16} />
+                  <I.Image width={16} height={16} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Category Grid */}
         {!activeCategory && !isSettingUp && (
           <>
-            <p style={S.sectionLabel}>Choose a section category</p>
+            <div style={S.sectionHeaderSplit}>
+              <h2 style={{ ...S.title, fontSize: 20 }}>Section Components Library</h2>
+              <p style={S.sectionLabel}>Choose a section category</p>
+            </div>
             <div style={S.catGrid}>
               {categories.map(cat => {
                 const Icon = I[cat.icon] || I.Grid;
@@ -229,6 +314,46 @@ const S = {
   spinner: { width: 20, height: 20, border: '2.5px solid #e5e7eb', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.7s linear infinite', flexShrink: 0, marginTop: 2 },
   progressTrack: { height: 6, background: '#f3f4f6', borderRadius: 3, overflow: 'hidden' },
   progressBar: { height: '100%', background: 'linear-gradient(90deg, #6366f1, #818cf8)', borderRadius: 3, animation: 'progress 90s ease-out forwards' },
+
+  heroContainer: { marginBottom: 40, padding: '40px 0 0' },
+  heroHeader: { textAlign: 'center', marginBottom: 32 },
+  heroTitle: { fontSize: 32, fontWeight: 800, color: '#111', letterSpacing: '-0.02em', margin: '0 0 12px' },
+  heroSubtitle: { fontSize: 16, color: '#666', maxWidth: 600, margin: '0 auto', lineHeight: 1.5 },
+
+  bentoGrid: { display: 'grid', gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)', gridTemplateRows: 'auto auto', gap: 16 },
+  bentoCardWide: { background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column', gap: 24, overflow: 'hidden', position: 'relative' },
+  bentoCardSquare1: { background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 },
+  bentoCardTall: { background: 'linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 },
+  bentoCardTallAI: { background: 'linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%)', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden' },
+  bentoCardTallLight: { background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)', borderRadius: 20, padding: 32, display: 'flex', flexDirection: 'column', gap: 16 },
+
+  bentoTitle: { fontSize: 18, fontWeight: 700, color: '#111', margin: 0, letterSpacing: '-0.01em', lineHeight: 1.3 },
+  bentoDesc: { fontSize: 14, color: '#4b5563', margin: 0, lineHeight: 1.5 },
+  bentoList: { margin: '8px 0 0', padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13, color: '#4b5563', fontWeight: 500 },
+
+  bentoImageMock: { flex: 1, minHeight: 180, background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', overflow: 'hidden', display: 'flex', flexDirection: 'column' },
+  mockWindow: { flex: 1, display: 'flex', flexDirection: 'column' },
+  mockHeader: { height: 28, borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6, background: '#f9fafb' },
+  mockDotRed: { width: 8, height: 8, borderRadius: '50%', background: '#ef4444' },
+  mockDotYellow: { width: 8, height: 8, borderRadius: '50%', background: '#f59e0b' },
+  mockDotGreen: { width: 8, height: 8, borderRadius: '50%', background: '#10b981' },
+  mockBody: { flex: 1, display: 'flex' },
+  mockSidebar: { width: 60, borderRight: '1px solid #e5e7eb', padding: 10, display: 'flex', flexDirection: 'column', gap: 8 },
+  mockCanvas: { flex: 1, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 },
+  mockBlock: { height: 20, background: '#f3f4f6', borderRadius: 4 },
+  mockHero: { height: 60, background: '#e0e7ff', borderRadius: 6 },
+  mockSectionHalf: { flex: 1, height: 40, background: '#f3f4f6', borderRadius: 6 },
+
+  mockIntegrations: { display: 'flex', gap: 8, marginTop: 'auto' },
+  mockTag: { display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', background: '#fff', border: '1px solid #bfdbfe', borderRadius: 6, fontSize: 11, fontWeight: 600, color: '#1d4ed8' },
+
+  aiBadge: { display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', padding: '4px 10px', borderRadius: 100, fontSize: 12, fontWeight: 700, color: '#c026d3', width: 'max-content', border: '1px solid #f0abfc' },
+  mockAiBox: { marginTop: 'auto', background: '#fff', padding: 16, borderRadius: 10, border: '1px solid #f5d0fe', display: 'flex', flexDirection: 'column', gap: 8 },
+  mockAiLine: { height: 8, background: '#fae8ff', borderRadius: 4 },
+
+  mockDevices: { display: 'flex', justifyContent: 'center', gap: 16, marginTop: 'auto', padding: 16, background: '#fff', borderRadius: 10, border: '1px solid #e2e8f0', color: '#64748b' },
+
+  sectionHeaderSplit: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 },
 
   catGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 },
   catCard: { display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' },
