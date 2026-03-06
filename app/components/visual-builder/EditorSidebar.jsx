@@ -4,7 +4,7 @@ import {
     ChevronRight, ChevronDown, Layout, Type, AlignLeft,
     MousePointerClick, Image, Space, Minus, Columns,
     Layers, Plus, Search, Trash2, Copy, Eye, EyeOff,
-    LayoutTemplate, LayoutGrid, FileText, Sparkles, Download
+    LayoutTemplate, LayoutGrid, FileText, Sparkles, Download, X
 } from 'lucide-react';
 import { useVisualBuilderStore } from '../../store/visualBuilderStore';
 import { ELEMENT_CONFIGS } from '../../store/elementConfigs';
