@@ -3,14 +3,17 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate, useFetcher } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import { db } from "../db.server";
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
 
 import DashboardHeader from '../components/visual-builder/DashboardHeader';
 import PageCard from '../components/visual-builder/PageCard';
 import EmptyState from '../components/visual-builder/EmptyState';
+
+// Load Inter font via CDN (SSR-safe approach for Remix production builds)
+export const links = () => [
+    { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+    { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" },
+];
 
 // Ensure the visual_pages table exists
 async function ensureTable() {
