@@ -198,6 +198,8 @@ function TemplatesPanel() {
     const [activeType, setActiveType] = useState(null);
     const [installing, setInstalling] = useState(null);
     const [previewTemplate, setPreviewTemplate] = useState(null);
+    const [previewHtml, setPreviewHtml] = useState('');
+    const [loadingPreview, setLoadingPreview] = useState(false);
 
     const filtered = useMemo(() => {
         return TEMPLATES.filter(t => {
@@ -216,6 +218,22 @@ function TemplatesPanel() {
         window.dispatchEvent(new CustomEvent('cf-install-template', { detail: template }));
         setTimeout(() => setInstalling(null), 3000);
     };
+
+    const handlePreview = async (template) => {
+        setPreviewTemplate(template);
+        setLoadingPreview(true);
+        setPreviewHtml('');
+        try {
+            const res = await fetch(`/app/api/template-preview?file=${encodeURIComponent(template.liquidFile)}`);
+            const data = await res.json();
+            setPreviewHtml(data.html || '<html><body style="background:#111;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh"><p>Preview unavailable</p></body></html>');
+        } catch (e) {
+            setPreviewHtml('<html><body style="background:#111;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh"><p>Error loading preview</p></body></html>');
+        }
+        setLoadingPreview(false);
+    };
+
+    const closePreview = () => { setPreviewTemplate(null); setPreviewHtml(''); };
 
     return (
         <div className="p-3 space-y-3">
@@ -261,7 +279,7 @@ function TemplatesPanel() {
                             <div
                                 className="h-14 relative cursor-pointer"
                                 style={{ background: `linear-gradient(135deg, ${t.previewColors[0]}, ${t.previewColors[2] || t.previewColors[1]})` }}
-                                onClick={() => setPreviewTemplate(t)}
+                                onClick={() => handlePreview(t)}
                             >
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="text-lg opacity-80">{typeInfo?.icon || '📄'}</span>
@@ -279,7 +297,7 @@ function TemplatesPanel() {
                                     </div>
                                     <div className="flex gap-1 shrink-0">
                                         <button
-                                            onClick={() => setPreviewTemplate(t)}
+                                            onClick={() => handlePreview(t)}
                                             className="px-1.5 py-1 text-[10px] font-semibold rounded-md border border-border text-txt-secondary hover:border-accent hover:text-accent transition-all"
                                             title="Preview"
                                         >
@@ -311,7 +329,7 @@ function TemplatesPanel() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 z-[9999] flex items-center justify-center"
-                        onClick={() => setPreviewTemplate(null)}
+                        onClick={closePreview}
                     >
                         {/* Backdrop */}
                         <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
@@ -333,13 +351,13 @@ function TemplatesPanel() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <button
-                                        onClick={() => { handleInstall(previewTemplate); setPreviewTemplate(null); }}
+                                        onClick={() => { handleInstall(previewTemplate); closePreview(); }}
                                         className="px-4 py-1.5 bg-accent text-white text-xs font-semibold rounded-lg hover:bg-accent-hover transition-all"
                                     >
                                         Install to Theme
                                     </button>
                                     <button
-                                        onClick={() => setPreviewTemplate(null)}
+                                        onClick={closePreview}
                                         className="p-1.5 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                                     >
                                         <X size={16} />
@@ -347,14 +365,24 @@ function TemplatesPanel() {
                                 </div>
                             </div>
 
-                            {/* Preview iframe */}
-                            <div className="flex-1 bg-[#0a0a0a]">
-                                <iframe
-                                    src={`/app/api/template-preview?file=${encodeURIComponent(previewTemplate.liquidFile)}`}
-                                    className="w-full h-full border-none"
-                                    title={`Preview: ${previewTemplate.name}`}
-                                    sandbox="allow-same-origin allow-scripts"
-                                />
+                            {/* Preview content — uses srcdoc to avoid Shopify auth redirect */}
+                            <div className="flex-1 bg-[#0a0a0a] relative">
+                                {loadingPreview && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+                                            <p className="text-xs text-white/50">Loading preview...</p>
+                                        </div>
+                                    </div>
+                                )}
+                                {previewHtml && (
+                                    <iframe
+                                        srcDoc={previewHtml}
+                                        className="w-full h-full border-none"
+                                        title={`Preview: ${previewTemplate.name}`}
+                                        sandbox="allow-scripts"
+                                    />
+                                )}
                             </div>
                         </motion.div>
                     </motion.div>
