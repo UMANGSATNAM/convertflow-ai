@@ -1,19 +1,29 @@
 import { json } from "@remix-run/node";
 import { useLoaderData, useFetcher } from "@remix-run/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { authenticate } from "../shopify.server";
-import { readSectionFile, publishSection, publishAllSnippets, publishAllLocales, publishConfig } from "../lib/shopify.server";
+import { readSectionFile, publishSection, checkDepsInstalled, installAllDeps } from "../lib/shopify.server";
 import { SECTION_FILES, getCategoriesWithCounts, getSectionsByCategory } from "../lib/constants";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
-  return json({ shop: session.shop });
+  const depsInstalled = await checkDepsInstalled(session.shop, session.accessToken);
+  return json({ shop: session.shop, depsInstalled });
 };
 
 export const action = async ({ request }) => {
   const { session } = await authenticate.admin(request);
   const formData = await request.formData();
   const intent = formData.get("intent");
+
+  if (intent === "install_deps") {
+    try {
+      const result = await installAllDeps(session.shop, session.accessToken);
+      return json({ ok: true, intent: "deps", message: `Setup complete! ${result.totalFiles} files installed (${result.snippets} snippets, ${result.locales} locales)` });
+    } catch (e) {
+      return json({ ok: false, intent: "deps", error: e.message }, { status: 500 });
+    }
+  }
 
   if (intent === "publish_section") {
     const sectionId = formData.get("sectionId");
@@ -24,45 +34,18 @@ export const action = async ({ request }) => {
     if (!liquid) return json({ ok: false, error: "Section file missing on server" }, { status: 404 });
 
     try {
-      const result = await publishSection(session.shop, session.accessToken, `cf-${sectionId}`, liquid);
+      await publishSection(session.shop, session.accessToken, `cf-${sectionId}`, liquid);
       return json({ ok: true, sectionId, message: `Published ${sectionMeta.name}` });
     } catch (e) {
       return json({ ok: false, sectionId, error: e.message }, { status: 500 });
     }
   }
 
-  if (intent === "publish_snippets") {
-    try {
-      const result = await publishAllSnippets(session.shop, session.accessToken);
-      return json({ ok: true, intent: "snippets", message: `Snippets: ${result.success}/${result.total} uploaded` });
-    } catch (e) {
-      return json({ ok: false, intent: "snippets", error: e.message }, { status: 500 });
-    }
-  }
-
-  if (intent === "publish_locales") {
-    try {
-      const result = await publishAllLocales(session.shop, session.accessToken);
-      return json({ ok: true, intent: "locales", message: `Locales: ${result.success}/${result.total} uploaded` });
-    } catch (e) {
-      return json({ ok: false, intent: "locales", error: e.message }, { status: 500 });
-    }
-  }
-
-  if (intent === "publish_config") {
-    try {
-      await publishConfig(session.shop, session.accessToken);
-      return json({ ok: true, intent: "config", message: "Theme config uploaded" });
-    } catch (e) {
-      return json({ ok: false, intent: "config", error: e.message }, { status: 500 });
-    }
-  }
-
   return json({ ok: false, error: "Unknown intent" }, { status: 400 });
 };
 
-// ─── ICONS (SVG) ────────────────────────────────────
-const Icons = {
+// ─── SVG ICONS ──────────────────────────────────────
+const I = {
   Layout: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>,
   Image: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>,
   ShoppingBag: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 01-8 0" /></svg>,
@@ -78,21 +61,34 @@ const Icons = {
   Layers: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></svg>,
   Upload: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>,
   Check: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>,
-  AlertCircle: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>,
-  ChevronDown: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>,
+  X: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>,
 };
 
 // ─── MAIN COMPONENT ─────────────────────────────────
 export default function AppIndex() {
-  const { shop } = useLoaderData();
+  const { shop, depsInstalled } = useLoaderData();
   const fetcher = useFetcher();
   const [activeCategory, setActiveCategory] = useState(null);
+  const [setupTriggered, setSetupTriggered] = useState(false);
   const categories = getCategoriesWithCounts();
   const result = fetcher.data;
-  const publishingIntent = fetcher.state !== "idle" ? fetcher.formData?.get("intent") : null;
+
+  const isPublishing = fetcher.state !== "idle";
+  const publishingIntent = isPublishing ? fetcher.formData?.get("intent") : null;
 
   const activeSections = activeCategory ? getSectionsByCategory(activeCategory) : [];
   const activeCatInfo = categories.find(c => c.id === activeCategory);
+
+  // Auto-trigger dependency installation on first load
+  useEffect(() => {
+    if (!depsInstalled && !setupTriggered && fetcher.state === "idle") {
+      setSetupTriggered(true);
+      fetcher.submit({ intent: "install_deps" }, { method: "post" });
+    }
+  }, [depsInstalled, setupTriggered, fetcher.state]);
+
+  const setupDone = depsInstalled || (result?.ok && result?.intent === "deps");
+  const isSettingUp = publishingIntent === "install_deps";
 
   return (
     <div style={S.page}>
@@ -102,78 +98,61 @@ export default function AppIndex() {
                 .cat-card:hover { border-color: #818cf8 !important; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79,70,229,0.08) !important; }
                 .sec-card:hover { border-color: #c7d2fe !important; }
                 .pub-btn:hover { background: #4338ca !important; }
-                .setup-btn:hover { background: #f5f3ff !important; border-color: #818cf8 !important; }
                 @keyframes spin { to { transform: rotate(360deg); } }
+                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+                @keyframes progress { 0% { width: 5%; } 50% { width: 60%; } 100% { width: 95%; } }
             `}</style>
 
       <div style={S.container}>
         {/* Header */}
         <div style={S.header}>
-          <div>
-            <h1 style={S.title}>Section Builder</h1>
-            <p style={S.subtitle}>Connected to <strong>{shop}</strong></p>
-          </div>
+          <h1 style={S.title}>Section Builder</h1>
+          <p style={S.subtitle}>Connected to <strong>{shop}</strong></p>
         </div>
 
-        {/* Toast */}
-        {result && (
+        {/* Setup Progress / Installing */}
+        {isSettingUp && (
+          <div style={S.setupCard}>
+            <div style={S.setupRow}>
+              <span style={S.spinner} />
+              <div>
+                <p style={S.setupTitle}>Installing theme dependencies...</p>
+                <p style={S.setupDesc}>Uploading 393 snippets + 57 locales + config to your theme. This takes 2-3 minutes on first run.</p>
+              </div>
+            </div>
+            <div style={S.progressTrack}>
+              <div style={S.progressBar} />
+            </div>
+          </div>
+        )}
+
+        {/* Setup Complete Toast */}
+        {result?.intent === "deps" && !isSettingUp && (
           <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca' }}>
             {result.ok
-              ? <><Icons.Check width={14} height={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> {result.message}</>
-              : <><Icons.AlertCircle width={14} height={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> {result.error}</>
+              ? <><I.Check width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.message}</>
+              : <><I.X width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> Setup failed: {result.error}</>
             }
           </div>
         )}
 
-        {/* Setup Dependencies Card */}
-        {!activeCategory && (
-          <div style={S.setupCard}>
-            <div style={S.setupHeader}>
-              <Icons.Layers width={18} height={18} style={{ color: '#6366f1' }} />
-              <div>
-                <p style={S.setupTitle}>Setup Theme Dependencies</p>
-                <p style={S.setupDesc}>Install required snippets, translations, and config before publishing sections</p>
-              </div>
-            </div>
-            <div style={S.setupActions}>
-              <fetcher.Form method="post" style={{ display: 'inline' }}>
-                <input type="hidden" name="intent" value="publish_snippets" />
-                <button type="submit" className="setup-btn" disabled={publishingIntent === 'publish_snippets'}
-                  style={{ ...S.setupBtn, opacity: publishingIntent === 'publish_snippets' ? 0.7 : 1 }}>
-                  {publishingIntent === 'publish_snippets'
-                    ? <><span style={S.miniSpinner} /> Uploading 393 snippets...</>
-                    : <><Icons.Upload width={13} height={13} /> Snippets (393 files)</>}
-                </button>
-              </fetcher.Form>
-              <fetcher.Form method="post" style={{ display: 'inline' }}>
-                <input type="hidden" name="intent" value="publish_locales" />
-                <button type="submit" className="setup-btn" disabled={publishingIntent === 'publish_locales'}
-                  style={{ ...S.setupBtn, opacity: publishingIntent === 'publish_locales' ? 0.7 : 1 }}>
-                  {publishingIntent === 'publish_locales'
-                    ? <><span style={S.miniSpinner} /> Uploading 57 locales...</>
-                    : <><Icons.Upload width={13} height={13} /> Locales (57 files)</>}
-                </button>
-              </fetcher.Form>
-              <fetcher.Form method="post" style={{ display: 'inline' }}>
-                <input type="hidden" name="intent" value="publish_config" />
-                <button type="submit" className="setup-btn" disabled={publishingIntent === 'publish_config'}
-                  style={{ ...S.setupBtn, opacity: publishingIntent === 'publish_config' ? 0.7 : 1 }}>
-                  {publishingIntent === 'publish_config'
-                    ? <><span style={S.miniSpinner} /> Uploading...</>
-                    : <><Icons.Upload width={13} height={13} /> Theme Config</>}
-                </button>
-              </fetcher.Form>
-            </div>
+        {/* Section Publish Toast */}
+        {result && result.intent !== "deps" && result.sectionId && !isSettingUp && (
+          <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca' }}>
+            {result.ok
+              ? <><I.Check width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.message} — now in your Theme Editor</>
+              : <><I.X width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.error}</>
+            }
           </div>
         )}
 
         {/* Category Grid */}
-        {!activeCategory && (
+        {!activeCategory && !isSettingUp && (
           <>
             <p style={S.sectionLabel}>Choose a section category</p>
             <div style={S.catGrid}>
               {categories.map(cat => {
-                const Icon = Icons[cat.icon] || Icons.Grid;
+                const Icon = I[cat.icon] || I.Grid;
                 return (
                   <button key={cat.id} className="cat-card" onClick={() => setActiveCategory(cat.id)} style={S.catCard}>
                     <Icon width={22} height={22} style={{ color: '#6366f1', marginBottom: 8 }} />
@@ -196,41 +175,35 @@ export default function AppIndex() {
             </button>
 
             <div style={S.catHeader}>
-              <div>
-                <h2 style={S.catTitle}>{activeCatInfo?.name}</h2>
-                <p style={S.catSubtitle}>{activeSections.length} section{activeSections.length !== 1 ? 's' : ''} available</p>
-              </div>
+              <h2 style={S.catTitle}>{activeCatInfo?.name}</h2>
+              <p style={S.catSubtitle}>{activeSections.length} section{activeSections.length !== 1 ? 's' : ''} available</p>
             </div>
 
             <div style={S.secGrid}>
-              {activeSections.map(sec => (
-                <div key={sec.id} className="sec-card" style={S.secCard}>
-                  <div style={S.secInfo}>
-                    <p style={S.secName}>{sec.name}</p>
-                    <p style={S.secFile}>{sec.file}</p>
-                  </div>
-                  <fetcher.Form method="post">
-                    <input type="hidden" name="intent" value="publish_section" />
-                    <input type="hidden" name="sectionId" value={sec.id} />
-                    <button
-                      type="submit"
-                      className="pub-btn"
-                      disabled={publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id}
-                      style={{ ...S.publishBtn, opacity: (publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id) ? 0.7 : 1 }}
-                    >
-                      {(publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id) ? (
+              {activeSections.map(sec => {
+                const isBusy = publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id;
+                const isDone = result?.ok && result?.sectionId === sec.id;
+                return (
+                  <div key={sec.id} className="sec-card" style={S.secCard}>
+                    <div style={S.secInfo}>
+                      <p style={S.secName}>{sec.name}</p>
+                      <p style={S.secFile}>{sec.file}</p>
+                    </div>
+                    <fetcher.Form method="post">
+                      <input type="hidden" name="intent" value="publish_section" />
+                      <input type="hidden" name="sectionId" value={sec.id} />
+                      <button type="submit" className="pub-btn" disabled={isBusy}
+                        style={{ ...S.publishBtn, opacity: isBusy ? 0.7 : 1, background: isDone ? '#059669' : '#4f46e5' }}>
                         <span style={S.btnInner}>
-                          <span style={{ width: 14, height: 14, border: '2px solid #fff4', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.6s linear infinite', display: 'inline-block' }} />
+                          {isBusy ? <span style={S.btnSpinner} />
+                            : isDone ? <><I.Check width={14} height={14} /> Published</>
+                              : <><I.Upload width={14} height={14} /> Publish</>}
                         </span>
-                      ) : result?.ok && result.sectionId === sec.id ? (
-                        <span style={S.btnInner}><Icons.Check width={14} height={14} /> Published</span>
-                      ) : (
-                        <span style={S.btnInner}><Icons.Upload width={14} height={14} /> Publish</span>
-                      )}
-                    </button>
-                  </fetcher.Form>
-                </div>
-              ))}
+                      </button>
+                    </fetcher.Form>
+                  </div>
+                );
+              })}
             </div>
           </>
         )}
@@ -249,6 +222,14 @@ const S = {
   sectionLabel: { fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 16 },
   toast: { padding: '12px 16px', borderRadius: 8, fontSize: 13, fontWeight: 500, border: '1px solid', marginBottom: 20, display: 'flex', alignItems: 'center' },
 
+  setupCard: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '24px', marginBottom: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' },
+  setupRow: { display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16 },
+  setupTitle: { fontSize: 14, fontWeight: 600, color: '#111', margin: '0 0 4px' },
+  setupDesc: { fontSize: 12, color: '#888', margin: 0, lineHeight: '1.4' },
+  spinner: { width: 20, height: 20, border: '2.5px solid #e5e7eb', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.7s linear infinite', flexShrink: 0, marginTop: 2 },
+  progressTrack: { height: 6, background: '#f3f4f6', borderRadius: 3, overflow: 'hidden' },
+  progressBar: { height: '100%', background: 'linear-gradient(90deg, #6366f1, #818cf8)', borderRadius: 3, animation: 'progress 90s ease-out forwards' },
+
   catGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 },
   catCard: { display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 16px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' },
   catName: { fontSize: 13, fontWeight: 600, color: '#111', marginBottom: 4 },
@@ -266,14 +247,7 @@ const S = {
   secName: { fontSize: 14, fontWeight: 600, color: '#111', margin: '0 0 2px' },
   secFile: { fontSize: 11, color: '#aaa', margin: 0, fontFamily: 'monospace' },
 
-  publishBtn: { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'background 0.2s' },
+  publishBtn: { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', color: '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' },
   btnInner: { display: 'flex', alignItems: 'center', gap: 5 },
-
-  setupCard: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '20px 24px', marginBottom: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' },
-  setupHeader: { display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16 },
-  setupTitle: { fontSize: 14, fontWeight: 600, color: '#111', margin: '0 0 2px' },
-  setupDesc: { fontSize: 12, color: '#888', margin: 0 },
-  setupActions: { display: 'flex', gap: 8, flexWrap: 'wrap' },
-  setupBtn: { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: '#fafafa', color: '#333', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' },
-  miniSpinner: { width: 12, height: 12, border: '2px solid #ccc', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.6s linear infinite', display: 'inline-block' },
+  btnSpinner: { width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.6s linear infinite', display: 'inline-block' },
 };

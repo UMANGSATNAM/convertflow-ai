@@ -141,3 +141,69 @@ export async function publishConfig(shop, accessToken) {
 
     return { success: true };
 }
+
+/** Check if dependencies are already installed on the theme */
+export async function checkDepsInstalled(shop, accessToken) {
+    try {
+        const theme = await getActiveTheme(shop, accessToken);
+        if (!theme) return false;
+        const res = await fetch(
+            `https://${shop}/admin/api/${API_VERSION}/themes/${theme.id}/assets.json?asset[key]=snippets/cf-deps-marker.liquid`,
+            { headers: { 'X-Shopify-Access-Token': accessToken } }
+        );
+        return res.ok;
+    } catch {
+        return false;
+    }
+}
+
+/** Install ALL dependencies (snippets + locales + config) in one go */
+export async function installAllDeps(shop, accessToken) {
+    const theme = await getActiveTheme(shop, accessToken);
+    if (!theme) throw new Error('No active theme found');
+
+    const results = { snippets: 0, locales: 0, config: false, totalFiles: 0, errors: [] };
+
+    // 1. Upload all snippets
+    const snippetFiles = listFiles('snippets').filter(f => f.endsWith('.liquid'));
+    for (const file of snippetFiles) {
+        try {
+            const content = readSnippetFile(file);
+            if (content) {
+                await uploadAsset(shop, accessToken, theme.id, `snippets/${file}`, content);
+                results.snippets++;
+            }
+        } catch (e) { results.errors.push(e.message); }
+        if (results.snippets % 4 === 0) await new Promise(r => setTimeout(r, 200));
+    }
+
+    // 2. Upload all locales
+    const localeFiles = listFiles('locales').filter(f => f.endsWith('.json'));
+    for (const file of localeFiles) {
+        try {
+            const content = readLocaleFile(file);
+            if (content) {
+                await uploadAsset(shop, accessToken, theme.id, `locales/${file}`, content);
+                results.locales++;
+            }
+        } catch (e) { results.errors.push(e.message); }
+        if (results.locales % 4 === 0) await new Promise(r => setTimeout(r, 200));
+    }
+
+    // 3. Upload config
+    try {
+        const settingsSchema = readConfigFile('settings_schema.json');
+        if (settingsSchema) {
+            await uploadAsset(shop, accessToken, theme.id, 'config/settings_schema.json', settingsSchema);
+            results.config = true;
+        }
+    } catch (e) { results.errors.push(e.message); }
+
+    // 4. Upload marker so we don't re-run
+    try {
+        await uploadAsset(shop, accessToken, theme.id, 'snippets/cf-deps-marker.liquid', '{% comment %}ConvertFlow deps installed{% endcomment %}');
+    } catch { }
+
+    results.totalFiles = results.snippets + results.locales + (results.config ? 1 : 0);
+    return results;
+}
