@@ -4,9 +4,6 @@ import { useLoaderData, useNavigate, useFetcher } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import { db } from "../db.server";
 import { useVisualBuilderStore } from '../store/visualBuilderStore';
-import { TEMPLATES } from '../store/templateRegistry';
-import fs from 'fs';
-import path from 'path';
 
 import EditorToolbar from '../components/visual-builder/EditorToolbar';
 import EditorSidebar from '../components/visual-builder/EditorSidebar';
@@ -139,6 +136,10 @@ ${compiledHtml}
         }
 
         try {
+            // Use require() for Node.js-only modules (avoid client bundle crash)
+            const fs = require('fs');
+            const path = require('path');
+
             // Read the Liquid template from the templates directory
             const templatePath = path.resolve(process.cwd(), 'app', 'templates', templateFile);
             let liquidContent = '';
