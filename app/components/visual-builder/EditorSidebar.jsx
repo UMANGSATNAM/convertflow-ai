@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     ChevronRight, ChevronDown, Layout, Type, AlignLeft,
     MousePointerClick, Image, Space, Minus, Columns,
     Layers, Plus, Search, Trash2, Copy, Eye, EyeOff,
-    LayoutTemplate, LayoutGrid, FileText
+    LayoutTemplate, LayoutGrid, FileText, Sparkles, Download
 } from 'lucide-react';
 import { useVisualBuilderStore } from '../../store/visualBuilderStore';
 import { ELEMENT_CONFIGS } from '../../store/elementConfigs';
+import { TEMPLATES, TEMPLATE_STYLES, SECTION_TYPES } from '../../store/templateRegistry';
 
 const ICONS = {
     Root: Layers,
@@ -190,6 +191,105 @@ function AddSectionButton() {
     );
 }
 
+// --- Templates Panel ---
+function TemplatesPanel() {
+    const [search, setSearch] = useState('');
+    const [activeStyle, setActiveStyle] = useState(null);
+    const [activeType, setActiveType] = useState(null);
+    const [installing, setInstalling] = useState(null);
+
+    const filtered = useMemo(() => {
+        return TEMPLATES.filter(t => {
+            if (search) {
+                const q = search.toLowerCase();
+                if (!t.name.toLowerCase().includes(q) && !t.tags.some(tag => tag.includes(q))) return false;
+            }
+            if (activeStyle && t.style !== activeStyle) return false;
+            if (activeType && t.sectionType !== activeType) return false;
+            return true;
+        });
+    }, [search, activeStyle, activeType]);
+
+    const handleInstall = (template) => {
+        setInstalling(template.id);
+        // Dispatch a custom event that the parent editor route catches
+        window.dispatchEvent(new CustomEvent('cf-install-template', { detail: template }));
+        setTimeout(() => setInstalling(null), 2000);
+    };
+
+    return (
+        <div className="p-3 space-y-3">
+            {/* Search */}
+            <div className="relative">
+                <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-txt-tertiary" />
+                <input
+                    type="text"
+                    placeholder="Search templates..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full pl-7 pr-3 py-1.5 bg-surface-secondary border border-border rounded-lg text-xs text-txt-primary placeholder:text-txt-tertiary outline-none focus:border-accent transition-all"
+                />
+            </div>
+
+            {/* Style filter pills */}
+            <div className="flex gap-1 flex-wrap">
+                <button
+                    onClick={() => setActiveStyle(null)}
+                    className={`px-2 py-0.5 text-[10px] font-medium rounded-md border transition-all ${!activeStyle ? 'bg-accent text-white border-accent' : 'border-border text-txt-tertiary hover:border-accent'
+                        }`}
+                >All</button>
+                {TEMPLATE_STYLES.slice(0, 4).map(s => (
+                    <button
+                        key={s.id}
+                        onClick={() => setActiveStyle(activeStyle === s.id ? null : s.id)}
+                        className={`px-2 py-0.5 text-[10px] font-medium rounded-md border transition-all ${activeStyle === s.id ? 'bg-accent text-white border-accent' : 'border-border text-txt-tertiary hover:border-accent'
+                            }`}
+                    >{s.label}</button>
+                ))}
+            </div>
+
+            {/* Template cards */}
+            <div className="space-y-2">
+                {filtered.length === 0 && (
+                    <p className="text-xs text-txt-tertiary text-center py-4">No templates found</p>
+                )}
+                {filtered.map(t => {
+                    const typeInfo = SECTION_TYPES.find(s => s.id === t.sectionType);
+                    return (
+                        <div key={t.id} className="group rounded-xl border border-border hover:border-accent/40 transition-all overflow-hidden bg-surface-secondary">
+                            {/* Preview bar */}
+                            <div className="h-14 relative" style={{ background: `linear-gradient(135deg, ${t.previewColors[0]}, ${t.previewColors[2] || t.previewColors[1]})` }}>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-lg opacity-80">{typeInfo?.icon || '📄'}</span>
+                                </div>
+                            </div>
+                            {/* Info */}
+                            <div className="p-2.5">
+                                <div className="flex items-start justify-between gap-2">
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[11px] font-semibold text-txt-primary truncate">{t.name}</p>
+                                        <p className="text-[10px] text-txt-tertiary mt-0.5 capitalize">{t.sectionType} · {t.style}</p>
+                                    </div>
+                                    <button
+                                        onClick={() => handleInstall(t)}
+                                        disabled={installing === t.id}
+                                        className={`shrink-0 px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all ${installing === t.id
+                                                ? 'bg-green-100 text-green-700 border border-green-200'
+                                                : 'bg-accent text-white hover:bg-accent-hover'
+                                            }`}
+                                    >
+                                        {installing === t.id ? '✓ Installed' : 'Install'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
 // --- Main Sidebar ---
 export default function EditorSidebar() {
     const { elements, leftPanelTab, setLeftPanelTab, leftPanelOpen } = useVisualBuilderStore();
@@ -198,8 +298,9 @@ export default function EditorSidebar() {
     if (!leftPanelOpen) return null;
 
     const tabs = [
-        { id: 'tree', label: 'Page content', icon: Layers },
-        { id: 'elements', label: 'Add element', icon: Plus },
+        { id: 'tree', label: 'Content', icon: Layers },
+        { id: 'elements', label: 'Elements', icon: Plus },
+        { id: 'templates', label: 'Templates', icon: Sparkles },
     ];
 
     return (
@@ -217,8 +318,8 @@ export default function EditorSidebar() {
                         key={tab.id}
                         onClick={() => setLeftPanelTab(tab.id)}
                         className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-all border-b-2 ${leftPanelTab === tab.id
-                                ? 'text-txt-primary border-accent'
-                                : 'text-txt-tertiary border-transparent hover:text-txt-secondary'
+                            ? 'text-txt-primary border-accent'
+                            : 'text-txt-tertiary border-transparent hover:text-txt-secondary'
                             }`}
                     >
                         <tab.icon size={14} />
@@ -239,6 +340,8 @@ export default function EditorSidebar() {
                 )}
 
                 {leftPanelTab === 'elements' && <ElementsGrid />}
+
+                {leftPanelTab === 'templates' && <TemplatesPanel />}
             </div>
         </motion.div>
     );

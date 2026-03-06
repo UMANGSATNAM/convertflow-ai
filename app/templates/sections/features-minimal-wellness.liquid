@@ -1,0 +1,27 @@
+{%- comment -%} CF Visual Builder — Minimal Feature Grid — Wellness {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-feat-min{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--muted:{{ section.settings.muted }};--accent:{{ section.settings.accent }};font-family:'Inter',sans-serif;background:var(--bg);padding:clamp(3rem,7vw,6rem) clamp(1.5rem,4vw,4rem)}
+.myapp-feat-min__header{text-align:center;max-width:560px;margin:0 auto clamp(2.5rem,4vw,4rem)}
+.myapp-feat-min__title{font-size:clamp(1.6rem,3vw,{{ section.settings.title_size }}px);font-weight:700;letter-spacing:-.02em;color:var(--txt);margin:0 0 12px}
+.myapp-feat-min__desc{font-size:15px;line-height:1.7;color:var(--muted)}
+.myapp-feat-min__grid{display:grid;grid-template-columns:repeat({{ section.settings.columns }},1fr);gap:1px;max-width:1100px;margin:0 auto;background:var(--muted);border-radius:16px;overflow:hidden;border:1px solid {{ section.settings.border_color }}}
+.myapp-feat-min__card{background:var(--bg);padding:clamp(1.5rem,3vw,2.5rem);text-align:{{ section.settings.card_align }};transition:background .3s}
+.myapp-feat-min__card:hover{background:{{ section.settings.hover_bg }}}
+.myapp-feat-min__card-icon{font-size:28px;margin-bottom:14px;display:block}
+.myapp-feat-min__card-title{font-size:15px;font-weight:600;color:var(--txt);margin:0 0 6px}
+.myapp-feat-min__card-desc{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+@media(max-width:768px){.myapp-feat-min__grid{grid-template-columns:1fr}}
+{%- endstyle -%}
+<section class="myapp-feat-min" id="myapp-feat-min-{{ section.id }}">
+  <div class="myapp-feat-min__header">
+    {% if section.settings.title != blank %}<h2 class="myapp-feat-min__title">{{ section.settings.title }}</h2>{% endif %}
+    {% if section.settings.description != blank %}<p class="myapp-feat-min__desc">{{ section.settings.description }}</p>{% endif %}
+  </div>
+  <div class="myapp-feat-min__grid">
+    {% for block in section.blocks %}<div class="myapp-feat-min__card" {{ block.shopify_attributes }}>{% if block.settings.icon != blank %}<span class="myapp-feat-min__card-icon">{{ block.settings.icon }}</span>{% endif %}<h3 class="myapp-feat-min__card-title">{{ block.settings.title }}</h3><p class="myapp-feat-min__card-desc">{{ block.settings.description }}</p></div>{% endfor %}
+  </div>
+</section>
+{% schema %}
+{"name":"CF Features — Minimal","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#ffffff"},{"type":"color","id":"text_color","label":"Text","default":"#111827"},{"type":"color","id":"muted","label":"Muted","default":"#6b7280"},{"type":"color","id":"accent","label":"Accent","default":"#10b981"},{"type":"color","id":"border_color","label":"Border","default":"#e5e7eb"},{"type":"color","id":"hover_bg","label":"Hover BG","default":"#f8fafb"},{"type":"text","id":"title","label":"Title","default":"The Natural Difference"},{"type":"range","id":"title_size","label":"Title Size","min":24,"max":48,"step":2,"default":36,"unit":"px"},{"type":"textarea","id":"description","label":"Description","default":"Pure ingredients sourced from organic farms around the world."},{"type":"range","id":"columns","label":"Columns","min":2,"max":4,"step":1,"default":3},{"type":"select","id":"card_align","label":"Card Alignment","default":"center","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"}]}],"blocks":[{"type":"feature","name":"Feature","settings":[{"type":"text","id":"icon","label":"Icon","default":"🌱"},{"type":"text","id":"title","label":"Title","default":"100% Organic"},{"type":"textarea","id":"description","label":"Description","default":"Certified organic ingredients from sustainable farms."}]}],"presets":[{"name":"CF Features — Minimal","blocks":[{"type":"feature","settings":{"icon":"🌱","title":"100% Organic","description":"Certified organic ingredients from sustainable farms."}},{"type":"feature","settings":{"icon":"🧪","title":"Lab Tested","description":"Third-party verified for purity and potency."}},{"type":"feature","settings":{"icon":"♻️","title":"Eco Packaging","description":"Recyclable materials with zero plastic waste."}}]}]}
+{% endschema %}

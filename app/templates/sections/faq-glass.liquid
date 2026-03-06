@@ -1,0 +1,38 @@
+{%- comment -%} CF Visual Builder — Glass FAQ Accordion {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-faq-gl{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--muted:{{ section.settings.muted }};--accent:{{ section.settings.accent }};--glass:{{ section.settings.glass_bg }};--glass-b:{{ section.settings.glass_border }};font-family:'Inter',sans-serif;background:var(--bg);padding:clamp(3rem,7vw,6rem) clamp(1.5rem,4vw,4rem)}
+.myapp-faq-gl__header{text-align:center;max-width:560px;margin:0 auto clamp(2rem,4vw,3.5rem)}
+.myapp-faq-gl__title{font-size:clamp(1.6rem,3vw,{{ section.settings.title_size }}px);font-weight:800;color:var(--txt);margin:0 0 10px;letter-spacing:-.02em}
+.myapp-faq-gl__subtitle{font-size:14px;color:var(--muted)}
+.myapp-faq-gl__list{max-width:{{ section.settings.max_width }}px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.myapp-faq-gl__item{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-b);border-radius:{{ section.settings.card_radius }}px;overflow:hidden;transition:border-color .3s}
+.myapp-faq-gl__item.myapp-is-open{border-color:var(--accent)}
+.myapp-faq-gl__q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 22px;background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--txt);text-align:left;transition:color .3s}
+.myapp-faq-gl__q:hover{color:var(--accent)}
+.myapp-faq-gl__icon{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);transition:all .3s;flex-shrink:0}
+.myapp-faq-gl__item.myapp-is-open .myapp-faq-gl__icon{background:var(--accent);color:var(--bg);transform:rotate(45deg)}
+.myapp-faq-gl__a{padding:0 22px 20px;font-size:14px;line-height:1.7;color:var(--muted);display:none}
+.myapp-faq-gl__item.myapp-is-open .myapp-faq-gl__a{display:block}
+.myapp-faq-gl__contact{text-align:center;margin-top:clamp(2rem,3vw,3rem);padding:20px;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--glass-b);border-radius:12px;max-width:{{ section.settings.max_width }}px;margin-left:auto;margin-right:auto}
+.myapp-faq-gl__contact p{font-size:13px;color:var(--muted);margin:0}
+.myapp-faq-gl__contact a{color:var(--accent);font-weight:600;text-decoration:none}
+{%- endstyle -%}
+<section class="myapp-faq-gl" id="myapp-faq-gl-{{ section.id }}">
+  <div class="myapp-faq-gl__header">
+    <h2 class="myapp-faq-gl__title">{{ section.settings.title }}</h2>
+    {% if section.settings.subtitle != blank %}<p class="myapp-faq-gl__subtitle">{{ section.settings.subtitle }}</p>{% endif %}
+  </div>
+  <div class="myapp-faq-gl__list">
+    {% for block in section.blocks %}{% if block.type == 'faq' %}
+    <div class="myapp-faq-gl__item" {{ block.shopify_attributes }}>
+      <button class="myapp-faq-gl__q" onclick="this.parentElement.classList.toggle('myapp-is-open')">{{ block.settings.question }}<span class="myapp-faq-gl__icon">+</span></button>
+      <div class="myapp-faq-gl__a">{{ block.settings.answer }}</div>
+    </div>
+    {% endif %}{% endfor %}
+  </div>
+  {% if section.settings.contact_text != blank %}<div class="myapp-faq-gl__contact"><p>{{ section.settings.contact_text }} <a href="{{ section.settings.contact_url }}">{{ section.settings.contact_link_text }}</a></p></div>{% endif %}
+</section>
+{% schema %}
+{"name":"CF FAQ — Glass Accordion","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#0a0a0f"},{"type":"color","id":"text_color","label":"Text","default":"#f0f0f5"},{"type":"color","id":"muted","label":"Muted","default":"#8b8b9e"},{"type":"color","id":"accent","label":"Accent","default":"#a78bfa"},{"type":"text","id":"glass_bg","label":"Glass BG","default":"rgba(255,255,255,0.04)"},{"type":"text","id":"glass_border","label":"Glass Border","default":"rgba(255,255,255,0.08)"},{"type":"text","id":"title","label":"Title","default":"Frequently Asked Questions"},{"type":"range","id":"title_size","label":"Title Size","min":24,"max":48,"step":2,"default":38,"unit":"px"},{"type":"text","id":"subtitle","label":"Subtitle","default":"Everything you need to know"},{"type":"range","id":"max_width","label":"Max Width","min":500,"max":900,"step":50,"default":700,"unit":"px"},{"type":"range","id":"card_radius","label":"Card Radius","min":8,"max":20,"step":4,"default":16,"unit":"px"},{"type":"text","id":"contact_text","label":"Contact Text","default":"Still have questions?"},{"type":"text","id":"contact_link_text","label":"Contact Link Text","default":"Get in touch"},{"type":"url","id":"contact_url","label":"Contact URL"}],"blocks":[{"type":"faq","name":"FAQ Item","settings":[{"type":"text","id":"question","label":"Question","default":"How does this product work?"},{"type":"richtext","id":"answer","label":"Answer","default":"<p>Our advanced formula works by penetrating deep into the skin's surface to deliver active ingredients exactly where they're needed.</p>"}]}],"presets":[{"name":"CF FAQ — Glass Accordion","blocks":[{"type":"faq","settings":{"question":"How long until I see results?","answer":"<p>Most customers report visible improvements within 2-4 weeks of consistent use.</p>"}},{"type":"faq","settings":{"question":"Is this product suitable for sensitive skin?","answer":"<p>Yes! Our formula is dermatologist-tested, hypoallergenic, and free from harsh irritants.</p>"}},{"type":"faq","settings":{"question":"What is your return policy?","answer":"<p>We offer a 60-day money-back guarantee. If you're not completely satisfied, return for a full refund — no questions asked.</p>"}},{"type":"faq","settings":{"question":"Do you offer international shipping?","answer":"<p>Yes, we ship to over 50 countries worldwide. Free shipping on orders over $75.</p>"}}]}]}
+{% endschema %}

@@ -1,0 +1,20 @@
+{%- comment -%} CF Visual Builder — Brutalist Marquee {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-marquee{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--stroke:{{ section.settings.stroke_color }};background:var(--bg);padding:{{ section.settings.padding_y }}px 0;overflow:hidden;{% if section.settings.show_border %}border-top:{{ section.settings.border_width }}px solid var(--txt);border-bottom:{{ section.settings.border_width }}px solid var(--txt){% endif %};transform:rotate({{ section.settings.rotate }}deg)}
+.myapp-marquee__track{display:flex;animation:myapp-mq-scroll {{ section.settings.speed }}s linear infinite;width:max-content}
+.myapp-marquee:hover .myapp-marquee__track{animation-play-state:paused}
+@keyframes myapp-mq-scroll{to{transform:translateX(-50%)}}
+.myapp-marquee__item{display:flex;align-items:center;gap:clamp(1rem,3vw,2.5rem);padding:0 clamp(1rem,3vw,2.5rem);white-space:nowrap}
+.myapp-marquee__text{font-family:'Inter',sans-serif;font-size:clamp(2rem,6vw,{{ section.settings.font_size }}px);font-weight:900;text-transform:uppercase;letter-spacing:-.03em;color:var(--txt)}
+.myapp-marquee__text--outline{color:transparent;-webkit-text-stroke:{{ section.settings.stroke_width }}px var(--stroke)}
+.myapp-marquee__dot{width:{{ section.settings.dot_size }}px;height:{{ section.settings.dot_size }}px;border-radius:50%;background:var(--txt);flex-shrink:0}
+{%- endstyle -%}
+<section class="myapp-marquee" id="myapp-marquee-{{ section.id }}">
+  <div class="myapp-marquee__track">
+    {% for i in (1..4) %}{% for block in section.blocks %}<div class="myapp-marquee__item" {% if forloop.parentloop.first %}{{ block.shopify_attributes }}{% endif %}><span class="myapp-marquee__text {% if block.settings.outline %}myapp-marquee__text--outline{% endif %}">{{ block.settings.text }}</span><span class="myapp-marquee__dot"></span></div>{% endfor %}{% endfor %}
+  </div>
+</section>
+{% schema %}
+{"name":"CF Marquee — Brutalist","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#ffffff"},{"type":"color","id":"text_color","label":"Text","default":"#000000"},{"type":"color","id":"stroke_color","label":"Outline Stroke","default":"#000000"},{"type":"range","id":"font_size","label":"Font Size","min":40,"max":120,"step":8,"default":72,"unit":"px"},{"type":"range","id":"stroke_width","label":"Outline Width","min":1,"max":4,"step":1,"default":2,"unit":"px"},{"type":"range","id":"dot_size","label":"Dot Size","min":4,"max":16,"step":2,"default":8,"unit":"px"},{"type":"range","id":"padding_y","label":"Padding","min":8,"max":40,"step":4,"default":16,"unit":"px"},{"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":5,"default":20,"unit":"s"},{"type":"range","id":"rotate","label":"Rotation","min":-5,"max":5,"step":1,"default":0,"unit":"°"},{"type":"checkbox","id":"show_border","label":"Show Borders","default":true},{"type":"range","id":"border_width","label":"Border Width","min":1,"max":6,"step":1,"default":3,"unit":"px"}],"blocks":[{"type":"text","name":"Text Item","settings":[{"type":"text","id":"text","label":"Text","default":"NEW ARRIVALS"},{"type":"checkbox","id":"outline","label":"Outline Style","default":false}]}],"presets":[{"name":"CF Marquee — Brutalist","blocks":[{"type":"text","settings":{"text":"NEW ARRIVALS","outline":false}},{"type":"text","settings":{"text":"SHOP NOW","outline":true}},{"type":"text","settings":{"text":"FREE SHIPPING","outline":false}},{"type":"text","settings":{"text":"LIMITED EDITION","outline":true}}]}]}
+{% endschema %}

@@ -1,0 +1,38 @@
+{%- comment -%} CF Visual Builder — Glass Feature Grid — Skincare {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-feat-gl{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--muted:{{ section.settings.muted }};--accent:{{ section.settings.accent }};--glass:{{ section.settings.glass_bg }};--glass-b:{{ section.settings.glass_border }};font-family:'Inter',sans-serif;background:var(--bg);padding:clamp(3rem,8vw,7rem) clamp(1.5rem,4vw,4rem);position:relative;overflow:hidden}
+.myapp-feat-gl__header{text-align:{{ section.settings.header_align }};margin-bottom:clamp(2rem,4vw,4rem);max-width:640px;{% if section.settings.header_align == 'center' %}margin-left:auto;margin-right:auto{% endif %}}
+.myapp-feat-gl__eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.myapp-feat-gl__title{font-size:clamp(1.8rem,3.5vw,{{ section.settings.title_size }}px);font-weight:800;line-height:1.1;letter-spacing:-.02em;color:var(--txt);margin:0 0 16px}
+.myapp-feat-gl__desc{font-size:15px;line-height:1.7;color:var(--muted)}
+.myapp-feat-gl__grid{display:grid;grid-template-columns:repeat({{ section.settings.columns }},1fr);gap:{{ section.settings.gap }}px;max-width:1200px;margin:0 auto}
+.myapp-feat-gl__card{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-b);border-radius:{{ section.settings.card_radius }}px;padding:{{ section.settings.card_padding }}px;transition:all .3s;position:relative;overflow:hidden}
+.myapp-feat-gl__card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.15);border-color:var(--accent)}
+.myapp-feat-gl__card-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent),{{ section.settings.accent_end }});display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.myapp-feat-gl__card-title{font-size:16px;font-weight:700;color:var(--txt);margin:0 0 8px}
+.myapp-feat-gl__card-desc{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.myapp-feat-gl__card-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--accent);margin-top:14px;text-decoration:none;transition:gap .3s}
+.myapp-feat-gl__card-link:hover{gap:8px}
+@media(max-width:768px){.myapp-feat-gl__grid{grid-template-columns:1fr}}
+{%- endstyle -%}
+<section class="myapp-feat-gl" id="myapp-feat-gl-{{ section.id }}">
+  <div class="myapp-feat-gl__header">
+    {% if section.settings.eyebrow != blank %}<p class="myapp-feat-gl__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+    {% if section.settings.title != blank %}<h2 class="myapp-feat-gl__title">{{ section.settings.title }}</h2>{% endif %}
+    {% if section.settings.description != blank %}<p class="myapp-feat-gl__desc">{{ section.settings.description }}</p>{% endif %}
+  </div>
+  <div class="myapp-feat-gl__grid">
+    {% for block in section.blocks %}
+      <div class="myapp-feat-gl__card" {{ block.shopify_attributes }}>
+        {% if block.settings.icon != blank %}<div class="myapp-feat-gl__card-icon">{{ block.settings.icon }}</div>{% endif %}
+        {% if block.settings.title != blank %}<h3 class="myapp-feat-gl__card-title">{{ block.settings.title }}</h3>{% endif %}
+        {% if block.settings.description != blank %}<p class="myapp-feat-gl__card-desc">{{ block.settings.description }}</p>{% endif %}
+        {% if block.settings.link_text != blank %}<a href="{{ block.settings.link_url }}" class="myapp-feat-gl__card-link">{{ block.settings.link_text }} →</a>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% schema %}
+{"name":"CF Features — Glass Grid","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#0a0a0f"},{"type":"color","id":"text_color","label":"Text","default":"#f0f0f5"},{"type":"color","id":"muted","label":"Muted","default":"#8b8b9e"},{"type":"color","id":"accent","label":"Accent","default":"#a78bfa"},{"type":"color","id":"accent_end","label":"Accent Gradient End","default":"#6d5bff"},{"type":"text","id":"glass_bg","label":"Glass BG","default":"rgba(255,255,255,0.05)"},{"type":"text","id":"glass_border","label":"Glass Border","default":"rgba(255,255,255,0.08)"},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Why Choose Us"},{"type":"text","id":"title","label":"Title","default":"Science-Backed Skincare"},{"type":"range","id":"title_size","label":"Title Size","min":28,"max":56,"step":2,"default":42,"unit":"px"},{"type":"textarea","id":"description","label":"Description","default":"Every formula is developed by leading dermatologists and backed by clinical trials."},{"type":"select","id":"header_align","label":"Header Alignment","default":"center","options":[{"value":"left","label":"Left"},{"value":"center","label":"Center"}]},{"type":"range","id":"columns","label":"Columns","min":2,"max":4,"step":1,"default":3},{"type":"range","id":"gap","label":"Gap","min":12,"max":32,"step":4,"default":20,"unit":"px"},{"type":"range","id":"card_radius","label":"Card Radius","min":8,"max":28,"step":4,"default":20,"unit":"px"},{"type":"range","id":"card_padding","label":"Card Padding","min":20,"max":40,"step":4,"default":28,"unit":"px"}],"blocks":[{"type":"feature","name":"Feature Card","settings":[{"type":"text","id":"icon","label":"Emoji Icon","default":"🧬"},{"type":"text","id":"title","label":"Title","default":"Bio-Retinol Complex"},{"type":"textarea","id":"description","label":"Description","default":"Plant-based retinol that delivers clinical results without irritation."},{"type":"text","id":"link_text","label":"Link Text"},{"type":"url","id":"link_url","label":"Link URL"}]}],"presets":[{"name":"CF Features — Glass Grid","blocks":[{"type":"feature","settings":{"icon":"🧬","title":"Bio-Retinol Complex","description":"Plant-based retinol that delivers results without irritation."}},{"type":"feature","settings":{"icon":"💧","title":"Hyaluronic Acid","description":"Triple-weight HA plumps and hydrates for 72 hours."}},{"type":"feature","settings":{"icon":"🛡️","title":"Dermatologist Tested","description":"Clinically validated on all skin types including sensitive."}}]}]}
+{% endschema %}

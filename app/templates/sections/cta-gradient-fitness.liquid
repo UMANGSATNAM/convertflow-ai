@@ -1,0 +1,35 @@
+{%- comment -%} CF Visual Builder — Gradient CTA — Fitness {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-cta-grad{--bg1:{{ section.settings.gradient_start }};--bg2:{{ section.settings.gradient_end }};font-family:'Inter',sans-serif;background:linear-gradient({{ section.settings.gradient_angle }}deg,var(--bg1),var(--bg2));padding:clamp(3rem,8vw,7rem) clamp(1.5rem,4vw,4rem);text-align:center;position:relative;overflow:hidden}
+.myapp-cta-grad__ring{position:absolute;width:{{ section.settings.ring_size }}px;height:{{ section.settings.ring_size }}px;border:2px solid rgba(255,255,255,.1);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:myapp-cta-ring 6s ease infinite}
+.myapp-cta-grad__ring:nth-child(2){width:calc({{ section.settings.ring_size }}px * 1.5);height:calc({{ section.settings.ring_size }}px * 1.5);animation-delay:1s}
+@keyframes myapp-cta-ring{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.15}50%{transform:translate(-50%,-50%) scale(1.05);opacity:.25}}
+.myapp-cta-grad__inner{position:relative;z-index:2;max-width:700px;margin:0 auto}
+.myapp-cta-grad__eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:{{ section.settings.eyebrow_color }};margin-bottom:16px}
+.myapp-cta-grad__title{font-size:clamp(2rem,5vw,{{ section.settings.title_size }}px);font-weight:900;line-height:1.05;letter-spacing:-.03em;color:#fff;margin:0 0 18px}
+.myapp-cta-grad__sub{font-size:16px;line-height:1.7;color:rgba(255,255,255,.75);margin:0 0 32px;max-width:520px;margin-left:auto;margin-right:auto}
+.myapp-cta-grad__btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.myapp-cta-grad__btn{padding:16px 36px;font-size:14px;font-weight:700;border-radius:{{ section.settings.btn_radius }}px;text-decoration:none;transition:all .3s;border:2px solid transparent}
+.myapp-cta-grad__btn--primary{background:#fff;color:var(--bg1)}
+.myapp-cta-grad__btn--primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.myapp-cta-grad__btn--outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.myapp-cta-grad__btn--outline:hover{border-color:#fff}
+.myapp-cta-grad__urgency{margin-top:24px;font-size:13px;font-weight:600;color:{{ section.settings.urgency_color }}}
+{%- endstyle -%}
+<section class="myapp-cta-grad" id="myapp-cta-grad-{{ section.id }}">
+  <div class="myapp-cta-grad__ring"></div><div class="myapp-cta-grad__ring"></div>
+  <div class="myapp-cta-grad__inner">
+    {% if section.settings.eyebrow != blank %}<p class="myapp-cta-grad__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+    <h2 class="myapp-cta-grad__title">{{ section.settings.title }}</h2>
+    {% if section.settings.subtext != blank %}<p class="myapp-cta-grad__sub">{{ section.settings.subtext }}</p>{% endif %}
+    <div class="myapp-cta-grad__btns">
+      {% if section.settings.cta_text != blank %}<a href="{{ section.settings.cta_url }}" class="myapp-cta-grad__btn myapp-cta-grad__btn--primary">{{ section.settings.cta_text }}</a>{% endif %}
+      {% if section.settings.cta2_text != blank %}<a href="{{ section.settings.cta2_url }}" class="myapp-cta-grad__btn myapp-cta-grad__btn--outline">{{ section.settings.cta2_text }}</a>{% endif %}
+    </div>
+    {% if section.settings.urgency != blank %}<p class="myapp-cta-grad__urgency">{{ section.settings.urgency }}</p>{% endif %}
+  </div>
+</section>
+{% schema %}
+{"name":"CF CTA — Gradient","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"gradient_start","label":"Gradient Start","default":"#1e1b4b"},{"type":"color","id":"gradient_end","label":"Gradient End","default":"#6366f1"},{"type":"range","id":"gradient_angle","label":"Gradient Angle","min":0,"max":360,"step":15,"default":135,"unit":"°"},{"type":"color","id":"eyebrow_color","label":"Eyebrow Color","default":"#fbbf24"},{"type":"color","id":"urgency_color","label":"Urgency Color","default":"#fbbf24"},{"type":"range","id":"ring_size","label":"Ring Size","min":200,"max":600,"step":50,"default":400,"unit":"px"},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"⚡ LIMITED TIME"},{"type":"text","id":"title","label":"Title","default":"Transform Your Body in 90 Days"},{"type":"range","id":"title_size","label":"Title Size","min":28,"max":64,"step":2,"default":48,"unit":"px"},{"type":"textarea","id":"subtext","label":"Subtext","default":"Join 50,000+ members who've already achieved their fitness goals. Your transformation starts today."},{"type":"text","id":"cta_text","label":"CTA Text","default":"Start Free Trial"},{"type":"url","id":"cta_url","label":"CTA Link"},{"type":"text","id":"cta2_text","label":"CTA 2 Text","default":"Watch Video"},{"type":"url","id":"cta2_url","label":"CTA 2 Link"},{"type":"range","id":"btn_radius","label":"Button Radius","min":0,"max":24,"step":2,"default":12,"unit":"px"},{"type":"text","id":"urgency","label":"Urgency Text","default":"🔥 Only 23 spots left at this price"}],"presets":[{"name":"CF CTA — Gradient"}]}
+{% endschema %}

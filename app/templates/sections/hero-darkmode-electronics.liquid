@@ -1,0 +1,43 @@
+{%- comment -%} CF Visual Builder — Dark/Neon Hero — Electronics {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-hero-dk{--bg:{{ section.settings.bg }};--neon:{{ section.settings.neon }};--neon-glow:{{ section.settings.neon }}30;--txt:{{ section.settings.text_color }};--muted:{{ section.settings.muted }};font-family:'Inter',sans-serif;background:var(--bg);min-height:{{ section.settings.height }}vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.myapp-hero-dk__grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.myapp-hero-dk__inner{max-width:1300px;margin:0 auto;padding:clamp(3rem,6vw,6rem) clamp(1.5rem,3vw,3rem);display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,4vw,5rem);align-items:center;width:100%;position:relative;z-index:2}
+.myapp-hero-dk__content{display:flex;flex-direction:column;gap:20px}
+.myapp-hero-dk__chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--neon-glow);border:1px solid var(--neon);border-radius:100px;color:var(--neon);font-size:11px;font-weight:600;width:fit-content}
+.myapp-hero-dk__chip-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 8px var(--neon)}
+.myapp-hero-dk__h1{font-size:clamp(2rem,5vw,{{ section.settings.h1_size }}px);font-weight:800;line-height:1.08;letter-spacing:-.03em;color:var(--txt);margin:0}
+.myapp-hero-dk__h1 em{font-style:normal;color:var(--neon);text-shadow:0 0 30px var(--neon-glow)}
+.myapp-hero-dk__sub{font-size:15px;line-height:1.7;color:var(--muted);max-width:420px}
+.myapp-hero-dk__specs{display:flex;gap:16px;flex-wrap:wrap;margin-top:4px}
+.myapp-hero-dk__spec{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:12px;color:var(--txt);font-weight:500}
+.myapp-hero-dk__spec strong{color:var(--neon)}
+.myapp-hero-dk__cta{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--neon);color:var(--bg);font-size:14px;font-weight:700;border-radius:12px;text-decoration:none;transition:all .3s;width:fit-content;box-shadow:0 0 30px var(--neon-glow)}
+.myapp-hero-dk__cta:hover{transform:translateY(-2px);box-shadow:0 8px 40px var(--neon-glow)}
+.myapp-hero-dk__media{display:flex;align-items:center;justify-content:center;position:relative}
+.myapp-hero-dk__img{max-width:90%;filter:drop-shadow(0 0 40px var(--neon-glow));animation:myapp-dk-float 5s ease-in-out infinite}
+@keyframes myapp-dk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.myapp-hero-dk__ring{position:absolute;width:70%;aspect-ratio:1;border:1px solid var(--neon);border-radius:50%;opacity:.15;animation:myapp-dk-pulse 4s ease infinite}
+@keyframes myapp-dk-pulse{0%,100%{transform:scale(1);opacity:.15}50%{transform:scale(1.05);opacity:.25}}
+@media(max-width:768px){.myapp-hero-dk__inner{grid-template-columns:1fr}.myapp-hero-dk__media{order:-1;margin-bottom:1rem}.myapp-hero-dk__img{max-width:70%}.myapp-hero-dk__specs{gap:8px}}
+{%- endstyle -%}
+<section class="myapp-hero-dk" id="myapp-hero-dk-{{ section.id }}">
+  <div class="myapp-hero-dk__grid-bg"></div>
+  <div class="myapp-hero-dk__inner">
+    <div class="myapp-hero-dk__content">
+      {% if section.settings.chip != blank %}<div class="myapp-hero-dk__chip"><span class="myapp-hero-dk__chip-dot"></span>{{ section.settings.chip }}</div>{% endif %}
+      <h1 class="myapp-hero-dk__h1">{{ section.settings.headline }}</h1>
+      <p class="myapp-hero-dk__sub">{{ section.settings.subtext }}</p>
+      {% if section.blocks.size > 0 %}<div class="myapp-hero-dk__specs">{% for block in section.blocks %}{% if block.type == 'spec' %}<div class="myapp-hero-dk__spec" {{ block.shopify_attributes }}><strong>{{ block.settings.spec_value }}</strong> {{ block.settings.spec_label }}</div>{% endif %}{% endfor %}</div>{% endif %}
+      {% if section.settings.cta_text != blank %}<a href="{{ section.settings.cta_url }}" class="myapp-hero-dk__cta">{{ section.settings.cta_text }}</a>{% endif %}
+    </div>
+    <div class="myapp-hero-dk__media">
+      <div class="myapp-hero-dk__ring"></div>
+      {% if section.settings.image != blank %}<img class="myapp-hero-dk__img" src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.headline }}" loading="eager">{% endif %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{"name":"CF Hero — Dark Neon","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#0a0a12"},{"type":"color","id":"neon","label":"Neon Accent","default":"#00ff88"},{"type":"color","id":"text_color","label":"Text","default":"#e0e0e0"},{"type":"color","id":"muted","label":"Muted","default":"#6b7280"},{"type":"range","id":"height","label":"Min Height","min":60,"max":100,"step":5,"default":90,"unit":"vh"},{"type":"text","id":"chip","label":"Chip Text","default":"Next Gen Technology"},{"type":"html","id":"headline","label":"Headline","default":"The Future of <em>Sound</em>"},{"type":"range","id":"h1_size","label":"Headline Size","min":36,"max":80,"step":2,"default":58,"unit":"px"},{"type":"textarea","id":"subtext","label":"Subtext","default":"Spatial audio with head tracking. 48-hour battery. Military-grade noise cancellation. This changes everything."},{"type":"image_picker","id":"image","label":"Product Image"},{"type":"text","id":"cta_text","label":"CTA Text","default":"Pre-Order Now — $349"},{"type":"url","id":"cta_url","label":"CTA Link"}],"blocks":[{"type":"spec","name":"Spec Badge","settings":[{"type":"text","id":"spec_value","label":"Value","default":"48h"},{"type":"text","id":"spec_label","label":"Label","default":"Battery"}]}],"presets":[{"name":"CF Hero — Dark Neon","blocks":[{"type":"spec","settings":{"spec_value":"48h","spec_label":"Battery"}},{"type":"spec","settings":{"spec_value":"ANC","spec_label":"Pro Noise Cancel"}},{"type":"spec","settings":{"spec_value":"Hi-Res","spec_label":"Spatial Audio"}}]}]}
+{% endschema %}

@@ -1,0 +1,39 @@
+{%- comment -%} CF Visual Builder — Countdown Timer — Fashion {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-countdown{--bg1:{{ section.settings.gradient_start }};--bg2:{{ section.settings.gradient_end }};font-family:'Inter',sans-serif;background:linear-gradient({{ section.settings.gradient_angle }}deg,var(--bg1),var(--bg2));padding:clamp(2.5rem,6vw,5rem) clamp(1.5rem,4vw,4rem);text-align:center;position:relative;overflow:hidden}
+.myapp-countdown__inner{position:relative;z-index:2;max-width:800px;margin:0 auto}
+.myapp-countdown__eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:{{ section.settings.eyebrow_color }};margin-bottom:12px}
+.myapp-countdown__title{font-size:clamp(1.8rem,4vw,{{ section.settings.title_size }}px);font-weight:900;color:#fff;margin:0 0 24px;letter-spacing:-.02em}
+.myapp-countdown__timer{display:flex;justify-content:center;gap:clamp(12px,3vw,24px);margin-bottom:28px}
+.myapp-countdown__unit{display:flex;flex-direction:column;align-items:center;gap:6px}
+.myapp-countdown__digit{width:clamp(56px,12vw,80px);height:clamp(56px,12vw,80px);background:{{ section.settings.digit_bg }};backdrop-filter:blur(16px);border:1px solid {{ section.settings.digit_border }};border-radius:{{ section.settings.digit_radius }}px;display:flex;align-items:center;justify-content:center;font-size:clamp(1.5rem,4vw,{{ section.settings.digit_size }}px);font-weight:900;color:#fff}
+.myapp-countdown__label{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em}
+.myapp-countdown__colon{font-size:clamp(1.5rem,4vw,36px);font-weight:800;color:rgba(255,255,255,.3);align-self:flex-start;margin-top:clamp(14px,3vw,20px)}
+.myapp-countdown__cta{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;background:#fff;color:var(--bg1);font-size:15px;font-weight:800;border-radius:{{ section.settings.btn_radius }}px;text-decoration:none;transition:all .3s}
+.myapp-countdown__cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.myapp-countdown__sub{margin-top:16px;font-size:13px;color:rgba(255,255,255,.6)}
+{%- endstyle -%}
+<section class="myapp-countdown" id="myapp-countdown-{{ section.id }}">
+  <div class="myapp-countdown__inner">
+    {% if section.settings.eyebrow != blank %}<p class="myapp-countdown__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+    <h2 class="myapp-countdown__title">{{ section.settings.title }}</h2>
+    <div class="myapp-countdown__timer" id="myapp-timer-{{ section.id }}">
+      <div class="myapp-countdown__unit"><div class="myapp-countdown__digit" data-myapp-days>00</div><span class="myapp-countdown__label">Days</span></div>
+      <span class="myapp-countdown__colon">:</span>
+      <div class="myapp-countdown__unit"><div class="myapp-countdown__digit" data-myapp-hours>00</div><span class="myapp-countdown__label">Hours</span></div>
+      <span class="myapp-countdown__colon">:</span>
+      <div class="myapp-countdown__unit"><div class="myapp-countdown__digit" data-myapp-mins>00</div><span class="myapp-countdown__label">Minutes</span></div>
+      <span class="myapp-countdown__colon">:</span>
+      <div class="myapp-countdown__unit"><div class="myapp-countdown__digit" data-myapp-secs>00</div><span class="myapp-countdown__label">Seconds</span></div>
+    </div>
+    {% if section.settings.cta_text != blank %}<a href="{{ section.settings.cta_url }}" class="myapp-countdown__cta">{{ section.settings.cta_text }}</a>{% endif %}
+    {% if section.settings.sub_text != blank %}<p class="myapp-countdown__sub">{{ section.settings.sub_text }}</p>{% endif %}
+  </div>
+</section>
+<script>
+(function(){var t=document.getElementById('myapp-timer-{{ section.id }}');if(!t)return;var end=new Date('{{ section.settings.end_date }}T{{ section.settings.end_time }}:00').getTime();function u(){var n=end-Date.now();if(n<=0){t.querySelectorAll('.myapp-countdown__digit').forEach(function(e){e.textContent='00'});return}var d=Math.floor(n/864e5),h=Math.floor(n%864e5/36e5),m=Math.floor(n%36e5/6e4),s=Math.floor(n%6e4/1e3);t.querySelector('[data-myapp-days]').textContent=String(d).padStart(2,'0');t.querySelector('[data-myapp-hours]').textContent=String(h).padStart(2,'0');t.querySelector('[data-myapp-mins]').textContent=String(m).padStart(2,'0');t.querySelector('[data-myapp-secs]').textContent=String(s).padStart(2,'0')}u();setInterval(u,1000)})();
+</script>
+{% schema %}
+{"name":"CF Countdown — Urgency","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"gradient_start","label":"Gradient Start","default":"#1e1b4b"},{"type":"color","id":"gradient_end","label":"Gradient End","default":"#ec4899"},{"type":"range","id":"gradient_angle","label":"Gradient Angle","min":0,"max":360,"step":15,"default":135,"unit":"°"},{"type":"color","id":"eyebrow_color","label":"Eyebrow Color","default":"#fbbf24"},{"type":"text","id":"digit_bg","label":"Digit BG","default":"rgba(255,255,255,0.1)"},{"type":"text","id":"digit_border","label":"Digit Border","default":"rgba(255,255,255,0.2)"},{"type":"range","id":"digit_radius","label":"Digit Radius","min":4,"max":20,"step":4,"default":12,"unit":"px"},{"type":"range","id":"digit_size","label":"Digit Font Size","min":20,"max":48,"step":4,"default":32,"unit":"px"},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"⚡ FLASH SALE"},{"type":"text","id":"title","label":"Title","default":"Sale Ends In..."},{"type":"range","id":"title_size","label":"Title Size","min":24,"max":56,"step":2,"default":42,"unit":"px"},{"type":"text","id":"end_date","label":"End Date","default":"2026-03-31","info":"YYYY-MM-DD format"},{"type":"text","id":"end_time","label":"End Time","default":"23:59","info":"HH:MM format"},{"type":"text","id":"cta_text","label":"CTA Text","default":"Shop the Sale"},{"type":"url","id":"cta_url","label":"CTA Link"},{"type":"range","id":"btn_radius","label":"Button Radius","min":0,"max":24,"step":2,"default":12,"unit":"px"},{"type":"text","id":"sub_text","label":"Sub Text","default":"Free express shipping on orders over $100"}],"presets":[{"name":"CF Countdown — Urgency"}]}
+{% endschema %}

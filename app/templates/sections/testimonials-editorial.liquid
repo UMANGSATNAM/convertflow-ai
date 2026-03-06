@@ -1,0 +1,25 @@
+{%- comment -%} CF Visual Builder — Editorial Testimonials — Jewelry {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Inter:wght@400;500;600&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-testi-ed{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--gold:{{ section.settings.accent }};--muted:{{ section.settings.muted }};font-family:'Inter',sans-serif;background:var(--bg);padding:clamp(3rem,7vw,7rem) clamp(1.5rem,4vw,5rem)}
+.myapp-testi-ed__header{text-align:center;margin-bottom:clamp(2.5rem,4vw,4rem)}
+.myapp-testi-ed__title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,42px);font-weight:400;color:var(--txt);margin:0}
+.myapp-testi-ed__divider{width:60px;height:1px;background:var(--gold);margin:20px auto}
+.myapp-testi-ed__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px;max-width:1100px;margin:0 auto}
+.myapp-testi-ed__card{text-align:center;padding:0 20px}
+.myapp-testi-ed__quote-mark{font-family:'Playfair Display',serif;font-size:48px;color:var(--gold);line-height:1;margin-bottom:8px}
+.myapp-testi-ed__quote{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;line-height:1.8;color:var(--txt);margin:0 0 20px}
+.myapp-testi-ed__line{width:40px;height:1px;background:var(--gold);margin:0 auto 16px}
+.myapp-testi-ed__avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;margin:0 auto 10px;display:block}
+.myapp-testi-ed__name{font-size:13px;font-weight:600;color:var(--txt);letter-spacing:.04em}
+.myapp-testi-ed__role{font-size:11px;color:var(--muted);margin-top:2px}
+{%- endstyle -%}
+<section class="myapp-testi-ed" id="myapp-testi-ed-{{ section.id }}">
+  <div class="myapp-testi-ed__header"><h2 class="myapp-testi-ed__title">{{ section.settings.title }}</h2><div class="myapp-testi-ed__divider"></div></div>
+  <div class="myapp-testi-ed__grid">
+    {% for block in section.blocks %}<div class="myapp-testi-ed__card" {{ block.shopify_attributes }}><div class="myapp-testi-ed__quote-mark">"</div><p class="myapp-testi-ed__quote">{{ block.settings.quote }}</p><div class="myapp-testi-ed__line"></div>{% if block.settings.avatar != blank %}<img class="myapp-testi-ed__avatar" src="{{ block.settings.avatar | image_url: width: 96 }}" alt="{{ block.settings.name }}" loading="lazy">{% endif %}<div class="myapp-testi-ed__name">{{ block.settings.name }}</div><div class="myapp-testi-ed__role">{{ block.settings.role }}</div></div>{% endfor %}
+  </div>
+</section>
+{% schema %}
+{"name":"CF Testimonials — Editorial","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#faf7f2"},{"type":"color","id":"text_color","label":"Text","default":"#1a1a1a"},{"type":"color","id":"accent","label":"Accent","default":"#c9a961"},{"type":"color","id":"muted","label":"Muted","default":"#8b7355"},{"type":"text","id":"title","label":"Title","default":"Words From Our Collectors"}],"blocks":[{"type":"review","name":"Testimonial","settings":[{"type":"textarea","id":"quote","label":"Quote","default":"Every piece from this collection is a work of art."},{"type":"text","id":"name","label":"Name","default":"Victoria S."},{"type":"text","id":"role","label":"Title","default":"Art Collector, NYC"},{"type":"image_picker","id":"avatar","label":"Photo"}]}],"presets":[{"name":"CF Testimonials — Editorial","blocks":[{"type":"review","settings":{"quote":"Every piece from this collection is a work of art. The craftsmanship is simply extraordinary.","name":"Victoria S.","role":"Art Collector, NYC"}},{"type":"review","settings":{"quote":"I've purchased from the finest jewelers in Paris and Milan. Nothing compares to this level of detail.","name":"Isabelle D.","role":"Fashion Editor"}}]}]}
+{% endschema %}

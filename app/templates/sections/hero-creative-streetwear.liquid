@@ -1,0 +1,48 @@
+{%- comment -%} CF Visual Builder — Creative Hero — Streetwear {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;800;900&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-hero-cre{--bg:{{ section.settings.bg }};--neon1:{{ section.settings.neon1 }};--neon2:{{ section.settings.neon2 }};--neon3:{{ section.settings.neon3 }};font-family:'Inter',sans-serif;background:var(--bg);min-height:{{ section.settings.height }}vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.myapp-hero-cre__bg-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(6rem,20vw,18rem);font-weight:900;color:rgba(255,255,255,.03);white-space:nowrap;pointer-events:none;letter-spacing:-.05em;text-transform:uppercase}
+.myapp-hero-cre__inner{max-width:1400px;margin:0 auto;padding:clamp(3rem,6vw,6rem) clamp(1.5rem,4vw,4rem);display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(2rem,4vw,5rem);align-items:center;width:100%;position:relative;z-index:2}
+.myapp-hero-cre__content{display:flex;flex-direction:column;gap:24px}
+.myapp-hero-cre__badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:2px solid var(--neon1);color:var(--neon1);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;width:fit-content;animation:myapp-cre-flash 2s ease infinite}
+@keyframes myapp-cre-flash{0%,100%{border-color:var(--neon1);color:var(--neon1)}50%{border-color:var(--neon2);color:var(--neon2)}}
+.myapp-hero-cre__h1{font-size:clamp(2.5rem,7vw,{{ section.settings.h1_size }}px);font-weight:900;line-height:.95;letter-spacing:-.04em;color:#fff;margin:0;text-transform:uppercase}
+.myapp-hero-cre__h1 em{font-style:normal;-webkit-text-stroke:2px var(--neon1);color:transparent}
+.myapp-hero-cre__sub{font-size:15px;line-height:1.7;color:rgba(255,255,255,.6);max-width:400px}
+.myapp-hero-cre__ctas{display:flex;gap:12px;flex-wrap:wrap}
+.myapp-hero-cre__btn{padding:14px 32px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:all .3s;border:none;cursor:pointer}
+.myapp-hero-cre__btn--primary{background:var(--neon1);color:var(--bg)}
+.myapp-hero-cre__btn--primary:hover{background:var(--neon2);transform:skewX(-2deg)}
+.myapp-hero-cre__btn--outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.3)}
+.myapp-hero-cre__btn--outline:hover{border-color:var(--neon1);color:var(--neon1)}
+.myapp-hero-cre__media{position:relative}
+.myapp-hero-cre__img{width:100%;aspect-ratio:4/5;object-fit:cover;transform:rotate({{ section.settings.img_rotate }}deg);transition:transform .6s}
+.myapp-hero-cre__img:hover{transform:rotate(0deg) scale(1.02)}
+.myapp-hero-cre__sticker{position:absolute;top:-12px;right:-12px;width:80px;height:80px;background:var(--neon3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--bg);text-transform:uppercase;text-align:center;line-height:1.2;animation:myapp-spin 8s linear infinite}
+@keyframes myapp-spin{to{transform:rotate(360deg)}}
+.myapp-hero-cre__price-tag{position:absolute;bottom:20px;left:-20px;background:var(--neon1);color:var(--bg);padding:10px 20px;font-size:24px;font-weight:900;transform:rotate(-5deg)}
+@media(max-width:768px){.myapp-hero-cre__inner{grid-template-columns:1fr}.myapp-hero-cre__media{order:-1}.myapp-hero-cre__img{transform:rotate(0deg)}.myapp-hero-cre__sticker{width:60px;height:60px;font-size:9px}.myapp-hero-cre__price-tag{left:0;bottom:10px}}
+{%- endstyle -%}
+<section class="myapp-hero-cre" id="myapp-hero-cre-{{ section.id }}">
+  <div class="myapp-hero-cre__bg-text">{{ section.settings.bg_text }}</div>
+  <div class="myapp-hero-cre__inner">
+    <div class="myapp-hero-cre__content">
+      {% if section.settings.badge != blank %}<div class="myapp-hero-cre__badge">{{ section.settings.badge }}</div>{% endif %}
+      <h1 class="myapp-hero-cre__h1">{{ section.settings.headline }}</h1>
+      <p class="myapp-hero-cre__sub">{{ section.settings.subtext }}</p>
+      <div class="myapp-hero-cre__ctas">
+        {% if section.settings.cta_text != blank %}<a href="{{ section.settings.cta_url }}" class="myapp-hero-cre__btn myapp-hero-cre__btn--primary">{{ section.settings.cta_text }}</a>{% endif %}
+        {% if section.settings.cta2_text != blank %}<a href="{{ section.settings.cta2_url }}" class="myapp-hero-cre__btn myapp-hero-cre__btn--outline">{{ section.settings.cta2_text }}</a>{% endif %}
+      </div>
+    </div>
+    <div class="myapp-hero-cre__media">
+      {% if section.settings.image != blank %}<img class="myapp-hero-cre__img" src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ section.settings.headline }}" loading="eager">{% endif %}
+      {% if section.settings.sticker != blank %}<div class="myapp-hero-cre__sticker">{{ section.settings.sticker }}</div>{% endif %}
+      {% if section.settings.price_tag != blank %}<div class="myapp-hero-cre__price-tag">{{ section.settings.price_tag }}</div>{% endif %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{"name":"CF Hero — Creative","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#0d0d0d"},{"type":"color","id":"neon1","label":"Neon Primary","default":"#ff3366"},{"type":"color","id":"neon2","label":"Neon Secondary","default":"#00ff88"},{"type":"color","id":"neon3","label":"Sticker Color","default":"#ffd60a"},{"type":"range","id":"height","label":"Min Height","min":60,"max":100,"step":5,"default":90,"unit":"vh"},{"type":"text","id":"bg_text","label":"Background Text","default":"DROP 04"},{"type":"text","id":"badge","label":"Badge","default":"⚡ LIMITED DROP"},{"type":"html","id":"headline","label":"Headline","default":"BREAK <em>THE RULES</em>"},{"type":"range","id":"h1_size","label":"Headline Size","min":40,"max":120,"step":4,"default":80,"unit":"px"},{"type":"textarea","id":"subtext","label":"Subtext","default":"Only 200 pieces made. Once they're gone, they're gone forever. Don't sleep on this."},{"type":"image_picker","id":"image","label":"Product Image"},{"type":"range","id":"img_rotate","label":"Image Tilt °","min":-8,"max":8,"step":1,"default":3,"unit":"°"},{"type":"text","id":"sticker","label":"Sticker Text","default":"NEW DROP"},{"type":"text","id":"price_tag","label":"Price Tag","default":"$149"},{"type":"text","id":"cta_text","label":"Primary CTA","default":"COP NOW"},{"type":"url","id":"cta_url","label":"CTA Link"},{"type":"text","id":"cta2_text","label":"Secondary CTA","default":"LOOKBOOK"},{"type":"url","id":"cta2_url","label":"CTA2 Link"}],"presets":[{"name":"CF Hero — Creative"}]}
+{% endschema %}

@@ -1,0 +1,19 @@
+{%- comment -%} CF Visual Builder — Minimal CTA — Home {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-cta-min{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--muted:{{ section.settings.muted }};font-family:'Inter',sans-serif;background:var(--bg);padding:clamp(4rem,10vw,8rem) clamp(1.5rem,4vw,4rem);text-align:center}
+.myapp-cta-min__title{font-size:clamp(1.8rem,4vw,{{ section.settings.title_size }}px);font-weight:700;letter-spacing:-.02em;color:var(--txt);margin:0 0 16px}
+.myapp-cta-min__sub{font-size:15px;line-height:1.7;color:var(--muted);max-width:480px;margin:0 auto 32px}
+.myapp-cta-min__btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--txt);color:var(--bg);font-size:14px;font-weight:600;border-radius:{{ section.settings.btn_radius }}px;text-decoration:none;transition:all .3s;position:relative;overflow:hidden}
+.myapp-cta-min__btn::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:{{ section.settings.underline_color }};transform:scaleX(0);transition:transform .4s;transform-origin:left}
+.myapp-cta-min__btn:hover::after{transform:scaleX(1)}
+.myapp-cta-min__btn:hover{transform:translateY(-2px)}
+{%- endstyle -%}
+<section class="myapp-cta-min" id="myapp-cta-min-{{ section.id }}">
+  <h2 class="myapp-cta-min__title">{{ section.settings.title }}</h2>
+  {% if section.settings.subtext != blank %}<p class="myapp-cta-min__sub">{{ section.settings.subtext }}</p>{% endif %}
+  {% if section.settings.cta_text != blank %}<a href="{{ section.settings.cta_url }}" class="myapp-cta-min__btn">{{ section.settings.cta_text }} →</a>{% endif %}
+</section>
+{% schema %}
+{"name":"CF CTA — Minimal","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#fafafa"},{"type":"color","id":"text_color","label":"Text","default":"#111827"},{"type":"color","id":"muted","label":"Muted","default":"#6b7280"},{"type":"color","id":"underline_color","label":"Underline Color","default":"#111827"},{"type":"text","id":"title","label":"Title","default":"Elevate Your Space"},{"type":"range","id":"title_size","label":"Title Size","min":24,"max":56,"step":2,"default":40,"unit":"px"},{"type":"textarea","id":"subtext","label":"Subtext","default":"Browse our curated collection of handcrafted home essentials."},{"type":"text","id":"cta_text","label":"CTA Text","default":"Explore Collection"},{"type":"url","id":"cta_url","label":"CTA Link"},{"type":"range","id":"btn_radius","label":"Button Radius","min":0,"max":12,"step":2,"default":0,"unit":"px"}],"presets":[{"name":"CF CTA — Minimal"}]}
+{% endschema %}

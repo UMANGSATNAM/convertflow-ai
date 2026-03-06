@@ -1,0 +1,33 @@
+{%- comment -%} CF Visual Builder — Dark Newsletter {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-news-dk{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--accent:{{ section.settings.accent }};--muted:{{ section.settings.muted }};font-family:'Inter',sans-serif;background:var(--bg);padding:clamp(3rem,7vw,6rem) clamp(1.5rem,4vw,4rem);text-align:center}
+.myapp-news-dk__inner{max-width:580px;margin:0 auto}
+.myapp-news-dk__emoji{font-size:36px;margin-bottom:16px}
+.myapp-news-dk__title{font-size:clamp(1.6rem,3vw,{{ section.settings.title_size }}px);font-weight:800;color:var(--txt);margin:0 0 10px;letter-spacing:-.02em}
+.myapp-news-dk__sub{font-size:14px;line-height:1.7;color:var(--muted);margin:0 0 28px}
+.myapp-news-dk__form{display:flex;gap:8px;max-width:440px;margin:0 auto;position:relative}
+.myapp-news-dk__input{flex:1;padding:14px 18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:{{ section.settings.input_radius }}px;color:var(--txt);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .3s}
+.myapp-news-dk__input:focus{border-color:var(--accent)}
+.myapp-news-dk__input::placeholder{color:var(--muted)}
+.myapp-news-dk__btn{padding:14px 28px;background:linear-gradient(135deg,var(--accent),{{ section.settings.accent_end }});color:{{ section.settings.btn_text }};font-size:14px;font-weight:700;border:none;border-radius:{{ section.settings.input_radius }}px;cursor:pointer;transition:all .3s;white-space:nowrap}
+.myapp-news-dk__btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px {{ section.settings.accent }}30}
+.myapp-news-dk__proof{margin-top:18px;font-size:12px;color:var(--muted)}
+.myapp-news-dk__proof strong{color:var(--accent)}
+@media(max-width:480px){.myapp-news-dk__form{flex-direction:column}}
+{%- endstyle -%}
+<section class="myapp-news-dk" id="myapp-news-dk-{{ section.id }}">
+  <div class="myapp-news-dk__inner">
+    {% if section.settings.emoji != blank %}<div class="myapp-news-dk__emoji">{{ section.settings.emoji }}</div>{% endif %}
+    <h2 class="myapp-news-dk__title">{{ section.settings.title }}</h2>
+    {% if section.settings.subtext != blank %}<p class="myapp-news-dk__sub">{{ section.settings.subtext }}</p>{% endif %}
+    <form class="myapp-news-dk__form" action="{{ section.settings.form_action }}" method="post">
+      <input type="email" name="email" class="myapp-news-dk__input" placeholder="{{ section.settings.placeholder }}" required>
+      <button type="submit" class="myapp-news-dk__btn">{{ section.settings.btn_text }}</button>
+    </form>
+    {% if section.settings.proof_text != blank %}<p class="myapp-news-dk__proof">{{ section.settings.proof_text }}</p>{% endif %}
+  </div>
+</section>
+{% schema %}
+{"name":"CF Newsletter — Dark","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#0d0d0d"},{"type":"color","id":"text_color","label":"Text","default":"#f0f0f5"},{"type":"color","id":"muted","label":"Muted","default":"#6b7280"},{"type":"color","id":"accent","label":"Accent","default":"#635bff"},{"type":"color","id":"accent_end","label":"Accent End","default":"#00ff88"},{"type":"color","id":"btn_text","label":"Button Text","default":"#ffffff"},{"type":"text","id":"emoji","label":"Emoji","default":"✉️"},{"type":"text","id":"title","label":"Title","default":"Stay In The Loop"},{"type":"range","id":"title_size","label":"Title Size","min":24,"max":48,"step":2,"default":36,"unit":"px"},{"type":"textarea","id":"subtext","label":"Subtext","default":"Get early access to drops, exclusive discounts, and insider style tips."},{"type":"text","id":"placeholder","label":"Placeholder","default":"Enter your email"},{"type":"text","id":"btn_text","label":"Button Text","default":"Subscribe"},{"type":"url","id":"form_action","label":"Form Action URL"},{"type":"range","id":"input_radius","label":"Input Radius","min":0,"max":16,"step":2,"default":10,"unit":"px"},{"type":"text","id":"proof_text","label":"Social Proof","default":"Join <strong>12,400+</strong> subscribers — No spam, unsubscribe anytime"}],"presets":[{"name":"CF Newsletter — Dark"}]}
+{% endschema %}

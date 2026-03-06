@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useFetcher } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import { db } from "../db.server";
 import { useVisualBuilderStore } from '../store/visualBuilderStore';
+import { TEMPLATES } from '../store/templateRegistry';
+import fs from 'fs';
+import path from 'path';
 
 import EditorToolbar from '../components/visual-builder/EditorToolbar';
 import EditorSidebar from '../components/visual-builder/EditorSidebar';
@@ -127,6 +130,53 @@ ${compiledHtml}
         return json({ success: true, message: 'Published to theme!' });
     }
 
+    if (intent === "install_template") {
+        const templateId = formData.get("templateId");
+        const templateFile = formData.get("liquidFile");
+
+        if (!templateFile) {
+            return json({ success: false, error: 'No template file specified' }, { status: 400 });
+        }
+
+        try {
+            // Read the Liquid template from the templates directory
+            const templatePath = path.resolve(process.cwd(), 'app', 'templates', templateFile);
+            let liquidContent = '';
+
+            if (fs.existsSync(templatePath)) {
+                liquidContent = fs.readFileSync(templatePath, 'utf-8');
+            } else {
+                return json({ success: false, error: 'Template file not found' }, { status: 404 });
+            }
+
+            // Get active theme
+            const themesResponse = await admin.rest.get({ path: 'themes' });
+            const themes = await themesResponse.json();
+            const activeTheme = themes.themes?.find(t => t.role === 'main');
+
+            if (activeTheme) {
+                // Clean the template ID for file naming
+                const sectionName = `cf-tpl-${templateId}`;
+                await admin.rest.put({
+                    path: `themes/${activeTheme.id}/assets`,
+                    data: {
+                        asset: {
+                            key: `sections/${sectionName}.liquid`,
+                            value: liquidContent,
+                        }
+                    }
+                });
+
+                return json({ success: true, message: `Template "${templateId}" installed to theme!`, sectionName });
+            }
+
+            return json({ success: false, error: 'No active theme found' });
+        } catch (e) {
+            console.error('[Editor] Template install error:', e.message);
+            return json({ success: false, error: 'Install failed: ' + e.message });
+        }
+    }
+
     return json({ error: "Invalid intent" }, { status: 400 });
 };
 
@@ -224,6 +274,26 @@ export default function VisualBuilderEditor() {
         navigate('/app/visual-builder');
     };
 
+    // Listen for template install events from the sidebar
+    useEffect(() => {
+        const handleTemplateInstall = (e) => {
+            const template = e.detail;
+            if (template && template.liquidFile) {
+                fetcher.submit(
+                    {
+                        intent: "install_template",
+                        templateId: template.id,
+                        liquidFile: template.liquidFile,
+                    },
+                    { method: "POST" }
+                );
+            }
+        };
+
+        window.addEventListener('cf-install-template', handleTemplateInstall);
+        return () => window.removeEventListener('cf-install-template', handleTemplateInstall);
+    }, [fetcher]);
+
     // Keyboard shortcuts
     useEffect(() => {
         const handleKeyboard = (e) => {
@@ -273,10 +343,11 @@ export default function VisualBuilderEditor() {
                 <EditorProperties />
             </div>
 
-            {/* Save feedback toast */}
-            {fetcher.data?.message && (
-                <div className="fixed bottom-6 right-6 px-4 py-3 bg-[#1a1d27] text-white text-sm font-medium rounded-xl shadow-float animate-slide-up z-[9999]">
-                    {fetcher.data.message}
+            {/* Save/Install feedback toast */}
+            {(fetcher.data?.message || fetcher.data?.error) && (
+                <div className={`fixed bottom-6 right-6 px-4 py-3 text-white text-sm font-medium rounded-xl shadow-float animate-slide-up z-[9999] ${fetcher.data?.error ? 'bg-red-600' : 'bg-[#1a1d27]'
+                    }`}>
+                    {fetcher.data.message || fetcher.data.error}
                 </div>
             )}
         </div>

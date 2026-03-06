@@ -1,0 +1,39 @@
+{%- comment -%} CF Visual Builder — Editorial Hero — Jewelry {%- endcomment -%}
+{{ 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap' | stylesheet_tag }}
+{%- style -%}
+.myapp-hero-ed{--bg:{{ section.settings.bg }};--txt:{{ section.settings.text_color }};--gold:{{ section.settings.accent }};--muted:{{ section.settings.muted }};font-family:'Inter',sans-serif;background:var(--bg);min-height:{{ section.settings.height }}vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.myapp-hero-ed__inner{max-width:1400px;margin:0 auto;padding:clamp(3rem,6vw,7rem) clamp(1.5rem,4vw,5rem);display:grid;grid-template-columns:{{ section.settings.content_ratio }}fr {{ section.settings.media_ratio }}fr;gap:clamp(2rem,4vw,5rem);align-items:center;width:100%}
+.myapp-hero-ed__content{display:flex;flex-direction:column;gap:20px}
+.myapp-hero-ed__eyebrow{font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:12px}
+.myapp-hero-ed__eyebrow::before{content:'';width:40px;height:1px;background:var(--gold)}
+.myapp-hero-ed__h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4.5vw,{{ section.settings.h1_size }}px);font-weight:400;line-height:1.15;letter-spacing:-.01em;color:var(--txt);margin:0}
+.myapp-hero-ed__h1 em{font-style:italic;color:var(--gold)}
+.myapp-hero-ed__sub{font-size:15px;line-height:1.8;color:var(--muted);max-width:420px;margin:0}
+.myapp-hero-ed__divider{width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.myapp-hero-ed__cta{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:var(--gold);color:var(--bg);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .4s;width:fit-content}
+.myapp-hero-ed__cta:hover{background:var(--txt);color:var(--bg);letter-spacing:.12em}
+.myapp-hero-ed__media{position:relative}
+.myapp-hero-ed__img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.myapp-hero-ed__frame{position:absolute;inset:12px;border:1px solid var(--gold);pointer-events:none;opacity:.4}
+.myapp-hero-ed__caption{position:absolute;bottom:-30px;right:0;font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--muted)}
+@media(max-width:768px){.myapp-hero-ed__inner{grid-template-columns:1fr}.myapp-hero-ed__media{order:-1}.myapp-hero-ed__sub{max-width:100%}.myapp-hero-ed__frame{inset:8px}}
+{%- endstyle -%}
+<section class="myapp-hero-ed" id="myapp-hero-ed-{{ section.id }}">
+  <div class="myapp-hero-ed__inner">
+    <div class="myapp-hero-ed__content">
+      {% if section.settings.eyebrow != blank %}<p class="myapp-hero-ed__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+      <h1 class="myapp-hero-ed__h1">{{ section.settings.headline }}</h1>
+      <div class="myapp-hero-ed__divider"></div>
+      <p class="myapp-hero-ed__sub">{{ section.settings.subtext }}</p>
+      {% if section.settings.cta_text != blank %}<a href="{{ section.settings.cta_url }}" class="myapp-hero-ed__cta">{{ section.settings.cta_text }}</a>{% endif %}
+    </div>
+    <div class="myapp-hero-ed__media">
+      {% if section.settings.image != blank %}<img class="myapp-hero-ed__img" src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ section.settings.headline }}" loading="eager">{% endif %}
+      <div class="myapp-hero-ed__frame"></div>
+      {% if section.settings.caption != blank %}<p class="myapp-hero-ed__caption">{{ section.settings.caption }}</p>{% endif %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{"name":"CF Hero — Editorial","tag":"section","class":"myapp-section","settings":[{"type":"color","id":"bg","label":"Background","default":"#faf7f2"},{"type":"color","id":"text_color","label":"Text","default":"#1a1a1a"},{"type":"color","id":"accent","label":"Gold Accent","default":"#c9a961"},{"type":"color","id":"muted","label":"Muted","default":"#8b7355"},{"type":"range","id":"height","label":"Min Height","min":60,"max":100,"step":5,"default":90,"unit":"vh"},{"type":"range","id":"content_ratio","label":"Content Ratio","min":3,"max":6,"step":1,"default":4},{"type":"range","id":"media_ratio","label":"Media Ratio","min":3,"max":7,"step":1,"default":5},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"The Heritage Collection"},{"type":"html","id":"headline","label":"Headline","default":"Timeless Beauty, <em>Reimagined</em>"},{"type":"range","id":"h1_size","label":"Headline Size","min":36,"max":80,"step":2,"default":56,"unit":"px"},{"type":"textarea","id":"subtext","label":"Subtext","default":"Each piece tells a story of master craftsmanship, passed down through five generations of artisans."},{"type":"image_picker","id":"image","label":"Hero Image"},{"type":"text","id":"caption","label":"Image Caption","default":"— Handcrafted in Italy"},{"type":"text","id":"cta_text","label":"CTA Text","default":"Discover the Collection"},{"type":"url","id":"cta_url","label":"CTA Link"}],"presets":[{"name":"CF Hero — Editorial"}]}
+{% endschema %}
