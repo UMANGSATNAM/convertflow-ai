@@ -274,7 +274,7 @@ export default function AppIndex() {
                       <p style={S.secName}>{sec.name}</p>
                       <p style={S.secFile}>{sec.file}</p>
                     </div>
-                    <Link to={`/app/editor/${sec.id}`} className="pub-btn" style={S.publishBtn}>
+                    <Link to={`/app/editor/${sec.id}`} className="pub-btn" style={{ ...S.publishBtn, background: '#4f46e5', textDecoration: 'none' }}>
                       <span style={S.btnInner}>
                         <I.Layout width={14} height={14} /> Customize & Inject
                       </span>
