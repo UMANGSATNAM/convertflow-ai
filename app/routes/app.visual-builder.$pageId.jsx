@@ -4,6 +4,7 @@ import { useLoaderData, useNavigate, useFetcher } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import { db } from "../db.server";
 import { useVisualBuilderStore } from '../store/visualBuilderStore';
+import { readTemplateFile, installTemplateToTheme, publishLiquidToTheme } from '../utils/templateInstaller.server';
 
 import EditorToolbar from '../components/visual-builder/EditorToolbar';
 import EditorSidebar from '../components/visual-builder/EditorSidebar';
@@ -42,7 +43,7 @@ export const loader = async ({ request, params }) => {
 };
 
 export const action = async ({ request, params }) => {
-    const { session, admin } = await authenticate.admin(request);
+    const { session } = await authenticate.admin(request);
     const shop = session.shop;
     const pageId = params.pageId;
     const formData = await request.formData();
@@ -57,7 +58,7 @@ export const action = async ({ request, params }) => {
             [elementsJson, title, pageId, shop]
         );
 
-        return json({ success: true, message: 'Page saved' });
+        return json({ success: true, message: 'Page saved ✓' });
     }
 
     if (intent === "publish") {
@@ -78,7 +79,6 @@ export const action = async ({ request, params }) => {
             return json({ success: false, error: 'Invalid JSON' }, { status: 400 });
         }
 
-        // Simple Liquid compiler
         const compiledHtml = compileToHtml(elements[0]);
         const compiledCss = compileToCss(elements[0]);
         const sectionName = `cf-visual-page-${pageId}`;
@@ -101,37 +101,14 @@ ${compiledHtml}
 {% endschema %}
         `.trim();
 
-        // Upload to Shopify theme via direct fetch (admin.rest is not configured)
         try {
-            const apiVersion = '2025-01';
-            const headers = {
-                'X-Shopify-Access-Token': session.accessToken,
-                'Content-Type': 'application/json',
-            };
-
-            // Get active theme
-            const themesRes = await fetch(`https://${shop}/admin/api/${apiVersion}/themes.json`, { headers });
-            const themesData = await themesRes.json();
-            const activeTheme = themesData.themes?.find(t => t.role === 'main');
-
-            if (activeTheme) {
-                await fetch(`https://${shop}/admin/api/${apiVersion}/themes/${activeTheme.id}/assets.json`, {
-                    method: 'PUT',
-                    headers,
-                    body: JSON.stringify({
-                        asset: {
-                            key: `sections/${sectionName}.liquid`,
-                            value: liquidContent,
-                        }
-                    })
-                });
-            }
+            await publishLiquidToTheme(shop, session.accessToken, sectionName, liquidContent);
         } catch (e) {
             console.error('[Editor] Publish error:', e.message);
             return json({ success: true, message: 'Saved but publish failed: ' + e.message });
         }
 
-        return json({ success: true, message: 'Published to theme!' });
+        return json({ success: true, message: 'Published to theme! ✓' });
     }
 
     if (intent === "install_template") {
@@ -143,53 +120,14 @@ ${compiledHtml}
         }
 
         try {
-            // Use require() for Node.js-only modules (avoid client bundle crash)
-            const fs = require('fs');
-            const path = require('path');
+            const liquidContent = readTemplateFile(templateFile);
 
-            // Read the Liquid template from the templates directory
-            const templatePath = path.resolve(process.cwd(), 'app', 'templates', templateFile);
-            let liquidContent = '';
-
-            if (fs.existsSync(templatePath)) {
-                liquidContent = fs.readFileSync(templatePath, 'utf-8');
-            } else {
+            if (!liquidContent) {
                 return json({ success: false, error: 'Template file not found' }, { status: 404 });
             }
 
-            const apiVersion = '2025-01';
-            const headers = {
-                'X-Shopify-Access-Token': session.accessToken,
-                'Content-Type': 'application/json',
-            };
-
-            // Get active theme
-            const themesRes = await fetch(`https://${shop}/admin/api/${apiVersion}/themes.json`, { headers });
-            const themesData = await themesRes.json();
-            const activeTheme = themesData.themes?.find(t => t.role === 'main');
-
-            if (activeTheme) {
-                const sectionName = `cf-tpl-${templateId}`;
-                const assetRes = await fetch(`https://${shop}/admin/api/${apiVersion}/themes/${activeTheme.id}/assets.json`, {
-                    method: 'PUT',
-                    headers,
-                    body: JSON.stringify({
-                        asset: {
-                            key: `sections/${sectionName}.liquid`,
-                            value: liquidContent,
-                        }
-                    })
-                });
-
-                if (!assetRes.ok) {
-                    const errData = await assetRes.json().catch(() => ({}));
-                    return json({ success: false, error: `Upload failed: ${errData.errors || assetRes.statusText}` });
-                }
-
-                return json({ success: true, message: `✓ Template installed to theme!`, sectionName });
-            }
-
-            return json({ success: false, error: 'No active theme found' });
+            const result = await installTemplateToTheme(shop, session.accessToken, templateId, liquidContent);
+            return json({ success: true, message: '✓ Template installed to theme!', sectionName: result.sectionName });
         } catch (e) {
             console.error('[Editor] Template install error:', e.message);
             return json({ success: false, error: 'Install failed: ' + e.message });

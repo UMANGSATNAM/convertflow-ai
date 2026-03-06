@@ -197,6 +197,7 @@ function TemplatesPanel() {
     const [activeStyle, setActiveStyle] = useState(null);
     const [activeType, setActiveType] = useState(null);
     const [installing, setInstalling] = useState(null);
+    const [previewTemplate, setPreviewTemplate] = useState(null);
 
     const filtered = useMemo(() => {
         return TEMPLATES.filter(t => {
@@ -212,9 +213,8 @@ function TemplatesPanel() {
 
     const handleInstall = (template) => {
         setInstalling(template.id);
-        // Dispatch a custom event that the parent editor route catches
         window.dispatchEvent(new CustomEvent('cf-install-template', { detail: template }));
-        setTimeout(() => setInstalling(null), 2000);
+        setTimeout(() => setInstalling(null), 3000);
     };
 
     return (
@@ -257,10 +257,17 @@ function TemplatesPanel() {
                     const typeInfo = SECTION_TYPES.find(s => s.id === t.sectionType);
                     return (
                         <div key={t.id} className="group rounded-xl border border-border hover:border-accent/40 transition-all overflow-hidden bg-surface-secondary">
-                            {/* Preview bar */}
-                            <div className="h-14 relative" style={{ background: `linear-gradient(135deg, ${t.previewColors[0]}, ${t.previewColors[2] || t.previewColors[1]})` }}>
+                            {/* Preview bar — clickable for preview */}
+                            <div
+                                className="h-14 relative cursor-pointer"
+                                style={{ background: `linear-gradient(135deg, ${t.previewColors[0]}, ${t.previewColors[2] || t.previewColors[1]})` }}
+                                onClick={() => setPreviewTemplate(t)}
+                            >
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="text-lg opacity-80">{typeInfo?.icon || '📄'}</span>
+                                </div>
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-colors">
+                                    <Eye size={18} className="text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
                                 </div>
                             </div>
                             {/* Info */}
@@ -270,22 +277,89 @@ function TemplatesPanel() {
                                         <p className="text-[11px] font-semibold text-txt-primary truncate">{t.name}</p>
                                         <p className="text-[10px] text-txt-tertiary mt-0.5 capitalize">{t.sectionType} · {t.style}</p>
                                     </div>
-                                    <button
-                                        onClick={() => handleInstall(t)}
-                                        disabled={installing === t.id}
-                                        className={`shrink-0 px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all ${installing === t.id
+                                    <div className="flex gap-1 shrink-0">
+                                        <button
+                                            onClick={() => setPreviewTemplate(t)}
+                                            className="px-1.5 py-1 text-[10px] font-semibold rounded-md border border-border text-txt-secondary hover:border-accent hover:text-accent transition-all"
+                                            title="Preview"
+                                        >
+                                            <Eye size={11} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleInstall(t)}
+                                            disabled={installing === t.id}
+                                            className={`px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all ${installing === t.id
                                                 ? 'bg-green-100 text-green-700 border border-green-200'
                                                 : 'bg-accent text-white hover:bg-accent-hover'
-                                            }`}
-                                    >
-                                        {installing === t.id ? '✓ Installed' : 'Install'}
-                                    </button>
+                                                }`}
+                                        >
+                                            {installing === t.id ? '✓ Done' : 'Install'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     );
                 })}
             </div>
+
+            {/* Preview Modal */}
+            <AnimatePresence>
+                {previewTemplate && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[9999] flex items-center justify-center"
+                        onClick={() => setPreviewTemplate(null)}
+                    >
+                        {/* Backdrop */}
+                        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+
+                        {/* Modal */}
+                        <motion.div
+                            initial={{ scale: 0.92, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.92, opacity: 0 }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 400 }}
+                            className="relative w-[90vw] h-[85vh] bg-[#111] rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 bg-[#111]">
+                                <div>
+                                    <p className="text-sm font-semibold text-white">{previewTemplate.name}</p>
+                                    <p className="text-xs text-white/50 capitalize">{previewTemplate.sectionType} · {previewTemplate.style} · {previewTemplate.niche}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => { handleInstall(previewTemplate); setPreviewTemplate(null); }}
+                                        className="px-4 py-1.5 bg-accent text-white text-xs font-semibold rounded-lg hover:bg-accent-hover transition-all"
+                                    >
+                                        Install to Theme
+                                    </button>
+                                    <button
+                                        onClick={() => setPreviewTemplate(null)}
+                                        className="p-1.5 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Preview iframe */}
+                            <div className="flex-1 bg-[#0a0a0a]">
+                                <iframe
+                                    src={`/app/api/template-preview?file=${encodeURIComponent(previewTemplate.liquidFile)}`}
+                                    className="w-full h-full border-none"
+                                    title={`Preview: ${previewTemplate.name}`}
+                                    sandbox="allow-same-origin allow-scripts"
+                                />
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
