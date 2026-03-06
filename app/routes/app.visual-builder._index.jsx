@@ -3,10 +3,12 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useNavigate, useFetcher } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import { db } from "../db.server";
+import { AnimatePresence } from 'framer-motion';
 
 import DashboardHeader from '../components/visual-builder/DashboardHeader';
 import PageCard from '../components/visual-builder/PageCard';
 import EmptyState from '../components/visual-builder/EmptyState';
+import TemplateBrowser from '../components/visual-builder/TemplateBrowser';
 
 // Ensure the visual_pages table exists
 async function ensureTable() {
@@ -19,6 +21,7 @@ async function ensureTable() {
                 page_type VARCHAR(50) NOT NULL DEFAULT 'landing',
                 status VARCHAR(20) NOT NULL DEFAULT 'draft',
                 elements_json LONGTEXT,
+                template_id VARCHAR(100),
                 thumbnail VARCHAR(1000),
                 shopify_page_id BIGINT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -28,7 +31,6 @@ async function ensureTable() {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         `);
     } catch (e) {
-        // Table already exists or DB not available — gracefully continue
         console.log('[VisualBuilder] Table init:', e.message);
     }
 }
@@ -36,10 +38,8 @@ async function ensureTable() {
 export const loader = async ({ request }) => {
     const { session } = await authenticate.admin(request);
     const shop = session.shop;
-
     await ensureTable();
 
-    // Load all pages for this shop
     let pages = [];
     try {
         const result = await db.query(
@@ -59,17 +59,18 @@ export const action = async ({ request }) => {
     const shop = session.shop;
     const formData = await request.formData();
     const intent = formData.get("intent");
-
     await ensureTable();
 
     if (intent === "create") {
         const title = formData.get("title") || "Untitled Page";
         const pageType = formData.get("pageType") || "landing";
+        const templateId = formData.get("templateId") || null;
 
         const defaultElements = JSON.stringify([
             {
                 id: 'root',
                 type: 'Root',
+                label: 'Page body',
                 children: [],
                 settings: {
                     styles: {
@@ -82,11 +83,10 @@ export const action = async ({ request }) => {
         ]);
 
         await db.query(
-            'INSERT INTO visual_pages (shop_domain, title, page_type, elements_json) VALUES (?, ?, ?, ?)',
-            [shop, title, pageType, defaultElements]
+            'INSERT INTO visual_pages (shop_domain, title, page_type, template_id, elements_json) VALUES (?, ?, ?, ?, ?)',
+            [shop, title, pageType, templateId, defaultElements]
         );
 
-        // Get the new page ID
         const result = await db.query(
             'SELECT id FROM visual_pages WHERE shop_domain = ? ORDER BY id DESC LIMIT 1',
             [shop]
@@ -97,7 +97,6 @@ export const action = async ({ request }) => {
 
     if (intent === "duplicate") {
         const pageId = formData.get("pageId");
-
         const original = await db.query(
             'SELECT * FROM visual_pages WHERE id = ? AND shop_domain = ?',
             [pageId, shop]
@@ -131,15 +130,27 @@ export default function VisualBuilderDashboard() {
     const navigate = useNavigate();
     const fetcher = useFetcher();
     const [searchQuery, setSearchQuery] = useState('');
+    const [showTemplateBrowser, setShowTemplateBrowser] = useState(false);
 
-    // Optimistic UI: filter pages based on search
     const filteredPages = pages.filter(p =>
         p.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    // Open template browser instead of creating immediately
     const handleCreateNew = () => {
+        setShowTemplateBrowser(true);
+    };
+
+    // When a template is selected, create the page and navigate
+    const handleTemplateSelect = (template) => {
+        setShowTemplateBrowser(false);
         fetcher.submit(
-            { intent: "create", title: "Untitled Page", pageType: "landing" },
+            {
+                intent: "create",
+                title: template ? template.name : "Untitled Page",
+                pageType: "landing",
+                templateId: template ? template.id : "",
+            },
             { method: "POST" }
         );
     };
@@ -202,6 +213,16 @@ export default function VisualBuilderDashboard() {
                     </div>
                 )}
             </div>
+
+            {/* Template Browser Overlay */}
+            <AnimatePresence>
+                {showTemplateBrowser && (
+                    <TemplateBrowser
+                        onSelect={handleTemplateSelect}
+                        onClose={() => setShowTemplateBrowser(false)}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }
