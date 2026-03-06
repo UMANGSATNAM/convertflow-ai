@@ -101,22 +101,29 @@ ${compiledHtml}
 {% endschema %}
         `.trim();
 
-        // Upload to Shopify theme
+        // Upload to Shopify theme via direct fetch (admin.rest is not configured)
         try {
+            const apiVersion = '2025-01';
+            const headers = {
+                'X-Shopify-Access-Token': session.accessToken,
+                'Content-Type': 'application/json',
+            };
+
             // Get active theme
-            const themesResponse = await admin.rest.get({ path: 'themes' });
-            const themes = await themesResponse.json();
-            const activeTheme = themes.themes?.find(t => t.role === 'main');
+            const themesRes = await fetch(`https://${shop}/admin/api/${apiVersion}/themes.json`, { headers });
+            const themesData = await themesRes.json();
+            const activeTheme = themesData.themes?.find(t => t.role === 'main');
 
             if (activeTheme) {
-                await admin.rest.put({
-                    path: `themes/${activeTheme.id}/assets`,
-                    data: {
+                await fetch(`https://${shop}/admin/api/${apiVersion}/themes/${activeTheme.id}/assets.json`, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify({
                         asset: {
                             key: `sections/${sectionName}.liquid`,
                             value: liquidContent,
                         }
-                    }
+                    })
                 });
             }
         } catch (e) {
@@ -150,25 +157,36 @@ ${compiledHtml}
                 return json({ success: false, error: 'Template file not found' }, { status: 404 });
             }
 
+            const apiVersion = '2025-01';
+            const headers = {
+                'X-Shopify-Access-Token': session.accessToken,
+                'Content-Type': 'application/json',
+            };
+
             // Get active theme
-            const themesResponse = await admin.rest.get({ path: 'themes' });
-            const themes = await themesResponse.json();
-            const activeTheme = themes.themes?.find(t => t.role === 'main');
+            const themesRes = await fetch(`https://${shop}/admin/api/${apiVersion}/themes.json`, { headers });
+            const themesData = await themesRes.json();
+            const activeTheme = themesData.themes?.find(t => t.role === 'main');
 
             if (activeTheme) {
-                // Clean the template ID for file naming
                 const sectionName = `cf-tpl-${templateId}`;
-                await admin.rest.put({
-                    path: `themes/${activeTheme.id}/assets`,
-                    data: {
+                const assetRes = await fetch(`https://${shop}/admin/api/${apiVersion}/themes/${activeTheme.id}/assets.json`, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify({
                         asset: {
                             key: `sections/${sectionName}.liquid`,
                             value: liquidContent,
                         }
-                    }
+                    })
                 });
 
-                return json({ success: true, message: `Template "${templateId}" installed to theme!`, sectionName });
+                if (!assetRes.ok) {
+                    const errData = await assetRes.json().catch(() => ({}));
+                    return json({ success: false, error: `Upload failed: ${errData.errors || assetRes.statusText}` });
+                }
+
+                return json({ success: true, message: `✓ Template installed to theme!`, sectionName });
             }
 
             return json({ success: false, error: 'No active theme found' });
