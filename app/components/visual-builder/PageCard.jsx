@@ -106,7 +106,7 @@ export default function PageCard({ page, index, onEdit, onDuplicate, onDelete })
 
                     <span className="flex items-center gap-1 text-[11px] text-txt-tertiary">
                         <Clock size={11} />
-                        {formatDate(page.updatedAt)}
+                        {formatDate(page.updated_at || page.created_at)}
                     </span>
                 </div>
             </div>
