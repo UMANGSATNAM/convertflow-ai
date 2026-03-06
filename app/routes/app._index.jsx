@@ -2,7 +2,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useFetcher } from "@remix-run/react";
 import { useState } from "react";
 import { authenticate } from "../shopify.server";
-import { readSectionFile, publishSection } from "../lib/shopify.server";
+import { readSectionFile, publishSection, publishAllSnippets, publishAllLocales, publishConfig } from "../lib/shopify.server";
 import { SECTION_FILES, getCategoriesWithCounts, getSectionsByCategory } from "../lib/constants";
 
 export const loader = async ({ request }) => {
@@ -28,6 +28,33 @@ export const action = async ({ request }) => {
       return json({ ok: true, sectionId, message: `Published ${sectionMeta.name}` });
     } catch (e) {
       return json({ ok: false, sectionId, error: e.message }, { status: 500 });
+    }
+  }
+
+  if (intent === "publish_snippets") {
+    try {
+      const result = await publishAllSnippets(session.shop, session.accessToken);
+      return json({ ok: true, intent: "snippets", message: `Snippets: ${result.success}/${result.total} uploaded` });
+    } catch (e) {
+      return json({ ok: false, intent: "snippets", error: e.message }, { status: 500 });
+    }
+  }
+
+  if (intent === "publish_locales") {
+    try {
+      const result = await publishAllLocales(session.shop, session.accessToken);
+      return json({ ok: true, intent: "locales", message: `Locales: ${result.success}/${result.total} uploaded` });
+    } catch (e) {
+      return json({ ok: false, intent: "locales", error: e.message }, { status: 500 });
+    }
+  }
+
+  if (intent === "publish_config") {
+    try {
+      await publishConfig(session.shop, session.accessToken);
+      return json({ ok: true, intent: "config", message: "Theme config uploaded" });
+    } catch (e) {
+      return json({ ok: false, intent: "config", error: e.message }, { status: 500 });
     }
   }
 
@@ -62,7 +89,7 @@ export default function AppIndex() {
   const [activeCategory, setActiveCategory] = useState(null);
   const categories = getCategoriesWithCounts();
   const result = fetcher.data;
-  const publishingId = fetcher.state !== "idle" ? fetcher.formData?.get("sectionId") : null;
+  const publishingIntent = fetcher.state !== "idle" ? fetcher.formData?.get("intent") : null;
 
   const activeSections = activeCategory ? getSectionsByCategory(activeCategory) : [];
   const activeCatInfo = categories.find(c => c.id === activeCategory);
@@ -75,6 +102,7 @@ export default function AppIndex() {
                 .cat-card:hover { border-color: #818cf8 !important; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79,70,229,0.08) !important; }
                 .sec-card:hover { border-color: #c7d2fe !important; }
                 .pub-btn:hover { background: #4338ca !important; }
+                .setup-btn:hover { background: #f5f3ff !important; border-color: #818cf8 !important; }
                 @keyframes spin { to { transform: rotate(360deg); } }
             `}</style>
 
@@ -91,9 +119,51 @@ export default function AppIndex() {
         {result && (
           <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca' }}>
             {result.ok
-              ? <><Icons.Check width={14} height={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> {result.message} — now available in your Theme Editor</>
+              ? <><Icons.Check width={14} height={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> {result.message}</>
               : <><Icons.AlertCircle width={14} height={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> {result.error}</>
             }
+          </div>
+        )}
+
+        {/* Setup Dependencies Card */}
+        {!activeCategory && (
+          <div style={S.setupCard}>
+            <div style={S.setupHeader}>
+              <Icons.Layers width={18} height={18} style={{ color: '#6366f1' }} />
+              <div>
+                <p style={S.setupTitle}>Setup Theme Dependencies</p>
+                <p style={S.setupDesc}>Install required snippets, translations, and config before publishing sections</p>
+              </div>
+            </div>
+            <div style={S.setupActions}>
+              <fetcher.Form method="post" style={{ display: 'inline' }}>
+                <input type="hidden" name="intent" value="publish_snippets" />
+                <button type="submit" className="setup-btn" disabled={publishingIntent === 'publish_snippets'}
+                  style={{ ...S.setupBtn, opacity: publishingIntent === 'publish_snippets' ? 0.7 : 1 }}>
+                  {publishingIntent === 'publish_snippets'
+                    ? <><span style={S.miniSpinner} /> Uploading 393 snippets...</>
+                    : <><Icons.Upload width={13} height={13} /> Snippets (393 files)</>}
+                </button>
+              </fetcher.Form>
+              <fetcher.Form method="post" style={{ display: 'inline' }}>
+                <input type="hidden" name="intent" value="publish_locales" />
+                <button type="submit" className="setup-btn" disabled={publishingIntent === 'publish_locales'}
+                  style={{ ...S.setupBtn, opacity: publishingIntent === 'publish_locales' ? 0.7 : 1 }}>
+                  {publishingIntent === 'publish_locales'
+                    ? <><span style={S.miniSpinner} /> Uploading 57 locales...</>
+                    : <><Icons.Upload width={13} height={13} /> Locales (57 files)</>}
+                </button>
+              </fetcher.Form>
+              <fetcher.Form method="post" style={{ display: 'inline' }}>
+                <input type="hidden" name="intent" value="publish_config" />
+                <button type="submit" className="setup-btn" disabled={publishingIntent === 'publish_config'}
+                  style={{ ...S.setupBtn, opacity: publishingIntent === 'publish_config' ? 0.7 : 1 }}>
+                  {publishingIntent === 'publish_config'
+                    ? <><span style={S.miniSpinner} /> Uploading...</>
+                    : <><Icons.Upload width={13} height={13} /> Theme Config</>}
+                </button>
+              </fetcher.Form>
+            </div>
           </div>
         )}
 
@@ -145,10 +215,10 @@ export default function AppIndex() {
                     <button
                       type="submit"
                       className="pub-btn"
-                      disabled={publishingId === sec.id}
-                      style={{ ...S.publishBtn, opacity: publishingId === sec.id ? 0.7 : 1 }}
+                      disabled={publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id}
+                      style={{ ...S.publishBtn, opacity: (publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id) ? 0.7 : 1 }}
                     >
-                      {publishingId === sec.id ? (
+                      {(publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id) ? (
                         <span style={S.btnInner}>
                           <span style={{ width: 14, height: 14, border: '2px solid #fff4', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.6s linear infinite', display: 'inline-block' }} />
                         </span>
@@ -198,4 +268,12 @@ const S = {
 
   publishBtn: { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'background 0.2s' },
   btnInner: { display: 'flex', alignItems: 'center', gap: 5 },
+
+  setupCard: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '20px 24px', marginBottom: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' },
+  setupHeader: { display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16 },
+  setupTitle: { fontSize: 14, fontWeight: 600, color: '#111', margin: '0 0 2px' },
+  setupDesc: { fontSize: 12, color: '#888', margin: 0 },
+  setupActions: { display: 'flex', gap: 8, flexWrap: 'wrap' },
+  setupBtn: { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 14px', background: '#fafafa', color: '#333', border: '1px solid #e5e7eb', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' },
+  miniSpinner: { width: 12, height: 12, border: '2px solid #ccc', borderTopColor: '#6366f1', borderRadius: '50%', animation: 'spin 0.6s linear infinite', display: 'inline-block' },
 };
