@@ -1,0 +1,253 @@
+<style>
+/* ─── SCOPED CSS FOR PREMIUM HEADER ─── */
+.cf-header-wrapper {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.cf-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: {{ section.settings.padding_y }}px 5%;
+  background-color: {{ section.settings.bg_color }};
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.cf-header-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.cf-header-logo img {
+  max-height: {{ section.settings.logo_height }}px;
+  width: auto;
+  object-fit: contain;
+}
+.cf-header-logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.cf-header-nav {
+  display: none;
+}
+.cf-header-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 32px;
+}
+.cf-header-nav a {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s;
+}
+.cf-header-nav a:hover {
+  opacity: 0.6;
+}
+
+.cf-header-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.cf-header-icon {
+  color: {{ section.settings.icon_color }};
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: transform 0.2s;
+}
+.cf-header-icon:hover {
+  transform: translateY(-2px);
+}
+.cf-header-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+}
+.cf-cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: {{ section.settings.badge_color }};
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* Desktop */
+@media (min-width: 990px) {
+  .cf-header-nav {
+    display: block;
+  }
+  .cf-menu-toggle {
+    display: none;
+  }
+}
+/* Mobile */
+@media (max-width: 989px) {
+  .cf-header-inner {
+    padding: 12px 5%;
+  }
+}
+</style>
+
+<div class="cf-header-wrapper">
+  <div class="cf-header-inner">
+    
+    <!-- Mobile Menu Toggle -->
+    <div class="cf-menu-toggle">
+      <a href="#" class="cf-header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </a>
+    </div>
+
+    <!-- Logo -->
+    <a href="{{ routes.root_url }}" class="cf-header-logo">
+      {%- if section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | image_url: width: 600 }}" alt="{{ shop.name }}">
+      {%- else -%}
+        <span class="cf-header-logo-text">{{ section.settings.logo_text | default: shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="cf-header-nav">
+      <ul>
+        {%- for link in section.settings.menu.links -%}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- else -%}
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <!-- Icons -->
+    <div class="cf-header-icons">
+      {%- if section.settings.show_search -%}
+      <a href="{{ routes.search_url }}" class="cf-header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      {%- endif -%}
+      
+      {%- if shop.customer_accounts_enabled and section.settings.show_account -%}
+      <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="cf-header-icon desktop-only">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+      {%- endif -%}
+
+      <a href="{{ routes.cart_url }}" class="cf-header-icon" id="cf-cart-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        <span class="cf-cart-count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Premium Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text/Menu Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Cart Badge Color",
+      "default": "#e11d48"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text (if no image)",
+      "default": "BRAND"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo Height (px)",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Desktop Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show Search Icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show Account Icon",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Top/Bottom Padding (px)",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Header"
+    }
+  ]
+}
+{% endschema %}
