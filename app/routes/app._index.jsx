@@ -149,6 +149,12 @@ export default function AppIndex() {
                 {publishingIntent === 'remove_all_cf' ? '⏳ Removing...' : '🗑 Remove All Injected'}
               </button>
             </fetcher.Form>
+            <fetcher.Form method="post">
+              <input type="hidden" name="intent" value="deps" />
+              <button type="submit" disabled={fetcher.state !== 'idle'} style={S.syncBtn}>
+                {publishingIntent === 'deps' ? '⏳ Syncing...' : '📦 Sync Theme Dependencies'}
+              </button>
+            </fetcher.Form>
           </div>
         </div>
         {/* Setup Progress / Installing */}
@@ -432,4 +438,5 @@ const S = {
   actionsCard: { background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' },
   actionsLeft: { display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minWidth: 200 },
   dangerBtn: { background: '#ef4444', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' },
+  syncBtn: { background: '#10b981', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' },
 };
