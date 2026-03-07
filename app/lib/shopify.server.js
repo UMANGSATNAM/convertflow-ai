@@ -128,43 +128,47 @@ export async function getThemeAsset(shop, accessToken, themeId, assetKey) {
 /** 
  * Inject a published section directly into the homepage (index.json) 
  * so the user doesn't have to open the Shopify Theme Editor.
+ * 
+ * IMPORTANT: The `type` in index.json must be EXACTLY the asset key
+ * WITHOUT `sections/` prefix and WITHOUT `.liquid` extension.
+ * e.g. if the file is at sections/cf-header-01.liquid, type = "cf-header-01"
  */
 export async function injectSectionIntoTheme(shop, accessToken, themeId, sectionKey, settings = {}) {
+    // 1. Fetch current templates/index.json
+    const indexJsonStr = await getThemeAsset(shop, accessToken, themeId, 'templates/index.json');
+    if (!indexJsonStr) throw new Error("Could not read templates/index.json — make sure your theme has a homepage template.");
+
+    let indexJson;
     try {
-        // 1. Fetch current templates/index.json
-        const indexJsonStr = await getThemeAsset(shop, accessToken, themeId, 'templates/index.json');
-        if (!indexJsonStr) throw new Error("Could not read templates/index.json from active theme");
-
-        const indexJson = JSON.parse(indexJsonStr);
-
-        // 2. Generate a unique block ID for this section instance
-        const blockId = `cf_${sectionKey.replace('cf-', '')}_${Math.random().toString(36).substring(2, 8)}`;
-
-        // 3. Add to the sections object
-        indexJson.sections = indexJson.sections || {};
-        indexJson.sections[blockId] = {
-            type: sectionKey,
-            settings: settings
-        };
-
-        // 4. Add to the order array (at the top, just below header if possible, or append)
-        indexJson.order = indexJson.order || [];
-        // Just push it to the end for now (above footer if we can detect it, but simple append is safest)
-        const footerIndex = indexJson.order.findIndex(id => id.includes('footer'));
-        if (footerIndex !== -1) {
-            indexJson.order.splice(footerIndex, 0, blockId);
-        } else {
-            indexJson.order.push(blockId);
-        }
-
-        // 5. Upload the modified index.json back to Shopify
-        await uploadAsset(shop, accessToken, themeId, 'templates/index.json', JSON.stringify(indexJson, null, 2));
-
-        return { success: true, blockId };
-    } catch (e) {
-        console.error("Failed to inject section into theme:", e);
-        throw e;
+        indexJson = JSON.parse(indexJsonStr);
+    } catch {
+        throw new Error("templates/index.json is not valid JSON — it may be corrupted.");
     }
+
+    // 2. Ensure sections and order exist
+    indexJson.sections = indexJson.sections || {};
+    indexJson.order = indexJson.order || [];
+
+    // 3. Generate unique block key
+    const blockId = `cf_${sectionKey.replace(/^cf-/, '')}_${Date.now().toString(36)}`;
+
+    // 4. Add section block — type MUST match bare asset name (no path, no extension)
+    indexJson.sections[blockId] = { type: sectionKey, settings };
+
+    // 5. Insert before footer if possible, else append
+    const footerIdx = indexJson.order.findIndex(id =>
+        id.toLowerCase().includes('footer')
+    );
+    if (footerIdx !== -1) {
+        indexJson.order.splice(footerIdx, 0, blockId);
+    } else {
+        indexJson.order.push(blockId);
+    }
+
+    // 6. Save back to Shopify
+    await uploadAsset(shop, accessToken, themeId, 'templates/index.json', JSON.stringify(indexJson, null, 2));
+
+    return { success: true, blockId };
 }
 
 /** Bulk publish all snippets to the theme */

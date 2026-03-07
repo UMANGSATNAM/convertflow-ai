@@ -1,94 +1,86 @@
 import { json } from "@remix-run/node";
+import { authenticate } from "../shopify.server";
 import { readSectionFile } from "../lib/shopify.server";
 
+// POST /app/api/template-preview
+// body: sectionId=..., settings=JSON
 export const action = async ({ request }) => {
+    // must be authenticated (Shopify embedded context)
+    await authenticate.admin(request);
+
     const formData = await request.formData();
     const sectionId = formData.get("sectionId");
-
     if (!sectionId) return json({ error: "Missing sectionId" }, { status: 400 });
 
-    let rawLiquid = readSectionFile(sectionId + '.liquid') || readSectionFile(sectionId);
-    if (!rawLiquid) return json({ error: "Section not found" }, { status: 404 });
+    // Try both "id.liquid" and raw "id" lookups
+    const raw = readSectionFile(sectionId + '.liquid') || readSectionFile(sectionId);
+    if (!raw) return json({ error: "Section not found: " + sectionId }, { status: 404 });
 
-    // 1. Extract Settings JSON from FormData
     let settings = {};
-    const settingsJson = formData.get("settings");
-    if (settingsJson) {
-        try { settings = JSON.parse(settingsJson); } catch (e) { }
-    }
+    try { settings = JSON.parse(formData.get("settings") || "{}"); } catch { }
 
-    // 2. Mock Liquid Drops (Fallback if actual Liquid parsing fails in preview)
-    const mockShop = { name: "Preview Store" };
-    const mockCart = { item_count: 2 };
-    const mockRoutes = {
-        root_url: "/",
-        search_url: "/search",
-        account_url: "/account",
-        account_login_url: "/account/login",
-        cart_url: "/cart"
-    };
+    // ── Render HTML from Liquid (regex-based, no Liquid engine) ──────────
+    let html = raw;
 
-    // 3. Render pure HTML preview
-    // * Note: To keep the preview fast and lightweight within the local app editor,
-    // we do simple Regex replacements for section.settings and routes.
-    // This avoids entirely spinning up a heavy Liquid engine in the browser.
+    // 1. Remove schema block entirely
+    html = html.replace(/\{%-?\s*schema\s*-?%\}[\s\S]*?\{%-?\s*endschema\s*-?%\}/g, '');
 
-    let html = rawLiquid;
+    // 2. Convert style blocks to HTML style tags
+    html = html.replace(/\{%-?\s*style\s*-?%\}/g, '<style>');
+    html = html.replace(/\{%-?\s*endstyle\s*-?%\}/g, '</style>');
 
-    // Strip {% schema %} entirely
-    html = html.replace(/{% schema %}[\s\S]*?{% endschema %}/g, "");
-
-    // Strip {% style %} tags
-    html = html.replace(/{%-?\s*style\s*-?%}/g, "<style>");
-    html = html.replace(/{%-?\s*endstyle\s*-?%}/g, "</style>");
-
-    // Replace {{ section.settings.xyz }}
-    html = html.replace(/\{\{\s*section\.settings\.([a-zA-Z0-9_]+)\s*\}\}/g, (match, key) => {
-        // If user provided a setting, use it. Otherwise, return a placeholder
-        if (settings[key] !== undefined) return settings[key];
-        return `/* ${key} */`;
+    // 3. Inject user settings into CSS custom-property assignments (inside <style> blocks)
+    //    Replace --var: {{ section.settings.key }}px  →  --var: 80px
+    html = html.replace(/\{\{\s*section\.settings\.([a-zA-Z0-9_]+)\s*\}\}/g, (_, key) => {
+        return settings[key] !== undefined ? String(settings[key]) : getDefaultPlaceholder(key);
     });
 
-    // Replace Routes
-    html = html.replace(/\{\{\s*routes\.([a-zA-Z0-9_]+)\s*\}\}/g, (match, key) => mockRoutes[key] || "#");
-    html = html.replace(/\{\{\s*shop\.name\s*\}\}/g, mockShop.name);
-    html = html.replace(/\{\{\s*cart\.item_count\s*\}\}/g, mockCart.item_count);
+    // 4. Handle simple if/unless for settings booleans
+    html = html.replace(
+        /\{%-?\s*if\s+section\.settings\.([a-zA-Z0-9_]+)\s*-?%\}([\s\S]*?)\{%-?\s*endif\s*-?%\}/g,
+        (_, key, inner) => (settings[key] === false ? '' : inner)
+    );
+    html = html.replace(
+        /\{%-?\s*unless\s+section\.settings\.([a-zA-Z0-9_]+)\s*-?%\}([\s\S]*?)\{%-?\s*endunless\s*-?%\}/g,
+        (_, key, inner) => (settings[key] !== false ? '' : inner)
+    );
 
-    // Replace Checkboxes / If statements
-    // Simplistic replacement for the preview: Assume checking for settings is always true
-    html = html.replace(/{%-?\s*if\s+section\.settings\.([a-zA-Z0-9_]+)\s*-?%}([\s\S]*?){%-?\s*endif\s*-?%}/g, (m, key, inner) => {
-        if (settings[key] === false) return "";
-        return inner;
-    });
+    // 5. Replace common Liquid variables
+    html = html.replace(/\{\{\s*routes\.[a-zA-Z0-9_]+\s*\}\}/g, '#');
+    html = html.replace(/\{\{\s*shop\.name\s*\}\}/g, 'Preview Store');
+    html = html.replace(/\{\{\s*cart\.item_count\s*\}\}/g, '0');
+    html = html.replace(/\{\{\s*section\.id\s*\}\}/g, 'preview-section');
 
-    // Strip other common Liquid logic tags
-    html = html.replace(/{%-?\s*(if|else|elsif|for|endfor|endif|render|include|assign|capture|endcapture|comment|endcomment).*-?%}/g, "");
+    // 6. Strip remaining Liquid tags/variables
+    html = html.replace(/\{%-?.*?-?%\}/gs, '');
+    html = html.replace(/\{\{.*?\}\}/gs, '');
 
-    // Wrap in boilerplate so styles apply inside the iframe
-    const fullHtml = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-              body { margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-              * { box-sizing: border-box; }
-              img { max-width: 100%; height: auto; }
-          </style>
-      </head>
-      <body>
-          ${html}
-          <script>
-            // Auto-resize iframe script
-            const resizeObserver = new ResizeObserver(entries => {
-              window.parent.postMessage({ type: 'resize', height: document.body.scrollHeight }, '*');
-            });
-            resizeObserver.observe(document.body);
-          </script>
-      </body>
-      </html>
-  `;
+    const fullHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; min-height: 100vh; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { text-decoration: none; color: inherit; }
+  </style>
+</head>
+<body>
+${html}
+</body>
+</html>`;
 
     return json({ html: fullHtml });
 };
+
+function getDefaultPlaceholder(key) {
+    if (key.includes('color')) return '#111111';
+    if (key.includes('bg')) return '#ffffff';
+    if (key.includes('height') || key.includes('width') || key.includes('size') || key.includes('padding')) return '80';
+    if (key.includes('text') || key.includes('title') || key.includes('heading')) return 'Sample Text';
+    return '';
+}
