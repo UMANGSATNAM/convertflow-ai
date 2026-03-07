@@ -82,6 +82,38 @@ export async function publishSection(shop, accessToken, sectionKey, liquidConten
     return { themeId: theme.id, assetKey: `sections/${sectionKey}.liquid` };
 }
 
+/**
+ * Re-uploads ALL local section files to the theme with translations stripped.
+ * This retroactively fixes previously uploaded sections that had t: errors.
+ */
+export async function fixAllSections(shop, accessToken) {
+    const theme = await getActiveTheme(shop, accessToken);
+    if (!theme) throw new Error('No active theme found');
+
+    const files = listFiles('sections').filter(f => f.endsWith('.liquid'));
+    let success = 0, failed = 0, errors = [];
+
+    for (const file of files) {
+        try {
+            const raw = readSectionFile(file);
+            if (raw) {
+                const fixed = removeSchemaTranslations(raw);
+                // Key is cf-{filename without .liquid}
+                const key = `sections/cf-${file.replace('.liquid', '')}.liquid`;
+                await uploadAsset(shop, accessToken, theme.id, key, fixed);
+                success++;
+            }
+        } catch (e) {
+            failed++;
+            errors.push(e.message);
+        }
+        // Rate limit
+        if ((success + failed) % 4 === 0) await new Promise(r => setTimeout(r, 200));
+    }
+
+    return { total: files.length, success, failed, errors: errors.slice(0, 5) };
+}
+
 /** Get a specific asset from the theme */
 export async function getThemeAsset(shop, accessToken, themeId, assetKey) {
     const res = await fetch(

@@ -2,7 +2,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useFetcher, Link } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { authenticate } from "../shopify.server";
-import { readSectionFile, publishSection, checkDepsInstalled, installAllDeps } from "../lib/shopify.server";
+import { readSectionFile, publishSection, checkDepsInstalled, installAllDeps, fixAllSections } from "../lib/shopify.server";
 import { SECTION_FILES, getCategoriesWithCounts, getSectionsByCategory } from "../lib/constants";
 
 export const loader = async ({ request }) => {
@@ -38,6 +38,15 @@ export const action = async ({ request }) => {
       return json({ ok: true, sectionId, message: `Published ${sectionMeta.name}` });
     } catch (e) {
       return json({ ok: false, sectionId, error: e.message }, { status: 500 });
+    }
+  }
+
+  if (intent === "fix_all") {
+    try {
+      const result = await fixAllSections(session.shop, session.accessToken);
+      return json({ ok: true, intent: "fix_all", message: `Fixed! Re-uploaded ${result.success} sections with translations removed.` });
+    } catch (e) {
+      return json({ ok: false, intent: "fix_all", error: e.message }, { status: 500 });
     }
   }
 
@@ -110,6 +119,49 @@ export default function AppIndex() {
           <p style={S.subtitle}>Connected to <strong>{shop}</strong></p>
         </div>
 
+        {/* Fix Translations Warning Banner */}
+        {(() => {
+          const isFixing = publishingIntent === "fix_all";
+          const fixDone = result?.intent === "fix_all";
+          return (
+            <>
+              {!isFixing && !fixDone && (
+                <div style={S.warnCard}>
+                  <div style={S.warnLeft}>
+                    <span style={S.warnIcon}>⚠️</span>
+                    <div>
+                      <p style={S.warnTitle}>Translation Errors in Published Sections?</p>
+                      <p style={S.warnDesc}>Click below to re-upload all sections with translation strings permanently removed. This fixes all "missing translation: t:..." errors.</p>
+                    </div>
+                  </div>
+                  <fetcher.Form method="post">
+                    <input type="hidden" name="intent" value="fix_all" />
+                    <button type="submit" style={S.warnBtn}>Fix All Translation Errors</button>
+                  </fetcher.Form>
+                </div>
+              )}
+              {isFixing && (
+                <div style={{ ...S.setupCard, marginBottom: 20 }}>
+                  <div style={S.setupRow}>
+                    <span style={S.spinner} />
+                    <div>
+                      <p style={S.setupTitle}>Re-uploading all sections with translations fixed...</p>
+                      <p style={S.setupDesc}>This may take 1-2 minutes. All existing CF sections will be patched.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {fixDone && (
+                <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca', marginBottom: 20 }}>
+                  {result.ok
+                    ? <><I.Check width={14} height={14} style={{ marginRight: 6 }} /> {result.message}</>
+                    : <><I.X width={14} height={14} style={{ marginRight: 6 }} /> Fix failed: {result.error}</>
+                  }
+                </div>
+              )}
+            </>
+          );
+        })()}
         {/* Setup Progress / Installing */}
         {isSettingUp && (
           <div style={S.setupCard}>
@@ -368,4 +420,11 @@ const S = {
   publishBtn: { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', color: '#fff', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' },
   btnInner: { display: 'flex', alignItems: 'center', gap: 5 },
   btnSpinner: { width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.6s linear infinite', display: 'inline-block' },
+
+  warnCard: { background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 10, padding: '14px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 },
+  warnLeft: { display: 'flex', alignItems: 'flex-start', gap: 12, flex: 1 },
+  warnIcon: { fontSize: 18, flexShrink: 0 },
+  warnTitle: { fontSize: 13, fontWeight: 700, color: '#92400e', margin: '0 0 2px' },
+  warnDesc: { fontSize: 12, color: '#b45309', margin: 0, lineHeight: 1.4 },
+  warnBtn: { background: '#d97706', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 },
 };
