@@ -21,10 +21,18 @@ export function removeSchemaTranslations(liquidContent) {
     try {
         const schemaString = liquidContent.substring(startIndex + startToken.length, endIndex).trim();
 
-        let fixedSchema = schemaString.replace(/"t:([^"]+)"/g, (match, p1) => {
-            // Convert something like "settings.video.video_url" into "Video url"
+        // Catch "t:..." OR "en...." strings
+        let fixedSchema = schemaString.replace(/"(?:t:|en\.)([^"]+)"/g, (match, p1) => {
+            // e.g. "settings.video.video_url" -> "Video url"
+            // e.g. "placeholders.collection_title" -> "Collection title"
             const parts = p1.split('.');
-            const lastPart = parts[parts.length - 1];
+            let lastPart = parts[parts.length - 1];
+
+            // If it ends with "label" or "info" and has a previous part, use the previous part
+            if ((lastPart === 'label' || lastPart === 'info' || lastPart === 'title') && parts.length > 1) {
+                lastPart = parts[parts.length - 2];
+            }
+
             // Basic English sentence case converter
             const EnglishName = lastPart
                 .replace(/_/g, ' ')
