@@ -171,6 +171,38 @@ export async function injectSectionIntoTheme(shop, accessToken, themeId, section
     return { success: true, blockId };
 }
 
+/**
+ * Remove ALL ConvertFlow-injected sections (cf_ prefix) from the homepage index.json.
+ * Use this to do a clean slate before re-injecting corrected sections.
+ */
+export async function removeAllCfSections(shop, accessToken) {
+    const theme = await getActiveTheme(shop, accessToken);
+    if (!theme) throw new Error('No active theme found');
+
+    const indexJsonStr = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
+    if (!indexJsonStr) throw new Error('Could not read templates/index.json');
+
+    const indexJson = JSON.parse(indexJsonStr);
+
+    const before = (indexJson.order || []).length;
+
+    // Remove all cf_ prefixed entries from sections map
+    Object.keys(indexJson.sections || {}).forEach(key => {
+        if (key.startsWith('cf_')) delete indexJson.sections[key];
+    });
+
+    // Remove from order array
+    indexJson.order = (indexJson.order || []).filter(id => !id.startsWith('cf_'));
+
+    const removed = before - indexJson.order.length;
+
+    await uploadAsset(shop, accessToken, theme.id, 'templates/index.json', JSON.stringify(indexJson, null, 2));
+
+    return { removed };
+}
+
+
+
 /** Bulk publish all snippets to the theme */
 export async function publishAllSnippets(shop, accessToken) {
     const theme = await getActiveTheme(shop, accessToken);

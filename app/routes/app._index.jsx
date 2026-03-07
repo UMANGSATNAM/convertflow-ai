@@ -2,7 +2,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useFetcher, Link } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { authenticate } from "../shopify.server";
-import { readSectionFile, publishSection, checkDepsInstalled, installAllDeps, fixAllSections } from "../lib/shopify.server";
+import { readSectionFile, publishSection, checkDepsInstalled, installAllDeps, fixAllSections, removeAllCfSections } from "../lib/shopify.server";
 import { SECTION_FILES, getCategoriesWithCounts, getSectionsByCategory } from "../lib/constants";
 
 export const loader = async ({ request }) => {
@@ -47,6 +47,15 @@ export const action = async ({ request }) => {
       return json({ ok: true, intent: "fix_all", message: `Fixed! Re-uploaded ${result.success} sections with translations removed.` });
     } catch (e) {
       return json({ ok: false, intent: "fix_all", error: e.message }, { status: 500 });
+    }
+  }
+
+  if (intent === "remove_all_cf") {
+    try {
+      const result = await removeAllCfSections(session.shop, session.accessToken);
+      return json({ ok: true, intent: "remove_all_cf", message: `Removed ${result.removed} injected section(s) from your homepage. Theme is now clean.` });
+    } catch (e) {
+      return json({ ok: false, intent: "remove_all_cf", error: e.message }, { status: 500 });
     }
   }
 
@@ -119,226 +128,218 @@ export default function AppIndex() {
           <p style={S.subtitle}>Connected to <strong>{shop}</strong></p>
         </div>
 
-        {/* Fix Translations Warning Banner */}
-        {(() => {
-          const isFixing = publishingIntent === "fix_all";
-          const fixDone = result?.intent === "fix_all";
-          return (
-            <>
-              {!isFixing && !fixDone && (
-                <div style={S.warnCard}>
-                  <div style={S.warnLeft}>
-                    <span style={S.warnIcon}>⚠️</span>
-                    <div>
-                      <p style={S.warnTitle}>Translation Errors in Published Sections?</p>
-                      <p style={S.warnDesc}>Click below to re-upload all sections with translation strings permanently removed. This fixes all "missing translation: t:..." errors.</p>
-                    </div>
-                  </div>
-                  <fetcher.Form method="post">
-                    <input type="hidden" name="intent" value="fix_all" />
-                    <button type="submit" style={S.warnBtn}>Fix All Translation Errors</button>
-                  </fetcher.Form>
-                </div>
-              )}
-              {isFixing && (
-                <div style={{ ...S.setupCard, marginBottom: 20 }}>
-                  <div style={S.setupRow}>
-                    <span style={S.spinner} />
-                    <div>
-                      <p style={S.setupTitle}>Re-uploading all sections with translations fixed...</p>
-                      <p style={S.setupDesc}>This may take 1-2 minutes. All existing CF sections will be patched.</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {fixDone && (
-                <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca', marginBottom: 20 }}>
-                  {result.ok
-                    ? <><I.Check width={14} height={14} style={{ marginRight: 6 }} /> {result.message}</>
-                    : <><I.X width={14} height={14} style={{ marginRight: 6 }} /> Fix failed: {result.error}</>
-                  }
-                </div>
-              )}
-            </>
-          );
-        })()}
+        {/* Quick Actions Banner */}
+        <div style={S.actionsCard}>
+          <div style={S.actionsLeft}>
+            <span style={{ fontWeight: 700, fontSize: 13, color: '#111' }}>🛠 Quick Actions</span>
+            <span style={{ fontSize: 12, color: '#6b7280' }}>Fix errors or clean sections from your live store</span>
+            {result?.intent === 'fix_all' && <span style={{ fontSize: 12, color: result.ok ? '#059669' : '#dc2626' }}>{result.ok ? result.message : result.error}</span>}
+            {result?.intent === 'remove_all_cf' && <span style={{ fontSize: 12, color: result.ok ? '#059669' : '#dc2626' }}>{result.ok ? result.message : result.error}</span>}
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+            <fetcher.Form method="post">
+              <input type="hidden" name="intent" value="fix_all" />
+              <button type="submit" disabled={fetcher.state !== 'idle'} style={S.warnBtn}>
+                {publishingIntent === 'fix_all' ? '⏳ Fixing...' : '⚡ Fix Translations'}
+              </button>
+            </fetcher.Form>
+            <fetcher.Form method="post">
+              <input type="hidden" name="intent" value="remove_all_cf" />
+              <button type="submit" disabled={fetcher.state !== 'idle'} style={S.dangerBtn}>
+                {publishingIntent === 'remove_all_cf' ? '⏳ Removing...' : '🗑 Remove All Injected'}
+              </button>
+            </fetcher.Form>
+          </div>
+        </div>
         {/* Setup Progress / Installing */}
-        {isSettingUp && (
-          <div style={S.setupCard}>
-            <div style={S.setupRow}>
-              <span style={S.spinner} />
-              <div>
-                <p style={S.setupTitle}>Installing theme dependencies...</p>
-                <p style={S.setupDesc}>Uploading 393 snippets + 57 locales + config to your theme. This takes 2-3 minutes on first run.</p>
+        {
+          isSettingUp && (
+            <div style={S.setupCard}>
+              <div style={S.setupRow}>
+                <span style={S.spinner} />
+                <div>
+                  <p style={S.setupTitle}>Installing theme dependencies...</p>
+                  <p style={S.setupDesc}>Uploading 393 snippets + 57 locales + config to your theme. This takes 2-3 minutes on first run.</p>
+                </div>
+              </div>
+              <div style={S.progressTrack}>
+                <div style={S.progressBar} />
               </div>
             </div>
-            <div style={S.progressTrack}>
-              <div style={S.progressBar} />
-            </div>
-          </div>
-        )}
+          )
+        }
 
         {/* Setup Complete Toast */}
-        {result?.intent === "deps" && !isSettingUp && (
-          <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca' }}>
-            {result.ok
-              ? <><I.Check width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.message}</>
-              : <><I.X width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> Setup failed: {result.error}</>
-            }
-          </div>
-        )}
+        {
+          result?.intent === "deps" && !isSettingUp && (
+            <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca' }}>
+              {result.ok
+                ? <><I.Check width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.message}</>
+                : <><I.X width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> Setup failed: {result.error}</>
+              }
+            </div>
+          )
+        }
 
         {/* Section Publish Toast */}
-        {result && result.intent !== "deps" && result.sectionId && !isSettingUp && (
-          <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca' }}>
-            {result.ok
-              ? <><I.Check width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.message} — now in your Theme Editor</>
-              : <><I.X width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.error}</>
-            }
-          </div>
-        )}
+        {
+          result && result.intent !== "deps" && result.sectionId && !isSettingUp && (
+            <div style={{ ...S.toast, background: result.ok ? '#f0fdf4' : '#fef2f2', color: result.ok ? '#166534' : '#991b1b', borderColor: result.ok ? '#bbf7d0' : '#fecaca' }}>
+              {result.ok
+                ? <><I.Check width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.message} — now in your Theme Editor</>
+                : <><I.X width={14} height={14} style={{ marginRight: 6, flexShrink: 0 }} /> {result.error}</>
+              }
+            </div>
+          )
+        }
 
         {/* Hero Section (Bento Grid) */}
-        {!activeCategory && !isSettingUp && (
-          <div style={S.heroContainer}>
-            <div style={S.heroHeader}>
-              <h2 style={S.heroTitle}>Build High-Converting Pages Faster</h2>
-              <p style={S.heroSubtitle}>Premium sections designed for clarity, conversion, and perfect mobile responsiveness.</p>
-            </div>
+        {
+          !activeCategory && !isSettingUp && (
+            <div style={S.heroContainer}>
+              <div style={S.heroHeader}>
+                <h2 style={S.heroTitle}>Build High-Converting Pages Faster</h2>
+                <p style={S.heroSubtitle}>Premium sections designed for clarity, conversion, and perfect mobile responsiveness.</p>
+              </div>
 
-            <div style={S.bentoGrid}>
-              {/* Feature 1 (Wide) */}
-              <div style={S.bentoCardWide}>
-                <div style={S.bentoContent}>
-                  <h3 style={S.bentoTitle}>Full Structural Control for Conversion</h3>
-                  <p style={S.bentoDesc}><strong>ConvertFlow AI</strong> lets you control add-to-cart visibility, trust badge placement, product information hierarchy, and CTA prominence seamlessly.</p>
-                </div>
-                <div style={S.bentoImageMock}>
-                  <div style={S.mockWindow}>
-                    <div style={S.mockHeader}>
-                      <span style={S.mockDotRed} />
-                      <span style={S.mockDotYellow} />
-                      <span style={S.mockDotGreen} />
-                    </div>
-                    <div style={S.mockBody}>
-                      <div style={S.mockSidebar}>
-                        <div style={S.mockBlock} /><div style={S.mockBlock} /><div style={S.mockBlock} />
+              <div style={S.bentoGrid}>
+                {/* Feature 1 (Wide) */}
+                <div style={S.bentoCardWide}>
+                  <div style={S.bentoContent}>
+                    <h3 style={S.bentoTitle}>Full Structural Control for Conversion</h3>
+                    <p style={S.bentoDesc}><strong>ConvertFlow AI</strong> lets you control add-to-cart visibility, trust badge placement, product information hierarchy, and CTA prominence seamlessly.</p>
+                  </div>
+                  <div style={S.bentoImageMock}>
+                    <div style={S.mockWindow}>
+                      <div style={S.mockHeader}>
+                        <span style={S.mockDotRed} />
+                        <span style={S.mockDotYellow} />
+                        <span style={S.mockDotGreen} />
                       </div>
-                      <div style={S.mockCanvas}>
-                        <div style={S.mockHero} />
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                          <div style={S.mockSectionHalf} /><div style={S.mockSectionHalf} />
+                      <div style={S.mockBody}>
+                        <div style={S.mockSidebar}>
+                          <div style={S.mockBlock} /><div style={S.mockBlock} /><div style={S.mockBlock} />
+                        </div>
+                        <div style={S.mockCanvas}>
+                          <div style={S.mockHero} />
+                          <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={S.mockSectionHalf} /><div style={S.mockSectionHalf} />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Feature 2 (Square) */}
-              <div style={S.bentoCardSquare1}>
-                <h3 style={S.bentoTitle}>Built to Work With Shopify's Ecosystem</h3>
-                <p style={S.bentoDesc}>Seamlessly integrate with Shopify themes and apps without slowing down performance. 100% native Liquid blocks.</p>
-                <div style={S.mockIntegrations}>
-                  <div style={S.mockTag}><I.Zap width={12} height={12} /> Live App Block</div>
-                  <div style={S.mockTag}><I.Layout width={12} height={12} /> Theme Editor</div>
+                {/* Feature 2 (Square) */}
+                <div style={S.bentoCardSquare1}>
+                  <h3 style={S.bentoTitle}>Built to Work With Shopify's Ecosystem</h3>
+                  <p style={S.bentoDesc}>Seamlessly integrate with Shopify themes and apps without slowing down performance. 100% native Liquid blocks.</p>
+                  <div style={S.mockIntegrations}>
+                    <div style={S.mockTag}><I.Zap width={12} height={12} /> Live App Block</div>
+                    <div style={S.mockTag}><I.Layout width={12} height={12} /> Theme Editor</div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Bottom Row */}
-              <div style={S.bentoCardTall}>
-                <h3 style={S.bentoTitle}>Customize for Clarity, Not Just Design</h3>
-                <p style={S.bentoDesc}>Structure product information to reduce confusion and increase purchase confidence.</p>
-                <ul style={S.bentoList}>
-                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Parameter for almost every style</li>
-                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Global styles</li>
-                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Option Swatches</li>
-                  <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Custom Code Editor</li>
-                </ul>
-              </div>
-
-              <div style={S.bentoCardTallAI}>
-                <div style={S.aiBadge}><span style={{ fontSize: 14 }}>✨</span> New: AI Sales Page</div>
-                <p style={S.bentoDesc}>Build personalized sales pages designed to improve add-to-cart rate by aligning content with visitor intent.</p>
-                <div style={S.mockAiBox}>
-                  <div style={S.mockAiLine} />
-                  <div style={S.mockAiLine} />
-                  <div style={{ ...S.mockAiLine, width: '60%' }} />
+                {/* Bottom Row */}
+                <div style={S.bentoCardTall}>
+                  <h3 style={S.bentoTitle}>Customize for Clarity, Not Just Design</h3>
+                  <p style={S.bentoDesc}>Structure product information to reduce confusion and increase purchase confidence.</p>
+                  <ul style={S.bentoList}>
+                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Parameter for almost every style</li>
+                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Global styles</li>
+                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Option Swatches</li>
+                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Custom Code Editor</li>
+                  </ul>
                 </div>
-              </div>
 
-              <div style={S.bentoCardTallLight}>
-                <h3 style={S.bentoTitle}>Responsive for Mobile Conversion</h3>
-                <p style={S.bentoDesc}>Ensure your key conversion elements remain visible and optimized across devices.</p>
-                <div style={S.mockDevices}>
-                  <I.Layout width={16} height={16} />
-                  <I.Grid width={16} height={16} />
-                  <I.Image width={16} height={16} />
+                <div style={S.bentoCardTallAI}>
+                  <div style={S.aiBadge}><span style={{ fontSize: 14 }}>✨</span> New: AI Sales Page</div>
+                  <p style={S.bentoDesc}>Build personalized sales pages designed to improve add-to-cart rate by aligning content with visitor intent.</p>
+                  <div style={S.mockAiBox}>
+                    <div style={S.mockAiLine} />
+                    <div style={S.mockAiLine} />
+                    <div style={{ ...S.mockAiLine, width: '60%' }} />
+                  </div>
+                </div>
+
+                <div style={S.bentoCardTallLight}>
+                  <h3 style={S.bentoTitle}>Responsive for Mobile Conversion</h3>
+                  <p style={S.bentoDesc}>Ensure your key conversion elements remain visible and optimized across devices.</p>
+                  <div style={S.mockDevices}>
+                    <I.Layout width={16} height={16} />
+                    <I.Grid width={16} height={16} />
+                    <I.Image width={16} height={16} />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         {/* Category Grid */}
-        {!activeCategory && !isSettingUp && (
-          <>
-            <div style={S.sectionHeaderSplit}>
-              <h2 style={{ ...S.title, fontSize: 20 }}>Section Components Library</h2>
-              <p style={S.sectionLabel}>Choose a section category</p>
-            </div>
-            <div style={S.catGrid}>
-              {categories.map(cat => {
-                const Icon = I[cat.icon] || I.Grid;
-                return (
-                  <button key={cat.id} className="cat-card" onClick={() => setActiveCategory(cat.id)} style={S.catCard}>
-                    <Icon width={22} height={22} style={{ color: '#6366f1', marginBottom: 8 }} />
-                    <span style={S.catName}>{cat.name}</span>
-                    <span style={S.catDesc}>{cat.description}</span>
-                    <span style={S.catCount}>{cat.count} section{cat.count !== 1 ? 's' : ''}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </>
-        )}
+        {
+          !activeCategory && !isSettingUp && (
+            <>
+              <div style={S.sectionHeaderSplit}>
+                <h2 style={{ ...S.title, fontSize: 20 }}>Section Components Library</h2>
+                <p style={S.sectionLabel}>Choose a section category</p>
+              </div>
+              <div style={S.catGrid}>
+                {categories.map(cat => {
+                  const Icon = I[cat.icon] || I.Grid;
+                  return (
+                    <button key={cat.id} className="cat-card" onClick={() => setActiveCategory(cat.id)} style={S.catCard}>
+                      <Icon width={22} height={22} style={{ color: '#6366f1', marginBottom: 8 }} />
+                      <span style={S.catName}>{cat.name}</span>
+                      <span style={S.catDesc}>{cat.description}</span>
+                      <span style={S.catCount}>{cat.count} section{cat.count !== 1 ? 's' : ''}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )
+        }
 
         {/* Section List */}
-        {activeCategory && (
-          <>
-            <button onClick={() => setActiveCategory(null)} style={S.backBtn}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
-              Back to categories
-            </button>
+        {
+          activeCategory && (
+            <>
+              <button onClick={() => setActiveCategory(null)} style={S.backBtn}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                Back to categories
+              </button>
 
-            <div style={S.catHeader}>
-              <h2 style={S.catTitle}>{activeCatInfo?.name}</h2>
-              <p style={S.catSubtitle}>{activeSections.length} section{activeSections.length !== 1 ? 's' : ''} available</p>
-            </div>
+              <div style={S.catHeader}>
+                <h2 style={S.catTitle}>{activeCatInfo?.name}</h2>
+                <p style={S.catSubtitle}>{activeSections.length} section{activeSections.length !== 1 ? 's' : ''} available</p>
+              </div>
 
-            <div style={S.secGrid}>
-              {activeSections.map(sec => {
-                const isBusy = publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id;
-                const isDone = result?.ok && result?.sectionId === sec.id;
-                return (
-                  <div key={sec.id} className="sec-card" style={S.secCard}>
-                    <div style={S.secInfo}>
-                      <p style={S.secName}>{sec.name}</p>
-                      <p style={S.secFile}>{sec.file}</p>
+              <div style={S.secGrid}>
+                {activeSections.map(sec => {
+                  const isBusy = publishingIntent === 'publish_section' && fetcher.formData?.get('sectionId') === sec.id;
+                  const isDone = result?.ok && result?.sectionId === sec.id;
+                  return (
+                    <div key={sec.id} className="sec-card" style={S.secCard}>
+                      <div style={S.secInfo}>
+                        <p style={S.secName}>{sec.name}</p>
+                        <p style={S.secFile}>{sec.file}</p>
+                      </div>
+                      <Link to={`/app/editor/${sec.id}`} className="pub-btn" style={{ ...S.publishBtn, background: '#4f46e5', textDecoration: 'none' }}>
+                        <span style={S.btnInner}>
+                          <I.Layout width={14} height={14} /> Customize & Inject
+                        </span>
+                      </Link>
                     </div>
-                    <Link to={`/app/editor/${sec.id}`} className="pub-btn" style={{ ...S.publishBtn, background: '#4f46e5', textDecoration: 'none' }}>
-                      <span style={S.btnInner}>
-                        <I.Layout width={14} height={14} /> Customize & Inject
-                      </span>
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+                  );
+                })}
+              </div>
+            </>
+          )
+        }
+      </div >
+    </div >
   );
 }
 
@@ -426,5 +427,9 @@ const S = {
   warnIcon: { fontSize: 18, flexShrink: 0 },
   warnTitle: { fontSize: 13, fontWeight: 700, color: '#92400e', margin: '0 0 2px' },
   warnDesc: { fontSize: 12, color: '#b45309', margin: 0, lineHeight: 1.4 },
-  warnBtn: { background: '#d97706', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 },
+  warnBtn: { background: '#d97706', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 },
+
+  actionsCard: { background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' },
+  actionsLeft: { display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minWidth: 200 },
+  dangerBtn: { background: '#ef4444', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' },
 };
