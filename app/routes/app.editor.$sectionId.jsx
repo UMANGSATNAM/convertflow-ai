@@ -25,7 +25,7 @@ export const loader = async ({ request, params }) => {
     if (sm) {
         try {
             const schemaObj = JSON.parse(sm[1].trim());
-            const SIMPLE = ['text', 'color', 'range', 'checkbox', 'select', 'textarea'];
+            const SIMPLE = ['text', 'color', 'color_background', 'range', 'checkbox', 'select', 'textarea'];
             editorSettings = (schemaObj.settings || []).filter(s => SIMPLE.includes(s.type));
             editorSettings.forEach(s => { if (s.default !== undefined) initialConfig[s.id] = s.default; });
         } catch (e) { /* schema parse failed — show empty sidebar */ }
@@ -40,6 +40,7 @@ export const action = async ({ request, params }) => {
     const formData = await request.formData();
     const sectionId = params.sectionId;
     const settings = JSON.parse(formData.get("settings") || "{}");
+    const placement = formData.get("placement") || "bottom";
 
     const sectionMeta = SECTION_FILES[sectionId];
     if (!sectionMeta) return json({ ok: false, error: "Section not found" }, { status: 400 });
@@ -54,7 +55,7 @@ export const action = async ({ request, params }) => {
         const { themeId } = await publishSection(session.shop, session.accessToken, sectionKey, rawLiquid);
 
         // 2. Inject into homepage index.json
-        await injectSectionIntoTheme(session.shop, session.accessToken, themeId, sectionKey, settings);
+        await injectSectionIntoTheme(session.shop, session.accessToken, themeId, sectionKey, settings, placement);
 
         return json({ ok: true, message: `"${sectionMeta.name}" is now live on your homepage!` });
     } catch (e) {
@@ -69,6 +70,7 @@ export default function VisualEditor() {
     const navigate = useNavigate();
 
     const [settings, setSettings] = useState(initialConfig);
+    const [placement, setPlacement] = useState('bottom');
     const [device, setDevice] = useState('desktop');
     const [previewHtml, setPreviewHtml] = useState('');
     const [previewLoading, setPreviewLoading] = useState(false);
@@ -107,6 +109,7 @@ export default function VisualEditor() {
     const handleInject = () => {
         const form = new FormData();
         form.append("settings", JSON.stringify(settings));
+        form.append("placement", placement);
         fetcher.submit(form, { method: "post" });
     };
 
@@ -153,6 +156,15 @@ export default function VisualEditor() {
                             {editorSettings.map(s => (
                                 <SettingControl key={s.id} setting={s} value={settings[s.id]} onChange={handleSetting} />
                             ))}
+
+                            <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '10px 0' }} />
+                            <div style={S.ctrl}>
+                                <label style={S.label}>Inject Placement</label>
+                                <select value={placement} onChange={e => setPlacement(e.target.value)}>
+                                    <option value="top">Top (Below Header)</option>
+                                    <option value="bottom">Bottom (Above Footer)</option>
+                                </select>
+                            </div>
                         </div>
                     }
                 </aside>
@@ -188,7 +200,7 @@ function SettingControl({ setting, value, onChange }) {
                     <code style={S.colorCode}>{v || '#000000'}</code>
                 </div>
             )}
-            {(setting.type === 'text' || setting.type === 'textarea') && (
+            {(setting.type === 'text' || setting.type === 'textarea' || setting.type === 'color_background') && (
                 <input type="text" value={v}
                     placeholder={setting.placeholder || ''}
                     onChange={e => onChange(setting.id, e.target.value)} />

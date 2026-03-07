@@ -1,0 +1,355 @@
+<style>
+/* ─── SCOPED CSS FOR ADVANCED HEADER ─── */
+/* Load Custom Fonts */
+{%- if section.settings.font_family != 'system' -%}
+  @import url('https://fonts.googleapis.com/css2?family={{ section.settings.font_family | replace: ' ', '+' }}:wght@400;500;600;700;800&display=swap');
+{%- endif -%}
+
+.cf-header-advanced {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  {%- if section.settings.font_family != 'system' -%}
+    font-family: "{{ section.settings.font_family }}", sans-serif;
+  {%- else -%}
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  {%- endif -%}
+  background: {{ section.settings.bg_gradient | default: section.settings.bg_color }};
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.cf-header-inner {
+  display: flex;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 5%;
+  gap: 24px;
+  {%- if section.settings.logo_position == 'center' -%}
+    justify-content: center;
+  {%- else -%}
+    justify-content: space-between;
+  {%- endif -%}
+}
+
+.cf-header-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  {%- if section.settings.logo_position == 'center' -%}
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  {%- endif -%}
+}
+.cf-header-logo img {
+  max-height: {{ section.settings.logo_height }}px;
+  width: auto;
+  object-fit: contain;
+}
+.cf-header-logo-text {
+  font-size: 26px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.cf-header-nav {
+  display: none;
+  flex: 1;
+  {%- if section.settings.logo_position == 'center' -%}
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  {%- endif -%}
+}
+
+.cf-header-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.cf-header-nav.left-nav {
+  justify-content: flex-start;
+}
+.cf-header-nav.right-nav {
+  justify-content: flex-end;
+}
+
+.cf-header-nav a {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s, transform 0.2s;
+  display: inline-block;
+}
+.cf-header-nav a:hover {
+  opacity: 0.7;
+  transform: translateY(-1px);
+}
+
+.cf-header-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.cf-header-icon {
+  color: {{ section.settings.icon_color }};
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: transform 0.2s;
+}
+.cf-header-icon:hover {
+  transform: translateY(-2px);
+}
+.cf-header-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
+}
+.cf-cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: {{ section.settings.badge_color }};
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Desktop */
+@media (min-width: 990px) {
+  .cf-header-nav {
+    display: flex;
+  }
+  .cf-menu-toggle {
+    display: none;
+  }
+}
+/* Mobile */
+@media (max-width: 989px) {
+  .cf-header-inner {
+    padding: 12px 5%;
+    justify-content: space-between !important;
+  }
+  .cf-header-nav {
+    display: none !important;
+  }
+  .cf-header-logo {
+    position: static !important;
+    transform: none !important;
+  }
+}
+</style>
+
+<div class="cf-header-advanced">
+  <div class="cf-header-inner">
+    
+    <!-- Mobile Menu Toggle -->
+    <div class="cf-menu-toggle">
+      <a href="#" class="cf-header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </a>
+    </div>
+
+    {%- if section.settings.logo_position == 'center' -%}
+      <!-- Split Nav Left -->
+      <nav class="cf-header-nav left-nav">
+        <ul>
+          {%- for link in section.settings.menu.links limit: 3 -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- else -%}
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">Collections</a></li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    <!-- Logo -->
+    <a href="{{ routes.root_url }}" class="cf-header-logo">
+      {%- if section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | image_url: width: 600 }}" alt="{{ shop.name }}">
+      {%- else -%}
+        <span class="cf-header-logo-text">{{ section.settings.logo_text | default: shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <!-- Nav (Right/Full) -->
+    <nav class="cf-header-nav {% if section.settings.logo_position == 'left' %}right-nav{% else %}right-nav{% endif %}">
+      <ul>
+        {%- if section.settings.logo_position == 'center' -%}
+          {%- for link in section.settings.menu.links offset: 3 -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- else -%}
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for link in section.settings.menu.links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- else -%}
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+    </nav>
+
+    <!-- Icons -->
+    <div class="cf-header-icons">
+      {%- if section.settings.show_search -%}
+      <a href="{{ routes.search_url }}" class="cf-header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      {%- endif -%}
+      
+      {%- if shop.customer_accounts_enabled and section.settings.show_account -%}
+      <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="cf-header-icon desktop-only">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+      {%- endif -%}
+
+      <a href="{{ routes.cart_url }}" class="cf-header-icon" id="cf-cart-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        <span class="cf-cart-count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Advanced Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "color_background",
+      "id": "bg_gradient",
+      "label": "Background Gradient",
+      "default": "linear-gradient(90deg, #ff7e5f 0%, #feb47b 100%)"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fallback Solid Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text/Menu Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Cart Badge Color",
+      "default": "#111111"
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Typography Font",
+      "options": [
+        { "value": "system", "label": "System Default" },
+        { "value": "Inter", "label": "Inter (Modern)" },
+        { "value": "Playfair Display", "label": "Playfair Display (Elegant)" },
+        { "value": "Montserrat", "label": "Montserrat (Bold)" },
+        { "value": "Space Grotesk", "label": "Space Grotesk (Tech)" },
+        { "value": "Outfit", "label": "Outfit (Clean)" }
+      ],
+      "default": "Inter"
+    },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "Logo Position",
+      "options": [
+        { "value": "left", "label": "Left Aligned" },
+        { "value": "center", "label": "Center Split" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text (if no image)",
+      "default": "WILD HEART"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo Height (px)",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "default": 36
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Desktop Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show Search Icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show Account Icon",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Top/Bottom Padding (px)",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Advanced Header"
+    }
+  ]
+}
+{% endschema %}

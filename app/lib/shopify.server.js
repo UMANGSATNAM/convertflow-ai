@@ -133,7 +133,7 @@ export async function getThemeAsset(shop, accessToken, themeId, assetKey) {
  * WITHOUT `sections/` prefix and WITHOUT `.liquid` extension.
  * e.g. if the file is at sections/cf-header-01.liquid, type = "cf-header-01"
  */
-export async function injectSectionIntoTheme(shop, accessToken, themeId, sectionKey, settings = {}) {
+export async function injectSectionIntoTheme(shop, accessToken, themeId, sectionKey, settings = {}, placement = 'bottom') {
     // 1. Fetch current templates/index.json
     const indexJsonStr = await getThemeAsset(shop, accessToken, themeId, 'templates/index.json');
     if (!indexJsonStr) throw new Error("Could not read templates/index.json — make sure your theme has a homepage template.");
@@ -155,14 +155,15 @@ export async function injectSectionIntoTheme(shop, accessToken, themeId, section
     // 4. Add section block — type MUST match bare asset name (no path, no extension)
     indexJson.sections[blockId] = { type: sectionKey, settings };
 
-    // 5. Insert before footer if possible, else append
-    const footerIdx = indexJson.order.findIndex(id =>
-        id.toLowerCase().includes('footer')
-    );
-    if (footerIdx !== -1) {
-        indexJson.order.splice(footerIdx, 0, blockId);
+    // 5. Insert based on placement preference
+    if (placement === 'top') {
+        const headerIdx = indexJson.order.findIndex(id => id.toLowerCase().includes('header'));
+        if (headerIdx !== -1) indexJson.order.splice(headerIdx + 1, 0, blockId);
+        else indexJson.order.unshift(blockId);
     } else {
-        indexJson.order.push(blockId);
+        const footerIdx = indexJson.order.findIndex(id => id.toLowerCase().includes('footer'));
+        if (footerIdx !== -1) indexJson.order.splice(footerIdx, 0, blockId);
+        else indexJson.order.push(blockId);
     }
 
     // 6. Save back to Shopify

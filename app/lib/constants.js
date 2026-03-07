@@ -12,6 +12,11 @@ export const SECTION_FILES = {
         category: 'header',
         name: 'Premium Header',
         file: 'cf-header-premium.liquid'
+    },
+    'cf-header-advanced': {
+        category: 'header',
+        name: 'Advanced Header (Gradient & Fonts)',
+        file: 'cf-header-advanced.liquid'
     }
 };
 
