@@ -1,0 +1,224 @@
+<style>
+.cf-ann-07 {
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 5%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.cf-ann-07-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cf-ann-07-badge {
+  flex-shrink: 0;
+  background: {{ section.settings.badge_color }};
+  color: {{ section.settings.badge_text_color }};
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 4px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cf-ann-07-code {
+  font-size: {{ section.settings.font_size }}px;
+  color: {{ section.settings.text_color }};
+  font-weight: 600;
+}
+.cf-ann-07-code strong {
+  font-family: monospace;
+  background: rgba(0,0,0,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.1em;
+}
+.cf-ann-07-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cf-ann-07-main {
+  font-size: {{ section.settings.headline_size }}px;
+  font-weight: 800;
+  color: {{ section.settings.headline_color }};
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+.cf-ann-07-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.cf-ann-07-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: {{ section.settings.btn_color }};
+  color: {{ section.settings.btn_text_color }};
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.cf-ann-07-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.cf-ann-07-dismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: {{ section.settings.text_color }};
+  opacity: 0.5;
+  font-size: 18px;
+}
+.cf-ann-07-dismiss:hover { opacity: 1; }
+@media(max-width:768px){
+  .cf-ann-07 { grid-template-columns: 1fr; text-align: center; }
+  .cf-ann-07-left,.cf-ann-07-right { justify-content: center; }
+}
+</style>
+
+<div class="cf-ann-07" id="cf-ann-07-bar">
+  <div class="cf-ann-07-left">
+    {%- if section.settings.badge_text != blank -%}
+      <span class="cf-ann-07-badge">{{ section.settings.badge_text }}</span>
+    {%- endif -%}
+    <span class="cf-ann-07-code">{{ section.settings.code_prefix }} <strong>{{ section.settings.coupon_code }}</strong></span>
+  </div>
+  <div class="cf-ann-07-center">
+    <span class="cf-ann-07-main">{{ section.settings.headline }}</span>
+  </div>
+  <div class="cf-ann-07-right">
+    <a href="{{ section.settings.btn_url }}" class="cf-ann-07-btn">{{ section.settings.btn_label }}</a>
+    {%- if section.settings.show_dismiss -%}
+      <button class="cf-ann-07-dismiss" onclick="document.getElementById('cf-ann-07-bar').style.display='none'">&times;</button>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Split Promo Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f0fdf4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#14532d"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Label",
+      "default": "OFFER"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge Color",
+      "default": "#16a34a"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "code_prefix",
+      "label": "Code Prefix Text",
+      "default": "Use code"
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Coupon Code",
+      "default": "SAVE20"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Center Headline",
+      "default": "20% Off Your First Order 🎉"
+    },
+    {
+      "type": "range",
+      "id": "headline_size",
+      "label": "Headline Size (px)",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "headline_color",
+      "label": "Headline Color",
+      "default": "#14532d"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "Shop Now →"
+    },
+    {
+      "type": "text",
+      "id": "btn_url",
+      "label": "Button URL",
+      "default": "/collections/all"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Color",
+      "default": "#16a34a"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dismiss",
+      "label": "Show Dismiss Button",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (px)",
+      "min": 11,
+      "max": 17,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding (px)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 10
+    }
+  ],
+  "presets": [{ "name": "07 · Split Promo Bar" }]
+}
+{% endschema %}

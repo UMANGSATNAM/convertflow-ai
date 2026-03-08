@@ -1,0 +1,165 @@
+<style>
+.cf-ann-04 {
+  background: {{ section.settings.bg_color }};
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,{{ section.settings.border_opacity | divided_by: 100.0 }});
+  padding: {{ section.settings.padding_y }}px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  flex-wrap: wrap;
+}
+.cf-ann-04-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 100px;
+}
+.cf-ann-04-icon { font-size: 14px; }
+.cf-ann-04-text {
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 600;
+  color: {{ section.settings.text_color }};
+  letter-spacing: 0.01em;
+}
+.cf-ann-04-badge {
+  background: {{ section.settings.badge_color }};
+  color: {{ section.settings.badge_text_color }};
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 9px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+</style>
+
+<div class="cf-ann-04">
+  {%- if section.settings.badge_text != blank -%}
+    <span class="cf-ann-04-badge">{{ section.settings.badge_text }}</span>
+  {%- endif -%}
+  <div class="cf-ann-04-pill">
+    <span class="cf-ann-04-icon">{{ section.settings.icon }}</span>
+    <span class="cf-ann-04-text">{{ section.settings.message }}</span>
+  </div>
+  {%- if section.settings.message_2 != blank -%}
+  <div class="cf-ann-04-pill">
+    <span class="cf-ann-04-icon">{{ section.settings.icon_2 }}</span>
+    <span class="cf-ann-04-text">{{ section.settings.message_2 }}</span>
+  </div>
+  {%- endif -%}
+  {%- if section.settings.message_3 != blank -%}
+  <div class="cf-ann-04-pill">
+    <span class="cf-ann-04-icon">{{ section.settings.icon_3 }}</span>
+    <span class="cf-ann-04-text">{{ section.settings.message_3 }}</span>
+  </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "04 · Glassmorphism Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color (semi-transparent)",
+      "default": "rgba(255,255,255,0.10)"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "label": "Border Opacity (%)",
+      "min": 5,
+      "max": 80,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "NEW"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge Color",
+      "default": "#6366f1"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "icon",
+      "label": "Pill 1 Icon",
+      "default": "🚀"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Pill 1 Text",
+      "default": "Free Shipping over ₹999"
+    },
+    {
+      "type": "text",
+      "id": "icon_2",
+      "label": "Pill 2 Icon",
+      "default": "💎"
+    },
+    {
+      "type": "text",
+      "id": "message_2",
+      "label": "Pill 2 Text",
+      "default": "Premium Quality Guaranteed"
+    },
+    {
+      "type": "text",
+      "id": "icon_3",
+      "label": "Pill 3 Icon",
+      "default": "↩️"
+    },
+    {
+      "type": "text",
+      "id": "message_3",
+      "label": "Pill 3 Text",
+      "default": "Easy 30-Day Returns"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (px)",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding (px)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 10
+    }
+  ],
+  "presets": [{ "name": "04 · Glassmorphism Bar" }]
+}
+{% endschema %}

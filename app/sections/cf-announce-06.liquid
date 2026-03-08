@@ -1,0 +1,125 @@
+<style>
+@keyframes cf-emoji-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.cf-ann-06 {
+  background: {{ section.settings.bg_color }};
+  overflow: hidden;
+  padding: {{ section.settings.padding_y }}px 0;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+.cf-ann-06-track {
+  display: flex;
+  width: max-content;
+  animation: cf-emoji-scroll {{ section.settings.speed }}s linear infinite;
+}
+.cf-ann-06-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 20px;
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: {{ section.settings.font_weight }};
+  color: {{ section.settings.text_color }};
+  white-space: nowrap;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0.01em;
+}
+.cf-ann-06-emoji {
+  font-size: {{ section.settings.emoji_size }}px;
+}
+</style>
+
+<div class="cf-ann-06">
+  <div class="cf-ann-06-track">
+    {%- assign items = section.settings.items | split: '|' -%}
+    {%- for i in (1..6) -%}
+      {%- for item in items -%}
+        {%- assign parts = item | split: ':' -%}
+        <span class="cf-ann-06-item">
+          <span class="cf-ann-06-emoji">{{ parts[0] | strip }}</span>
+          {{ parts[1] | strip | default: item }}
+        </span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Emoji Marquee Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fef3c7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#92400e"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Bottom Border Color",
+      "default": "#fcd34d"
+    },
+    {
+      "type": "textarea",
+      "id": "items",
+      "label": "Items (emoji:text, separated by |)",
+      "default": "🚚: Free Shipping | 🎁: Gift Wrapping Available | 💯: Authentic Products | ⭐: 50,000+ Happy Customers | 🔄: Easy Returns | 🇮🇳: Made in India"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Speed (seconds, lower = faster)",
+      "min": 8,
+      "max": 60,
+      "step": 4,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Text Size (px)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "emoji_size",
+      "label": "Emoji Size (px)",
+      "min": 12,
+      "max": 28,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "font_weight",
+      "label": "Font Weight",
+      "min": 400,
+      "max": 800,
+      "step": 100,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding (px)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 8
+    }
+  ],
+  "presets": [{ "name": "06 · Emoji Marquee Bar" }]
+}
+{% endschema %}

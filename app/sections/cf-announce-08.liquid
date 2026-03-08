@@ -1,0 +1,108 @@
+<style>
+@keyframes cf-wave-drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.cf-ann-08 {
+  background: {{ section.settings.color_1 }};
+  background: linear-gradient(270deg, {{ section.settings.color_1 }}, {{ section.settings.color_2 }}, {{ section.settings.color_3 }});
+  background-size: 600% 600%;
+  animation: cf-wave-drift {{ section.settings.speed }}s ease infinite;
+  padding: {{ section.settings.padding_y }}px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.cf-ann-08-text {
+  color: {{ section.settings.text_color }};
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.cf-ann-08-dot {
+  color: {{ section.settings.text_color }};
+  opacity: 0.6;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+}
+</style>
+
+<div class="cf-ann-08">
+  {%- assign msgs = section.settings.messages | split: '|' -%}
+  {%- for msg in msgs -%}
+    {%- unless forloop.first -%}<span class="cf-ann-08-dot">·</span>{%- endunless -%}
+    <span class="cf-ann-08-text">{{ msg | strip }}</span>
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "08 · Animated Wave Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "color_1",
+      "label": "Wave Color 1",
+      "default": "#f97316"
+    },
+    {
+      "type": "color",
+      "id": "color_2",
+      "label": "Wave Color 2",
+      "default": "#ec4899"
+    },
+    {
+      "type": "color",
+      "id": "color_3",
+      "label": "Wave Color 3",
+      "default": "#8b5cf6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "messages",
+      "label": "Messages (separate by |)",
+      "default": "✨ New Collection Launched | 🎀 Gift Sets Available Now | 🚀 Ship Across India"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Wave Speed (seconds)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (px)",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding (px)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 10
+    }
+  ],
+  "presets": [{ "name": "08 · Animated Wave Bar" }]
+}
+{% endschema %}

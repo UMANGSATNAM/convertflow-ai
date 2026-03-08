@@ -1,0 +1,183 @@
+<style>
+.cf-ann-03 {
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.cf-ann-03-msg {
+  color: {{ section.settings.text_color }};
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.cf-ann-03-timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.15);
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+.cf-ann-03-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 36px;
+}
+.cf-ann-03-num {
+  font-size: 18px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  line-height: 1.2;
+}
+.cf-ann-03-label {
+  font-size: 9px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.cf-ann-03-sep {
+  font-size: 18px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  opacity: 0.5;
+  margin-bottom: 10px;
+}
+.cf-ann-03-btn {
+  display: inline-block;
+  padding: 7px 18px;
+  background: {{ section.settings.btn_color }};
+  color: {{ section.settings.btn_text_color }};
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.cf-ann-03-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+</style>
+
+<div class="cf-ann-03">
+  <span class="cf-ann-03-msg">{{ section.settings.message }}</span>
+  <div class="cf-ann-03-timer" id="cf-timer-03">
+    <div class="cf-ann-03-unit"><span class="cf-ann-03-num" id="cf-t03-h">00</span><span class="cf-ann-03-label">hrs</span></div>
+    <span class="cf-ann-03-sep">:</span>
+    <div class="cf-ann-03-unit"><span class="cf-ann-03-num" id="cf-t03-m">00</span><span class="cf-ann-03-label">min</span></div>
+    <span class="cf-ann-03-sep">:</span>
+    <div class="cf-ann-03-unit"><span class="cf-ann-03-num" id="cf-t03-s">00</span><span class="cf-ann-03-label">sec</span></div>
+  </div>
+  {%- if section.settings.btn_label != blank -%}
+    <a href="{{ section.settings.btn_url }}" class="cf-ann-03-btn">{{ section.settings.btn_label }}</a>
+  {%- endif -%}
+</div>
+
+<script>
+(function(){
+  var end = new Date();
+  end.setHours(end.getHours() + {{ section.settings.hours }}, end.getMinutes() + {{ section.settings.minutes }}, 0, 0);
+  function tick(){
+    var now = new Date(), diff = Math.max(0, end - now);
+    var h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    var pad = n => String(n).padStart(2,'0');
+    document.getElementById('cf-t03-h').textContent = pad(h);
+    document.getElementById('cf-t03-m').textContent = pad(m);
+    document.getElementById('cf-t03-s').textContent = pad(s);
+    if(diff>0) requestAnimationFrame(function(){ setTimeout(tick, 1000); });
+  }
+  tick();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "03 · Countdown Timer Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#dc2626"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Announcement Text",
+      "default": "🔥 Flash Sale Ends In:"
+    },
+    {
+      "type": "range",
+      "id": "hours",
+      "label": "Timer Hours",
+      "min": 0,
+      "max": 72,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "minutes",
+      "label": "Timer Additional Minutes",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "Shop the Sale"
+    },
+    {
+      "type": "text",
+      "id": "btn_url",
+      "label": "Button URL",
+      "default": "/collections/sale"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#dc2626"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (px)",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding (px)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 10
+    }
+  ],
+  "presets": [{ "name": "03 · Countdown Timer Bar" }]
+}
+{% endschema %}

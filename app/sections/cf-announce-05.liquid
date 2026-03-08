@@ -1,0 +1,132 @@
+<style>
+@keyframes cf-neon-pulse {
+  0%, 100% { text-shadow: 0 0 7px {{ section.settings.glow_color }}, 0 0 20px {{ section.settings.glow_color }}, 0 0 40px {{ section.settings.glow_color }}; }
+  50% { text-shadow: 0 0 4px {{ section.settings.glow_color }}, 0 0 10px {{ section.settings.glow_color }}, 0 0 20px {{ section.settings.glow_color }}; }
+}
+.cf-ann-05 {
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border-bottom: 1px solid {{ section.settings.glow_color }}33;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  flex-wrap: wrap;
+}
+.cf-ann-05-text {
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: cf-neon-pulse 2.5s ease-in-out infinite;
+}
+.cf-ann-05-separator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: {{ section.settings.glow_color }};
+  box-shadow: 0 0 8px {{ section.settings.glow_color }};
+}
+.cf-ann-05-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 16px;
+  border: 1.5px solid {{ section.settings.glow_color }};
+  color: {{ section.settings.glow_color }};
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 0 10px {{ section.settings.glow_color }}55, inset 0 0 10px {{ section.settings.glow_color }}11;
+  transition: box-shadow 0.3s;
+}
+.cf-ann-05-link:hover {
+  box-shadow: 0 0 20px {{ section.settings.glow_color }}99, inset 0 0 15px {{ section.settings.glow_color }}22;
+}
+</style>
+
+<div class="cf-ann-05">
+  <span class="cf-ann-05-text">{{ section.settings.message }}</span>
+  {%- if section.settings.message_2 != blank -%}
+    <div class="cf-ann-05-separator"></div>
+    <span class="cf-ann-05-text">{{ section.settings.message_2 }}</span>
+  {%- endif -%}
+  {%- if section.settings.btn_label != blank -%}
+    <div class="cf-ann-05-separator"></div>
+    <a href="{{ section.settings.btn_url }}" class="cf-ann-05-link">{{ section.settings.btn_label }} →</a>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "05 · Neon Glow Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#00f0ff"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Neon Glow Color",
+      "default": "#00f0ff"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Primary Text",
+      "default": "Midnight Drop — Limited Stock"
+    },
+    {
+      "type": "text",
+      "id": "message_2",
+      "label": "Secondary Text (optional)",
+      "default": "50% OFF Till Midnight"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "CTA Label",
+      "default": "Get It Now"
+    },
+    {
+      "type": "text",
+      "id": "btn_url",
+      "label": "CTA URL",
+      "default": "/collections/all"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (px)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding (px)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 10
+    }
+  ],
+  "presets": [{ "name": "05 · Neon Glow Bar" }]
+}
+{% endschema %}

@@ -1,0 +1,119 @@
+<style>
+.cf-ann-02 {
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.cf-ann-02-text {
+  color: {{ section.settings.text_color }};
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+.cf-ann-02-text a {
+  color: {{ section.settings.link_color }};
+  font-weight: 700;
+  text-decoration: underline;
+  margin-left: 8px;
+}
+.cf-ann-02-close {
+  position: absolute;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: {{ section.settings.text_color }};
+  opacity: 0.6;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 6px;
+  transition: opacity 0.2s;
+}
+.cf-ann-02-close:hover { opacity: 1; }
+</style>
+
+<div class="cf-ann-02" id="cf-ann-02-bar">
+  <p class="cf-ann-02-text">
+    {{ section.settings.message }}
+    {%- if section.settings.link_label != blank and section.settings.link_url != blank -%}
+      <a href="{{ section.settings.link_url }}">{{ section.settings.link_label }}</a>
+    {%- endif -%}
+  </p>
+  {%- if section.settings.show_dismiss -%}
+    <button class="cf-ann-02-close" onclick="document.getElementById('cf-ann-02-bar').style.display='none'" aria-label="Dismiss">&times;</button>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "02 · Minimal Dark Bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link Color",
+      "default": "#facc15"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Announcement Text",
+      "default": "✦ Free delivery on all orders above ₹999 · Limited time offer"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "CTA Link Label",
+      "default": "Shop Now →"
+    },
+    {
+      "type": "text",
+      "id": "link_url",
+      "label": "CTA Link URL",
+      "default": "/collections/all"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dismiss",
+      "label": "Show Dismiss (×) Button",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size (px)",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding (px)",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "default": 10
+    }
+  ],
+  "presets": [{ "name": "02 · Minimal Dark Bar" }]
+}
+{% endschema %}

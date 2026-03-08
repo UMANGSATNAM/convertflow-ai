@@ -1,0 +1,17 @@
+<style>
+.cf-ann-09{background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_top }}px 5% {{ section.settings.padding_bottom }}px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.cf-ann-09-eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:{{ section.settings.eyebrow_color }};background:{{ section.settings.eyebrow_bg }};padding:4px 14px;border-radius:100px}
+.cf-ann-09-headline{font-size:{{ section.settings.headline_size }}px;font-weight:900;color:{{ section.settings.text_color }};margin:0;letter-spacing:-.02em;line-height:1.1}
+.cf-ann-09-sub{font-size:{{ section.settings.sub_size }}px;color:{{ section.settings.text_color }};opacity:.75;margin:0}
+.cf-ann-09-btn{display:inline-flex;gap:8px;margin-top:6px;padding:10px 28px;background:{{ section.settings.btn_color }};color:{{ section.settings.btn_text }};border-radius:100px;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 4px 14px {{ section.settings.btn_color }}55;transition:transform .2s}
+.cf-ann-09-btn:hover{transform:translateY(-2px)}
+</style>
+<div class="cf-ann-09">
+  {%- if section.settings.eyebrow != blank -%}<span class="cf-ann-09-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+  <p class="cf-ann-09-headline">{{ section.settings.headline }}</p>
+  {%- if section.settings.subtext != blank -%}<p class="cf-ann-09-sub">{{ section.settings.subtext }}</p>{%- endif -%}
+  {%- if section.settings.btn_label != blank -%}<a href="{{ section.settings.btn_url }}" class="cf-ann-09-btn">{{ section.settings.btn_label }}</a>{%- endif -%}
+</div>
+{% schema %}
+{"name":"09 · Bold Full-Width Bar","settings":[{"type":"color","id":"bg_color","label":"Background","default":"#1e1b4b"},{"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"LIMITED TIME"},{"type":"color","id":"eyebrow_color","label":"Eyebrow Text Color","default":"#1e1b4b"},{"type":"color","id":"eyebrow_bg","label":"Eyebrow Background","default":"#a5b4fc"},{"type":"text","id":"headline","label":"Headline","default":"Extra 30% OFF on Everything 🎊"},{"type":"range","id":"headline_size","label":"Headline Size","min":16,"max":48,"step":2,"default":28},{"type":"text","id":"subtext","label":"Subtext","default":"Use code MEGA30. Ends midnight Sunday."},{"type":"range","id":"sub_size","label":"Subtext Size","min":10,"max":18,"step":1,"default":14},{"type":"text","id":"btn_label","label":"Button","default":"Claim Offer"},{"type":"text","id":"btn_url","label":"Button URL","default":"/collections/all"},{"type":"color","id":"btn_color","label":"Button Color","default":"#818cf8"},{"type":"color","id":"btn_text","label":"Button Text","default":"#1e1b4b"},{"type":"range","id":"padding_top","label":"Padding Top","min":12,"max":60,"step":4,"default":24},{"type":"range","id":"padding_bottom","label":"Padding Bottom","min":12,"max":60,"step":4,"default":24}],"presets":[{"name":"09 · Bold Full-Width Bar"}]}
+{% endschema %}

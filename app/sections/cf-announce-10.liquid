@@ -1,0 +1,23 @@
+<style>
+.cf-ann-10{background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 5%;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;border-top:3px solid {{ section.settings.accent_color }};border-bottom:3px solid {{ section.settings.accent_color }}}
+.cf-ann-10-icon{font-size:{{ section.settings.icon_size }}px;flex-shrink:0}
+.cf-ann-10-content{display:flex;flex-direction:column;gap:2px}
+.cf-ann-10-line1{font-size:{{ section.settings.line1_size }}px;font-weight:800;color:{{ section.settings.text_color }};letter-spacing:-.01em}
+.cf-ann-10-line2{font-size:{{ section.settings.line2_size }}px;font-weight:500;color:{{ section.settings.text_color }};opacity:.75}
+.cf-ann-10-divider{width:1px;height:36px;background:{{ section.settings.text_color }};opacity:.2;flex-shrink:0}
+.cf-ann-10-link{display:inline-flex;align-items:center;gap:6px;padding:8px 22px;background:{{ section.settings.accent_color }};color:{{ section.settings.btn_text }};border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;flex-shrink:0}
+</style>
+<div class="cf-ann-10">
+  <span class="cf-ann-10-icon">{{ section.settings.icon }}</span>
+  <div class="cf-ann-10-content">
+    <span class="cf-ann-10-line1">{{ section.settings.line1 }}</span>
+    <span class="cf-ann-10-line2">{{ section.settings.line2 }}</span>
+  </div>
+  {%- if section.settings.btn_label != blank -%}
+    <div class="cf-ann-10-divider"></div>
+    <a href="{{ section.settings.btn_url }}" class="cf-ann-10-link">{{ section.settings.btn_label }} →</a>
+  {%- endif -%}
+</div>
+{% schema %}
+{"name":"10 · Multi-Line Icon Bar","settings":[{"type":"color","id":"bg_color","label":"Background","default":"#fff7ed"},{"type":"color","id":"text_color","label":"Text Color","default":"#7c2d12"},{"type":"color","id":"accent_color","label":"Accent / Border Color","default":"#ea580c"},{"type":"text","id":"icon","label":"Icon / Emoji","default":"🎁"},{"type":"range","id":"icon_size","label":"Icon Size","min":16,"max":48,"step":2,"default":28},{"type":"text","id":"line1","label":"Line 1 (Bold)","default":"Grand Sale — Upto 50% Off Sitewide"},{"type":"range","id":"line1_size","label":"Line 1 Size","min":12,"max":24,"step":1,"default":16},{"type":"text","id":"line2","label":"Line 2 (Subtle)","default":"No coupon needed. Discount applied at checkout automatically."},{"type":"range","id":"line2_size","label":"Line 2 Size","min":10,"max":16,"step":1,"default":12},{"type":"text","id":"btn_label","label":"Button Label","default":"Shop All"},{"type":"text","id":"btn_url","label":"Button URL","default":"/collections/all"},{"type":"color","id":"btn_text","label":"Button Text Color","default":"#ffffff"},{"type":"range","id":"padding_y","label":"Padding","min":8,"max":32,"step":4,"default":14}],"presets":[{"name":"10 · Multi-Line Icon Bar"}]}
+{% endschema %}
