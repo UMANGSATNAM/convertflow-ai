@@ -21,6 +21,7 @@ export const SECTION_FILES = {
     'cf-head-08': { category: 'header', name: '08 · Kids Header', file: 'cf-head-08.liquid' },
     'cf-head-09': { category: 'header', name: '09 · Furniture Header', file: 'cf-head-09.liquid' },
     'cf-head-10': { category: 'header', name: '10 · Fitness Header', file: 'cf-head-10.liquid' },
+    'cf-head-11': { category: 'header', name: '11 · Men\'s Header', file: 'cf-head-11.liquid' },
 
     'cf-marquee-01': { category: 'marquee', name: '01 · Luxury Marquee', file: 'cf-marquee-01.liquid' },
     'cf-marquee-02': { category: 'marquee', name: '02 · Streetwear Marquee', file: 'cf-marquee-02.liquid' },
@@ -32,6 +33,7 @@ export const SECTION_FILES = {
     'cf-marquee-08': { category: 'marquee', name: '08 · Kids Marquee', file: 'cf-marquee-08.liquid' },
     'cf-marquee-09': { category: 'marquee', name: '09 · Furniture Marquee', file: 'cf-marquee-09.liquid' },
     'cf-marquee-10': { category: 'marquee', name: '10 · Fitness Marquee', file: 'cf-marquee-10.liquid' },
+    'cf-marquee-11': { category: 'marquee', name: '11 · Men\'s Marquee', file: 'cf-marquee-11.liquid' },
 
     'cf-promo-01': { category: 'promo', name: '01 · Luxury Promo', file: 'cf-promo-01.liquid' },
     'cf-promo-02': { category: 'promo', name: '02 · Streetwear Promo', file: 'cf-promo-02.liquid' },
@@ -43,6 +45,7 @@ export const SECTION_FILES = {
     'cf-promo-08': { category: 'promo', name: '08 · Kids Promo', file: 'cf-promo-08.liquid' },
     'cf-promo-09': { category: 'promo', name: '09 · Furniture Promo', file: 'cf-promo-09.liquid' },
     'cf-promo-10': { category: 'promo', name: '10 · Fitness Promo', file: 'cf-promo-10.liquid' },
+    'cf-promo-11': { category: 'promo', name: '11 · Men\'s Promo', file: 'cf-promo-11.liquid' },
 
     'cf-snack-01': { category: 'snack', name: '01 · Luxury Snack', file: 'cf-snack-01.liquid' },
     'cf-snack-02': { category: 'snack', name: '02 · Streetwear Snack', file: 'cf-snack-02.liquid' },
@@ -54,6 +57,7 @@ export const SECTION_FILES = {
     'cf-snack-08': { category: 'snack', name: '08 · Kids Snack', file: 'cf-snack-08.liquid' },
     'cf-snack-09': { category: 'snack', name: '09 · Furniture Snack', file: 'cf-snack-09.liquid' },
     'cf-snack-10': { category: 'snack', name: '10 · Fitness Snack', file: 'cf-snack-10.liquid' },
+    'cf-snack-11': { category: 'snack', name: '11 · Men\'s Snack', file: 'cf-snack-11.liquid' },
 
     'cf-category-01': { category: 'category', name: '01 · Luxury Categories', file: 'cf-category-01.liquid' },
     'cf-category-02': { category: 'category', name: '02 · Streetwear Categories', file: 'cf-category-02.liquid' },
@@ -65,6 +69,7 @@ export const SECTION_FILES = {
     'cf-category-08': { category: 'category', name: '08 · Kids Categories', file: 'cf-category-08.liquid' },
     'cf-category-09': { category: 'category', name: '09 · Furniture Categories', file: 'cf-category-09.liquid' },
     'cf-category-10': { category: 'category', name: '10 · Fitness Categories', file: 'cf-category-10.liquid' },
+    'cf-category-11': { category: 'category', name: '11 · Men\'s Categories', file: 'cf-cat-11.liquid' },
 
     'cf-feature-01': { category: 'feature', name: '01 · Luxury Lookbook', file: 'cf-feature-01.liquid' },
     'cf-feature-02': { category: 'feature', name: '02 · Streetwear Drop', file: 'cf-feature-02.liquid' },
@@ -76,6 +81,7 @@ export const SECTION_FILES = {
     'cf-feature-08': { category: 'feature', name: '08 · Kids Toys', file: 'cf-feature-08.liquid' },
     'cf-feature-09': { category: 'feature', name: '09 · Furniture Gallery', file: 'cf-feature-09.liquid' },
     'cf-feature-10': { category: 'feature', name: '10 · Fitness Gear', file: 'cf-feature-10.liquid' },
+    'cf-feature-11': { category: 'feature', name: '11 · Men\'s Featured', file: 'cf-feature-11.liquid' },
 
     'cf-trust-01': { category: 'trust', name: '01 · Luxury Trust', file: 'cf-trust-01.liquid' },
     'cf-trust-02': { category: 'trust', name: '02 · Streetwear Trust', file: 'cf-trust-02.liquid' },
@@ -87,6 +93,7 @@ export const SECTION_FILES = {
     'cf-trust-08': { category: 'trust', name: '08 · Kids Trust', file: 'cf-trust-08.liquid' },
     'cf-trust-09': { category: 'trust', name: '09 · Furniture Trust', file: 'cf-trust-09.liquid' },
     'cf-trust-10': { category: 'trust', name: '10 · Fitness Trust', file: 'cf-trust-10.liquid' },
+    'cf-trust-11': { category: 'trust', name: '11 · Men\'s Trust', file: 'cf-trust-11.liquid' },
 
     'cf-announce-01': { category: 'announcement', name: '01 · Gradient Marquee', file: 'cf-announce-01.liquid' },
     'cf-announce-02': { category: 'announcement', name: '02 · Minimal Dark Bar', file: 'cf-announce-02.liquid' },

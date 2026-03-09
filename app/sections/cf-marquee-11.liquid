@@ -1,0 +1,34 @@
+<style>
+.cf-mq-11{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;display:flex;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-mq-11-track{display:flex;white-space:nowrap;animation:cf-mq-11-scroll {{ section.settings.speed }}s linear infinite}
+.cf-mq-11-item{display:inline-flex;align-items:center;padding:0 40px;font-family:sans-serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};text-transform:uppercase;letter-spacing:0.2em}
+.cf-mq-11-dot{width:4px;height:4px;background:{{ section.settings.accent_color }};margin:0 40px;border-radius:50%}
+@keyframes cf-mq-11-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-mq-11">
+  <div class="cf-mq-11-track">
+    {% for i in (1..10) %}
+      <div class="cf-mq-11-item">
+        {{ section.settings.text }} <div class="cf-mq-11-dot"></div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"THE FALL/WINTER COLLECTION IS NOW LIVE"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":12},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f9fafb"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#1f2937"},
+    {"type":"color","id":"border_color","label":"Border","default":"#e5e7eb"},
+    {"type":"color","id":"accent_color","label":"Dot Color","default":"#9ca3af"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"11 · Men's Marquee"}]
+}
+{% endschema %}

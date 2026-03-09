@@ -1,0 +1,59 @@
+<style>
+.cf-h-11{width:100%;background:{{ section.settings.bg_color }};padding:0 40px;height:{{ section.settings.height }}px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-h-11-nav{display:flex;gap:40px;align-items:center}
+.cf-h-11-link{text-decoration:none;color:{{ section.settings.text_color }};font-size:12px;text-transform:uppercase;letter-spacing:0.15em;transition:0.3s}
+.cf-h-11-link:hover{color:{{ section.settings.accent_color }}}
+.cf-h-11-logo{font-size:{{ section.settings.logo_size }}px;color:{{ section.settings.text_color }};font-weight:400;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none}
+.cf-h-11-icons{display:flex;gap:25px;align-items:center}
+.cf-h-11-icon{color:{{ section.settings.text_color }};transition:0.3s;display:flex}
+.cf-h-11-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-h-11-menu-btn{display:none;background:none;border:none;color:{{ section.settings.text_color }};cursor:pointer;padding:0}
+@media(max-width:900px){.cf-h-11-nav{display:none}.cf-h-11-menu-btn{display:block}.cf-h-11{padding:0 20px}}
+</style>
+
+<div class="cf-h-11">
+  <button class="cf-h-11-menu-btn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  </button>
+  
+  <div class="cf-h-11-nav">
+    {% for link in linklists[section.settings.menu].links limit:3 %}
+      <a href="{{ link.url }}" class="cf-h-11-link">{{ link.title }}</a>
+    {% else %}
+      <a href="#" class="cf-h-11-link">NEW ARRIVALS</a>
+      <a href="#" class="cf-h-11-link">CLOTHING</a>
+      <a href="#" class="cf-h-11-link">FOOTWEAR</a>
+    {% endfor %}
+  </div>
+  
+  <a href="/" class="cf-h-11-logo">{{ section.settings.logo_text }}</a>
+  
+  <div class="cf-h-11-icons">
+    <a href="/search" class="cf-h-11-icon" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </a>
+    <a href="/account" class="cf-h-11-icon hidden md:flex" aria-label="Account">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    </a>
+    <a href="/cart" class="cf-h-11-icon" aria-label="Cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"TAILORED"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":16,"max":40,"step":1,"default":22},
+    {"type":"link_list","id":"menu","label":"Left Menu"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Base","default":"#e5e5e5"},
+    {"type":"color","id":"accent_color","label":"Accent (Hover)","default":"#666666"},
+    {"type":"range","id":"height","label":"Height","min":60,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Header"}]
+}
+{% endschema %}

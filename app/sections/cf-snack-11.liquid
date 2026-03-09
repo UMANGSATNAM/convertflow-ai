@@ -1,0 +1,35 @@
+<style>
+.cf-sn-11{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;border-bottom:1px solid #333}
+.cf-sn-11-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:30px}
+.cf-sn-11-text{font-size:14px;color:{{ section.settings.text_color }};letter-spacing:0.1em;text-transform:uppercase}
+.cf-sn-11-code-wrap{display:flex;align-items:center}
+.cf-sn-11-code{background:transparent;border:1px solid #555;color:{{ section.settings.accent_color }};padding:10px 20px;font-family:monospace;font-size:16px;letter-spacing:0.15em}
+.cf-sn-11-btn{background:{{ section.settings.text_color }};border:1px solid {{ section.settings.text_color }};color:{{ section.settings.bg_color }};padding:10px 20px;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;transition:0.2s}
+.cf-sn-11-btn:hover{opacity:0.8}
+@media(max-width:600px){.cf-sn-11-inner{flex-direction:column;gap:15px;text-align:center}}
+</style>
+
+<div class="cf-sn-11">
+  <div class="cf-sn-11-inner">
+    <div class="cf-sn-11-text">{{ section.settings.title }}</div>
+    <div class="cf-sn-11-code-wrap">
+      <div class="cf-sn-11-code" id="cf-sn-11-code">{{ section.settings.code }}</div>
+      <button class="cf-sn-11-btn" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');this.innerHTML='COPIED!'">COPY</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"VIP EARLY ACCESS: 20% OFF ALL SUITING"},
+    {"type":"text","id":"code","label":"Code","default":"EARLY20"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#0f172a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Code","default":"#94a3b8"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":24}
+  ],
+  "presets": [{"name":"11 · Men's Snack"}]
+}
+{% endschema %}
