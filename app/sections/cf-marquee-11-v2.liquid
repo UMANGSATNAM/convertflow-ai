@@ -1,0 +1,35 @@
+<style>
+.cf-mq-11-v2{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;display:flex;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-mq-11-v2-track{display:flex;white-space:nowrap;animation:cf-mq-11-v2-scroll {{ section.settings.speed }}s linear infinite}
+.cf-mq-11-v2-item{display:inline-flex;align-items:center;padding:0 40px;font-family:sans-serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};font-weight:600;letter-spacing:0.05em;text-transform:uppercase}
+.cf-mq-11-v2-dot{width:6px;height:6px;background:{{ section.settings.accent_color }};border-radius:50%;margin-right:40px}
+@keyframes cf-mq-11-v2-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-mq-11-v2">
+  <div class="cf-mq-11-v2-track">
+    {% for i in (1..10) %}
+      <div class="cf-mq-11-v2-item">
+        <div class="cf-mq-11-v2-dot"></div>
+        {{ section.settings.text }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Marquee (v2)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"MENSWEAR ESSENTIALS"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":64,"step":2,"default":14},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Dot Color","default":"#888888"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#EAEAEE"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"11 · Men's Marquee (v2)"}]
+}
+{% endschema %}

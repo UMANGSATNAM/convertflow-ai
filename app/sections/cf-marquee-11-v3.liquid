@@ -1,0 +1,34 @@
+<style>
+.cf-mq-11-v3{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;display:flex}
+.cf-mq-11-v3-track{display:flex;white-space:nowrap;animation:cf-mq-11-v3-scroll {{ section.settings.speed }}s linear infinite}
+.cf-mq-11-v3-item{display:inline-flex;align-items:center;padding:0 30px;font-family:serif;font-style:italic;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};font-weight:400;letter-spacing:0.02em}
+.cf-mq-11-v3-separator{margin:0 30px;color:{{ section.settings.accent_color }};font-size:{{ section.settings.text_size | times: 1.2 }}px;font-style:normal;font-family:sans-serif}
+@keyframes cf-mq-11-v3-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-mq-11-v3">
+  <div class="cf-mq-11-v3-track">
+    {% for i in (1..8) %}
+      <div class="cf-mq-11-v3-item">
+        {{ section.settings.text }}
+        <span class="cf-mq-11-v3-separator">&times;</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Marquee (v3)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"The Modern Tailor"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":64,"step":2,"default":28},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F7F7F7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+    {"type":"color","id":"accent_color","label":"Separator Color","default":"#999999"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":20},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":35}
+  ],
+  "presets": [{"name":"11 · Men's Marquee (v3)"}]
+}
+{% endschema %}

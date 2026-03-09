@@ -1,0 +1,35 @@
+<style>
+.cf-mq-11-v8{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;display:flex}
+.cf-mq-11-v8-track{display:flex;white-space:nowrap;animation:cf-mq-11-v8-scroll {{ section.settings.speed }}s linear infinite}
+.cf-mq-11-v8-item{display:inline-flex;align-items:center;padding:0 30px;font-family:sans-serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;letter-spacing:-0.04em}
+.cf-mq-11-v8-pill{background:{{ section.settings.accent_color }};color:{{ section.settings.bg_color }};padding:4px 16px;border-radius:40px;font-size:calc({{ section.settings.text_size }}px * 0.4);font-weight:800;letter-spacing:0.1em;margin-left:30px;transform:translateY(-2px)}
+@keyframes cf-mq-11-v8-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-mq-11-v8">
+  <div class="cf-mq-11-v8-track">
+    {% for i in (1..6) %}
+      <div class="cf-mq-11-v8-item">
+        {{ section.settings.main_text }}
+        <div class="cf-mq-11-v8-pill">{{ section.settings.pill_text }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Marquee (v8)",
+  "settings": [
+    {"type":"text","id":"main_text","label":"Main Text","default":"WINTER WARDROBE"},
+    {"type":"text","id":"pill_text","label":"Pill Text","default":"NOW LIVE"},
+    {"type":"range","id":"text_size","label":"Main Text Size","min":30,"max":120,"step":2,"default":64},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Main Text Color","default":"#F2F2F2"},
+    {"type":"color","id":"accent_color","label":"Pill Color","default":"#5A5A5A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":80,"step":5,"default":30},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"11 · Men's Marquee (v8)"}]
+}
+{% endschema %}

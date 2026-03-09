@@ -1,0 +1,32 @@
+<style>
+.cf-mq-11-v7{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:0;display:flex;border-top:2px solid {{ section.settings.border_color }};border-bottom:2px solid {{ section.settings.border_color }}}
+.cf-mq-11-v7-track{display:flex;white-space:nowrap;animation:cf-mq-11-v7-scroll {{ section.settings.speed }}s linear infinite}
+.cf-mq-11-v7-item{display:inline-flex;align-items:center;padding:{{ section.settings.padding_y }}px 40px;font-family:sans-serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};font-weight:700;letter-spacing:0.02em;text-transform:uppercase;border-right:2px solid {{ section.settings.border_color }}}
+@keyframes cf-mq-11-v7-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-mq-11-v7">
+  <div class="cf-mq-11-v7-track">
+    {% for i in (1..10) %}
+      <div class="cf-mq-11-v7-item">
+        {{ section.settings.text }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Marquee (v7)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"SUSTAINABLY MADE"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":48,"step":2,"default":16},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"border_color","label":"Grid Lines","default":"#D1D1D1"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":50,"step":2,"default":20},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":30}
+  ],
+  "presets": [{"name":"11 · Men's Marquee (v7)"}]
+}
+{% endschema %}

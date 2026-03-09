@@ -1,0 +1,38 @@
+<style>
+.cf-mq-11-v4{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;display:flex}
+.cf-mq-11-v4-wrap{display:flex;transform:rotate({{ section.settings.angle }}deg) scale(1.1);width:110%}
+.cf-mq-11-v4-track{display:flex;white-space:nowrap;animation:cf-mq-11-v4-scroll {{ section.settings.speed }}s linear infinite}
+.cf-mq-11-v4-item{display:inline-flex;align-items:center;padding:0 20px;font-family:sans-serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;line-height:1}
+.cf-mq-11-v4-outline{color:transparent;-webkit-text-stroke:1px {{ section.settings.text_color }};margin:0 20px}
+@keyframes cf-mq-11-v4-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-mq-11-v4">
+  <div class="cf-mq-11-v4-wrap">
+    <div class="cf-mq-11-v4-track">
+      {% for i in (1..8) %}
+        <div class="cf-mq-11-v4-item">
+          {{ section.settings.text_solid }}
+          <span class="cf-mq-11-v4-outline">{{ section.settings.text_outline }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Marquee (v4)",
+  "settings": [
+    {"type":"text","id":"text_solid","label":"Solid Text","default":"NEW DROPS"},
+    {"type":"text","id":"text_outline","label":"Outline Text","default":"EVERY WEEK"},
+    {"type":"range","id":"angle","label":"Rotation Angle","min":-10,"max":10,"step":1,"default":-2},
+    {"type":"range","id":"text_size","label":"Text Size","min":20,"max":100,"step":2,"default":48},
+    {"type":"color","id":"bg_color","label":"Background","default":"#1A1A1A"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":80,"step":5,"default":40},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":30}
+  ],
+  "presets": [{"name":"11 · Men's Marquee (v4)"}]
+}
+{% endschema %}

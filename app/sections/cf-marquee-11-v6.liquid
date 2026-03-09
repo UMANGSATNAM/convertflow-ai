@@ -1,0 +1,39 @@
+<style>
+.cf-mq-11-v6{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;display:flex;position:relative}
+.cf-mq-11-v6::before, .cf-mq-11-v6::after{content:'';position:absolute;top:0;width:15%;height:100%;z-index:2;pointer-events:none}
+.cf-mq-11-v6::before{left:0;background:linear-gradient(to right, {{ section.settings.bg_color }}, transparent)}
+.cf-mq-11-v6::after{right:0;background:linear-gradient(to left, {{ section.settings.bg_color }}, transparent)}
+.cf-mq-11-v6-track{display:flex;white-space:nowrap;animation:cf-mq-11-v6-scroll {{ section.settings.speed }}s linear infinite}
+.cf-mq-11-v6-item{display:inline-flex;align-items:center;padding:0 30px;font-family:sans-serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};font-weight:800;letter-spacing:-0.03em;text-transform:uppercase}
+.cf-mq-11-v6-icon{margin-right:30px;color:{{ section.settings.accent_color }}}
+@keyframes cf-mq-11-v6-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-mq-11-v6">
+  <div class="cf-mq-11-v6-track">
+    {% for i in (1..8) %}
+      <div class="cf-mq-11-v6-item">
+        <div class="cf-mq-11-v6-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+        </div>
+        {{ section.settings.text }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Marquee (v6)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"ELEVATE YOUR WARDROBE"},
+    {"type":"range","id":"text_size","label":"Text Size","min":16,"max":72,"step":2,"default":36},
+    {"type":"color","id":"bg_color","label":"Background (Solid)","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"Arrow Color","default":"#000000"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":50,"step":5,"default":25},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":25}
+  ],
+  "presets": [{"name":"11 · Men's Marquee (v6)"}]
+}
+{% endschema %}
