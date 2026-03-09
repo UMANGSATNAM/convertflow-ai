@@ -1,0 +1,77 @@
+<style>
+.cf-head-07{width:100%;font-family:system-ui,-apple-system,sans-serif}
+.cf-head-07-top{background:{{ section.settings.top_bg }};color:{{ section.settings.top_color }};padding:6px 24px;font-size:12px;font-weight:500;display:flex;justify-content:space-between;align-items:center}
+.cf-head-07-top-links{display:flex;gap:16px}
+.cf-head-07-top a{color:inherit;text-decoration:none;opacity:0.8;transition:0.2s}
+.cf-head-07-top a:hover{opacity:1}
+.cf-head-07-main{background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,0.06)}
+.cf-head-07-inner{display:flex;align-items:center;gap:40px}
+.cf-head-07-logo{font-size:clamp(20px,2.5vw,{{ section.settings.logo_size }}px);font-weight:800;color:{{ section.settings.logo_color }};text-decoration:none;letter-spacing:-0.03em;display:flex;align-items:center;gap:8px}
+.cf-head-07-logo-icon{width:28px;height:28px;background:linear-gradient(135deg,{{ section.settings.accent_1 }},{{ section.settings.accent_2 }});border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff}
+.cf-head-07-nav{display:none;align-items:center;gap:28px}
+.cf-head-07-link{font-size:14px;font-weight:600;color:{{ section.settings.text_color }};text-decoration:none;transition:0.2s}
+.cf-head-07-link:hover{color:{{ section.settings.accent_1 }}}
+.cf-head-07-actions{display:flex;align-items:center;gap:16px}
+.cf-head-07-btn{background:{{ section.settings.logo_color }};color:{{ section.settings.bg_color }};padding:10px 20px;border-radius:6px;font-size:14px;font-weight:600;text-decoration:none;transition:0.2s;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
+.cf-head-07-btn:hover{background:{{ section.settings.accent_1 }};color:#fff;transform:translateY(-1px)}
+@media(min-width:1024px){.cf-head-07-nav{display:flex}.cf-head-07-main,.cf-head-07-top{padding-left:40px;padding-right:40px}}
+</style>
+
+<header class="cf-head-07">
+  {% if section.settings.show_top %}
+  <div class="cf-head-07-top">
+    <div>{{ section.settings.announcement }}</div>
+    <div class="cf-head-07-top-links">
+      <a href="/pages/support">Support</a>
+      <a href="/account/login">Log In</a>
+    </div>
+  </div>
+  {% endif %}
+  <div class="cf-head-07-main">
+    <div class="cf-head-07-inner">
+      <a href="/" class="cf-head-07-logo">
+        <div class="cf-head-07-logo-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m2 12 5.25 5 2.625-3M22 12l-5.25 5-2.625-3"/><path d="m12 12 5.25-5L22 10M12 12 6.75 7 2 10"/></svg>
+        </div>
+        {{ section.settings.logo_text }}
+      </a>
+      <div class="cf-head-07-nav">
+        <a href="{{ section.settings.link_1_url }}" class="cf-head-07-link">{{ section.settings.link_1 }}</a>
+        <a href="{{ section.settings.link_2_url }}" class="cf-head-07-link">{{ section.settings.link_2 }}</a>
+        <a href="{{ section.settings.link_3_url }}" class="cf-head-07-link">{{ section.settings.link_3 }}</a>
+      </div>
+    </div>
+    <div class="cf-head-07-actions">
+      <a href="{{ section.settings.cta_url }}" class="cf-head-07-btn">{{ section.settings.cta_text }}</a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "07 · SaaS Header",
+  "settings": [
+    {"type":"checkbox","id":"show_top","label":"Show Top Bar","default":true},
+    {"type":"text","id":"announcement","label":"Announcement","default":"🎉 ConvertFlow 2.0 is now live!"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"ConvertFlow"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":18,"max":40,"step":2,"default":22},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Features"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"#features"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Pricing"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/pages/pricing"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Templates"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/templates"},
+    {"type":"text","id":"cta_text","label":"CTA Button","default":"Start Free Trial"},
+    {"type":"text","id":"cta_url","label":"CTA URL","default":"/cart"},
+    {"type":"color","id":"bg_color","label":"Main Background","default":"#ffffff"},
+    {"type":"color","id":"top_bg","label":"Top Background","default":"#f8fafc"},
+    {"type":"color","id":"top_color","label":"Top Text Color","default":"#475569"},
+    {"type":"color","id":"logo_color","label":"Logo Color","default":"#0f172a"},
+    {"type":"color","id":"text_color","label":"Link Color","default":"#64748b"},
+    {"type":"color","id":"accent_1","label":"Gradient 1","default":"#6366f1"},
+    {"type":"color","id":"accent_2","label":"Gradient 2","default":"#a855f7"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":32,"step":2,"default":16}
+  ],
+  "presets": [{"name":"07 · SaaS Header"}]
+}
+{% endschema %}

@@ -1,0 +1,55 @@
+<style>
+.cf-head-04{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;border-bottom:1px solid rgba(0,0,0,0.05)}
+.cf-head-04-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.cf-head-04-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:{{ section.settings.logo_color }}}
+.cf-head-04-logo svg{color:{{ section.settings.accent_color }}}
+.cf-head-04-logo span{font-size:clamp(20px,2vw,{{ section.settings.logo_size }}px);font-weight:700;letter-spacing:-0.02em}
+.cf-head-04-nav{display:none;align-items:center;padding:8px 32px;background:rgba(0,0,0,0.03);border-radius:40px;gap:32px}
+.cf-head-04-link{font-size:15px;font-weight:500;color:{{ section.settings.text_color }};text-decoration:none;transition:0.2s}
+.cf-head-04-link:hover{color:{{ section.settings.accent_color }}}
+.cf-head-04-icons{display:flex;align-items:center;gap:16px}
+.cf-head-04-cart{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:{{ section.settings.accent_color }};color:#fff;text-decoration:none;transition:0.2s}
+.cf-head-04-cart:hover{transform:scale(1.05);filter:brightness(1.1)}
+@media(min-width:1024px){.cf-head-04-nav{display:flex}}
+</style>
+
+<header class="cf-head-04">
+  <div class="cf-head-04-inner">
+    <a href="/" class="cf-head-04-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      <span>{{ section.settings.logo_text }}</span>
+    </a>
+    <div class="cf-head-04-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-04-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-04-link">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-04-link">{{ section.settings.link_3 }}</a>
+    </div>
+    <div class="cf-head-04-icons">
+      <a href="/cart" class="cf-head-04-cart" title="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "04 · Health Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"NATURA"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":18,"max":40,"step":2,"default":24},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Supplements"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/supplements"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Story"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/pages/about"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Blog"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/blogs/news"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8fafc"},
+    {"type":"color","id":"logo_color","label":"Logo Color","default":"#0f172a"},
+    {"type":"color","id":"text_color","label":"Link Color","default":"#475569"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#16a34a"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":12,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"04 · Health Header"}]
+}
+{% endschema %}

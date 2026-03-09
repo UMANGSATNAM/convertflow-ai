@@ -1,0 +1,47 @@
+<style>
+.cf-head-09{width:100%;background:{{ section.settings.bg_color }};padding:0 40px;position:relative}
+.cf-head-09-inner{display:flex;align-items:center;height:{{ section.settings.height }}px;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-head-09-burger{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:500;color:{{ section.settings.text_color }};cursor:pointer;width:150px}
+.cf-head-09-burger-icon{display:flex;flex-direction:column;gap:4px;width:24px}
+.cf-head-09-burger-icon span{display:block;width:100%;height:1px;background:{{ section.settings.text_color }}}
+.cf-head-09-logo-wrap{flex:1;text-align:center}
+.cf-head-09-logo{font-size:clamp(20px,2.5vw,{{ section.settings.logo_size }}px);font-weight:400;color:{{ section.settings.logo_color }};text-decoration:none;letter-spacing:0.15em;text-transform:uppercase}
+.cf-head-09-actions{display:flex;align-items:center;justify-content:flex-end;gap:32px;width:150px}
+.cf-head-09-action{font-size:13px;font-weight:500;color:{{ section.settings.text_color }};text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;transition:0.2s}
+.cf-head-09-action:hover{color:{{ section.settings.logo_color }}}
+@media(max-width:768px){.cf-head-09{padding:0 20px}.cf-head-09-burger span:last-child{display:none}.cf-head-09-burger text{display:none}}
+</style>
+
+<header class="cf-head-09">
+  <div class="cf-head-09-inner">
+    <div class="cf-head-09-burger">
+      <div class="cf-head-09-burger-icon">
+        <span></span><span></span>
+      </div>
+      <span class="text">MENU</span>
+    </div>
+    <div class="cf-head-09-logo-wrap">
+      <a href="/" class="cf-head-09-logo">{{ section.settings.logo_text }}</a>
+    </div>
+    <div class="cf-head-09-actions">
+      <a href="/search" class="cf-head-09-action">Search</a>
+      <a href="/cart" class="cf-head-09-action">Cart (0)</a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "09 · Furniture Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"STUDIO"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":16,"max":48,"step":2,"default":26},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f5f5f4"},
+    {"type":"color","id":"border_color","label":"Line Color","default":"#d6d3d1"},
+    {"type":"color","id":"logo_color","label":"Logo Color","default":"#292524"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#57534e"},
+    {"type":"range","id":"height","label":"Header Height","min":60,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"09 · Furniture Header"}]
+}
+{% endschema %}

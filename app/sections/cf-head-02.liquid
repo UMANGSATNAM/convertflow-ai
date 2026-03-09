@@ -1,0 +1,61 @@
+<style>
+.cf-head-02{width:100%;border-bottom:4px solid {{ section.settings.border_color }};background:{{ section.settings.bg_color }};position:sticky;top:0;z-index:100}
+.cf-head-02-ticker{background:{{ section.settings.accent_color }};color:{{ section.settings.accent_text }};font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;padding:8px 0;width:100%;overflow:hidden;white-space:nowrap;box-sizing:border-box}
+.cf-head-02-twrap{display:inline-block;animation:cf-h02-scroll 15s linear infinite}
+@keyframes cf-h02-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.cf-head-02-main{display:flex;align-items:center;justify-content:space-between;padding:{{ section.settings.padding_y }}px 20px}
+.cf-head-02-logo{font-size:clamp(24px,3vw,{{ section.settings.logo_size }}px);font-weight:900;color:{{ section.settings.logo_color }};text-transform:uppercase;text-decoration:none;letter-spacing:-0.04em;line-height:1}
+.cf-head-02-nav{display:none;gap:24px}
+.cf-head-02-link{font-size:14px;font-weight:700;color:{{ section.settings.text_color }};text-transform:uppercase;text-decoration:none;transition:0.2s}
+.cf-head-02-link:hover{color:{{ section.settings.accent_color }};transform:skewX(-10deg)}
+.cf-head-02-icons{display:flex;align-items:center;gap:12px}
+.cf-head-02-btn{background:{{ section.settings.logo_color }};color:{{ section.settings.bg_color }};padding:10px 20px;font-weight:800;font-size:13px;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:0.2s}
+.cf-head-02-btn:hover{background:{{ section.settings.accent_color }};color:{{ section.settings.accent_text }}}
+@media(min-width:1024px){.cf-head-02-nav{display:flex;align-items:center}.cf-head-02-main{padding:{{ section.settings.padding_y }}px 40px}}
+</style>
+
+<header class="cf-head-02">
+  {% if section.settings.ticker != blank %}
+  <div class="cf-head-02-ticker">
+    <div class="cf-head-02-twrap">
+      {{ section.settings.ticker }} • {{ section.settings.ticker }} • {{ section.settings.ticker }} • {{ section.settings.ticker }} • {{ section.settings.ticker }}
+    </div>
+  </div>
+  {% endif %}
+  <div class="cf-head-02-main">
+    <a href="/" class="cf-head-02-logo">{{ section.settings.logo_text }}</a>
+    <div class="cf-head-02-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-02-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-02-link">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-02-link">{{ section.settings.link_3 }}</a>
+    </div>
+    <div class="cf-head-02-icons">
+      <a href="/cart" class="cf-head-02-btn">Cart [0]</a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "02 · Streetwear Header",
+  "settings": [
+    {"type":"text","id":"ticker","label":"Ticker Text","default":"FREE SHIPPING WORLDWIDE OVER $150"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"DEFIANT"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":64,"step":2,"default":36},
+    {"type":"text","id":"link_1","label":"Link 1","default":"New Drops"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/new"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Apparel"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/apparel"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Accessories"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/accessories"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#111111"},
+    {"type":"color","id":"logo_color","label":"Logo Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Link Color","default":"#333333"},
+    {"type":"color","id":"accent_color","label":"Accent (Ticker BG)","default":"#eab308"},
+    {"type":"color","id":"accent_text","label":"Accent Text","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"02 · Streetwear Header"}]
+}
+{% endschema %}

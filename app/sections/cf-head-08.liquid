@@ -1,0 +1,55 @@
+<style>
+.cf-head-08{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;box-shadow:0 8px 0 {{ section.settings.accent_1 }};position:relative;z-index:100;border-bottom:4px solid #fff}
+.cf-head-08-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;background:#fff;padding:12px 24px;border-radius:100px;box-shadow:inset 0 -4px 0 rgba(0,0,0,0.05),0 4px 12px rgba(0,0,0,0.05)}
+.cf-head-08-logo{font-family:'Comic Sans MS', 'Fredoka One', cursive;font-size:clamp(24px,3vw,{{ section.settings.logo_size }}px);font-weight:900;color:{{ section.settings.logo_color }};text-decoration:none;letter-spacing:0.02em;text-shadow:2px 2px 0 {{ section.settings.accent_2 }}}
+.cf-head-08-nav{display:none;align-items:center;gap:20px}
+.cf-head-08-link{font-size:16px;font-weight:800;color:{{ section.settings.text_color }};text-decoration:none;padding:8px 16px;border-radius:40px;transition:0.2s}
+.cf-head-08-link:hover{background:{{ section.settings.accent_2 }};color:#fff;transform:translateY(-2px)}
+.cf-head-08-actions{display:flex;align-items:center;gap:12px}
+.cf-head-08-icon{width:44px;height:44px;border-radius:50%;background:{{ section.settings.accent_3 }};color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:inset 0 -3px 0 rgba(0,0,0,0.15);transition:0.2s}
+.cf-head-08-icon:hover{transform:rotate(10deg) scale(1.1)}
+@media(min-width:1024px){.cf-head-08-nav{display:flex}}
+</style>
+
+<header class="cf-head-08">
+  <div class="cf-head-08-inner">
+    <a href="/" class="cf-head-08-logo">{{ section.settings.logo_text }}</a>
+    <div class="cf-head-08-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-08-link" style="color:{{ section.settings.accent_1 }}">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-08-link" style="color:{{ section.settings.accent_2 }}">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-08-link" style="color:{{ section.settings.accent_3 }}">{{ section.settings.link_3 }}</a>
+    </div>
+    <div class="cf-head-08-actions">
+      <a href="/search" class="cf-head-08-icon" style="background:{{ section.settings.accent_2 }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </a>
+      <a href="/cart" class="cf-head-08-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "08 · Kids Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"ToyBox!"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":24,"max":56,"step":2,"default":36},
+    {"type":"text","id":"link_1","label":"Link 1","default":"New Toys"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/new"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Games"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/games"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Sale"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/sale"},
+    {"type":"color","id":"bg_color","label":"Background (Outer)","default":"#fef3c7"},
+    {"type":"color","id":"logo_color","label":"Logo Color","default":"#ef4444"},
+    {"type":"color","id":"accent_1","label":"Accent 1 (Blue)","default":"#3b82f6"},
+    {"type":"color","id":"accent_2","label":"Accent 2 (Yellow)","default":"#eab308"},
+    {"type":"color","id":"accent_3","label":"Accent 3 (Green)","default":"#10b981"},
+    {"type":"color","id":"text_color","label":"Link Default Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"08 · Kids Header"}]
+}
+{% endschema %}

@@ -1,0 +1,50 @@
+<style>
+.cf-head-10{width:100%;background:{{ section.settings.bg_color }};padding:0 24px;border-bottom:3px solid {{ section.settings.accent_color }}}
+.cf-head-10-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:{{ section.settings.height }}px}
+.cf-head-10-logo{font-size:clamp(24px,3vw,{{ section.settings.logo_size }}px);font-weight:900;color:{{ section.settings.logo_color }};text-decoration:none;letter-spacing:-0.05em;text-transform:uppercase;font-style:italic;transform:skewX(-10deg)}
+.cf-head-10-nav{display:none;align-items:center;gap:32px;transform:skewX(-10deg)}
+.cf-head-10-link{font-size:16px;font-weight:800;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.02em;transition:0.2s;display:block}
+.cf-head-10-link span{display:block;transform:skewX(10deg)}
+.cf-head-10-link:hover{color:{{ section.settings.accent_color }}}
+.cf-head-10-actions{display:flex;align-items:center;gap:16px;transform:skewX(-10deg)}
+.cf-head-10-btn{background:{{ section.settings.accent_color }};color:{{ section.settings.bg_color }};padding:12px 28px;font-weight:900;font-size:15px;text-transform:uppercase;text-decoration:none;transition:0.2s}
+.cf-head-10-btn span{display:block;transform:skewX(10deg)}
+.cf-head-10-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(min-width:1024px){.cf-head-10-nav{display:flex}}
+</style>
+
+<header class="cf-head-10">
+  <div class="cf-head-10-inner">
+    <a href="/" class="cf-head-10-logo">{{ section.settings.logo_text }}</a>
+    <div class="cf-head-10-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-10-link"><span>{{ section.settings.link_1 }}</span></a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-10-link"><span>{{ section.settings.link_2 }}</span></a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-10-link"><span>{{ section.settings.link_3 }}</span></a>
+    </div>
+    <div class="cf-head-10-actions">
+      <a href="/cart" class="cf-head-10-btn"><span>CART (0)</span></a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "10 · Fitness Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"IRONCORE"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":24,"max":64,"step":2,"default":40},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Supplements"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/supplements"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Apparel"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/apparel"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Gear"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/gear"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"logo_color","label":"Logo Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Link Color","default":"#9ca3af"},
+    {"type":"color","id":"accent_color","label":"Accent (Slant)","default":"#dc2626"},
+    {"type":"range","id":"height","label":"Header Height","min":60,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"10 · Fitness Header"}]
+}
+{% endschema %}

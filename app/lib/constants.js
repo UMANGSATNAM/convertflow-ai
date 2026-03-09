@@ -5,8 +5,16 @@ export const SECTION_CATEGORIES = [
 ];
 
 export const SECTION_FILES = {
-    'cf-header-premium': { category: 'header', name: 'Premium Header', file: 'cf-header-premium.liquid' },
-    'cf-header-advanced': { category: 'header', name: 'Advanced Header (Gradient & Fonts)', file: 'cf-header-advanced.liquid' },
+    'cf-head-01': { category: 'header', name: '01 · Luxury Header', file: 'cf-head-01.liquid' },
+    'cf-head-02': { category: 'header', name: '02 · Streetwear Header', file: 'cf-head-02.liquid' },
+    'cf-head-03': { category: 'header', name: '03 · Tech Header', file: 'cf-head-03.liquid' },
+    'cf-head-04': { category: 'header', name: '04 · Health Header', file: 'cf-head-04.liquid' },
+    'cf-head-05': { category: 'header', name: '05 · Beauty Header', file: 'cf-head-05.liquid' },
+    'cf-head-06': { category: 'header', name: '06 · Automotive Header', file: 'cf-head-06.liquid' },
+    'cf-head-07': { category: 'header', name: '07 · SaaS Header', file: 'cf-head-07.liquid' },
+    'cf-head-08': { category: 'header', name: '08 · Kids Header', file: 'cf-head-08.liquid' },
+    'cf-head-09': { category: 'header', name: '09 · Furniture Header', file: 'cf-head-09.liquid' },
+    'cf-head-10': { category: 'header', name: '10 · Fitness Header', file: 'cf-head-10.liquid' },
 
     'cf-announce-01': { category: 'announcement', name: '01 · Gradient Marquee', file: 'cf-announce-01.liquid' },
     'cf-announce-02': { category: 'announcement', name: '02 · Minimal Dark Bar', file: 'cf-announce-02.liquid' },
