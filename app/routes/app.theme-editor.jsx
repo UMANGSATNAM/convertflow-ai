@@ -180,12 +180,22 @@ export default function ThemeEditor() {
     // Live preview for selected template (unsaved) or active block (saved theme element)
     useEffect(() => {
         const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
-        if (!targetId) return;
 
         setPreviewLoading(true);
         clearTimeout(previewTimerRef.current);
         previewTimerRef.current = setTimeout(async () => {
             try {
+                if (!targetId) {
+                    // Load the full theme homepage preview
+                    const res = await fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`);
+                    if (res.ok) {
+                        const html = await res.text();
+                        setPreviewHtml(html);
+                    }
+                    return;
+                }
+
+                // Load individual block preview
                 const form = new FormData();
                 form.append("sectionId", targetId);
                 if (activeBlockId) form.append("blockId", activeBlockId);
@@ -283,7 +293,7 @@ export default function ThemeEditor() {
             <header style={S.topbar}>
                 <div style={S.topbarLeft}>
                     <button className="te-back-btn" onClick={() => navigate('/app')} title="Exit Editor">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                     </button>
                     <span style={S.topbarPageName}>Home page</span>
                 </div>
@@ -342,7 +352,7 @@ export default function ThemeEditor() {
                                         >
                                             <div style={S.blockRowLeft}>
                                                 <span style={S.dragHandle}>
-                                                    <Grid size={13} strokeWidth={2.5}/>
+                                                    <Grid size={13} strokeWidth={2.5} />
                                                 </span>
                                                 <span style={S.blockIcon}>
                                                     {block.isCf ? <Palette size={14} /> : <Layout size={14} />}
@@ -425,10 +435,10 @@ export default function ThemeEditor() {
                         maxWidth: device === 'mobile' ? '400px' : '100%',
                     }}>
                         {!previewHtml && !activeBlockId && !selectedTemplateId && (
-                             <div style={S.previewPlaceholder}>
-                                 <div className="te-spinner" />
-                                 <p style={{marginTop: 12, color: '#6d7175', fontSize: 13}}>Loading original theme...</p>
-                             </div>
+                            <div style={S.previewPlaceholder}>
+                                <div className="te-spinner" />
+                                <p style={{ marginTop: 12, color: '#6d7175', fontSize: 13 }}>Loading original theme...</p>
+                            </div>
                         )}
                         {previewLoading && (
                             <div style={S.previewOverlay}>
@@ -627,22 +637,22 @@ const S = {
 
     // ── LEFT SIDEBAR (Outline/Templates) ──
     leftSidebar: { width: 320, flexShrink: 0, background: '#fff', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
-    
+
     // ── RIGHT SIDEBAR (Settings) ──
     rightSidebar: { width: 340, flexShrink: 0, background: '#fff', borderLeft: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
-    
+
     // ── SHARED PANEL STYLES ──
     panelInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
     panelHeader: { display: 'flex', alignItems: 'center', gap: 12, padding: '16px', borderBottom: '1px solid #f4f6f8', flexShrink: 0 },
     panelTitle: { fontSize: 14, fontWeight: 600, color: '#202223', flex: 1 },
-    
+
     outlineList: { flex: 1, overflowY: 'auto', padding: '16px 12px' },
     emptyHint: { fontSize: 13, color: '#6d7175', textAlign: 'center', padding: '32px 16px' },
     blockRowLeft: { display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 },
     dragHandle: { color: '#c4cdd5', cursor: 'grab', display: 'flex' },
     blockIcon: { color: '#8c9196', display: 'flex' },
     blockLabel: { fontSize: 13, color: '#202223', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
-    
+
     addSectionArea: { padding: '16px', borderTop: '1px solid #dfe3e8', background: '#fff', flexShrink: 0 },
 
     scrollArea: { flex: 1, overflowY: 'auto', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 4 },
@@ -657,7 +667,7 @@ const S = {
     colorSwatch: { width: 36, height: 36, padding: 0, border: '1px solid #c4cdd5', borderRadius: 6, cursor: 'pointer', overflow: 'hidden' },
     colorCode: { fontSize: 13, color: '#202223', fontFamily: 'monospace', flex: 1, background: '#f4f6f8', padding: '8px 12px', border: '1px solid #c4cdd5', borderRadius: 6 },
     rangeVal: { fontSize: 13, fontWeight: 500, color: '#202223', minWidth: 40, textAlign: 'right' },
-    
+
     imageUploadBox: { border: '1px dashed #c4cdd5', borderRadius: 8, background: '#f9fafb', padding: 8, textAlign: 'center' },
     imageUploadLabel: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '24px 0', cursor: 'pointer', color: '#5c5f62', fontSize: 13, fontWeight: 500 },
     imagePreviewWrapper: { position: 'relative', width: '100%', height: 120, borderRadius: 4, overflow: 'hidden', background: '#fff', border: '1px solid #e1e3e5' },
