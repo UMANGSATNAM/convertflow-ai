@@ -1,0 +1,73 @@
+<style>
+.cf-ft-07{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:system-ui,-apple-system,sans-serif}
+.cf-ft-07-inner{max-width:1200px;margin:0 auto}
+.cf-ft-07-header{text-align:center;margin-bottom:60px}
+.cf-ft-07-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:800;letter-spacing:-0.02em;margin-bottom:15px}
+.cf-ft-07-sub{font-size:18px;color:#64748b;max-width:600px;margin:0 auto}
+.cf-ft-07-grid{display:grid;grid-template-columns:repeat({{ section.settings.cols }}, 1fr);gap:24px}
+.cf-ft-07-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px;display:flex;flex-direction:column;transition:0.3s;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);text-decoration:none}
+.cf-ft-07-card:hover{transform:translateY(-8px);box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);border-color:{{ section.settings.accent_color | color_modify: 'alpha', 0.5 }}}
+.cf-ft-07-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:{{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};color:{{ section.settings.accent_color }};border-radius:12px;margin-bottom:24px;flex-shrink:0}
+.cf-ft-07-name{font-size:20px;font-weight:700;color:{{ section.settings.text_color }};margin-bottom:8px}
+.cf-ft-07-price{font-size:28px;font-weight:800;color:{{ section.settings.text_color }};margin-bottom:24px}
+.cf-ft-07-price span{font-size:14px;color:#64748b;font-weight:500}
+.cf-ft-07-btn{display:block;width:100%;padding:12px;background:#f1f5f9;color:#0f172a;text-align:center;border-radius:8px;font-weight:600;font-size:15px;transition:0.2s}
+.cf-ft-07-card:hover .cf-ft-07-btn{background:{{ section.settings.accent_color }};color:#fff}
+@media(max-width:900px){.cf-ft-07-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cf-ft-07-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-ft-07">
+  <div class="cf-ft-07-inner">
+    <div class="cf-ft-07-header">
+      <h2 class="cf-ft-07-title">{{ section.settings.title }}</h2>
+      <p class="cf-ft-07-sub">{{ section.settings.subtitle }}</p>
+    </div>
+    
+    <div class="cf-ft-07-grid">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank and coll.products_count > 0 %}
+        {% for product in coll.products limit: section.settings.product_limit %}
+          <a href="{{ product.url }}" class="cf-ft-07-card">
+            <div class="cf-ft-07-icon">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <div class="cf-ft-07-name">{{ product.title }}</div>
+            <div class="cf-ft-07-price">{{ product.price | money }} <span>/ mo</span></div>
+            <div class="cf-ft-07-btn">Subscribe Now</div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.product_limit) %}
+          <a href="#" class="cf-ft-07-card">
+            <div class="cf-ft-07-icon">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <div class="cf-ft-07-name">Tier {{ i }} Plan</div>
+            <div class="cf-ft-07-price">$49 <span>/ mo</span></div>
+            <div class="cf-ft-07-btn">Subscribe Now</div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · SaaS Plans",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"Simple, transparent pricing"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":42},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"No hidden fees. No surprise charges. Cancel anytime."},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"product_limit","label":"Product Limit","min":2,"max":6,"step":1,"default":3},
+    {"type":"range","id":"cols","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":3},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent (Indigo)","default":"#6366f1"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"07 · SaaS Plans"}]
+}
+{% endschema %}

@@ -1,0 +1,83 @@
+<style>
+.cf-ft-10{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;overflow:hidden}
+.cf-ft-10-inner{max-width:1400px;margin:0 auto}
+.cf-ft-10-header{text-align:center;margin-bottom:60px}
+.cf-ft-10-title{font-size:clamp(40px,7vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;font-style:italic;line-height:1;margin:0}
+.cf-ft-10-title span{color:{{ section.settings.accent_color }}}
+.cf-ft-10-grid{display:grid;grid-template-columns:repeat({{ section.settings.cols }}, 1fr);gap:20px}
+.cf-ft-10-card{position:relative;background:#111;text-decoration:none;display:flex;flex-direction:column;transform:skewX(-10deg);overflow:hidden;border:4px solid transparent;transition:0.2s}
+.cf-ft-10-card-inner{transform:skewX(10deg);height:100%;display:flex;flex-direction:column}
+.cf-ft-10-img-wrap{aspect-ratio:1/1;background:#050505;position:relative}
+.cf-ft-10-img{width:100%;height:100%;object-fit:cover;opacity:0.6;transition:0.4s;filter:contrast(1.2) grayscale(50%)}
+.cf-ft-10-card:hover{border-color:{{ section.settings.accent_color }};transform:skewX(-10deg) translateY(-10px);box-shadow:15px 15px 0 rgba(220,38,38,0.2)}
+.cf-ft-10-card:hover .cf-ft-10-img{opacity:1;filter:contrast(1) grayscale(0%);transform:scale(1.1)}
+.cf-ft-10-info{padding:20px;display:flex;flex-direction:column;flex:1;align-items:center;text-align:center}
+.cf-ft-10-name{color:#fff;font-size:22px;font-weight:900;text-transform:uppercase;font-style:italic;margin-bottom:10px}
+.cf-ft-10-price{color:#888;font-size:18px;font-weight:900;margin-bottom:20px}
+.cf-ft-10-btn{margin-top:auto;width:100%;background:{{ section.settings.accent_color }};color:#fff;font-weight:900;font-size:16px;text-transform:uppercase;font-style:italic;padding:12px;border:0;cursor:pointer;transition:0.2s}
+.cf-ft-10-card:hover .cf-ft-10-btn{background:#fff;color:#000}
+@media(max-width:1024px){.cf-ft-10-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.cf-ft-10-grid{grid-template-columns:repeat(2,1fr)}.cf-ft-10-card{transform:none}.cf-ft-10-card-inner{transform:none}.cf-ft-10-card:hover{transform:translateY(-10px)}}
+@media(max-width:500px){.cf-ft-10-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-ft-10">
+  <div class="cf-ft-10-inner">
+    <div class="cf-ft-10-header">
+      <h2 class="cf-ft-10-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-ft-10-grid">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank and coll.products_count > 0 %}
+        {% for product in coll.products limit: section.settings.product_limit %}
+          <a href="{{ product.url }}" class="cf-ft-10-card">
+             <div class="cf-ft-10-card-inner">
+               <div class="cf-ft-10-img-wrap">
+                 <img class="cf-ft-10-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title }}">
+               </div>
+               <div class="cf-ft-10-info">
+                 <div class="cf-ft-10-name">{{ product.title }}</div>
+                 <div class="cf-ft-10-price">{{ product.price | money }}</div>
+                 <div class="cf-ft-10-btn">ADD TO STACK</div>
+               </div>
+             </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.product_limit) %}
+          <a href="#" class="cf-ft-10-card">
+             <div class="cf-ft-10-card-inner">
+               <div class="cf-ft-10-img-wrap">
+                  <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#333;font-size:40px;font-style:italic;font-weight:900">0{{ i }}</div>
+               </div>
+               <div class="cf-ft-10-info">
+                 <div class="cf-ft-10-name">Pre-Workout {{ i }}</div>
+                 <div class="cf-ft-10-price">$45.00</div>
+                 <div class="cf-ft-10-btn">ADD TO STACK</div>
+               </div>
+             </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Fitness Gear",
+  "settings": [
+    {"type":"text","id":"title","label":"Title (Wrap <span> for Red)","default":"BUILD YOUR <span>STACK</span>"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":100,"step":4,"default":72},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"product_limit","label":"Product Limit","min":2,"max":12,"step":1,"default":4},
+    {"type":"range","id":"cols","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent (Red)","default":"#dc2626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"10 · Fitness Gear"}]
+}
+{% endschema %}

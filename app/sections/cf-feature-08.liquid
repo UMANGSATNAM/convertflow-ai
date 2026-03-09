@@ -1,0 +1,71 @@
+<style>
+.cf-ft-08{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Comic Sans MS', 'Fredoka One', cursive}
+.cf-ft-08-inner{max-width:1400px;margin:0 auto}
+.cf-ft-08-header{text-align:center;margin-bottom:60px}
+.cf-ft-08-title{font-size:clamp(36px,6vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;text-shadow:3px 3px 0 {{ section.settings.border_color }};transform:rotate(-2deg);margin-bottom:15px}
+.cf-ft-08-grid{display:grid;grid-template-columns:repeat({{ section.settings.cols }}, 1fr);gap:40px}
+.cf-ft-08-card{background:{{ section.settings.card_bg }};border:4px solid {{ section.settings.border_color }};border-radius:32px;padding:24px;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:8px 8px 0 {{ section.settings.border_color }};transition:transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
+.cf-ft-08-card:nth-child(even){background:{{ section.settings.card_bg_2 }}}
+.cf-ft-08-card:hover{transform:translateY(-15px) scale(1.03)}
+.cf-ft-08-img-wrap{width:100%;aspect-ratio:1/1;background:#fff;border-radius:24px;border:3px dashed {{ section.settings.border_color }};margin-bottom:20px;padding:20px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cf-ft-08-img{max-width:100%;max-height:100%;object-fit:contain;transition:0.4s}
+.cf-ft-08-card:hover .cf-ft-08-img{transform:rotate(5deg) scale(1.1)}
+.cf-ft-08-name{font-size:20px;font-weight:900;color:#fff;text-shadow:2px 2px 0 {{ section.settings.border_color }};text-transform:uppercase;margin-bottom:10px}
+.cf-ft-08-price{margin-top:auto;background:#fff;color:{{ section.settings.border_color }};padding:8px 24px;border-radius:100px;font-size:22px;font-weight:900;border:3px solid {{ section.settings.border_color }};box-shadow:4px 4px 0 {{ section.settings.border_color }}}
+@media(max-width:1024px){.cf-ft-08-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.cf-ft-08-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.cf-ft-08-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-ft-08">
+  <div class="cf-ft-08-inner">
+    <div class="cf-ft-08-header">
+      <h2 class="cf-ft-08-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-ft-08-grid">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank and coll.products_count > 0 %}
+        {% for product in coll.products limit: section.settings.product_limit %}
+          <a href="{{ product.url }}" class="cf-ft-08-card">
+            <div class="cf-ft-08-img-wrap">
+              <img class="cf-ft-08-img" src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title }}">
+            </div>
+            <div class="cf-ft-08-name">{{ product.title }}</div>
+            <div class="cf-ft-08-price">{{ product.price | money }}</div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.product_limit) %}
+          <a href="#" class="cf-ft-08-card">
+            <div class="cf-ft-08-img-wrap">
+               <div style="font-size:48px">🧸</div>
+            </div>
+            <div class="cf-ft-08-name">Awesome Toy {{ i }}</div>
+            <div class="cf-ft-08-price">$29.99</div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Kids Toys",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"MOST POPULAR TOYS!"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":80,"step":2,"default":56},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"product_limit","label":"Product Limit","min":2,"max":12,"step":1,"default":4},
+    {"type":"range","id":"cols","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fef3c7"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ef4444"},
+    {"type":"color","id":"border_color","label":"Border/Shadow","default":"#111111"},
+    {"type":"color","id":"card_bg","label":"Card Color 1","default":"#60a5fa"},
+    {"type":"color","id":"card_bg_2","label":"Card Color 2","default":"#34d399"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"08 · Kids Toys"}]
+}
+{% endschema %}

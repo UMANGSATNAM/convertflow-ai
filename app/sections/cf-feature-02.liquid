@@ -1,0 +1,81 @@
+<style>
+.cf-ft-02{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-ft-02-inner{max-width:1400px;margin:0 auto}
+.cf-ft-02-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;border-bottom:4px solid {{ section.settings.border_color }};padding-bottom:15px}
+.cf-ft-02-title{font-size:clamp(32px,6vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;margin:0;line-height:1;letter-spacing:-0.03em}
+.cf-ft-02-grid{display:grid;grid-template-columns:repeat({{ section.settings.cols }}, 1fr);gap:20px}
+.cf-ft-02-card{background:#111;text-decoration:none;display:flex;flex-direction:column;border:2px solid transparent;transition:0.2s}
+.cf-ft-02-img-wrap{position:relative;aspect-ratio:4/5;background:#222;overflow:hidden}
+.cf-ft-02-img{width:100%;height:100%;object-fit:cover;opacity:0.8;transition:0.3s}
+.cf-ft-02-card:hover{border-color:{{ section.settings.accent_color }}}
+.cf-ft-02-card:hover .cf-ft-02-img{transform:scale(1.1);opacity:0.5}
+.cf-ft-02-badge{position:absolute;top:15px;left:-10px;background:{{ section.settings.accent_color }};color:#000;font-weight:900;text-transform:uppercase;padding:5px 15px;transform:skewX(-10deg);font-size:12px;box-shadow:2px 2px 0 {{ section.settings.border_color }}}
+.cf-ft-02-info{padding:20px;background:#050505;flex:1;display:flex;flex-direction:column}
+.cf-ft-02-name{font-size:18px;color:#fff;font-weight:900;text-transform:uppercase;margin-bottom:10px}
+.cf-ft-02-price{font-size:16px;color:{{ section.settings.accent_color }};font-weight:700;font-family:monospace;margin-bottom:20px}
+.cf-ft-02-btn{margin-top:auto;text-align:center;padding:12px;background:#1a1a1a;color:#fff;font-weight:900;text-transform:uppercase;font-size:14px;transition:0.2s;border:1px solid #333}
+.cf-ft-02-card:hover .cf-ft-02-btn{background:{{ section.settings.text_color }};color:#000}
+@media(max-width:1024px){.cf-ft-02-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.cf-ft-02-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.cf-ft-02-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-ft-02">
+  <div class="cf-ft-02-inner">
+    <div class="cf-ft-02-header">
+      <h2 class="cf-ft-02-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-ft-02-grid">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank and coll.products_count > 0 %}
+        {% for product in coll.products limit: section.settings.product_limit %}
+          <a href="{{ product.url }}" class="cf-ft-02-card">
+            <div class="cf-ft-02-img-wrap">
+              <div class="cf-ft-02-badge">NEW DROP</div>
+              <img class="cf-ft-02-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title }}">
+            </div>
+            <div class="cf-ft-02-info">
+              <div class="cf-ft-02-name">{{ product.title }}</div>
+              <div class="cf-ft-02-price">{{ product.price | money }}</div>
+              <div class="cf-ft-02-btn">COP NOW</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.product_limit) %}
+          <a href="#" class="cf-ft-02-card">
+            <div class="cf-ft-02-img-wrap">
+               <div class="cf-ft-02-badge">EXCLUSIVE</div>
+               <div style="width:100%;height:100%;background:#222;display:flex;align-items:center;justify-content:center;color:#666;font-weight:900">NO IMAGE</div>
+            </div>
+            <div class="cf-ft-02-info">
+              <div class="cf-ft-02-name">Graphic Tee {{ i }}</div>
+              <div class="cf-ft-02-price">$65.00</div>
+              <div class="cf-ft-02-btn">COP NOW</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Streetwear Drop",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"LATEST DROPS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":100,"step":4,"default":64},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"product_limit","label":"Product Limit","min":2,"max":12,"step":1,"default":4},
+    {"type":"range","id":"cols","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border/Shadow","default":"#ef4444"},
+    {"type":"color","id":"accent_color","label":"Accent (Yellow)","default":"#eab308"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"02 · Streetwear Drop"}]
+}
+{% endschema %}

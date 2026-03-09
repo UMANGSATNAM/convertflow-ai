@@ -1,0 +1,86 @@
+<style>
+.cf-ft-03{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:monospace}
+.cf-ft-03-inner{max-width:1400px;margin:0 auto}
+.cf-ft-03-header{margin-bottom:50px;text-align:center}
+.cf-ft-03-title{font-size:clamp(28px,4vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:700;margin:0;letter-spacing:0.05em}
+.cf-ft-03-title span{color:{{ section.settings.accent_color }}}
+.cf-ft-03-grid{display:grid;grid-template-columns:repeat({{ section.settings.cols }}, 1fr);gap:30px}
+.cf-ft-03-card{text-decoration:none;display:flex;flex-direction:column;background:rgba(255,255,255,0.03);border:1px solid rgba(16,185,129,0.2);border-radius:12px;overflow:hidden;transition:0.3s;position:relative}
+.cf-ft-03-card:hover{border-color:{{ section.settings.accent_color }};box-shadow:0 10px 30px rgba(16,185,129,0.1);transform:translateY(-5px)}
+.cf-ft-03-img-wrap{aspect-ratio:4/3;background:#020617;padding:30px;display:flex;align-items:center;justify-content:center}
+.cf-ft-03-img{max-width:100%;max-height:100%;object-fit:contain;transition:0.3s}
+.cf-ft-03-card:hover .cf-ft-03-img{transform:scale(1.1)}
+.cf-ft-03-info{padding:25px;flex:1;display:flex;flex-direction:column;background:#0f172a}
+.cf-ft-03-name{font-size:16px;color:{{ section.settings.text_color }};font-weight:700;margin-bottom:10px;line-height:1.4}
+.cf-ft-03-specs{font-size:12px;color:#64748b;margin-bottom:20px;line-height:1.5}
+.cf-ft-03-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.cf-ft-03-price{font-size:18px;color:{{ section.settings.accent_color }};font-weight:700}
+.cf-ft-03-btn{background:rgba(16,185,129,0.1);color:{{ section.settings.accent_color }};padding:8px 16px;border-radius:6px;font-size:13px;font-weight:700;transition:0.2s;border:1px solid rgba(16,185,129,0.2)}
+.cf-ft-03-card:hover .cf-ft-03-btn{background:{{ section.settings.accent_color }};color:#0f172a}
+@media(max-width:1024px){.cf-ft-03-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.cf-ft-03-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.cf-ft-03-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-ft-03">
+  <div class="cf-ft-03-inner">
+    <div class="cf-ft-03-header">
+      <h2 class="cf-ft-03-title">> <span>{{ section.settings.title }}</span> _</h2>
+    </div>
+    
+    <div class="cf-ft-03-grid">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank and coll.products_count > 0 %}
+        {% for product in coll.products limit: section.settings.product_limit %}
+          <a href="{{ product.url }}" class="cf-ft-03-card">
+            <div class="cf-ft-03-img-wrap">
+              <img class="cf-ft-03-img" src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title }}">
+            </div>
+            <div class="cf-ft-03-info">
+              <div class="cf-ft-03-name">{{ product.title }}</div>
+              <div class="cf-ft-03-specs">// SYSTEM.SPECS.READY</div>
+              <div class="cf-ft-03-bottom">
+                <div class="cf-ft-03-price">{{ product.price | money }}</div>
+                <div class="cf-ft-03-btn">INIT_CART</div>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.product_limit) %}
+          <a href="#" class="cf-ft-03-card">
+            <div class="cf-ft-03-img-wrap">
+               <svg style="color:#64748b" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <div class="cf-ft-03-info">
+              <div class="cf-ft-03-name">High-Performance Hardware Unit {{ i }}</div>
+              <div class="cf-ft-03-specs">// 32GB RAM · 1TB SSD</div>
+              <div class="cf-ft-03-bottom">
+                <div class="cf-ft-03-price">$2,499.00</div>
+                <div class="cf-ft-03-btn">INIT_CART</div>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Tech Showcase",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"FEATURED_RIGS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":40},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"product_limit","label":"Product Limit","min":2,"max":12,"step":1,"default":4},
+    {"type":"range","id":"cols","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
+    {"type":"color","id":"bg_color","label":"Background","default":"#080f1b"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#f8fafc"},
+    {"type":"color","id":"accent_color","label":"Accent (Green)","default":"#10b981"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"03 · Tech Showcase"}]
+}
+{% endschema %}
