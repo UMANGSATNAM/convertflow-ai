@@ -1,0 +1,64 @@
+<style>
+.cf-tr-13{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;border-bottom:4px solid {{ section.settings.border_color }}}
+.cf-tr-13-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;border-top:4px solid {{ section.settings.border_color }}}
+.cf-tr-13-item{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;min-width:250px;padding:40px 20px;border-right:1px solid {{ section.settings.border_color }}}
+.cf-tr-13-item:last-child{border-right:none}
+.cf-tr-13-icon{margin-bottom:20px;color:{{ section.settings.text_color }}}
+.cf-tr-13-title{font-size:24px;color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:10px}
+.cf-tr-13-desc{font-size:14px;color:{{ section.settings.text_color }};font-weight:600;opacity:0.6}
+@media(max-width:900px){.cf-tr-13-item{border-right:none;border-bottom:1px solid {{ section.settings.border_color }}}.cf-tr-13-item:last-child{border-bottom:none}.cf-tr-13-inner{flex-direction:column}}
+</style>
+
+<div class="cf-tr-13">
+  <div class="cf-tr-13-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-13-item">
+      <div class="cf-tr-13-icon">
+        {% if block.settings.icon == 'star' %}
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        {% elsif block.settings.icon == 'clock' %}
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        {% else %}
+           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        {% endif %}
+      </div>
+      <div class="cf-tr-13-title">{{ block.settings.title }}</div>
+      <div class="cf-tr-13-desc">{{ block.settings.desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Border Base","default":"#e5e5e5"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":0}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"select","id":"icon","label":"Icon","options":[{"value":"star","label":"Star"},{"value":"clock","label":"Clock"},{"value":"check","label":"Check"}],"default":"star"},
+        {"type":"text","id":"title","label":"Title","default":"LIFETIME GUARANTEE"},
+        {"type":"text","id":"desc","label":"Description","default":"BUILT TO OUTLAST YOU."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "13 · Brand Trust",
+      "blocks": [
+        {"type":"trust","settings":{"icon":"check","title":"VERIFIED AUTHENTIC","desc":"DESIGNED IN-HOUSE."}},
+        {"type":"trust","settings":{"icon":"clock","title":"RAPID FULFILLMENT","desc":"SHIPS WITHIN 24 HOURS."}},
+        {"type":"trust","settings":{"icon":"star","title":"PREMIUM BLENDS","desc":"HEAVYWEIGHT COTTON."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

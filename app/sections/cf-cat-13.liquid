@@ -1,0 +1,84 @@
+<style>
+.cf-cat-13{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-cat-13-inner{max-width:1400px;margin:0 auto}
+.cf-cat-13-header{text-align:center;margin-bottom:60px}
+.cf-cat-13-title{font-size:clamp(40px,8vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;margin:0;line-height:0.9}
+.cf-cat-13-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:repeat(2, 400px);gap:15px}
+.cf-cat-13-card{text-decoration:none;display:block;position:relative;background:#111;overflow:hidden}
+.cf-cat-13-card-1{grid-column:1 / 3;grid-row:1 / 3}
+.cf-cat-13-img{width:100%;height:100%;object-fit:cover;transition:0.6s transform}
+.cf-cat-13-card:hover .cf-cat-13-img{transform:scale(1.05)}
+.cf-cat-13-info{position:absolute;bottom:0;left:0;right:0;padding:30px;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent)}
+.cf-cat-13-name{font-size:24px;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em}
+.cf-cat-13-link{font-size:14px;color:{{ section.settings.accent_color }};font-weight:900;text-transform:uppercase;margin-top:10px;display:inline-block;transition:0.3s}
+.cf-cat-13-card:hover .cf-cat-13-link{color:#fff}
+@media(max-width:900px){.cf-cat-13-grid{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3, 300px)}.cf-cat-13-card-1{grid-column:1/3;grid-row:1/2}}
+@media(max-width:500px){.cf-cat-13-grid{grid-template-columns:1fr;grid-template-rows:repeat(4, 350px)}.cf-cat-13-card-1{grid-column:1/2;grid-row:1/2}}
+</style>
+
+<div class="cf-cat-13">
+  <div class="cf-cat-13-inner">
+    <div class="cf-cat-13-header">
+      <h2 class="cf-cat-13-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-cat-13-grid">
+      {% for block in section.blocks limit:4 %}
+        <a href="{{ block.settings.link }}" class="cf-cat-13-card {% if forloop.first %}cf-cat-13-card-1{% endif %}">
+          {% if block.settings.image %}
+            <img class="cf-cat-13-img" src="{{ block.settings.image | image_url: width: 1200 }}" alt="{{ block.settings.title }}">
+          {% else %}
+             <div style="width:100%;height:100%;background:#262626;display:flex;align-items:center;justify-content:center;color:#525252;font-size:20px;font-weight:900">CAMPAIGN //</div>
+          {% endif %}
+          <div class="cf-cat-13-info">
+            <div class="cf-cat-13-name">{{ block.settings.title }}</div>
+            <div class="cf-cat-13-link">SHOP NOW &rarr;</div>
+          </div>
+        </a>
+      {% endfor %}
+      
+      {% if section.blocks.size == 0 %}
+        {% for i in (1..4) %}
+          <a href="#" class="cf-cat-13-card {% if forloop.first %}cf-cat-13-card-1{% endif %}">
+            <div style="width:100%;height:100%;background:#262626;display:flex;align-items:center;justify-content:center;color:#525252;font-size:20px;font-weight:900">ARCHIVE {{ i }}</div>
+            <div class="cf-cat-13-info">
+              <div class="cf-cat-13-name">Category {{ i }}</div>
+              <div class="cf-cat-13-link">SHOP NOW &rarr;</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"THE CATALOG"},
+    {"type":"range","id":"title_size","label":"Title Size","min":40,"max":120,"step":4,"default":80},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"Accent Arrow","default":"#dc2626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 4,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Outerwear"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "13 · Brand Categories"
+    }
+  ]
+}
+{% endschema %}

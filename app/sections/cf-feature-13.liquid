@@ -1,0 +1,76 @@
+<style>
+.cf-ft-13{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-ft-13-inner{max-width:1400px;margin:0 auto}
+.cf-ft-13-header{display:flex;flex-direction:column;align-items:flex-start;margin-bottom:50px}
+.cf-ft-13-title{font-size:clamp(40px,7vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;line-height:1;margin:0 0 10px 0}
+.cf-ft-13-link{font-size:14px;color:{{ section.settings.accent_color }};font-weight:700;text-decoration:none;text-transform:uppercase;border-bottom:2px solid {{ section.settings.accent_color }};padding-bottom:2px;transition:0.3s}
+.cf-ft-13-link:hover{color:{{ section.settings.text_color }};border-color:{{ section.settings.text_color }}}
+.cf-ft-13-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:30px}
+.cf-ft-13-card{text-decoration:none;display:flex;flex-direction:column;group}
+.cf-ft-13-img-wrap{aspect-ratio:3/4;background:#111;margin-bottom:20px;overflow:hidden;position:relative}
+.cf-ft-13-img{width:100%;height:100%;object-fit:cover;transition:0.4s ease}
+.cf-ft-13-img-hover{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:0.4s ease}
+.cf-ft-13-card:hover .cf-ft-13-img-hover{opacity:1}
+.cf-ft-13-info{display:flex;flex-direction:column}
+.cf-ft-13-name{font-size:18px;color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;margin-bottom:5px;line-height:1.2}
+.cf-ft-13-price{font-size:16px;color:{{ section.settings.accent_color }};font-weight:700}
+</style>
+
+<div class="cf-ft-13">
+  <div class="cf-ft-13-inner">
+    <div class="cf-ft-13-header">
+      <h2 class="cf-ft-13-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.link }}" class="cf-ft-13-link">VIEW ENTIRE DROP &rarr;</a>
+    </div>
+    
+    <div class="cf-ft-13-grid">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank and coll.products_count > 0 %}
+        {% for product in coll.products limit: section.settings.product_limit %}
+          <a href="{{ product.url }}" class="cf-ft-13-card">
+            <div class="cf-ft-13-img-wrap">
+              <img class="cf-ft-13-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title }}">
+              {% if product.images[1] %}
+                <img class="cf-ft-13-img-hover" src="{{ product.images[1] | image_url: width: 600 }}" alt="{{ product.title }}">
+              {% endif %}
+            </div>
+            <div class="cf-ft-13-info">
+              <div class="cf-ft-13-name">{{ product.title }}</div>
+              <div class="cf-ft-13-price">{{ product.price | money }}</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.product_limit) %}
+          <a href="#" class="cf-ft-13-card">
+            <div class="cf-ft-13-img-wrap">
+               <div style="width:100%;height:100%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;color:#a3a3a3;font-size:20px;font-weight:900">STUDIO {{ i }}</div>
+            </div>
+            <div class="cf-ft-13-info">
+              <div class="cf-ft-13-name">Graphic Tee 0{{ i }}</div>
+              <div class="cf-ft-13-price">$45.00</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Featured",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"LATEST DROP"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":100,"step":2,"default":72},
+    {"type":"text","id":"link","label":"Link","default":"/collections/all"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"product_limit","label":"Product Limit","min":3,"max":12,"step":1,"default":6},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"Price/Link Color","default":"#dc2626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Featured"}]
+}
+{% endschema %}

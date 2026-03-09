@@ -1,0 +1,64 @@
+<style>
+.cf-h-13{width:100%;background:{{ section.settings.bg_color }};padding:0 40px;height:{{ section.settings.height }}px;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;position:relative}
+.cf-h-13-nav{display:flex;gap:30px;align-items:center;flex:1}
+.cf-h-13-link{text-decoration:none;color:{{ section.settings.text_color }};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;transition:0.3s}
+.cf-h-13-link:hover{color:{{ section.settings.accent_color }}}
+.cf-h-13-logo-wrap{flex:1;display:flex;justify-content:center}
+.cf-h-13-logo{font-size:{{ section.settings.logo_size }}px;color:{{ section.settings.text_color }};font-weight:900;letter-spacing:-0.03em;text-transform:uppercase;text-decoration:none;line-height:1}
+.cf-h-13-icons{display:flex;gap:25px;align-items:center;flex:1;justify-content:flex-end}
+.cf-h-13-icon{color:{{ section.settings.text_color }};transition:0.3s;display:flex;stroke-width:2.5px}
+.cf-h-13-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-h-13-icon-badge{position:relative}
+.cf-h-13-badge{position:absolute;top:-8px;right:-8px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-size:10px;font-weight:900;width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.cf-h-13-menu-btn{display:none;background:none;border:none;color:{{ section.settings.text_color }};cursor:pointer;padding:0}
+@media(max-width:900px){.cf-h-13-nav{display:none}.cf-h-13-menu-btn{display:block}.cf-h-13{padding:0 20px}.cf-h-13-logo-wrap{justify-content:flex-start;margin-left:20px}}
+</style>
+
+<div class="cf-h-13">
+  <button class="cf-h-13-menu-btn">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  </button>
+  
+  <div class="cf-h-13-nav hidden md:flex">
+    {% for link in linklists[section.settings.menu].links limit:3 %}
+      <a href="{{ link.url }}" class="cf-h-13-link">{{ link.title }}</a>
+    {% else %}
+      <a href="#" class="cf-h-13-link">SHOP ALL</a>
+      <a href="#" class="cf-h-13-link">LATEST DROP</a>
+      <a href="#" class="cf-h-13-link">LOOKBOOK</a>
+    {% endfor %}
+  </div>
+  
+  <div class="cf-h-13-logo-wrap">
+    <a href="/" class="cf-h-13-logo">{{ section.settings.logo_text }}</a>
+  </div>
+  
+  <div class="cf-h-13-icons">
+    <a href="/search" class="cf-h-13-icon hidden md:flex" aria-label="Search">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </a>
+    <a href="/account" class="cf-h-13-icon hidden md:flex" aria-label="Account">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    </a>
+    <a href="/cart" class="cf-h-13-icon cf-h-13-icon-badge" aria-label="Cart">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      <div class="cf-h-13-badge">0</div>
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"VERVE"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":64,"step":2,"default":42},
+    {"type":"link_list","id":"menu","label":"Left Menu"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"Accent (Hover)","default":"#dc2626"},
+    {"type":"range","id":"height","label":"Height","min":60,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Header"}]
+}
+{% endschema %}

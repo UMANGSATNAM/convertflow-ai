@@ -1,0 +1,41 @@
+<style>
+.cf-sn-13{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-sn-13-inner{max-width:800px;margin:0 auto;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};padding:25px;display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:-8px 8px 0 {{ section.settings.accent_color }}}
+.cf-sn-13-left{display:flex;flex-direction:column}
+.cf-sn-13-title{font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;line-height:1}
+.cf-sn-13-sub{font-size:12px;text-transform:uppercase;font-weight:700;color:{{ section.settings.accent_color }};margin-top:5px}
+.cf-sn-13-code-wrap{display:flex;align-items:center;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};padding:8px;gap:10px}
+.cf-sn-13-code{font-family:monospace;font-size:18px;font-weight:900;padding:5px 15px}
+.cf-sn-13-btn{background:{{ section.settings.accent_color }};color:#fff;border:none;padding:12px 20px;font-weight:900;font-size:12px;text-transform:uppercase;cursor:pointer;transition:transform 0.1s}
+.cf-sn-13-btn:active{transform:scale(0.95)}
+@media(max-width:600px){.cf-sn-13-inner{flex-direction:column;text-align:center;box-shadow:-4px 4px 0 {{ section.settings.accent_color }}}}
+</style>
+
+<div class="cf-sn-13">
+  <div class="cf-sn-13-inner">
+    <div class="cf-sn-13-left">
+      <div class="cf-sn-13-title">{{ section.settings.title }}</div>
+      <div class="cf-sn-13-sub">{{ section.settings.subtitle }}</div>
+    </div>
+    <div class="cf-sn-13-code-wrap">
+      <div class="cf-sn-13-code" id="cf-sn-13-code">{{ section.settings.code }}</div>
+      <button class="cf-sn-13-btn" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');this.innerHTML='SAVED'">SNAG IT</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"FLASH SALE LIVE"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"Use code at checkout. Limited time."},
+    {"type":"text","id":"code","label":"Code","default":"ARCHIVE25"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Box Color","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"Accent Drop Shadow","default":"#dc2626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":40}
+  ],
+  "presets": [{"name":"13 · Brand Snack"}]
+}
+{% endschema %}
