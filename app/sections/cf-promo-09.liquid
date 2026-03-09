@@ -1,0 +1,62 @@
+<style>
+.cf-pr-09{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:serif}
+.cf-pr-09-inner{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;min-height:{{ section.settings.height }}px}
+.cf-pr-09-img-wrap{flex:1;min-width:300px;position:relative;height:100%;min-height:500px;padding:40px;display:flex;align-items:center;justify-content:center}
+.cf-pr-09-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.cf-pr-09-card{position:relative;z-index:1;background:rgba(245,245,244,0.9);backdrop-filter:blur(10px);padding:60px 40px;max-width:500px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.05)}
+.cf-pr-09-title{font-size:clamp(32px,4vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};line-height:1.2;margin-bottom:20px;font-weight:400}
+.cf-pr-09-desc{font-family:sans-serif;font-size:15px;color:#78716c;margin-bottom:40px;line-height:1.6}
+.cf-pr-09-btn{display:inline-block;padding:14px 40px;background:transparent;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};text-decoration:none;font-family:sans-serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;transition:0.3s}
+.cf-pr-09-btn:hover{background:{{ section.settings.text_color }};color:#fff}
+.cf-pr-09-gfx{flex:1;min-width:300px;background:{{ section.settings.side_bg }};display:flex;align-items:center;justify-content:center;padding:60px;height:100%;min-height:500px}
+.cf-pr-09-gfx-inner{max-width:400px;text-align:left}
+.cf-pr-09-stat{font-size:clamp(60px,8vw,120px);color:{{ section.settings.text_color }};line-height:0.9;font-weight:400;margin-bottom:20px}
+.cf-pr-09-stat-lbl{font-family:sans-serif;font-size:16px;color:#78716c;text-transform:uppercase;letter-spacing:0.1em}
+@media(max-width:768px){.cf-pr-09-img-wrap,.cf-pr-09-gfx{min-height:400px;padding:20px}}
+</style>
+
+<div class="cf-pr-09">
+  <div class="cf-pr-09-inner">
+    <div class="cf-pr-09-img-wrap">
+      {% if section.settings.image != blank %}
+        <img class="cf-pr-09-img" src="{{ section.settings.image | image_url: width: 1000 }}" alt="Promo">
+      {% else %}
+        <div class="cf-pr-09-img" style="background:#e7e5e4"></div>
+      {% endif %}
+      <div class="cf-pr-09-card">
+        <h2 class="cf-pr-09-title">{{ section.settings.title }}</h2>
+        <p class="cf-pr-09-desc">{{ section.settings.desc }}</p>
+        <a href="{{ section.settings.btn_link }}" class="cf-pr-09-btn">{{ section.settings.btn_label }}</a>
+      </div>
+    </div>
+    
+    <div class="cf-pr-09-gfx">
+      <div class="cf-pr-09-gfx-inner">
+        <div class="cf-pr-09-stat">{{ section.settings.stat }}</div>
+        <div class="cf-pr-09-stat-lbl">{{ section.settings.stat_label }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Furniture Promo",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Left Image"},
+    {"type":"text","id":"title","label":"Title","default":"The Artisan Collection"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":42},
+    {"type":"textarea","id":"desc","label":"Description","default":"Handcrafted with sustainable materials. Each piece tells a unique story of dedication and precise craftsmanship."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"Explore Collection"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"text","id":"stat","label":"Stat Number","default":"-20%"},
+    {"type":"text","id":"stat_label","label":"Stat Label","default":"ON ALL SEATING THIS WEEK"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"side_bg","label":"Right Panel Background","default":"#f5f5f4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#292524"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":50,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":10,"default":40}
+  ],
+  "presets": [{"name":"09 · Furniture Promo"}]
+}
+{% endschema %}

@@ -1,0 +1,76 @@
+<style>
+.cf-pr-07{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:system-ui,-apple-system,sans-serif}
+.cf-pr-07-inner{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;min-height:{{ section.settings.height }}px;gap:60px;position:relative}
+.cf-pr-07-content{flex:1;min-width:300px;padding:40px 0}
+.cf-pr-07-tag{display:inline-block;padding:6px 12px;background:{{ section.settings.accent_1 | color_modify: 'alpha', 0.1 }};color:{{ section.settings.accent_1 }};border-radius:100px;font-size:13px;font-weight:700;letter-spacing:0.05em;margin-bottom:24px}
+.cf-pr-07-title{font-size:clamp(36px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};line-height:1.15;font-weight:800;margin-bottom:20px;letter-spacing:-0.02em}
+.cf-pr-07-desc{font-size:18px;color:#64748b;margin-bottom:40px;line-height:1.6;font-weight:500}
+.cf-pr-07-buttons{display:flex;gap:16px;flex-wrap:wrap}
+.cf-pr-07-btn1{background:{{ section.settings.logo_color }};color:#fff;padding:16px 32px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;transition:0.2s;box-shadow:0 10px 20px rgba(0,0,0,0.1)}
+.cf-pr-07-btn1:hover{transform:translateY(-2px);box-shadow:0 15px 30px rgba(0,0,0,0.15)}
+.cf-pr-07-btn2{background:transparent;color:{{ section.settings.logo_color }};padding:16px 32px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;border:2px solid {{ section.settings.logo_color }};transition:0.2s}
+.cf-pr-07-btn2:hover{background:{{ section.settings.logo_color }};color:#fff}
+.cf-pr-07-gfx{flex:1;min-width:300px;position:relative}
+.cf-pr-07-window{background:#fff;border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.05);overflow:hidden;position:relative;z-index:2}
+.cf-pr-07-w-top{background:#f1f5f9;height:40px;display:flex;align-items:center;padding:0 16px;gap:6px}
+.cf-pr-07-w-dot{width:10px;height:10px;border-radius:50%;background:#cbd5e1}
+.cf-pr-07-w-dot:nth-child(1){background:#f87171}.cf-pr-07-w-dot:nth-child(2){background:#fbbf24}.cf-pr-07-w-dot:nth-child(3){background:#34d399}
+.cf-pr-07-w-body{padding:0}
+.cf-pr-07-blob{position:absolute;width:400px;height:400px;background:linear-gradient(135deg, {{ section.settings.accent_1 }}, {{ section.settings.accent_2 }});border-radius:50%;filter:blur(60px);opacity:0.2;top:-50px;right:-50px;z-index:1}
+@media(max-width:768px){.cf-pr-07-inner{gap:30px}}
+</style>
+
+<div class="cf-pr-07">
+  <div class="cf-pr-07-inner">
+    <div class="cf-pr-07-content">
+      <div class="cf-pr-07-tag">{{ section.settings.tag }}</div>
+      <h2 class="cf-pr-07-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-07-desc">{{ section.settings.desc }}</p>
+      <div class="cf-pr-07-buttons">
+        <a href="{{ section.settings.btn1_link }}" class="cf-pr-07-btn1">{{ section.settings.btn1_label }}</a>
+        <a href="{{ section.settings.btn2_link }}" class="cf-pr-07-btn2">{{ section.settings.btn2_label }}</a>
+      </div>
+    </div>
+    
+    <div class="cf-pr-07-gfx">
+      <div class="cf-pr-07-blob"></div>
+      <div class="cf-pr-07-window">
+        <div class="cf-pr-07-w-top">
+          <div class="cf-pr-07-w-dot"></div><div class="cf-pr-07-w-dot"></div><div class="cf-pr-07-w-dot"></div>
+        </div>
+        <div class="cf-pr-07-w-body">
+          {% if section.settings.image != blank %}
+            <img src="{{ section.settings.image | image_url: width: 800 }}" style="width:100%;display:block;" alt="Dashboard">
+          {% else %}
+            <div style="width:100%;height:300px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-weight:500;">Software Dashboard Image</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · SaaS Promo",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Software Screenshot"},
+    {"type":"text","id":"tag","label":"Tag","default":"ENTERPRISE READY"},
+    {"type":"text","id":"title","label":"Title","default":"Scale your infrastructure without the growing pains."},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":64,"step":2,"default":48},
+    {"type":"textarea","id":"desc","label":"Description","default":"Join 10,000+ companies who trust our unified platform to manage their global operations securely and efficiently."},
+    {"type":"text","id":"btn1_label","label":"Button 1 Label","default":"Start Free Trial"},
+    {"type":"text","id":"btn1_link","label":"Button 1 Link","default":"/cart"},
+    {"type":"text","id":"btn2_label","label":"Button 2 Label","default":"Book Demo"},
+    {"type":"text","id":"btn2_link","label":"Button 2 Link","default":"/pages/contact"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#0f172a"},
+    {"type":"color","id":"logo_color","label":"Button/Logo Color","default":"#0f172a"},
+    {"type":"color","id":"accent_1","label":"Gradient 1","default":"#6366f1"},
+    {"type":"color","id":"accent_2","label":"Gradient 2","default":"#a855f7"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":50,"default":650},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"07 · SaaS Promo"}]
+}
+{% endschema %}

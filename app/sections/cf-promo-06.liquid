@@ -1,0 +1,52 @@
+<style>
+.cf-pr-06{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-pr-06-inner{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:stretch;min-height:{{ section.settings.height }}px;position:relative}
+.cf-pr-06-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.4;filter:grayscale(100%)}
+.cf-pr-06-content{flex:1;min-width:300px;padding:80px;position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(90deg, #111 0%, transparent 100%)}
+.cf-pr-06-badge{display:inline-block;padding:8px 16px;background:{{ section.settings.accent_color }};color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;font-style:italic;transform:skewX(-10deg);margin-bottom:24px;align-self:flex-start}
+.cf-pr-06-badge span{display:block;transform:skewX(10deg)}
+.cf-pr-06-title{font-size:clamp(40px,6vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;line-height:0.9;margin-bottom:20px;letter-spacing:-0.03em;font-style:italic}
+.cf-pr-06-desc{font-size:18px;color:#a1a1aa;margin-bottom:40px;line-height:1.5;max-width:500px;font-weight:500}
+.cf-pr-06-btn{display:inline-block;padding:16px 40px;background:#fff;color:#000;text-decoration:none;font-weight:900;font-size:16px;text-transform:uppercase;transition:0.2s;transform:skewX(-10deg);align-self:flex-start}
+.cf-pr-06-btn span{display:block;transform:skewX(10deg)}
+.cf-pr-06-btn:hover{background:{{ section.settings.accent_color }};color:#fff}
+@media(max-width:768px){.cf-pr-06-content{padding:40px 20px;background:linear-gradient(180deg, #111 40%, transparent 100%)}}
+</style>
+
+<div class="cf-pr-06">
+  <div class="cf-pr-06-inner">
+    {% if section.settings.image != blank %}
+      <img class="cf-pr-06-bg" src="{{ section.settings.image | image_url: width: 2000 }}" alt="Promo">
+    {% else %}
+      <div class="cf-pr-06-bg" style="background:#222"></div>
+    {% endif %}
+    
+    <div class="cf-pr-06-content">
+      <div class="cf-pr-06-badge"><span>{{ section.settings.badge }}</span></div>
+      <h2 class="cf-pr-06-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-06-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-06-btn"><span>{{ section.settings.btn_label }}</span></a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Automotive Promo",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Background Image"},
+    {"type":"text","id":"badge","label":"Badge","default":"GEAR UP"},
+    {"type":"text","id":"title","label":"Title","default":"UNLEASH MAXIMUM POWER"},
+    {"type":"range","id":"title_size","label":"Title Size","min":40,"max":100,"step":4,"default":80},
+    {"type":"textarea","id":"desc","label":"Description","default":"Precision engineered parts built for the track. Dominate the asphalt with our new high-performance series."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP PARTS"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent (Red) Color","default":"#ef4444"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":1000,"step":50,"default":700},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":10,"default":0}
+  ],
+  "presets": [{"name":"06 · Automotive Promo"}]
+}
+{% endschema %}

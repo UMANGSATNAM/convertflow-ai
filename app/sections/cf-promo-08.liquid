@@ -1,0 +1,50 @@
+<style>
+.cf-pr-08{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Comic Sans MS', 'Fredoka One', cursive}
+.cf-pr-08-inner{max-width:1200px;margin:0 auto;background:{{ section.settings.card_bg }};border-radius:40px;border:8px solid {{ section.settings.border_color }};padding:60px;position:relative;overflow:hidden;min-height:{{ section.settings.height }}px;display:flex;align-items:center;justify-content:center;text-align:center;box-shadow:12px 12px 0 {{ section.settings.border_color }}}
+.cf-pr-08-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.2}
+.cf-pr-08-content{position:relative;z-index:1;max-width:800px}
+.cf-pr-08-title{font-size:clamp(40px,6vw,{{ section.settings.title_size }}px);font-weight:900;color:{{ section.settings.text_color }};text-transform:uppercase;line-height:1.1;margin-bottom:20px;text-shadow:4px 4px 0 {{ section.settings.border_color }};transform:rotate(-2deg)}
+.cf-pr-08-desc{font-size:22px;color:{{ section.settings.border_color }};font-weight:700;margin-bottom:40px}
+.cf-pr-08-btn{display:inline-block;padding:16px 48px;background:{{ section.settings.accent_1 }};color:#fff;text-decoration:none;font-size:20px;font-weight:900;border-radius:100px;border:4px solid {{ section.settings.border_color }};box-shadow:6px 6px 0 {{ section.settings.border_color }};transition:0.2s;text-transform:uppercase;transform:rotate(2deg)}
+.cf-pr-08-btn:hover{transform:rotate(0deg) scale(1.05);background:{{ section.settings.accent_2 }}}
+@media(max-width:768px){.cf-pr-08-inner{padding:40px 20px;border-width:4px;border-radius:24px;box-shadow:6px 6px 0 {{ section.settings.border_color }}}}
+</style>
+
+<div class="cf-pr-08">
+  <div class="cf-pr-08-inner">
+    {% if section.settings.image != blank %}
+      <img class="cf-pr-08-bg" src="{{ section.settings.image | image_url: width: 1400 }}" alt="Promo">
+    {% else %}
+      <div class="cf-pr-08-bg" style="background:repeating-radial-gradient(circle, #fff 0, #fff 10px, transparent 10px, transparent 20px);"></div>
+    {% endif %}
+    
+    <div class="cf-pr-08-content">
+      <h2 class="cf-pr-08-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-08-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-08-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Kids Promo",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Background Pattern/Image"},
+    {"type":"text","id":"title","label":"Title","default":"THE BIG SUMMER PLAY SALE!"},
+    {"type":"range","id":"title_size","label":"Title Size","min":40,"max":100,"step":4,"default":72},
+    {"type":"textarea","id":"desc","label":"Description","default":"Up to 50% off all educational toys. Make learning fun today!"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP THE SALE"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#fef3c7"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#60a5fa"},
+    {"type":"color","id":"border_color","label":"Border/Shadow Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#fef08a"},
+    {"type":"color","id":"accent_1","label":"Button Color","default":"#ef4444"},
+    {"type":"color","id":"accent_2","label":"Button Hover Color","default":"#f97316"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":50,"default":550},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"08 · Kids Promo"}]
+}
+{% endschema %}

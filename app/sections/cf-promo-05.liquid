@@ -1,0 +1,59 @@
+<style>
+.cf-pr-05{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Georgia',serif}
+.cf-pr-05-inner{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;min-height:{{ section.settings.height }}px;background:{{ section.settings.card_bg }};border-radius:20px;box-shadow:0 30px 60px rgba(0,0,0,0.05);overflow:hidden}
+.cf-pr-05-img-wrap{flex:1;min-width:300px;position:relative;height:100%;min-height:500px}
+.cf-pr-05-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-top-right-radius:200px;border-bottom-right-radius:200px}
+.cf-pr-05-content{flex:1;min-width:300px;padding:80px 60px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.cf-pr-05-stars{display:flex;gap:4px;color:{{ section.settings.accent_color }};margin-bottom:24px}
+.cf-pr-05-title{font-size:clamp(32px,4vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};line-height:1.2;margin-bottom:20px;letter-spacing:0.02em}
+.cf-pr-05-desc{font-size:16px;color:#78716c;margin-bottom:40px;line-height:1.6;max-width:400px;font-family:sans-serif}
+.cf-pr-05-btn{display:inline-block;padding:14px 40px;background:transparent;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};text-decoration:none;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;font-family:sans-serif;transition:0.3s}
+.cf-pr-05-btn:hover{background:{{ section.settings.text_color }};color:#fff}
+@media(max-width:768px){.cf-pr-05-content{padding:40px 20px}.cf-pr-05-img{border-radius:0;border-bottom-left-radius:200px;border-bottom-right-radius:200px}.cf-pr-05-img-wrap{height:400px;min-height:auto}}
+</style>
+
+<div class="cf-pr-05">
+  <div class="cf-pr-05-inner">
+    <div class="cf-pr-05-img-wrap">
+      {% if section.settings.image != blank %}
+        <img class="cf-pr-05-img" src="{{ section.settings.image | image_url: width: 1000 }}" alt="Promo">
+      {% else %}
+        <div class="cf-pr-05-img" style="background:#e7e5e4"></div>
+      {% endif %}
+    </div>
+    
+    <div class="cf-pr-05-content">
+      <div class="cf-pr-05-stars">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.8-6.3 4.8 2.3-7.4-6-4.6h7.6z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.8-6.3 4.8 2.3-7.4-6-4.6h7.6z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.8-6.3 4.8 2.3-7.4-6-4.6h7.6z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.8-6.3 4.8 2.3-7.4-6-4.6h7.6z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.8-6.3 4.8 2.3-7.4-6-4.6h7.6z"/></svg>
+      </div>
+      <h2 class="cf-pr-05-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-05-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-05-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Beauty Promo",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Left Image"},
+    {"type":"text","id":"title","label":"Title","default":"Loved by thousands."},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":42},
+    {"type":"textarea","id":"desc","label":"Description","default":"Discover our award-winning serum that restores your natural glow overnight. Backed by science, loved by dermatologists."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW BESTSELLERS"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#fffbfb"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"accent_color","label":"Stars Color","default":"#d4aba0"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":50,"default":550},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"05 · Beauty Promo"}]
+}
+{% endschema %}

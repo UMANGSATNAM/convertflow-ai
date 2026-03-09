@@ -1,0 +1,47 @@
+<style>
+.cf-pr-01{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif}
+.cf-pr-01-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;min-height:{{ section.settings.height }}px;position:relative;border:1px solid {{ section.settings.border_color }};padding:60px 20px;text-align:center;justify-content:center;overflow:hidden}
+.cf-pr-01-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:{{ section.settings.image_opacity }};z-index:0;filter:grayscale(100%)}
+.cf-pr-01-content{position:relative;z-index:1;max-width:600px;background:rgba(255,255,255,0.85);backdrop-filter:blur(10px);padding:50px 40px;border:1px solid rgba({{ section.settings.text_color | color_to_rgb | remove: 'rgb(' | remove: ')' }}, 0.1)}
+.cf-pr-01-sub{font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:{{ section.settings.text_color }};margin-bottom:20px;display:block}
+.cf-pr-01-title{font-size:clamp(32px,4vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};line-height:1.1;margin-bottom:30px;font-weight:400;font-style:italic}
+.cf-pr-01-btn{display:inline-block;padding:14px 40px;background:transparent;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};text-decoration:none;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;transition:0.3s}
+.cf-pr-01-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+</style>
+
+<div class="cf-pr-01">
+  <div class="cf-pr-01-inner">
+    {% if section.settings.bg_image != blank %}
+      <img class="cf-pr-01-bg" src="{{ section.settings.bg_image | image_url: width: 2000 }}" alt="Background">
+    {% else %}
+      <div class="cf-pr-01-bg" style="background:#f0f0f0"></div>
+    {% endif %}
+    
+    <div class="cf-pr-01-content">
+      <span class="cf-pr-01-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-pr-01-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-01-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Promo",
+  "settings": [
+    {"type":"image_picker","id":"bg_image","label":"Background Image"},
+    {"type":"range","id":"image_opacity","label":"Image Opacity","min":0.1,"max":1.0,"step":0.1,"default":0.6},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"THE SUMMER EDIT"},
+    {"type":"text","id":"title","label":"Title","default":"Effortless elegance for the modern muse."},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":72,"step":2,"default":48},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"DISCOVER"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e5e5e5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":50,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":10,"default":40}
+  ],
+  "presets": [{"name":"01 · Luxury Promo"}]
+}
+{% endschema %}

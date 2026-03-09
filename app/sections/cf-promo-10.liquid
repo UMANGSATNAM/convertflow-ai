@@ -1,0 +1,55 @@
+<style>
+.cf-pr-10{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;overflow:hidden}
+.cf-pr-10-inner{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;min-height:{{ section.settings.height }}px;position:relative}
+.cf-pr-10-bg{position:absolute;top:0;right:-10%;width:60%;height:100%;object-fit:cover;z-index:0;transform:skewX(-15deg);filter:grayscale(100%) contrast(1.2);opacity:0.6}
+.cf-pr-10-content{position:relative;z-index:1;max-width:700px;padding:60px 0}
+.cf-pr-10-badge{display:inline-block;padding:8px 16px;background:{{ section.settings.accent_1 }};color:#fff;font-weight:900;text-transform:uppercase;transform:skewX(-15deg);margin-bottom:30px}
+.cf-pr-10-badge span{display:block;transform:skewX(15deg)}
+.cf-pr-10-title{font-size:clamp(48px,8vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;line-height:0.9;margin-bottom:24px;font-style:italic}
+.cf-pr-10-title span{color:{{ section.settings.accent_1 }}}
+.cf-pr-10-desc{font-size:20px;color:{{ section.settings.desc_color }};margin-bottom:40px;line-height:1.4;font-weight:500;max-width:500px}
+.cf-pr-10-btn{display:inline-block;padding:18px 48px;background:{{ section.settings.accent_1 }};color:#fff;text-decoration:none;font-weight:900;font-size:18px;text-transform:uppercase;transition:0.2s;transform:skewX(-15deg);border:4px solid transparent}
+.cf-pr-10-btn span{display:block;transform:skewX(15deg)}
+.cf-pr-10-btn:hover{background:transparent;color:{{ section.settings.accent_1 }};border-color:{{ section.settings.accent_1 }}}
+@media(max-width:1024px){.cf-pr-10-bg{width:100%;right:0;transform:none;opacity:0.3}}
+@media(max-width:768px){.cf-pr-10-content{padding:40px 0}}
+</style>
+
+<div class="cf-pr-10">
+  <div class="cf-pr-10-inner">
+    {% if section.settings.image != blank %}
+      <img class="cf-pr-10-bg" src="{{ section.settings.image | image_url: width: 1400 }}" alt="Promo">
+    {% else %}
+      <div class="cf-pr-10-bg" style="background:#222"></div>
+    {% endif %}
+    
+    <div class="cf-pr-10-content">
+      <div class="cf-pr-10-badge"><span>{{ section.settings.badge }}</span></div>
+      <h2 class="cf-pr-10-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-10-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-10-btn"><span>{{ section.settings.btn_label }}</span></a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Fitness Promo",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Background Image"},
+    {"type":"text","id":"badge","label":"Badge","default":"SUMMER SHRED CHALLENGE"},
+    {"type":"text","id":"title","label":"Title (Wrap <span> for Red)","default":"BUILD YOUR <span>LEGACY</span>"},
+    {"type":"range","id":"title_size","label":"Title Size","min":40,"max":120,"step":4,"default":88},
+    {"type":"textarea","id":"desc","label":"Description","default":"Premium supplements engineered for elite performance. Because average isn't in your vocabulary."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP THE GEAR"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"desc_color","label":"Description Color","default":"#9ca3af"},
+    {"type":"color","id":"accent_1","label":"Accent (Red)","default":"#dc2626"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":1000,"step":50,"default":700},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":10,"default":40}
+  ],
+  "presets": [{"name":"10 · Fitness Promo"}]
+}
+{% endschema %}
