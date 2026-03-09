@@ -1,4 +1,5 @@
 import { json } from "@remix-run/node";
+import { Home, ShoppingCart, Package, Palette, Store, Monitor, Smartphone, Layout, Megaphone, Image as ImageIcon, ShoppingBag, Grid, MessageSquare, Award, Type, Mail, Camera, Play, HelpCircle, Zap } from "lucide-react";
 import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { useState, useEffect, useRef } from "react";
 import { authenticate } from "../shopify.server";
