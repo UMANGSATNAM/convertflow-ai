@@ -172,6 +172,10 @@ export default function ThemeEditor() {
             setToast({ msg: fetcher.data.message, ok: fetcher.data.ok });
             setTimeout(() => setToast(null), 3000);
         }
+        if (fetcher.data?.error) {
+            setToast({ msg: fetcher.data.error, ok: false });
+            setTimeout(() => setToast(null), 6000);
+        }
         if (fetcher.data?.newBlockId) {
             setActiveBlockId(fetcher.data.newBlockId);
             setLeftView('outline');
@@ -243,6 +247,12 @@ export default function ThemeEditor() {
     };
 
     const handleSelectTemplate = (id) => {
+        const meta = SECTION_FILES[id];
+        if (meta && (meta.category === 'header' || meta.category === 'hero')) {
+            setPlacement('top');
+        } else {
+            setPlacement('bottom');
+        }
         setSelectedTemplateId(id);
         setLeftView('outline');
     };
