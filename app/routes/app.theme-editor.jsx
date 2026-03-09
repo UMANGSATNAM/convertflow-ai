@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { Home, ShoppingCart, Package, Palette, Store, Monitor, Smartphone, Layout, Megaphone, Image as ImageIcon, ShoppingBag, Grid, MessageSquare, Award, Type, Mail, Camera, Play, HelpCircle, Zap, ChevronRight, X, Check, Search, Settings2, Undo, Redo, Eye, ExternalLink, Plus, Sparkles, User, MoreHorizontal, FileText, Move, MousePointer2, Blocks } from "lucide-react";
+import { Home, ShoppingCart, Package, Palette, Store, Monitor, Smartphone, Layout, Megaphone, Image as ImageIcon, ShoppingBag, Grid, MessageSquare, Award, Type, Mail, Camera, Play, HelpCircle, Zap, ChevronRight, X, Check, Search, Settings2, Undo, Redo, Eye, ExternalLink, Plus, Sparkles, User, MoreHorizontal, FileText, Move, MousePointer2, Blocks, ArrowUp, ArrowDown } from "lucide-react";
 import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { useState, useEffect, useRef } from "react";
 import { authenticate } from "../shopify.server";
@@ -130,7 +130,7 @@ export const action = async ({ request }) => {
             const idx = await getIndex();
             idx.order = newOrder;
             await saveIndex(idx);
-            return json({ ok: true });
+            return json({ ok: true, message: "Sections reordered successfully!" });
         }
 
         return json({ ok: false, error: "Unknown intent" });
@@ -182,37 +182,48 @@ export default function ThemeEditor() {
         }
     }, [fetcher.data]);
 
-    // Live preview for selected template (unsaved) or active block (saved theme element)
+    // Live preview for full page with live settings
     useEffect(() => {
-        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
-
         setPreviewLoading(true);
         clearTimeout(previewTimerRef.current);
         previewTimerRef.current = setTimeout(async () => {
             try {
-                if (!targetId) {
-                    // Load the full theme homepage preview
-                    const res = await fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`);
-                    if (res.ok) {
-                        const html = await res.text();
-                        setPreviewHtml(html);
+                // 1. Clone page blocks
+                let blocksToSend = [...pageBlocks];
+
+                // 2. If editing an existing block, apply the live active settings
+                if (activeBlockId) {
+                    const idx = blocksToSend.findIndex(b => b.id === activeBlockId);
+                    if (idx !== -1) {
+                        blocksToSend[idx] = { ...blocksToSend[idx], settings: { ...settings } };
                     }
-                    return;
                 }
 
-                // Load individual block preview
+                // 3. If previewing an un-injected template, temporarily insert it
+                if (selectedTemplateId && !activeBlockId) {
+                    const tempBlock = { id: 'preview-insert', type: selectedTemplateId, settings: { ...settings } };
+                    if (placement === 'top') {
+                        const hi = blocksToSend.findIndex(b => b.type.includes('header') || b.id.includes('header'));
+                        hi !== -1 ? blocksToSend.splice(hi + 1, 0, tempBlock) : blocksToSend.unshift(tempBlock);
+                    } else {
+                        const fi = blocksToSend.findIndex(b => b.type.includes('footer') || b.id.includes('footer'));
+                        fi !== -1 ? blocksToSend.splice(fi, 0, tempBlock) : blocksToSend.push(tempBlock);
+                    }
+                }
+
                 const form = new FormData();
-                form.append("sectionId", targetId);
-                if (activeBlockId) form.append("blockId", activeBlockId);
-                form.append("settings", JSON.stringify(settings));
+                form.append("blocks", JSON.stringify(blocksToSend));
+                if (activeBlockId) form.append("activeBlockId", activeBlockId);
+                else if (selectedTemplateId) form.append("activeBlockId", "preview-insert");
+
                 const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
                 if (res.ok) {
                     const data = await res.json();
                     if (data.html) setPreviewHtml(data.html);
                 }
             } catch (e) { } finally { setPreviewLoading(false); }
-        }, 350);
-    }, [selectedTemplateId, activeBlockId, settings, pageBlocks]);
+        }, 200);
+    }, [selectedTemplateId, activeBlockId, settings, pageBlocks, placement]);
 
     // Fetch schema when a template OR block is selected
     useEffect(() => {
@@ -281,6 +292,26 @@ export default function ThemeEditor() {
         }
     };
 
+    const handleReorder = (direction, index) => {
+        if (direction === 'up' && index > 0) {
+            const newBlocks = [...pageBlocks];
+            [newBlocks[index - 1], newBlocks[index]] = [newBlocks[index], newBlocks[index - 1]];
+            setPageBlocks(newBlocks);
+            const form = new FormData();
+            form.append("intent", "reorder");
+            form.append("order", JSON.stringify(newBlocks.map(b => b.id)));
+            fetcher.submit(form, { method: "post" });
+        } else if (direction === 'down' && index < pageBlocks.length - 1) {
+            const newBlocks = [...pageBlocks];
+            [newBlocks[index + 1], newBlocks[index]] = [newBlocks[index], newBlocks[index + 1]];
+            setPageBlocks(newBlocks);
+            const form = new FormData();
+            form.append("intent", "reorder");
+            form.append("order", JSON.stringify(newBlocks.map(b => b.id)));
+            fetcher.submit(form, { method: "post" });
+        }
+    };
+
     const handleSaveLive = () => {
         if (!activeBlockId) return;
         const form = new FormData();
@@ -311,10 +342,11 @@ export default function ThemeEditor() {
                 <div style={S.topmostRight}>
                     <button
                         className="te-publish-btn"
-                        onClick={activeBlockId ? handleSaveLive : handleInject}
+                        onClick={activeBlockId ? handleSaveLive : (selectedTemplateId ? handleInject : null)}
                         disabled={isBusy || (!activeBlockId && !selectedTemplateId)}
+                        style={(!activeBlockId && !selectedTemplateId) ? { backgroundColor: '#e2f1e5', color: '#1f513b', border: '1px solid #c9e1d1', opacity: 1 } : {}}
                     >
-                        Publish
+                        {activeBlockId ? 'Save Settings' : (selectedTemplateId ? 'Add Section' : '✓ Theme Synced')}
                     </button>
                     <button className="te-close-btn" onClick={() => navigate('/app')}>
                         <X size={16} strokeWidth={2.5} />
@@ -400,7 +432,7 @@ export default function ThemeEditor() {
                                     </div>
                                 )}
 
-                                {pageBlocks.map((block) => {
+                                {pageBlocks.map((block, idx) => {
                                     const isActive = block.id === activeBlockId;
                                     const label = block.isCf ? (SECTION_FILES[block.type]?.name || block.type) : block.type;
                                     return (
@@ -424,13 +456,33 @@ export default function ThemeEditor() {
                                                 <span style={S.blockLabel}>{label}</span>
                                             </div>
                                             {block.isCf && (
-                                                <button
-                                                    className="te-del-btn"
-                                                    onClick={(e) => { e.stopPropagation(); handleRemove(block.id); }}
-                                                    title="Remove section"
-                                                >
-                                                    <X size={14} strokeWidth={2.5} />
-                                                </button>
+                                                <div style={{ display: 'flex', gap: 2 }}>
+                                                    <button
+                                                        className="te-del-btn"
+                                                        onClick={(e) => { e.stopPropagation(); handleReorder('up', idx); }}
+                                                        title="Move up"
+                                                        disabled={idx === 0}
+                                                        style={{ opacity: idx === 0 ? 0.3 : 1 }}
+                                                    >
+                                                        <ArrowUp size={14} strokeWidth={2.5} />
+                                                    </button>
+                                                    <button
+                                                        className="te-del-btn"
+                                                        onClick={(e) => { e.stopPropagation(); handleReorder('down', idx); }}
+                                                        title="Move down"
+                                                        disabled={idx === pageBlocks.length - 1}
+                                                        style={{ opacity: idx === pageBlocks.length - 1 ? 0.3 : 1 }}
+                                                    >
+                                                        <ArrowDown size={14} strokeWidth={2.5} />
+                                                    </button>
+                                                    <button
+                                                        className="te-del-btn"
+                                                        onClick={(e) => { e.stopPropagation(); handleRemove(block.id); }}
+                                                        title="Remove section"
+                                                    >
+                                                        <X size={14} strokeWidth={2.5} />
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     );
