@@ -243,7 +243,7 @@ export default function ThemeEditor() {
 
     const handleSelectTemplate = (id) => {
         setSelectedTemplateId(id);
-        setLeftView('settings');
+        setLeftView('outline');
     };
 
     const handleInject = () => {
@@ -293,9 +293,9 @@ export default function ThemeEditor() {
             <div style={S.topmostHeader}>
                 <div style={S.topmostLeft}>
                     <div style={S.pfLogoMark}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#3662e3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#3662e3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
                     </div>
-                    <span style={S.topmostTitle}>PageFly Page Editor</span>
+                    <span style={S.topmostTitle}>ConvertFlow Editor</span>
                 </div>
                 <div style={S.topmostRight}>
                     <button
@@ -325,24 +325,24 @@ export default function ThemeEditor() {
 
                 <div style={S.topbarRight}>
                     <div style={S.flymateBadge}>
-                         <Sparkles size={14} color="#6366f1" fill="#6366f1" style={{marginRight: 4}}/> Flymate
+                        <Sparkles size={14} color="#6366f1" fill="#6366f1" style={{ marginRight: 4 }} /> Flymate
                     </div>
-                    
+
                     <div style={S.deviceToggle}>
                         <button className={"te-dev-btn" + (device === 'desktop' ? ' active' : '')} onClick={() => setDevice('desktop')}><Monitor size={15} strokeWidth={2.5} /></button>
-                        <button className="te-dev-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="4" y="5" width="16" height="14" rx="2" ry="2"/></svg></button>
+                        <button className="te-dev-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="4" y="5" width="16" height="14" rx="2" ry="2" /></svg></button>
                         <button className={"te-dev-btn" + (device === 'mobile' ? ' active' : '')} onClick={() => setDevice('mobile')}><Smartphone size={15} strokeWidth={2.5} /></button>
                     </div>
-                    
-                    <div style={{fontSize: 12, color: '#5c5f62', margin: '0 8px'}}>{device === 'desktop' ? '1443px, 100%' : '375px, 100%'}</div>
-                    
+
+                    <div style={{ fontSize: 12, color: '#5c5f62', margin: '0 8px' }}>{device === 'desktop' ? '1443px, 100%' : '375px, 100%'}</div>
+
                     <button className="te-icon-btn"><Settings2 size={15} strokeWidth={2.5} /></button>
                     <div style={S.divider}></div>
                     <button className="te-icon-btn" disabled><Undo size={15} strokeWidth={2.5} color="#c9cccf" /></button>
                     <button className="te-icon-btn" disabled><Redo size={15} strokeWidth={2.5} color="#c9cccf" /></button>
                     <div style={S.divider}></div>
-                    <button className="te-text-action"><Eye size={14} strokeWidth={2.5}/> Preview</button>
-                    <button className="te-text-action" style={{color: '#8c9196'}}><ExternalLink size={14} strokeWidth={2.5}/> View live</button>
+                    <button className="te-text-action"><Eye size={14} strokeWidth={2.5} /> Preview</button>
+                    <button className="te-text-action" style={{ color: '#8c9196' }}><ExternalLink size={14} strokeWidth={2.5} /> View live</button>
                 </div>
             </header>
 
@@ -350,14 +350,14 @@ export default function ThemeEditor() {
                 {/* ── EXTREME LEFT UTILITY BAR ── */}
                 <div style={S.utilityBar}>
                     <div style={S.utilityTop}>
-                        <button className="te-util-btn active"><Layout size={18} strokeWidth={2}/></button>
-                        <button className="te-util-btn"><Sparkles size={18} strokeWidth={2}/></button>
-                        <button className="te-util-btn"><Blocks size={18} strokeWidth={2}/></button>
-                        <button className="te-util-btn"><FileText size={18} strokeWidth={2}/></button>
-                        <button className="te-util-btn"><Settings2 size={18} strokeWidth={2}/></button>
+                        <button className="te-util-btn active"><Layout size={18} strokeWidth={2} /></button>
+                        <button className="te-util-btn"><Sparkles size={18} strokeWidth={2} /></button>
+                        <button className="te-util-btn"><Blocks size={18} strokeWidth={2} /></button>
+                        <button className="te-util-btn"><FileText size={18} strokeWidth={2} /></button>
+                        <button className="te-util-btn"><Settings2 size={18} strokeWidth={2} /></button>
                     </div>
                     <div style={S.utilityBottom}>
-                        <button className="te-util-btn"><User size={18} strokeWidth={2}/></button>
+                        <button className="te-util-btn"><User size={18} strokeWidth={2} /></button>
                     </div>
                 </div>
 
@@ -373,22 +373,22 @@ export default function ThemeEditor() {
 
                             <div style={S.outlineList}>
                                 <div style={S.searchBox}>
-                                    <span style={{fontSize: 13, color:'#202223'}}>PageFly body</span>
+                                    <span style={{ fontSize: 13, color: '#202223' }}>ConvertFlow body</span>
                                     <Search size={14} color="#8c9196" strokeWidth={2.5} />
                                 </div>
-                                
+
                                 {pageBlocks.length === 0 && (
                                     <div style={S.blueHintBox}>
-                                        <div style={{display:'flex', gap: 8, color: '#005bd3'}}>
-                                            <Eye size={14} strokeWidth={2.5} style={{flexShrink:0, marginTop:2}}/>
+                                        <div style={{ display: 'flex', gap: 8, color: '#005bd3' }}>
+                                            <Eye size={14} strokeWidth={2.5} style={{ flexShrink: 0, marginTop: 2 }} />
                                             <span>Add a section to make this template visible to customers.</span>
                                         </div>
                                         <button className="te-add-sec-link" onClick={() => setLeftView('categories')}>
-                                            <Plus size={14} strokeWidth={2.5}/> Add section
+                                            <Plus size={14} strokeWidth={2.5} /> Add section
                                         </button>
                                     </div>
                                 )}
-                                
+
                                 {pageBlocks.map((block) => {
                                     const isActive = block.id === activeBlockId;
                                     const label = block.isCf ? (SECTION_FILES[block.type]?.name || block.type) : block.type;
@@ -424,6 +424,12 @@ export default function ThemeEditor() {
                                         </div>
                                     );
                                 })}
+
+                                <div style={{ padding: '8px 12px', marginTop: '8px' }}>
+                                    <button className="te-add-sec-link" onClick={() => setLeftView('categories')}>
+                                        <Plus size={14} strokeWidth={2.5} /> Add section
+                                    </button>
+                                </div>
 
                                 <div style={{ marginTop: 24, padding: '0 8px' }}>
                                     <div style={S.contextHeader}>Header</div>
@@ -516,17 +522,17 @@ export default function ThemeEditor() {
                                 </div>
                                 <h3 style={S.emptyCanvasTitle}>This page is empty</h3>
                                 <p style={S.emptyCanvasSub}>Choose a starting point to begin designing your page.</p>
-                                <div style={{display: 'flex', gap: 12, marginTop: 16}}>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
                                     <button className="te-canvas-btn" onClick={() => setLeftView('categories')}>
-                                        <Plus size={14} strokeWidth={2.5}/> Add element
+                                        <Plus size={14} strokeWidth={2.5} /> Add element
                                     </button>
                                     <button className="te-canvas-btn-dark">
-                                        <Sparkles size={14} strokeWidth={2.5}/> Prompt with AI
+                                        <Sparkles size={14} strokeWidth={2.5} /> Prompt with AI
                                     </button>
                                 </div>
-                                <p style={{marginTop: 24, fontSize: 13, color: '#5c5f62'}}>
-                                    Don't want to start from scratch?<br/>
-                                    <span style={{color: '#1a73e8', cursor: 'pointer'}} onClick={() => setLeftView('categories')}>Add a section</span> or <span style={{color: '#1a73e8', cursor: 'pointer'}}>Select a page template</span>
+                                <p style={{ marginTop: 24, fontSize: 13, color: '#5c5f62' }}>
+                                    Don't want to start from scratch?<br />
+                                    <span style={{ color: '#1a73e8', cursor: 'pointer' }} onClick={() => setLeftView('categories')}>Add a section</span> or <span style={{ color: '#1a73e8', cursor: 'pointer' }}>Select a page template</span>
                                 </p>
                             </div>
                         )}
@@ -561,8 +567,8 @@ export default function ThemeEditor() {
                                 </div>
                                 <h3 style={S.rightEmptyTitle}>Customize your pages</h3>
                                 <p style={S.rightEmptyText}>Select an element from the canvas or page outline to view its settings here.</p>
-                                <p style={S.rightEmptyText}>A PageFly page works as a section in your Shopify theme. To edit theme sections, visit the theme editor. <a href="#" style={{color: '#202223'}}>Learn more</a></p>
-                                <button className="te-text-action" style={{padding:0, marginTop:8}}><ExternalLink size={14} strokeWidth={2.5}/> Go to theme editor</button>
+                                <p style={S.rightEmptyText}>A ConvertFlow page works as a section in your Shopify theme. To edit theme sections, visit the theme editor. <a href="#" style={{ color: '#202223' }}>Learn more</a></p>
+                                <button className="te-text-action" style={{ padding: 0, marginTop: 8 }}><ExternalLink size={14} strokeWidth={2.5} /> Go to theme editor</button>
 
                                 <div style={S.shortcutsBlock}>
                                     <h4 style={S.shortcutsTitle}>Keyboard shortcuts</h4>
@@ -630,8 +636,8 @@ export default function ThemeEditor() {
                         </div>
                     )}
                 </aside>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 
