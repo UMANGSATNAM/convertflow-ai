@@ -124,8 +124,14 @@ export default function AppIndex() {
       <div style={S.container}>
         {/* Header */}
         <div style={S.header}>
-          <h1 style={S.title}>Section Builder</h1>
-          <p style={S.subtitle}>Connected to <strong>{shop}</strong></p>
+          <div>
+            <h1 style={S.title}>Section Builder</h1>
+            <p style={S.subtitle}>Connected to <strong>{shop}</strong></p>
+          </div>
+          <a href="/app/theme-editor" style={S.editorBtn}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+            Open Theme Editor
+          </a>
         </div>
 
         {/* Quick Actions Banner */}
@@ -439,4 +445,5 @@ const S = {
   actionsLeft: { display: 'flex', flexDirection: 'column', gap: 2, flex: 1, minWidth: 200 },
   dangerBtn: { background: '#ef4444', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' },
   syncBtn: { background: '#10b981', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' },
+  editorBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: '#111', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none', letterSpacing: '-0.01em', cursor: 'pointer', transition: 'background 0.2s', flexShrink: 0 },
 };
