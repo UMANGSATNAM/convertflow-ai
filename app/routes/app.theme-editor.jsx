@@ -1,12 +1,12 @@
 import { json } from "@remix-run/node";
 import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { authenticate } from "../shopify.server";
 import {
-    getActiveTheme, getThemeAsset, uploadAsset, publishSection, readSectionFile
+    getActiveTheme, getThemeAsset, uploadAsset, readSectionFile
 } from "../lib/shopify.server";
 import { removeSchemaTranslations } from "../lib/schema-fixer.server";
-import { SECTION_FILES, SECTION_CATEGORIES, getCategoriesWithCounts } from "../lib/constants";
+import { SECTION_FILES, getCategoriesWithCounts } from "../lib/constants";
 
 // ─── LOADER ───────────────────────────────────────────────────────────────────
 export const loader = async ({ request }) => {
@@ -137,25 +137,6 @@ export const action = async ({ request }) => {
         return json({ ok: false, error: e.message }, { status: 500 });
     }
 };
-
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-function parseSchema(sectionId) {
-    const meta = SECTION_FILES[sectionId];
-    if (!meta) return { settings: [] };
-    const liquid = readSectionFile?.(meta.file); // client-side: won't work; schema sent from loader
-    return { settings: [] };
-}
-
-function getSchemaFromLiquid(liquidContent) {
-    if (!liquidContent) return { settings: [], name: '' };
-    const m = liquidContent.match(/\{%-?\s*schema\s*-?%\}([\s\S]*?)\{%-?\s*endschema\s*-?%\}/);
-    if (!m) return { settings: [], name: '' };
-    try {
-        const s = JSON.parse(m[1].trim());
-        const ALLOWED = ['text', 'color', 'color_background', 'range', 'checkbox', 'select', 'textarea'];
-        return { settings: (s.settings || []).filter(x => ALLOWED.includes(x.type)), name: s.name || '' };
-    } catch { return { settings: [], name: '' }; }
-}
 
 // ─── COMPONENT ────────────────────────────────────────────────────────────────
 export default function ThemeEditor() {
