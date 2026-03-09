@@ -1,0 +1,64 @@
+<style>
+.cf-h-11-v4{width:100%;font-family:sans-serif}
+.cf-h-11-v4-top{width:100%;background:{{ section.settings.top_bg }};color:{{ section.settings.top_text }};padding:8px 30px;display:flex;justify-content:space-between;font-size:11px;letter-spacing:0.05em;text-transform:uppercase}
+.cf-h-11-v4-bottom{width:100%;background:{{ section.settings.bottom_bg }};padding:0 30px;height:{{ section.settings.height }}px;display:flex;align-items:center;justify-content:space-between}
+.cf-h-11-v4-logo{font-size:28px;color:{{ section.settings.bottom_text }};font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;text-decoration:none}
+.cf-h-11-v4-nav{display:flex;gap:40px;align-items:center}
+.cf-h-11-v4-link{text-decoration:none;color:{{ section.settings.bottom_text }};font-size:13px;font-weight:600;text-transform:uppercase;transition:opacity 0.3s;opacity:0.75}
+.cf-h-11-v4-link:hover{opacity:1}
+.cf-h-11-v4-actions{display:flex;gap:15px;align-items:center}
+.cf-h-11-v4-btn{padding:8px 16px;background:{{ section.settings.bottom_text }};color:{{ section.settings.bottom_bg }};text-decoration:none;font-size:11px;font-weight:700;letter-spacing:0.1em;border-radius:2px}
+.cf-h-11-v4-mobile{display:none;background:none;border:none;color:{{ section.settings.bottom_text }};cursor:pointer;padding:0}
+@media(max-width:900px){.cf-h-11-v4-nav,.cf-h-11-v4-top-left{display:none}.cf-h-11-v4-mobile{display:block}.cf-h-11-v4-top{justify-content:center}.cf-h-11-v4-bottom{padding:0 15px}}
+</style>
+
+<div class="cf-h-11-v4">
+  <div class="cf-h-11-v4-top">
+    <div class="cf-h-11-v4-top-left">{{ section.settings.top_left_text }}</div>
+    <div class="cf-h-11-v4-top-center">{{ section.settings.top_center_text }}</div>
+    <div class="cf-h-11-v4-top-left" style="text-align:right;">{{ section.settings.top_right_text }}</div>
+  </div>
+  
+  <div class="cf-h-11-v4-bottom">
+    <div style="flex:1;display:flex;align-items:center;">
+      <button class="cf-h-11-v4-mobile" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      <a href="/" class="cf-h-11-v4-logo">{{ section.settings.logo_text }}</a>
+    </div>
+    
+    <div class="cf-h-11-v4-nav">
+      {% for link in linklists[section.settings.menu].links limit:5 %}
+        <a href="{{ link.url }}" class="cf-h-11-v4-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-h-11-v4-link">NEW</a>
+        <a href="#" class="cf-h-11-v4-link">DESIGNERS</a>
+        <a href="#" class="cf-h-11-v4-link">CLOTHING</a>
+        <a href="#" class="cf-h-11-v4-link">SALE</a>
+      {% endfor %}
+    </div>
+    
+    <div class="cf-h-11-v4-actions" style="flex:1;justify-content:flex-end;">
+      <a href="/cart" class="cf-h-11-v4-btn">CART (0)</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Header (v4)",
+  "settings": [
+    {"type":"text","id":"top_left_text","label":"Top Left","default":"Need Help? 1-800-MEN-STYLE"},
+    {"type":"text","id":"top_center_text","label":"Top Center","default":"FREE SHIPPING ON ORDERS OVER $150"},
+    {"type":"text","id":"top_right_text","label":"Top Right","default":"USD ($)"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"ESSENTIALS"},
+    {"type":"link_list","id":"menu","label":"Navigation Menu"},
+    {"type":"color","id":"top_bg","label":"Top Background","default":"#F0F0F0"},
+    {"type":"color","id":"top_text","label":"Top Text Color","default":"#333333"},
+    {"type":"color","id":"bottom_bg","label":"Bottom Background","default":"#FFFFFF"},
+    {"type":"color","id":"bottom_text","label":"Bottom Text Color","default":"#000000"},
+    {"type":"range","id":"height","label":"Bottom Height","min":60,"max":100,"step":5,"default":75}
+  ],
+  "presets": [{"name":"11 · Men's Header (v4)"}]
+}
+{% endschema %}

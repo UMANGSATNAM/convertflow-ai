@@ -1,0 +1,60 @@
+<style>
+.cf-h-11-v7{width:100%;background:{{ section.settings.bg_color }};padding:25px 40px;display:flex;flex-direction:column;align-items:center;gap:25px;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-h-11-v7-top{width:100%;display:flex;justify-content:space-between;align-items:center}
+.cf-h-11-v7-icon{color:inherit;transition:opacity 0.3s}
+.cf-h-11-v7-icon:hover{opacity:0.6}
+.cf-h-11-v7-logo{font-size:36px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:inherit;line-height:1;margin-left:25px}
+.cf-h-11-v7-nav{display:flex;gap:40px}
+.cf-h-11-v7-link{text-decoration:none;color:inherit;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;transition:color 0.3s}
+.cf-h-11-v7-link:hover{color:{{ section.settings.accent_color }}}
+.cf-h-11-v7-mobile{display:none;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;background:none;border:none;color:inherit}
+@media(max-width:900px){.cf-h-11-v7-nav{display:none}.cf-h-11-v7-mobile{display:block}.cf-h-11-v7{padding:20px;gap:20px}.cf-h-11-v7-logo{font-size:28px;margin-left:0}}
+</style>
+
+<div class="cf-h-11-v7">
+  <div class="cf-h-11-v7-top">
+    <div style="flex:1;display:flex;gap:20px;align-items:center">
+      <button class="cf-h-11-v7-mobile">Menu</button>
+      <a href="/search" class="cf-h-11-v7-icon hidden md:block" aria-label="Search">
+         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+    </div>
+    
+    <a href="/" class="cf-h-11-v7-logo">{{ section.settings.logo_text }}</a>
+    
+    <div style="flex:1;display:flex;justify-content:flex-end;gap:20px;">
+      <a href="/account" class="cf-h-11-v7-icon hidden md:block" aria-label="Account">
+         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+      <a href="/cart" class="cf-h-11-v7-icon" aria-label="Cart">
+         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </a>
+    </div>
+  </div>
+  
+  <div class="cf-h-11-v7-nav">
+    {% for link in linklists[section.settings.menu].links limit:6 %}
+      <a href="{{ link.url }}" class="cf-h-11-v7-link">{{ link.title }}</a>
+    {% else %}
+      <a href="#" class="cf-h-11-v7-link">NEW ARRIVALS</a>
+      <a href="#" class="cf-h-11-v7-link">CLOTHING</a>
+      <a href="#" class="cf-h-11-v7-link">FOOTWEAR</a>
+      <a href="#" class="cf-h-11-v7-link">ACCESSORIES</a>
+      <a href="#" class="cf-h-11-v7-link">SALE</a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Header (v7)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"MENS"},
+    {"type":"link_list","id":"menu","label":"Bottom Navigation"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F2F2F2"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Accent","default":"#777777"}
+  ],
+  "presets": [{"name":"11 · Men's Header (v7)"}]
+}
+{% endschema %}

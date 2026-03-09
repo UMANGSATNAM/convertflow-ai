@@ -1,0 +1,58 @@
+<style>
+.cf-h-11-v10{width:100%;font-family:sans-serif;position:absolute;top:0;left:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 50px;height:{{ section.settings.height }}px;background:transparent;color:{{ section.settings.text_color }}}
+.cf-h-11-v10-logo{font-size:28px;font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;text-decoration:none;color:inherit}
+.cf-h-11-v10-nav{display:flex;gap:40px;align-items:center}
+.cf-h-11-v10-link{text-decoration:none;color:inherit;font-size:14px;font-weight:600;text-transform:none;transition:opacity 0.3s;opacity:0.9;text-shadow:0 1px 3px rgba(0,0,0,0.3)}
+.cf-h-11-v10-link:hover{opacity:1;color:{{ section.settings.accent_color }}}
+.cf-h-11-v10-utils{display:flex;gap:20px;align-items:center}
+.cf-h-11-v10-icon{color:inherit;transition:0.3s;filter:drop-shadow(0 1px 3px rgba(0,0,0,0.3))}
+.cf-h-11-v10-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-h-11-v10-mobile{display:none;background:none;border:none;color:inherit;cursor:pointer;padding:0}
+@media(max-width:900px){.cf-h-11-v10-nav{display:none}.cf-h-11-v10-mobile{display:block}.cf-h-11-v10{padding:0 25px}}
+</style>
+
+<div class="cf-h-11-v10">
+  <div style="flex:1;display:flex;">
+    <button class="cf-h-11-v10-mobile" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <a href="/" class="cf-h-11-v10-logo">{{ section.settings.logo_text }}</a>
+  </div>
+  
+  <div class="cf-h-11-v10-nav">
+    {% for link in linklists[section.settings.menu].links limit:5 %}
+      <a href="{{ link.url }}" class="cf-h-11-v10-link">{{ link.title }}</a>
+    {% else %}
+      <a href="#" class="cf-h-11-v10-link">Ready to Wear</a>
+      <a href="#" class="cf-h-11-v10-link">Leather</a>
+      <a href="#" class="cf-h-11-v10-link">Accessories</a>
+      <a href="#" class="cf-h-11-v10-link">The Campaign</a>
+    {% endfor %}
+  </div>
+  
+  <div class="cf-h-11-v10-utils" style="flex:1;justify-content:flex-end;">
+    <a href="/search" class="cf-h-11-v10-icon" aria-label="Search">
+       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </a>
+    <a href="/account" class="cf-h-11-v10-icon hidden md:block" aria-label="Account">
+       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    </a>
+    <a href="/cart" class="cf-h-11-v10-icon" aria-label="Cart">
+       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Header (v10)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"TRANSPARENT"},
+    {"type":"link_list","id":"menu","label":"Navigation Menu"},
+    {"type":"color","id":"text_color","label":"Text Color (Overlay)","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Hover Color","default":"#CCCCCC"},
+    {"type":"range","id":"height","label":"Height","min":60,"max":150,"step":5,"default":90}
+  ],
+  "presets": [{"name":"11 · Men's Header (v10)"}]
+}
+{% endschema %}

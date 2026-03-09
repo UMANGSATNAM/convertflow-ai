@@ -1,0 +1,55 @@
+<style>
+.cf-h-11-v3{width:100%;background:{{ section.settings.bg_color }};padding:0 40px;height:{{ section.settings.height }}px;display:flex;align-items:center;font-family:sans-serif}
+.cf-h-11-v3-left{flex:1;display:flex;gap:30px;align-items:center}
+.cf-h-11-v3-center{flex:1;display:flex;justify-content:center}
+.cf-h-11-v3-right{flex:1;display:flex;justify-content:flex-end;gap:25px;align-items:center}
+.cf-h-11-v3-logo{font-size:20px;color:{{ section.settings.text_color }};font-weight:600;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none}
+.cf-h-11-v3-link{text-decoration:none;color:{{ section.settings.text_color }};font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:0.1em;position:relative}
+.cf-h-11-v3-link::after{content:'';position:absolute;width:0;height:1px;bottom:-4px;left:0;background-color:{{ section.settings.text_color }};transition:width 0.3s}
+.cf-h-11-v3-link:hover::after{width:100%}
+.cf-h-11-v3-icon{color:{{ section.settings.text_color }};transition:0.3s}
+.cf-h-11-v3-mobile{display:none;background:none;border:none;color:{{ section.settings.text_color }};cursor:pointer;padding:0}
+@media(max-width:900px){.cf-h-11-v3-link{display:none}.cf-h-11-v3-left{flex:0}.cf-h-11-v3-mobile{display:block}.cf-h-11-v3{padding:0 20px}}
+</style>
+
+<div class="cf-h-11-v3">
+  <div class="cf-h-11-v3-left">
+    <button class="cf-h-11-v3-mobile" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+    </button>
+    {% for link in linklists[section.settings.menu].links limit:3 %}
+      <a href="{{ link.url }}" class="cf-h-11-v3-link">{{ link.title }}</a>
+    {% else %}
+      <a href="#" class="cf-h-11-v3-link">Suits</a>
+      <a href="#" class="cf-h-11-v3-link">Shirts</a>
+      <a href="#" class="cf-h-11-v3-link">Accessories</a>
+    {% endfor %}
+  </div>
+  
+  <div class="cf-h-11-v3-center">
+    <a href="/" class="cf-h-11-v3-logo">{{ section.settings.logo_text }}</a>
+  </div>
+  
+  <div class="cf-h-11-v3-right">
+    <a href="/search" class="cf-h-11-v3-icon" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </a>
+    <a href="/cart" class="cf-h-11-v3-icon" aria-label="Cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Header (v3)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"MENSWEAR"},
+    {"type":"link_list","id":"menu","label":"Left Menu"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#1A1A1A"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"height","label":"Height","min":60,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Header (v3)"}]
+}
+{% endschema %}
