@@ -187,6 +187,7 @@ export default function ThemeEditor() {
             try {
                 const form = new FormData();
                 form.append("sectionId", targetId);
+                if (activeBlockId) form.append("blockId", activeBlockId);
                 form.append("settings", JSON.stringify(settings));
                 const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
                 if (res.ok) {
@@ -579,21 +580,22 @@ function SettingRow({ setting, value, onChange }) {
 }
 
 // ─── SVG ICONS (PREMIUM) ──────────────────────────────────────────────────────
+
 const SVG_ICONS = {
-    layout: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>,
-    announcement: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>,
-    image: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>,
-    shoppingBag: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>,
-    grid: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>,
-    message: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>,
-    award: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="7" /><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" /></svg>,
-    type: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="4 7 4 4 20 4 20 7" /><line x1="9" y1="20" x2="15" y2="20" /><line x1="12" y1="4" x2="12" y2="20" /></svg>,
-    mail: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>,
-    camera: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>,
-    play: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg>,
-    help: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>,
-    zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>,
-    default: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /></svg>
+    layout: <Layout size={20} strokeWidth={1.5} />,
+    announcement: <Megaphone size={20} strokeWidth={1.5} />,
+    image: <ImageIcon size={20} strokeWidth={1.5} />,
+    shoppingBag: <ShoppingBag size={20} strokeWidth={1.5} />,
+    grid: <Grid size={20} strokeWidth={1.5} />,
+    message: <MessageSquare size={20} strokeWidth={1.5} />,
+    award: <Award size={20} strokeWidth={1.5} />,
+    type: <Type size={20} strokeWidth={1.5} />,
+    mail: <Mail size={20} strokeWidth={1.5} />,
+    camera: <Camera size={20} strokeWidth={1.5} />,
+    play: <Play size={20} strokeWidth={1.5} />,
+    help: <HelpCircle size={20} strokeWidth={1.5} />,
+    zap: <Zap size={20} strokeWidth={1.5} />,
+    default: <Layout size={20} strokeWidth={1.5} />
 };
 
 const CAT_SVG = {
@@ -614,47 +616,63 @@ const CAT_SVG = {
     default: SVG_ICONS.default
 };
 
-// ─── STYLES ───────────────────────────────────────────────────────────────────
 const S = {
-    root: { display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: '#f4f6f8', fontFamily: '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
+    root: { display: 'flex', height: '100vh', overflow: 'hidden', background: '#f9fafb', fontFamily: '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
 
-    // Topbar matches Shopify admin style
-    topbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 56, background: '#1a1a1a', borderBottom: '1px solid #333', flexShrink: 0, zIndex: 10 },
-    topbarLeft: { display: 'flex', alignItems: 'center', gap: 16, width: 300 },
-    deviceToggle: { display: 'flex', background: '#333', borderRadius: 6, padding: 2 },
+    // ── GLOBAL SIDEBAR ──
+    globalSidebar: { width: 240, flexShrink: 0, background: '#f9fafb', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', zIndex: 20 },
+    gsbLogo: { padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 12 },
+    gsbLogoIcon: { background: '#202223', color: '#fff', borderRadius: 8, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    gsbLogoText: { fontSize: 15, fontWeight: 700, color: '#202223' },
+    gsbMenu: { padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 4, flex: 1 },
+    gsbLink: { display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', fontSize: 14, fontWeight: 500, color: '#5c5f62', background: 'transparent', border: 'none', borderRadius: 6, cursor: 'pointer', textAlign: 'left', width: '100%' },
+    gsbDivider: { height: 1, background: '#dfe3e8', margin: '16px 0' },
+    gsbHeader: { fontSize: 11, fontWeight: 700, color: '#8c9196', letterSpacing: '0.05em', padding: '0 12px', marginBottom: 6 },
+    gsbActiveGroup: { display: 'flex', flexDirection: 'column' },
+    gsbSubLinkActive: { display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px 8px 36px', fontSize: 13, fontWeight: 600, color: '#2c6ecb', background: '#eef2ff', borderRadius: 6, cursor: 'pointer', position: 'relative' },
+    gsbActiveBar: { position: 'absolute', left: -16, top: '50%', transform: 'translateY(-50%)', width: 3, height: 16, background: '#2c6ecb', borderRadius: '0 4px 4px 0' },
+
+    // ── EDITOR SHELL ──
+    editorShell: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
+
+    topbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 56, background: '#fff', borderBottom: '1px solid #dfe3e8', flexShrink: 0, zIndex: 10 },
+    topbarLeft: { display: 'flex', alignItems: 'center', width: 200 },
+    deviceToggle: { display: 'flex', background: '#f4f6f8', borderRadius: 6, padding: 4 },
     topbarCenter: { flex: 1, display: 'flex', justifyContent: 'center' },
-    topbarPageName: { fontSize: 13, fontWeight: 600, color: '#fff', background: '#333', padding: '6px 16px', borderRadius: 20 },
-    topbarRight: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, width: 300 },
+    topbarPageName: { fontSize: 14, fontWeight: 600, color: '#202223' },
+    topbarRight: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, width: 200 },
     savingDot: { fontSize: 13, color: '#aaa' },
     toastBadge: { fontSize: 13, fontWeight: 600, padding: '6px 12px', borderRadius: 6 },
 
     body: { display: 'flex', flex: 1, overflow: 'hidden' },
 
-    // Left Panel is fixed width
-    leftPanel: { width: 320, flexShrink: 0, background: '#fff', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
+    // ── INNER SIDEBAR ──
+    leftPanel: { width: 300, flexShrink: 0, background: '#fff', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
     leftInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
-
     panelHeader: { display: 'flex', alignItems: 'center', gap: 12, padding: '16px', borderBottom: '1px solid #f4f6f8' },
     panelTitle: { fontSize: 14, fontWeight: 600, color: '#202223', flex: 1 },
 
-    outlineList: { flex: 1, overflowY: 'auto', padding: '8px 12px' },
+    outlineList: { flex: 1, overflowY: 'auto', padding: '16px 12px' },
     emptyHint: { fontSize: 13, color: '#6d7175', textAlign: 'center', padding: '32px 16px' },
     blockRowLeft: { display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 },
-    dragHandle: { color: '#c4cdd5', cursor: 'grab', display: 'flex' },
+    dragHandle: { color: '#c4cdd5', cursor: 'pointer', display: 'flex' },
     blockIcon: { color: '#8c9196', display: 'flex' },
     blockLabel: { fontSize: 13, color: '#202223', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
 
-    addSectionArea: { padding: '16px', borderTop: '1px solid #dfe3e8', background: '#f9fafb' },
+    addSectionArea: { padding: '16px', borderTop: '1px solid #dfe3e8', background: '#fff' },
 
     scrollArea: { flex: 1, overflowY: 'auto', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 4 },
-    listIcon: { width: 20, height: 20, color: '#5c5f62', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    listIcon: { width: 20, height: 20, color: '#8c9196', display: 'flex', alignItems: 'center', justifyContent: 'center' },
     listText: { fontSize: 13, color: '#202223', fontWeight: 500 },
 
+    // ── RIGHT SETTINGS PANEL ──
+    rightPanel: { width: 340, flexShrink: 0, background: '#fff', borderLeft: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
+    rightInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
     settingsScroll: { flex: 1, overflowY: 'auto' },
     settingsList: { padding: '16px' },
     settingBlock: { marginBottom: 20 },
     settingLabel: { display: 'block', fontSize: 12, fontWeight: 500, color: '#202223', marginBottom: 8 },
-    placementRow: { display: 'flex', gap: 8 },
+    placementRow: { display: 'flex', gap: 8, padding: '0 16px 16px' },
     colorSwatch: { width: 36, height: 36, padding: 0, border: '1px solid #c4cdd5', borderRadius: 6, cursor: 'pointer', overflow: 'hidden' },
     colorCode: { fontSize: 13, color: '#202223', fontFamily: 'monospace', flex: 1, background: '#f4f6f8', padding: '8px 12px', border: '1px solid #c4cdd5', borderRadius: 6 },
     rangeVal: { fontSize: 13, fontWeight: 500, color: '#202223', minWidth: 40, textAlign: 'right' },
@@ -664,8 +682,8 @@ const S = {
     imagePreviewWrapper: { position: 'relative', width: '100%', height: 120, borderRadius: 4, overflow: 'hidden', background: '#fff', border: '1px solid #e1e3e5' },
     imagePreview: { width: '100%', height: '100%', objectFit: 'contain' },
 
-    // Right Canvas takes remaining width smoothly
-    canvas: { flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflow: 'auto', padding: '24px 40px' },
+    // ── CENTER CANVAS ──
+    canvas: { flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflow: 'auto', background: '#f4f6f8', padding: '24px 40px' },
     previewFrame: { background: '#fff', borderRadius: 8, boxShadow: '0 0 0 1px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05)', overflow: 'hidden', transition: 'width 0.3s ease', minHeight: 'calc(100vh - 100px)', position: 'relative' },
     previewPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 400, gap: 16 },
     previewPlaceholderText: { fontSize: 14, color: '#6d7175', textAlign: 'center' },
@@ -673,7 +691,6 @@ const S = {
     previewIframe: { width: '100%', height: '100%', minHeight: 'calc(100vh - 100px)', border: 'none', display: 'block', transition: 'opacity 0.2s' },
 };
 
-// ─── CSS ─────────────────────────────────────────────────────────────────────
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -685,7 +702,7 @@ body { font-family: 'Inter', sans-serif; overflow: hidden; }
   background: transparent; display: inline-flex; align-items: center; justify-content: center;
   cursor: pointer; color: #a1a1aa; transition: all 0.15s;
 }
-.te-icon-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.te-icon-btn:hover { background: rgba(0,0,0,0.05); color: #202223; }
 
 .te-back-btn {
   width: 32px; height: 32px; border-radius: 6px; border: 1px solid #dfe3e8;
@@ -696,9 +713,9 @@ body { font-family: 'Inter', sans-serif; overflow: hidden; }
 
 .te-dev-btn {
   padding: 6px 12px; border: none; background: transparent; cursor: pointer;
-  font-size: 14px; color: #a1a1aa; transition: all 0.1s; border-radius: 4px;
+  font-size: 14px; color: #8c9196; transition: all 0.1s; border-radius: 4px;
 }
-.te-dev-btn.active { background: #444; color: #fff; }
+.te-dev-btn.active { background: #fff; color: #202223; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
 .te-save-btn {
   padding: 8px 16px; border-radius: 6px; border: none;
@@ -716,6 +733,9 @@ body { font-family: 'Inter', sans-serif; overflow: hidden; }
 }
 .te-text-btn:hover { background: #f9fafb; border-color: #c4cdd5; }
 
+/* Global Sidebar */
+nav > div > button:hover { background: #f4f6f8!important; color: #202223!important; }
+
 /* Lists & Rows */
 .te-block-row {
   display: flex; align-items: center; justify-content: space-between;
@@ -724,9 +744,10 @@ body { font-family: 'Inter', sans-serif; overflow: hidden; }
 }
 .te-block-row:hover { background: #f4f6f8; }
 .te-block-row.active { background: #eef2ff; color: #2c6ecb; }
+.te-block-row.active .te-del-btn { opacity: 1; }
 
 .te-del-btn {
-  width: 24px; height: 24px; border-radius: 4px; border: none;
+  width: 28px; height: 28px; border-radius: 6px; border: none;
   background: transparent; display: flex; align-items: center; justify-content: center;
   cursor: pointer; color: #8c9196; opacity: 0; transition: all 0.1s;
 }

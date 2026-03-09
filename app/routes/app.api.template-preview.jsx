@@ -10,6 +10,7 @@ export const action = async ({ request }) => {
 
     const formData = await request.formData();
     const sectionId = formData.get("sectionId");
+    const blockId = formData.get("blockId");
     if (!sectionId) return json({ error: "Missing sectionId" }, { status: 400 });
 
     // Try both "id.liquid" and raw "id" lookups
@@ -55,6 +56,17 @@ export const action = async ({ request }) => {
     html = html.replace(/\{%-?.*?-?%\}/gs, '');
     html = html.replace(/\{\{.*?\}\}/gs, '');
 
+    const interactiveScript = blockId ? `<script>
+      document.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.parent.postMessage({ type: 'SECTION_CLICK', id: '${blockId}' }, '*');
+      });
+      document.body.style.cursor = 'pointer';
+      document.body.addEventListener('mouseenter', () => document.body.style.outline = '2px solid #2c6ecb');
+      document.body.addEventListener('mouseleave', () => document.body.style.outline = 'none');
+    </script>` : '';
+
     const fullHtml = `<!DOCTYPE html>
 <html>
 <head>
@@ -71,6 +83,7 @@ export const action = async ({ request }) => {
 </head>
 <body>
 ${html}
+${interactiveScript}
 </body>
 </html>`;
 
