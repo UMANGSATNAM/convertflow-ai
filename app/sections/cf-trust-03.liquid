@@ -1,0 +1,60 @@
+<style>
+.cf-tr-03{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:monospace}
+.cf-tr-03-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px dashed rgba(16,185,129,0.3);border-bottom:1px dashed rgba(16,185,129,0.3);padding:30px 0}
+.cf-tr-03-item{display:flex;align-items:center;gap:15px;flex:1;min-width:250px}
+.cf-tr-03-icon{color:{{ section.settings.accent_color }};background:rgba(16,185,129,0.1);padding:12px;border-radius:8px;border:1px solid rgba(16,185,129,0.2)}
+.cf-tr-03-text{}
+.cf-tr-03-title{font-size:14px;color:{{ section.settings.text_color }};font-weight:700;margin-bottom:4px}
+.cf-tr-03-desc{font-size:12px;color:#64748b}
+@media(max-width:768px){.cf-tr-03-inner{flex-direction:column;gap:30px}}
+</style>
+
+<div class="cf-tr-03">
+  <div class="cf-tr-03-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-03-item">
+      <div class="cf-tr-03-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+      </div>
+      <div class="cf-tr-03-text">
+         <div class="cf-tr-03-title">[{{ block.settings.title }}]</div>
+         <div class="cf-tr-03-desc">{{ block.settings.desc }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Tech Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#020617"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#f8fafc"},
+    {"type":"color","id":"accent_color","label":"Accent (Green)","default":"#10b981"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"SYS_SECURE"},
+        {"type":"text","id":"desc","label":"Description","default":"256-bit encryption active."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "03 · Tech Trust",
+      "blocks": [
+        {"type":"trust","settings":{"title":"SECURE_TX","desc":"256-bit encrypted checkout."}},
+        {"type":"trust","settings":{"title":"WARRANTY","desc":"2-year hardware guarantee."}},
+        {"type":"trust","settings":{"title":"FAST_SHIP","desc":"Next-day delivery available."}},
+        {"type":"trust","settings":{"title":"SUPPORT","desc":"24/7 technical assistance."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

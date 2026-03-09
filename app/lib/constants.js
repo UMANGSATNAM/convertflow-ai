@@ -5,6 +5,7 @@ export const SECTION_CATEGORIES = [
     { id: 'snack', name: 'Promo Code Snacks', description: 'Compact discount code and offer bars', icon: 'Tag' },
     { id: 'category', name: 'Category Sections', description: 'Collection grids and carousels', icon: 'Grid' },
     { id: 'feature', name: 'Featured Collections', description: 'Product grids and sliders', icon: 'ShoppingBag' },
+    { id: 'trust', name: 'Trust Badges', description: 'Guarantees and value props', icon: 'Shield' },
     { id: 'announcement', name: 'Announcement Bars', description: '10 creative announcement styles', icon: 'Megaphone' },
     { id: 'hero', name: 'Hero Sections', description: '10 premium hero banners', icon: 'Image' }
 ];
@@ -75,6 +76,17 @@ export const SECTION_FILES = {
     'cf-feature-08': { category: 'feature', name: '08 · Kids Toys', file: 'cf-feature-08.liquid' },
     'cf-feature-09': { category: 'feature', name: '09 · Furniture Gallery', file: 'cf-feature-09.liquid' },
     'cf-feature-10': { category: 'feature', name: '10 · Fitness Gear', file: 'cf-feature-10.liquid' },
+
+    'cf-trust-01': { category: 'trust', name: '01 · Luxury Trust', file: 'cf-trust-01.liquid' },
+    'cf-trust-02': { category: 'trust', name: '02 · Streetwear Trust', file: 'cf-trust-02.liquid' },
+    'cf-trust-03': { category: 'trust', name: '03 · Tech Trust', file: 'cf-trust-03.liquid' },
+    'cf-trust-04': { category: 'trust', name: '04 · Health Trust', file: 'cf-trust-04.liquid' },
+    'cf-trust-05': { category: 'trust', name: '05 · Beauty Trust', file: 'cf-trust-05.liquid' },
+    'cf-trust-06': { category: 'trust', name: '06 · Auto Trust', file: 'cf-trust-06.liquid' },
+    'cf-trust-07': { category: 'trust', name: '07 · SaaS Trust', file: 'cf-trust-07.liquid' },
+    'cf-trust-08': { category: 'trust', name: '08 · Kids Trust', file: 'cf-trust-08.liquid' },
+    'cf-trust-09': { category: 'trust', name: '09 · Furniture Trust', file: 'cf-trust-09.liquid' },
+    'cf-trust-10': { category: 'trust', name: '10 · Fitness Trust', file: 'cf-trust-10.liquid' },
 
     'cf-announce-01': { category: 'announcement', name: '01 · Gradient Marquee', file: 'cf-announce-01.liquid' },
     'cf-announce-02': { category: 'announcement', name: '02 · Minimal Dark Bar', file: 'cf-announce-02.liquid' },

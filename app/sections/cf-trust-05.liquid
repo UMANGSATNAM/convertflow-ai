@@ -1,0 +1,58 @@
+<style>
+.cf-tr-05{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Georgia',serif}
+.cf-tr-05-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:center;align-items:center;gap:30px;flex-wrap:wrap}
+.cf-tr-05-item{display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px;border-right:1px solid rgba(212,171,160,0.3);flex:1;min-width:200px}
+.cf-tr-05-item:last-child{border-right:none}
+.cf-tr-05-icon{color:{{ section.settings.accent_color }};margin-bottom:15px}
+.cf-tr-05-title{font-size:18px;color:{{ section.settings.text_color }};margin-bottom:8px;font-style:italic}
+.cf-tr-05-desc{font-family:sans-serif;font-size:12px;color:{{ section.settings.text_color }};letter-spacing:0.1em;text-transform:uppercase;opacity:0.7}
+@media(max-width:768px){.cf-tr-05-item{border-right:none;border-bottom:1px solid rgba(212,171,160,0.3);padding:30px 0}.cf-tr-05-item:last-child{border-bottom:none}}
+</style>
+
+<div class="cf-tr-05">
+  <div class="cf-tr-05-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-05-item">
+      <div class="cf-tr-05-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      </div>
+      <div class="cf-tr-05-title">{{ block.settings.title }}</div>
+      <div class="cf-tr-05-desc">{{ block.settings.desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Beauty Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fffbfb"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"accent_color","label":"Accent (Rose)","default":"#d4aba0"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Cult Favorite"},
+        {"type":"text","id":"desc","label":"Description","default":"Loved by thousands."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Beauty Trust",
+      "blocks": [
+        {"type":"trust","settings":{"title":"Cruelty-Free","desc":"Never tested on animals."}},
+        {"type":"trust","settings":{"title":"Dermatologist Tested","desc":"Safe for all skin types."}},
+        {"type":"trust","settings":{"title":"Clean Ingredients","desc":"Free from parabens & sulfates."}},
+        {"type":"trust","settings":{"title":"Easy Returns","desc":"30-day money back guarantee."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

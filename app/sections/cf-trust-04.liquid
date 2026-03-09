@@ -1,0 +1,56 @@
+<style>
+.cf-tr-04{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-tr-04-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;gap:30px;flex-wrap:wrap}
+.cf-tr-04-item{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;min-width:200px;background:#fff;padding:40px 20px;border-radius:100px;box-shadow:0 10px 30px rgba(0,0,0,0.03)}
+.cf-tr-04-icon{color:{{ section.settings.accent_color }};margin-bottom:15px;background:{{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.cf-tr-04-title{font-size:16px;color:{{ section.settings.text_color }};font-weight:600;margin-bottom:8px}
+.cf-tr-04-desc{font-size:14px;color:#64748b;line-height:1.4}
+@media(max-width:768px){.cf-tr-04-inner{gap:20px}.cf-tr-04-item{border-radius:40px;padding:30px 20px}}
+</style>
+
+<div class="cf-tr-04">
+  <div class="cf-tr-04-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-04-item">
+      <div class="cf-tr-04-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      </div>
+      <div class="cf-tr-04-title">{{ block.settings.title }}</div>
+      <div class="cf-tr-04-desc">{{ block.settings.desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Health Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent (Green)","default":"#16a34a"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"100% Organic"},
+        {"type":"text","id":"desc","label":"Description","default":"Sourced naturally."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Health Trust",
+      "blocks": [
+        {"type":"trust","settings":{"title":"100% Vegan","desc":"Cruelty-free formulations."}},
+        {"type":"trust","settings":{"title":"Lab Tested","desc":"Clinically proven results."}},
+        {"type":"trust","settings":{"title":"Carbon Neutral","desc":"Eco-friendly shipping."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

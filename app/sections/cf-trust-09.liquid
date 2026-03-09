@@ -1,0 +1,63 @@
+<style>
+.cf-tr-09{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:serif;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-tr-09-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.cf-tr-09-item{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;min-width:250px}
+.cf-tr-09-icon{margin-bottom:20px;color:{{ section.settings.text_color }}}
+.cf-tr-09-title{font-size:18px;color:{{ section.settings.text_color }};margin-bottom:10px;font-weight:400}
+.cf-tr-09-desc{font-family:sans-serif;font-size:13px;color:#78716c;line-height:1.6;max-width:250px}
+@media(max-width:768px){.cf-tr-09-inner{flex-direction:column;gap:50px}}
+</style>
+
+<div class="cf-tr-09">
+  <div class="cf-tr-09-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-09-item">
+      <div class="cf-tr-09-icon">
+        {% if block.settings.icon == 'truck' %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+        {% elsif block.settings.icon == 'leaf' %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        {% else %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="2" x2="12" y2="22"></line><line x1="17" y1="5" x2="12" y2="10"></line><line x1="7" y1="5" x2="12" y2="10"></line></svg>
+        {% endif %}
+      </div>
+      <div class="cf-tr-09-title">{{ block.settings.title }}</div>
+      <div class="cf-tr-09-desc">{{ block.settings.desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Furniture Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#f5f5f4"},
+    {"type":"color","id":"border_color","label":"Border Base","default":"#e7e5e4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#292524"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"select","id":"icon","label":"Icon","options":[{"value":"truck","label":"Truck"},{"value":"leaf","label":"Leaf"},{"value":"tree","label":"Tree"}],"default":"tree"},
+        {"type":"text","id":"title","label":"Title","default":"Sustainable Wood"},
+        {"type":"text","id":"desc","label":"Description","default":"Sustainably sourced materials."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "09 · Furniture Trust",
+      "blocks": [
+        {"type":"trust","settings":{"icon":"truck","title":"White Glove Delivery","desc":"Delivered and assembled in your room of choice."}},
+        {"type":"trust","settings":{"icon":"tree","title":"Solid Oak Wood","desc":"Hand-crafted from sustainable forestry."}},
+        {"type":"trust","settings":{"icon":"leaf","title":"10-Year Warranty","desc":"Built to last for generations to come."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

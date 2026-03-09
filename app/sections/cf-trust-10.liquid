@@ -1,0 +1,62 @@
+<style>
+.cf-tr-10{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;overflow:hidden}
+.cf-tr-10-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+.cf-tr-10-item{background:#111;flex:1;min-width:280px;padding:30px;transform:skewX(-15deg);border-left:4px solid {{ section.settings.accent_color }};display:flex;align-items:center;gap:20px;transition:0.3s}
+.cf-tr-10-item:hover{background:{{ section.settings.accent_color }};transform:skewX(-15deg) translateY(-5px)}
+.cf-tr-10-icon{color:{{ section.settings.accent_color }};transform:skewX(15deg)}
+.cf-tr-10-item:hover .cf-tr-10-icon{color:#fff}
+.cf-tr-10-text{transform:skewX(15deg)}
+.cf-tr-10-title{font-size:22px;color:#fff;font-weight:900;text-transform:uppercase;font-style:italic;margin-bottom:5px;line-height:1}
+.cf-tr-10-desc{font-size:14px;color:#888;font-weight:700}
+.cf-tr-10-item:hover .cf-tr-10-desc{color:rgba(255,255,255,0.9)}
+@media(max-width:768px){.cf-tr-10-inner{flex-direction:column}.cf-tr-10-item{transform:none;border-left:0;border-top:4px solid {{ section.settings.accent_color }}}.cf-tr-10-icon,.cf-tr-10-text{transform:none}}
+</style>
+
+<div class="cf-tr-10">
+  <div class="cf-tr-10-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-10-item">
+      <div class="cf-tr-10-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+      <div class="cf-tr-10-text">
+         <div class="cf-tr-10-title">{{ block.settings.title }}</div>
+         <div class="cf-tr-10-desc">{{ block.settings.desc }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Fitness Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent (Red)","default":"#dc2626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Lab Tested"},
+        {"type":"text","id":"desc","label":"Description","default":"Clinically dosed."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "10 · Fitness Trust",
+      "blocks": [
+        {"type":"trust","settings":{"title":"CLINICALLY DOSED","desc":"Zero proprietary blends."}},
+        {"type":"trust","settings":{"title":"GMP CERTIFIED","desc":"Manufactured in the USA."}},
+        {"type":"trust","settings":{"title":"30-DAY GUARANTEE","desc":"Don't love it? Full refund."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

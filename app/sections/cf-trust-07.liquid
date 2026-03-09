@@ -1,0 +1,58 @@
+<style>
+.cf-tr-07{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:system-ui,-apple-system,sans-serif}
+.cf-tr-07-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.cf-tr-07-item{display:flex;align-items:flex-start;gap:15px;background:#fff;border:1px solid #e2e8f0;padding:24px;border-radius:12px;flex:1;min-width:280px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02)}
+.cf-tr-07-icon{color:{{ section.settings.accent_color }};background:{{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};padding:10px;border-radius:8px;flex-shrink:0}
+.cf-tr-07-text{display:flex;flex-direction:column;gap:4px}
+.cf-tr-07-title{font-size:16px;font-weight:700;color:{{ section.settings.text_color }}}
+.cf-tr-07-desc{font-size:14px;color:#64748b;line-height:1.5}
+</style>
+
+<div class="cf-tr-07">
+  <div class="cf-tr-07-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-07-item">
+      <div class="cf-tr-07-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <div class="cf-tr-07-text">
+         <div class="cf-tr-07-title">{{ block.settings.title }}</div>
+         <div class="cf-tr-07-desc">{{ block.settings.desc }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · SaaS Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent (Indigo)","default":"#6366f1"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"SOC 2 Compliant"},
+        {"type":"text","id":"desc","label":"Description","default":"Enterprise-grade security standards."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "07 · SaaS Trust",
+      "blocks": [
+        {"type":"trust","settings":{"title":"cancel anytime","desc":"No long-term contracts required."}},
+        {"type":"trust","settings":{"title":"99.9% Uptime","desc":"Guaranteed reliable infrastructure."}},
+        {"type":"trust","settings":{"title":"24/7 Support","desc":"Global human support team."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

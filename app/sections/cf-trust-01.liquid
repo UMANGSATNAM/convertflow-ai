@@ -1,0 +1,63 @@
+<style>
+.cf-tr-01{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-tr-01-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;gap:60px}
+.cf-tr-01-item{text-align:center;display:flex;flex-direction:column;align-items:center}
+.cf-tr-01-icon{margin-bottom:15px;color:{{ section.settings.text_color }};opacity:0.8}
+.cf-tr-01-title{font-size:16px;color:{{ section.settings.text_color }};text-transform:uppercase;letter-spacing:0.15em;margin-bottom:8px;font-family:sans-serif}
+.cf-tr-01-desc{font-size:14px;color:{{ section.settings.text_color }};font-style:italic;max-width:250px}
+@media(max-width:768px){.cf-tr-01-inner{flex-direction:column;gap:40px}}
+</style>
+
+<div class="cf-tr-01">
+  <div class="cf-tr-01-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-01-item">
+      <div class="cf-tr-01-icon">
+        {% if block.settings.icon == 'shield' %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        {% elsif block.settings.icon == 'gem' %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 2 7 12 22 22 7 12 2"></polygon><polyline points="2 7 12 7 22 7"></polyline><polyline points="12 22 12 7"></polyline></svg>
+        {% elsif block.settings.icon == 'package' %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        {% endif %}
+      </div>
+      <div class="cf-tr-01-title">{{ block.settings.title }}</div>
+      <div class="cf-tr-01-desc">{{ block.settings.desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border","default":"#e5e5e5"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 3,
+      "settings": [
+        {"type":"select","id":"icon","label":"Icon","options":[{"value":"shield","label":"Shield"},{"value":"gem","label":"Gem"},{"value":"package","label":"Package"}],"default":"gem"},
+        {"type":"text","id":"title","label":"Title","default":"Authenticity"},
+        {"type":"text","id":"desc","label":"Description","default":"Guaranteed original pieces."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "01 · Luxury Trust",
+      "blocks": [
+        {"type":"trust","settings":{"icon":"gem","title":"Craftsmanship","desc":"Meticulously designed in Italy."}},
+        {"type":"trust","settings":{"icon":"package","title":"Complimentary Shipping","desc":"Worldwide delivery on us."}},
+        {"type":"trust","settings":{"icon":"shield","title":"Secure Checkout","desc":"Encrypted and protected transactions."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

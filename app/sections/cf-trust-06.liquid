@@ -1,0 +1,63 @@
+<style>
+.cf-tr-06{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;overflow:hidden;border-bottom:2px solid {{ section.settings.accent_color }}}
+.cf-tr-06-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;gap:2px;background:#222;transform:skewX(-10deg);border:2px solid #333}
+.cf-tr-06-item{background:#111;flex:1;padding:25px;display:flex;align-items:center;gap:20px;transition:0.3s}
+.cf-tr-06-item:hover{background:{{ section.settings.accent_color }}}
+.cf-tr-06-icon{color:{{ section.settings.accent_color }};transform:skewX(10deg)}
+.cf-tr-06-item:hover .cf-tr-06-icon{color:#fff}
+.cf-tr-06-text{transform:skewX(10deg)}
+.cf-tr-06-title{font-size:18px;font-weight:900;color:#fff;text-transform:uppercase;font-style:italic;margin-bottom:4px}
+.cf-tr-06-desc{font-size:13px;color:#888;font-weight:700}
+.cf-tr-06-item:hover .cf-tr-06-desc{color:rgba(255,255,255,0.8)}
+@media(max-width:900px){.cf-tr-06-inner{flex-wrap:wrap;transform:none;background:transparent;border:0;gap:15px}.cf-tr-06-item{transform:none;min-width:45%;border:2px solid #333}.cf-tr-06-icon,.cf-tr-06-text{transform:none}}
+@media(max-width:500px){.cf-tr-06-item{min-width:100%}}
+</style>
+
+<div class="cf-tr-06">
+  <div class="cf-tr-06-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-06-item">
+      <div class="cf-tr-06-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      </div>
+      <div class="cf-tr-06-text">
+         <div class="cf-tr-06-title">{{ block.settings.title }}</div>
+         <div class="cf-tr-06-desc">{{ block.settings.desc }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Auto Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#050505"},
+    {"type":"color","id":"accent_color","label":"Accent (Red)","default":"#ef4444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Speedy Delivery"},
+        {"type":"text","id":"desc","label":"Description","default":"Ships in 24 hrs"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "06 · Auto Trust",
+      "blocks": [
+        {"type":"trust","settings":{"title":"Fitment Guarantee","desc":"100% Exact Match"}},
+        {"type":"trust","settings":{"title":"Fast Shipping","desc":"Same Day Dispatch"}},
+        {"type":"trust","settings":{"title":"Expert Support","desc":"Certified Techs"}},
+        {"type":"trust","settings":{"title":"Easy Returns","desc":"No Hassle Policy"}}
+      ]
+    }
+  ]
+}
+{% endschema %}
