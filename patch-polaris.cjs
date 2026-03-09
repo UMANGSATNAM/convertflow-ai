@@ -1,292 +1,38 @@
-import { json } from "@remix-run/node";
-import { BlockStack, InlineStack, Box, Text, Button, TextField, Select, Checkbox, RangeSlider, Badge, Icon, Divider, Tooltip } from "@shopify/polaris";
-import { Home, ShoppingCart, Package, Palette, Store, Monitor, Smartphone, Layout, Megaphone, Image as ImageIcon, ShoppingBag, Grid, MessageSquare, Award, Type, Mail, Camera, Play, HelpCircle, Zap, ChevronRight, X, Check, Settings, ArrowLeft, Eye, LayoutTemplate } from "lucide-react";
-import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
-import { useState, useEffect, useRef } from "react";
-import { authenticate } from "../shopify.server";
-import {
-    getActiveTheme, getThemeAsset, uploadAsset, readSectionFile
-} from "../lib/shopify.server";
-import { removeSchemaTranslations } from "../lib/schema-fixer.server";
-import { SECTION_FILES, getCategoriesWithCounts } from "../lib/constants";
+const fs = require('fs');
 
-// ─── LOADER ───────────────────────────────────────────────────────────────────
-export const loader = async ({ request }) => {
-    const { session } = await authenticate.admin(request);
-    const { shop, accessToken } = session;
+const file = 'app/routes/app.theme-editor.jsx';
+let content = fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
 
-    const theme = await getActiveTheme(shop, accessToken);
-    if (!theme) return json({ error: "No active theme found" });
+console.log("Original content length:", content.length);
 
-    let pageBlocks = [];
-    try {
-        const indexJsonStr = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
-        if (indexJsonStr) {
-            const indexJson = JSON.parse(indexJsonStr);
-            const sections = indexJson.sections || {};
-            const order = indexJson.order || Object.keys(sections);
-            pageBlocks = order.map(id => ({
-                id,
-                type: sections[id]?.type || id,
-                settings: sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-        }
-    } catch (e) { /* continue */ }
+// 1. imports
+content = content.replace(
+    `import { json } from "@remix-run/node";`,
+    `import { json } from "@remix-run/node";\nimport { BlockStack, InlineStack, Box, Text, Button, TextField, Select, Checkbox, RangeSlider, Badge, Icon, Divider, Tooltip } from "@shopify/polaris";`
+);
 
-    const categories = getCategoriesWithCounts();
-    return json({ themeId: theme.id, shop, pageBlocks, categories });
-};
-
-// ─── ACTION ───────────────────────────────────────────────────────────────────
-export const action = async ({ request }) => {
-    const { session } = await authenticate.admin(request);
-    const { shop, accessToken } = session;
-    const fd = await request.formData();
-    const intent = fd.get("intent");
-
-    const theme = await getActiveTheme(shop, accessToken);
-    if (!theme) return json({ ok: false, error: "No active theme" });
-
-    const getIndex = async () => {
-        const str = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
-        const json = str ? JSON.parse(str) : { sections: {}, order: [] };
-        json.sections = json.sections || {};
-        json.order = json.order || Object.keys(json.sections);
-        return json;
-    };
-    const saveIndex = async (idx) => {
-        await uploadAsset(shop, accessToken, theme.id, 'templates/index.json', JSON.stringify(idx, null, 2));
-    };
-
-    try {
-        // ── inject_section ────────────────────────────────────────────────────
-        if (intent === "inject_section") {
-            const sectionId = fd.get("sectionId");
-            const settings = JSON.parse(fd.get("settings") || "{}");
-            const placement = fd.get("placement") || "bottom";
-
-            const meta = SECTION_FILES[sectionId];
-            if (!meta) return json({ ok: false, error: "Unknown section" });
-
-            let liquid = readSectionFile(meta.file);
-            if (!liquid) return json({ ok: false, error: "Section file missing" });
-            liquid = removeSchemaTranslations(liquid);
-
-            // Upload the liquid file
-            const assetKey = `sections/${sectionId}.liquid`;
-            await uploadAsset(shop, accessToken, theme.id, assetKey, liquid);
-
-            // Update index.json
-            const idx = await getIndex();
-            const blockId = `cf_${sectionId}_${Date.now().toString(36)}`;
-            idx.sections[blockId] = { type: sectionId, settings };
-
-            if (placement === "top") {
-                const hi = idx.order.findIndex(id => id.toLowerCase().includes("header"));
-                hi !== -1 ? idx.order.splice(hi + 1, 0, blockId) : idx.order.unshift(blockId);
-            } else {
-                const fi = idx.order.findIndex(id => id.toLowerCase().includes("footer"));
-                fi !== -1 ? idx.order.splice(fi, 0, blockId) : idx.order.push(blockId);
-            }
-            await saveIndex(idx);
-
-            // Return updated page blocks
-            const newBlocks = idx.order.map(id => ({
-                id, type: idx.sections[id]?.type || id,
-                settings: idx.sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-            return json({ ok: true, message: `${meta.name} injected!`, pageBlocks: newBlocks, newBlockId: blockId });
-        }
-
-        // ── remove_section ─────────────────────────────────────────────────
-        if (intent === "remove_section") {
-            const blockId = fd.get("blockId");
-            const idx = await getIndex();
-            delete idx.sections[blockId];
-            idx.order = idx.order.filter(id => id !== blockId);
-            await saveIndex(idx);
-            const newBlocks = idx.order.map(id => ({
-                id, type: idx.sections[id]?.type || id,
-                settings: idx.sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-            return json({ ok: true, pageBlocks: newBlocks });
-        }
-
-        // ── update_settings ────────────────────────────────────────────────
-        if (intent === "update_settings") {
-            const blockId = fd.get("blockId");
-            const settings = JSON.parse(fd.get("settings") || "{}");
-            const idx = await getIndex();
-            if (idx.sections[blockId]) idx.sections[blockId].settings = settings;
-            await saveIndex(idx);
-            return json({ ok: true, message: "Settings saved to theme!" });
-        }
-
-        // ── reorder ────────────────────────────────────────────────────────
-        if (intent === "reorder") {
-            const newOrder = JSON.parse(fd.get("order") || "[]");
-            const idx = await getIndex();
-            idx.order = newOrder;
-            await saveIndex(idx);
-            return json({ ok: true });
-        }
-
-        return json({ ok: false, error: "Unknown intent" });
-    } catch (e) {
-        return json({ ok: false, error: e.message }, { status: 500 });
+let iconLineMatch = content.match(/import \{ ([^}]+) \} from "lucide-react";/);
+if (iconLineMatch) {
+    let icons = iconLineMatch[1].split(',').map(s => s.trim());
+    for (const icon of ['Settings', 'ArrowLeft', 'Eye', 'LayoutTemplate']) {
+        if (!icons.includes(icon)) icons.push(icon);
     }
-};
+    content = content.replace(iconLineMatch[0], `import { ${icons.join(', ')} } from "lucide-react";`);
+} else {
+    console.log("Failed to match lucide-react");
+}
 
-// ─── COMPONENT ────────────────────────────────────────────────────────────────
-export default function ThemeEditor() {
-    const { themeId, shop, pageBlocks: initBlocks, categories, error } = useLoaderData();
-    const fetcher = useFetcher();
-    const navigate = useNavigate();
+// 2. We extract the three parts: Start to SettingsRow, SettingsRow, and the rest.
+let themeEditorReturnIdx = content.indexOf('    return (\n        <div style={S.root}>');
+let settingRowIdx = content.indexOf('// ─── SETTING ROW ');
+let themeEditorEndIdx = settingRowIdx - 2; // the }\n before it
 
-    const [pageBlocks, setPageBlocks] = useState(initBlocks || []);
+if (themeEditorReturnIdx === -1 || settingRowIdx === -1) {
+    console.log("Could not find boundaries");
+    process.exit(1);
+}
 
-    // UI State: 'outline' | 'categories' | 'templates' | 'settings'
-    const [leftView, setLeftView] = useState('outline');
-
-    // Active selections
-    const [activeBlockId, setActiveBlockId] = useState(null);       // When editing an existing injected block
-    const [activeCategoryId, setActiveCategoryId] = useState(null); // When browsing to add
-    const [selectedTemplateId, setSelectedTemplateId] = useState(null); // The raw template being previewed before inject
-
-    const [templateSchema, setTemplateSchema] = useState({ settings: [], name: '' });
-    const [settings, setSettings] = useState({});
-    const [placement, setPlacement] = useState('bottom');
-    const [device, setDevice] = useState('desktop');
-    const [previewHtml, setPreviewHtml] = useState('');
-    const [previewLoading, setPreviewLoading] = useState(false);
-    const [toast, setToast] = useState(null);
-    const previewTimerRef = useRef(null);
-
-    // Sync page blocks from action response
-    useEffect(() => {
-        if (fetcher.data?.pageBlocks) setPageBlocks(fetcher.data.pageBlocks);
-        if (fetcher.data?.message) {
-            setToast({ msg: fetcher.data.message, ok: fetcher.data.ok });
-            setTimeout(() => setToast(null), 3000);
-        }
-        if (fetcher.data?.newBlockId) {
-            setActiveBlockId(fetcher.data.newBlockId);
-            setLeftView('outline');
-        }
-    }, [fetcher.data]);
-
-    // Live preview for selected template (unsaved) or active block (saved theme element)
-    useEffect(() => {
-        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
-
-        setPreviewLoading(true);
-        clearTimeout(previewTimerRef.current);
-        previewTimerRef.current = setTimeout(async () => {
-            try {
-                if (!targetId) {
-                    // Load the full theme homepage preview
-                    const res = await fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`);
-                    if (res.ok) {
-                        const html = await res.text();
-                        setPreviewHtml(html);
-                    }
-                    return;
-                }
-
-                // Load individual block preview
-                const form = new FormData();
-                form.append("sectionId", targetId);
-                if (activeBlockId) form.append("blockId", activeBlockId);
-                form.append("settings", JSON.stringify(settings));
-                const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.html) setPreviewHtml(data.html);
-                }
-            } catch (e) { } finally { setPreviewLoading(false); }
-        }, 350);
-    }, [selectedTemplateId, activeBlockId, settings, pageBlocks]);
-
-    // Fetch schema when a template OR block is selected
-    useEffect(() => {
-        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
-        if (!targetId) return;
-
-        fetch(`/app/api/section-schema?id=${targetId}`)
-            .then(r => r.json())
-            .then(data => {
-                if (data.settings) {
-                    setTemplateSchema({ settings: data.settings, name: data.name || targetId });
-
-                    if (activeBlockId) {
-                        // Editing existing: load saved settings, fallback to defaults
-                        const savedSettings = pageBlocks.find(b => b.id === activeBlockId)?.settings || {};
-                        const merged = {};
-                        data.settings.forEach(s => { merged[s.id] = savedSettings[s.id] !== undefined ? savedSettings[s.id] : s.default; });
-                        setSettings(merged);
-                    } else {
-                        // Adding new: load defaults
-                        const defaults = {};
-                        data.settings.forEach(s => { if (s.default !== undefined) defaults[s.id] = s.default; });
-                        setSettings(defaults);
-                    }
-                }
-            }).catch(() => { });
-    }, [selectedTemplateId, activeBlockId, pageBlocks]);
-
-    const handleSelectCategory = (catId) => {
-        setActiveCategoryId(catId);
-        setLeftView('templates');
-    };
-
-    const handleSelectTemplate = (id) => {
-        setSelectedTemplateId(id);
-        setLeftView('settings');
-    };
-
-    const handleInject = () => {
-        if (!selectedTemplateId) return;
-        const form = new FormData();
-        form.append("intent", "inject_section");
-        form.append("sectionId", selectedTemplateId);
-        form.append("settings", JSON.stringify(settings));
-        form.append("placement", placement);
-        fetcher.submit(form, { method: "post" });
-        setSelectedTemplateId(null);
-        setPreviewHtml('');
-    };
-
-    const handleRemove = (blockId) => {
-        const form = new FormData();
-        form.append("intent", "remove_section");
-        form.append("blockId", blockId);
-        fetcher.submit(form, { method: "post" });
-        if (activeBlockId === blockId) {
-            setActiveBlockId(null);
-            setSettings({});
-            setLeftView('outline');
-        }
-    };
-
-    const handleSaveLive = () => {
-        if (!activeBlockId) return;
-        const form = new FormData();
-        form.append("intent", "update_settings");
-        form.append("blockId", activeBlockId);
-        form.append("settings", JSON.stringify(settings));
-        fetcher.submit(form, { method: "post" });
-    };
-
-    const cfCats = categories || [];
-    const templateIds = activeCategoryId
-        ? Object.entries(SECTION_FILES).filter(([_, m]) => m.category === activeCategoryId).map(([id]) => id)
-        : [];
-    const isBusy = fetcher.state !== 'idle';
-
-    return (
+const NEW_RETURN = `    return (
         <div style={S.root}>
             <style>{CSS}</style>
 
@@ -541,10 +287,15 @@ export default function ThemeEditor() {
             </div>
         </div>
     );
-}
+}`;
 
+content = content.substring(0, themeEditorReturnIdx) + NEW_RETURN + "\n" + content.substring(themeEditorEndIdx);
 
-// ─── SETTING ROW ─────────────────────────────────────────────────────────────
+// Now SettingRow
+let settingRowStart = content.indexOf('// ─── SETTING ROW ');
+let nextSectionIdx = content.indexOf('// ─── SVG ICONS (PREMIUM)');
+
+const NEW_SETTING_ROW = `// ─── SETTING ROW ─────────────────────────────────────────────────────────────
 function SettingRow({ setting, value, onChange }) {
     const v = value !== undefined ? value : (setting.default ?? '');
 
@@ -606,46 +357,16 @@ function SettingRow({ setting, value, onChange }) {
         </Box>
     );
 }
+`;
 
-// ─── SVG ICONS (PREMIUM) ──────────────────────────────────────────────────────
+content = content.substring(0, settingRowStart) + NEW_SETTING_ROW + "\n" + content.substring(nextSectionIdx);
 
 
-const SVG_ICONS = {
-    layout: <Layout size={20} strokeWidth={1.5} />,
-    announcement: <Megaphone size={20} strokeWidth={1.5} />,
-    image: <ImageIcon size={20} strokeWidth={1.5} />,
-    shoppingBag: <ShoppingBag size={20} strokeWidth={1.5} />,
-    grid: <Grid size={20} strokeWidth={1.5} />,
-    message: <MessageSquare size={20} strokeWidth={1.5} />,
-    award: <Award size={20} strokeWidth={1.5} />,
-    type: <Type size={20} strokeWidth={1.5} />,
-    mail: <Mail size={20} strokeWidth={1.5} />,
-    camera: <Camera size={20} strokeWidth={1.5} />,
-    play: <Play size={20} strokeWidth={1.5} />,
-    help: <HelpCircle size={20} strokeWidth={1.5} />,
-    zap: <Zap size={20} strokeWidth={1.5} />,
-    default: <Layout size={20} strokeWidth={1.5} />
-};
+// 3. Styles replacing
+let styleStartIdx = content.indexOf('const S = {');
+let cssEndIdx = content.indexOf('`;', content.indexOf('const CSS = `'));
 
-const CAT_SVG = {
-    header: SVG_ICONS.layout,
-    announcement: SVG_ICONS.announcement,
-    hero: SVG_ICONS.image,
-    product: SVG_ICONS.shoppingBag,
-    collection: SVG_ICONS.grid,
-    testimonial: SVG_ICONS.message,
-    brand: SVG_ICONS.award,
-    content: SVG_ICONS.type,
-    newsletter: SVG_ICONS.mail,
-    social: SVG_ICONS.camera,
-    video: SVG_ICONS.play,
-    faq: SVG_ICONS.help,
-    banner: SVG_ICONS.zap,
-    footer: SVG_ICONS.layout,
-    default: SVG_ICONS.default
-};
-
-const S = {
+const NEW_STYLES = `const S = {
     root: { display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden', backgroundColor: 'var(--p-color-bg-surface-secondary)', fontFamily: 'var(--p-font-family-sans)' },
     topbar: { height: '56px', backgroundColor: 'var(--p-color-bg-surface)', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--p-color-border-subdued)', flexShrink: 0, zIndex: 10 },
     workspace: { display: 'flex', flex: 1, overflow: 'hidden' },
@@ -658,7 +379,7 @@ const S = {
     categoryRow: { padding: '12px 16px', borderBottom: '1px solid var(--p-color-border-subdued)', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', transition: 'background-color 0.1s' }
 };
 
-const CSS = `
+const CSS = \`
   .p-te-row:hover { background: var(--p-color-bg-surface-secondary-hover); }
   .p-te-row.active { background: var(--p-color-bg-fill-magic-secondary); }
   .p-te-row .del-btn { opacity: 0; transition: opacity 0.1s; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; border: none; background: transparent; cursor: pointer; color: var(--p-color-icon-subdued); }
@@ -673,4 +394,9 @@ const CSS = `
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--p-color-border-subdued); border-radius: 6px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--p-color-border-hover); }
-`;
+\`;`;
+
+content = content.substring(0, styleStartIdx) + NEW_STYLES + content.substring(cssEndIdx + 2);
+
+fs.writeFileSync(file, content);
+console.log("SUCCESS NEW LENGTH:", content.length);
