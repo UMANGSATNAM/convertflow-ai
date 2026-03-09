@@ -55,6 +55,21 @@ export const action = async ({ request }) => {
         return json;
     };
     const saveIndex = async (idx) => {
+        // Shopify Validation Fix: Ensure sections and order are perfectly synced
+        idx.sections = idx.sections || {};
+        idx.order = idx.order || [];
+
+        // Remove IDs from order that have no corresponding section object
+        idx.order = idx.order.filter(id => !!idx.sections[id]);
+
+        // Remove section objects that are not listed in the order array
+        const orderSet = new Set(idx.order);
+        for (const key of Object.keys(idx.sections)) {
+            if (!orderSet.has(key)) {
+                delete idx.sections[key];
+            }
+        }
+
         await uploadAsset(shop, accessToken, theme.id, 'templates/index.json', JSON.stringify(idx, null, 2));
     };
 
