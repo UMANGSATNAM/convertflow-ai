@@ -2,17 +2,33 @@ const fs = require('fs');
 const file = 'app/routes/app.theme-editor.jsx';
 let content = fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
 
+// 1. Ensure ChevronRight and X icons are imported
+// Replace the lucide-react import
+const importRegex = /import \{([^\}]+)\} from "lucide-react";/;
+const match = content.match(importRegex);
+if (match) {
+    let imports = match[1].split(',').map(s => s.trim());
+    if (!imports.includes('ChevronRight')) imports.push('ChevronRight');
+    if (!imports.includes('X')) imports.push('X');
+    if (!imports.includes('Check')) imports.push('Check');
+    content = content.replace(importRegex, \`import { \${imports.join(', ')} } from "lucide-react";\`);
+}
+
+// 2. Replace the Return statement
 const newReturn = `    return (
         <div style={S.root}>
             <style>{CSS}</style>
 
-            {/* ── TOP NAV BAR (Reverted to Shopify App Nav standard) ── */}
+            {/* ── TOP NAV BAR (PageFly Style) ── */}
             <header style={S.topbar}>
                 <div style={S.topbarLeft}>
-                    <button className="te-back-btn" onClick={() => navigate('/app')} title="Exit Editor">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    <button className="te-icon-back" onClick={() => navigate('/app')} title="Exit Editor">
+                        <Home size={16} strokeWidth={2.5} />
                     </button>
-                    <span style={S.topbarPageName}>Home page</span>
+                    <div style={S.topbarTitleGroup}>
+                        <span style={S.topbarPageName}>Home page</span>
+                        <span style={S.statusPill}>Unpublished</span>
+                    </div>
                 </div>
 
                 <div style={S.topbarCenter}>
@@ -24,8 +40,8 @@ const newReturn = `    return (
 
                 <div style={S.topbarRight}>
                     {toast && (
-                        <span style={{ ...S.toastBadge, background: toast.ok ? '#d1fae5' : '#fee2e2', color: toast.ok ? '#065f46' : '#991b1b' }}>
-                            {toast.msg}
+                        <span style={{ ...S.toastBadge, background: toast.ok ? '#e3f1df' : '#fee2e2', color: toast.ok ? '#065f46' : '#991b1b' }}>
+                            <Check size={12} style={{ marginRight: 4, display: 'inline-block' }} /> {toast.msg}
                         </span>
                     )}
                     {isBusy && <span style={S.savingDot}>Saving...</span>}
@@ -34,24 +50,25 @@ const newReturn = `    return (
                         onClick={activeBlockId ? handleSaveLive : handleInject}
                         disabled={isBusy || (!activeBlockId && !selectedTemplateId)}
                     >
-                        Save
+                        Publish
                     </button>
                 </div>
             </header>
 
             <div style={S.workspace}>
-                {/* ── LEFT SIDEBAR (Outline/Templates) ── */}
+                {/* ── LEFT SIDEBAR (PageFly Outline) ── */}
                 <aside style={S.leftSidebar}>
                     {/* STATE 0: OUTLINE */}
                     {leftView === 'outline' && (
                         <div style={S.panelInner}>
                             <div style={S.panelHeader}>
-                                <span style={S.panelTitle}>Sections</span>
+                                <span style={S.panelTitle}>Page content</span>
+                                <button className="te-icon-btn"><X size={16} strokeWidth={2.5} /></button>
                             </div>
 
                             <div style={S.outlineList}>
                                 {pageBlocks.length === 0 && (
-                                    <p style={S.emptyHint}>No sections yet.</p>
+                                    <p style={S.emptyHint}>No element selected</p>
                                 )}
                                 {pageBlocks.map((block) => {
                                     const isActive = block.id === activeBlockId;
@@ -69,7 +86,7 @@ const newReturn = `    return (
                                         >
                                             <div style={S.blockRowLeft}>
                                                 <span style={S.dragHandle}>
-                                                    <Grid size={13} strokeWidth={2.5}/>
+                                                    <ChevronRight size={14} strokeWidth={2.5} />
                                                 </span>
                                                 <span style={S.blockIcon}>
                                                     {block.isCf ? <Palette size={14} /> : <Layout size={14} />}
@@ -82,19 +99,30 @@ const newReturn = `    return (
                                                     onClick={(e) => { e.stopPropagation(); handleRemove(block.id); }}
                                                     title="Remove section"
                                                 >
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                                                    <X size={14} strokeWidth={2.5} />
                                                 </button>
                                             )}
                                         </div>
                                     );
                                 })}
-                            </div>
 
-                            <div style={S.addSectionArea}>
-                                <button className="te-text-btn" onClick={() => setLeftView('categories')}>
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                                    Add section
-                                </button>
+                                <div style={{ padding: '8px 12px', marginTop: '4px' }}>
+                                    <button className="te-text-btn" onClick={() => setLeftView('categories')}>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                        Add section
+                                    </button>
+                                </div>
+
+                                <div style={{ marginTop: 24 }}>
+                                    <div style={S.contextHeader}>Header</div>
+                                    <div style={S.contextBlock}>
+                                        <div style={S.blockRowLeft}><Layout size={14} color="#5c5f62" /><span style={{ fontSize: 13, color: '#5c5f62' }}>Theme header</span></div>
+                                    </div>
+                                    <div style={{ ...S.contextHeader, marginTop: 16 }}>Footer</div>
+                                    <div style={S.contextBlock}>
+                                        <div style={S.blockRowLeft}><Layout size={14} color="#5c5f62" /><span style={{ fontSize: 13, color: '#5c5f62' }}>Theme footer</span></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -104,16 +132,17 @@ const newReturn = `    return (
                         <div style={S.panelInner}>
                             <div style={S.panelHeader}>
                                 <button className="te-icon-back" onClick={() => setLeftView('outline')}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                    <ChevronRight size={16} strokeWidth={2.5} style={{ transform: 'rotate(180deg)' }} />
                                 </button>
                                 <span style={S.panelTitle}>Add section</span>
+                                <div style={{ width: 28 }}></div>
                             </div>
                             <div style={S.scrollArea}>
                                 {cfCats.map(cat => (
                                     <button key={cat.id} className="te-list-item" onClick={() => handleSelectCategory(cat.id)}>
-                                        <span style={S.listIcon}>{CAT_SVG[cat.id] || CAT_SVG.default}</span>
+                                        <span style={S.listIcon}>{CAT_SVG[cat.id] || <Layout size={16} strokeWidth={2} />}</span>
                                         <span style={S.listText}>{cat.name}</span>
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2.5" style={{ marginLeft: 'auto' }}><polyline points="9 18 15 12 9 6" /></svg>
+                                        <ChevronRight size={14} strokeWidth={2.5} style={{ marginLeft: 'auto', color: '#8c9196' }} />
                                     </button>
                                 ))}
                             </div>
@@ -125,16 +154,17 @@ const newReturn = `    return (
                         <div style={S.panelInner}>
                             <div style={S.panelHeader}>
                                 <button className="te-icon-back" onClick={() => setLeftView('categories')}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                    <ChevronRight size={16} strokeWidth={2.5} style={{ transform: 'rotate(180deg)' }} />
                                 </button>
                                 <span style={S.panelTitle}>{cfCats.find(c => c.id === activeCategoryId)?.name || 'Templates'}</span>
+                                <div style={{ width: 28 }}></div>
                             </div>
-                            <div style={S.scrollArea}>
+                            <div style={{ ...S.scrollArea, padding: '12px 0' }}>
                                 {templateIds.map(id => {
                                     const meta = SECTION_FILES[id];
                                     return (
                                         <button key={id} className="te-list-item" onClick={() => handleSelectTemplate(id)}>
-                                            <span style={S.listIcon}>{CAT_SVG.default}</span>
+                                            <span style={S.listIcon}><Palette size={16} strokeWidth={2} /></span>
                                             <span style={S.listText}>{meta?.name || id}</span>
                                         </button>
                                     );
@@ -146,16 +176,19 @@ const newReturn = `    return (
 
                 {/* ── CENTER CANVAS (Persistent Full Preview) ── */}
                 <main style={S.canvas}>
+                    <div style={{ ...S.canvasHeader, maxWidth: device === 'mobile' ? '400px' : '100%' }}>
+                        {device === 'desktop' ? '1440px, 100%' : '375px, 100%'}
+                    </div>
                     <div style={{
                         ...S.previewFrame,
                         width: device === 'mobile' ? '400px' : '100%',
                         maxWidth: device === 'mobile' ? '400px' : '100%',
                     }}>
                         {!previewHtml && !activeBlockId && !selectedTemplateId && (
-                             <div style={S.previewPlaceholder}>
-                                 <div className="te-spinner" />
-                                 <p style={{marginTop: 12, color: '#6d7175', fontSize: 13}}>Loading original theme...</p>
-                             </div>
+                            <div style={S.previewPlaceholder}>
+                                <div className="te-spinner" />
+                                <p style={S.previewPlaceholderText}>Loading visual canvas...</p>
+                            </div>
                         )}
                         {previewLoading && (
                             <div style={S.previewOverlay}>
@@ -187,11 +220,12 @@ const newReturn = `    return (
                                         setSettings({});
                                     }
                                 }}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                    <X size={16} strokeWidth={2.5} />
                                 </button>
                                 <span style={S.panelTitle}>
                                     {templateSchema.name || (activeBlockId ? 'Edit Section' : 'Customize Section')}
                                 </span>
+                                <div style={{ width: 28 }}></div>
                             </div>
 
                             <div style={S.settingsScroll}>
@@ -209,7 +243,7 @@ const newReturn = `    return (
                                 )}
 
                                 {templateSchema.settings.length === 0 ? (
-                                    <div style={{ padding: 20, textAlign: 'center', color: '#888', fontSize: 13 }}>Loading settings...</div>
+                                    <div style={{ padding: 40, textAlign: 'center', color: '#8c9196', fontSize: 13 }}>Loading parameters...</div>
                                 ) : (
                                     <div style={S.settingsList}>
                                         {templateSchema.settings.map(s => (
@@ -229,7 +263,7 @@ const newReturn = `    return (
             </div>
         </div>
     );
-}`;
+} `;
 
 const startIdx = content.indexOf('    return (\n        <div style={S.root}>');
 const endIdx = content.indexOf('// ─── SETTING ROW');
