@@ -1,0 +1,72 @@
+<style>
+.cf-cat-01{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif}
+.cf-cat-01-inner{max-width:1400px;margin:0 auto}
+.cf-cat-01-header{text-align:center;margin-bottom:40px}
+.cf-cat-01-title{font-size:clamp(28px,4vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:400;margin-bottom:10px}
+.cf-cat-01-sub{font-size:14px;color:#666;letter-spacing:0.15em;text-transform:uppercase;font-family:sans-serif}
+.cf-cat-01-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.cf-cat-01-item{position:relative;aspect-ratio:3/4;overflow:hidden;text-decoration:none;display:block}
+.cf-cat-01-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform 0.6s cubic-bezier(0.2,0.8,0.2,1);filter:grayscale(60%)}
+.cf-cat-01-item:hover .cf-cat-01-img{transform:scale(1.05);filter:grayscale(0%)}
+.cf-cat-01-label{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.9);padding:15px 40px;color:{{ section.settings.text_color }};font-size:16px;letter-spacing:0.1em;text-transform:uppercase;font-family:sans-serif;transition:0.3s}
+.cf-cat-01-item:hover .cf-cat-01-label{background:{{ section.settings.text_color }};color:#fff}
+@media(max-width:900px){.cf-cat-01-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cf-cat-01-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cat-01">
+  <div class="cf-cat-01-inner">
+    <div class="cf-cat-01-header">
+      <div class="cf-cat-01-sub">{{ section.settings.subtitle }}</div>
+      <h2 class="cf-cat-01-title">{{ section.settings.title }}</h2>
+    </div>
+    <div class="cf-cat-01-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-01-item">
+          {% if block.settings.image != blank %}
+            <img class="cf-cat-01-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+          {% else %}
+            <div class="cf-cat-01-img" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#999">No Image</div>
+          {% endif %}
+          <div class="cf-cat-01-label">{{ block.settings.title }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Categories",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"CURATED COLLECTIONS"},
+    {"type":"text","id":"title","label":"Title","default":"Shop by Category"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":42},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Womenswear"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "01 · Luxury Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"The Archive"}},
+        {"type":"category","settings":{"title":"Ready to Wear"}},
+        {"type":"category","settings":{"title":"Accessories"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

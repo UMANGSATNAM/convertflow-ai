@@ -1,0 +1,81 @@
+<style>
+.cf-cat-02{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-cat-02-inner{max-width:1400px;margin:0 auto}
+.cf-cat-02-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;border-bottom:4px solid {{ section.settings.border_color }};padding-bottom:10px}
+.cf-cat-02-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;line-height:1;margin:0}
+.cf-cat-02-link{font-size:14px;color:{{ section.settings.accent_color }};font-weight:900;text-transform:uppercase;text-decoration:none}
+.cf-cat-02-link:hover{text-decoration:underline}
+.cf-cat-02-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.cf-cat-02-item{position:relative;aspect-ratio:4/5;background:#111;text-decoration:none;display:block;overflow:hidden;border:2px solid transparent;transition:0.2s}
+.cf-cat-02-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.8;transition:0.4s;filter:contrast(1.2)}
+.cf-cat-02-item:hover{border-color:{{ section.settings.accent_color }}}
+.cf-cat-02-item:hover .cf-cat-02-img{transform:scale(1.1);opacity:0.4}
+.cf-cat-02-label-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:100%}
+.cf-cat-02-label{display:inline-block;background:{{ section.settings.accent_color }};color:#000;font-size:24px;font-weight:900;text-transform:uppercase;padding:8px 20px;transform:skewX(-10deg);box-shadow:4px 4px 0 {{ section.settings.border_color }}}
+.cf-cat-02-label span{display:block;transform:skewX(10deg)}
+@media(max-width:1024px){.cf-cat-02-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cf-cat-02-grid{grid-template-columns:1fr}.cf-cat-02-header{flex-direction:column;align-items:flex-start;gap:15px}}
+</style>
+
+<div class="cf-cat-02">
+  <div class="cf-cat-02-inner">
+    <div class="cf-cat-02-header">
+      <h2 class="cf-cat-02-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-cat-02-link">{{ section.settings.btn_label }} -></a>
+    </div>
+    <div class="cf-cat-02-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-02-item">
+          {% if block.settings.image != blank %}
+             <img class="cf-cat-02-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+          {% else %}
+             <div class="cf-cat-02-img" style="background:#222"></div>
+          {% endif %}
+          <div class="cf-cat-02-label-wrap">
+            <div class="cf-cat-02-label"><span>{{ block.settings.title }}</span></div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Streetwear Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"DEPARTMENTS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":80,"step":2,"default":48},
+    {"type":"text","id":"btn_label","label":"View All Label","default":"VIEW ALL"},
+    {"type":"text","id":"btn_link","label":"View All Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#ef4444"},
+    {"type":"color","id":"accent_color","label":"Tags / Accent","default":"#eab308"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 8,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Tees"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "02 · Streetwear Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"OUTERWEAR"}},
+        {"type":"category","settings":{"title":"TEES"}},
+        {"type":"category","settings":{"title":"BOTTOMS"}},
+        {"type":"category","settings":{"title":"HEADWEAR"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -3,6 +3,7 @@ export const SECTION_CATEGORIES = [
     { id: 'marquee', name: 'Marquee / Tickers', description: 'Infinite scrolling announcement bands', icon: 'Type' },
     { id: 'promo', name: 'Promo Posters', description: 'Large format promotional banners', icon: 'Image' },
     { id: 'snack', name: 'Promo Code Snacks', description: 'Compact discount code and offer bars', icon: 'Tag' },
+    { id: 'category', name: 'Category Sections', description: 'Collection grids and carousels', icon: 'Grid' },
     { id: 'announcement', name: 'Announcement Bars', description: '10 creative announcement styles', icon: 'Megaphone' },
     { id: 'hero', name: 'Hero Sections', description: '10 premium hero banners', icon: 'Image' }
 ];
@@ -51,6 +52,17 @@ export const SECTION_FILES = {
     'cf-snack-08': { category: 'snack', name: '08 · Kids Snack', file: 'cf-snack-08.liquid' },
     'cf-snack-09': { category: 'snack', name: '09 · Furniture Snack', file: 'cf-snack-09.liquid' },
     'cf-snack-10': { category: 'snack', name: '10 · Fitness Snack', file: 'cf-snack-10.liquid' },
+
+    'cf-category-01': { category: 'category', name: '01 · Luxury Categories', file: 'cf-category-01.liquid' },
+    'cf-category-02': { category: 'category', name: '02 · Streetwear Categories', file: 'cf-category-02.liquid' },
+    'cf-category-03': { category: 'category', name: '03 · Tech Categories', file: 'cf-category-03.liquid' },
+    'cf-category-04': { category: 'category', name: '04 · Health Categories', file: 'cf-category-04.liquid' },
+    'cf-category-05': { category: 'category', name: '05 · Beauty Categories', file: 'cf-category-05.liquid' },
+    'cf-category-06': { category: 'category', name: '06 · Auto Categories', file: 'cf-category-06.liquid' },
+    'cf-category-07': { category: 'category', name: '07 · SaaS Categories', file: 'cf-category-07.liquid' },
+    'cf-category-08': { category: 'category', name: '08 · Kids Categories', file: 'cf-category-08.liquid' },
+    'cf-category-09': { category: 'category', name: '09 · Furniture Categories', file: 'cf-category-09.liquid' },
+    'cf-category-10': { category: 'category', name: '10 · Fitness Categories', file: 'cf-category-10.liquid' },
 
     'cf-announce-01': { category: 'announcement', name: '01 · Gradient Marquee', file: 'cf-announce-01.liquid' },
     'cf-announce-02': { category: 'announcement', name: '02 · Minimal Dark Bar', file: 'cf-announce-02.liquid' },

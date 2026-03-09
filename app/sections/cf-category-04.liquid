@@ -1,0 +1,75 @@
+<style>
+.cf-cat-04{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-cat-04-inner{max-width:1200px;margin:0 auto}
+.cf-cat-04-header{text-align:center;margin-bottom:50px}
+.cf-cat-04-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:700;margin-bottom:15px}
+.cf-cat-04-sub{font-size:16px;color:#64748b;max-width:600px;margin:0 auto;line-height:1.5}
+.cf-cat-04-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px}
+.cf-cat-04-item{text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;group}
+.cf-cat-04-img-wrap{width:180px;height:180px;border-radius:50%;overflow:hidden;margin-bottom:20px;background:#f1f5f9;box-shadow:0 10px 25px rgba(0,0,0,0.05);transition:0.3s;border:4px solid transparent}
+.cf-cat-04-item:hover .cf-cat-04-img-wrap{transform:translateY(-10px);border-color:{{ section.settings.accent_color }};box-shadow:0 20px 30px rgba(22,163,74,0.15)}
+.cf-cat-04-img{width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-cat-04-item:hover .cf-cat-04-img{transform:scale(1.1)}
+.cf-cat-04-label{font-size:18px;color:{{ section.settings.text_color }};font-weight:600;transition:0.2s}
+.cf-cat-04-item:hover .cf-cat-04-label{color:{{ section.settings.accent_color }}}
+@media(max-width:600px){.cf-cat-04-grid{grid-template-columns:repeat(2,1fr);gap:20px}.cf-cat-04-img-wrap{width:140px;height:140px}}
+</style>
+
+<div class="cf-cat-04">
+  <div class="cf-cat-04-inner">
+    <div class="cf-cat-04-header">
+      <h2 class="cf-cat-04-title">{{ section.settings.title }}</h2>
+      <p class="cf-cat-04-sub">{{ section.settings.sub }}</p>
+    </div>
+    <div class="cf-cat-04-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-04-item">
+          <div class="cf-cat-04-img-wrap">
+            {% if block.settings.image != blank %}
+              <img class="cf-cat-04-img" src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.title }}">
+            {% endif %}
+          </div>
+          <div class="cf-cat-04-label">{{ block.settings.title }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Health Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"Shop by Goal"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":40},
+    {"type":"textarea","id":"sub","label":"Subtitle","default":"Find exactly what your body needs to thrive today."},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent (Green)","default":"#16a34a"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image (Square)"},
+        {"type":"text","id":"title","label":"Title","default":"Immunity"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Health Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"Vitamins"}},
+        {"type":"category","settings":{"title":"Digestion"}},
+        {"type":"category","settings":{"title":"Sleep"}},
+        {"type":"category","settings":{"title":"Energy"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

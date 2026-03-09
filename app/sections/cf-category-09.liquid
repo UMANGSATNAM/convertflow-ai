@@ -1,0 +1,78 @@
+<style>
+.cf-cat-09{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:serif}
+.cf-cat-09-inner{max-width:1400px;margin:0 auto}
+.cf-cat-09-header{text-align:left;margin-bottom:60px;display:flex;justify-content:space-between;align-items:flex-end}
+.cf-cat-09-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:400;margin:0;max-width:600px}
+.cf-cat-09-link{font-size:12px;color:{{ section.settings.text_color }};text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;font-family:sans-serif;padding-bottom:5px;border-bottom:1px solid {{ section.settings.text_color }};transition:0.3s}
+.cf-cat-09-link:hover{color:{{ section.settings.accent_color }};border-color:{{ section.settings.accent_color }}}
+.cf-cat-09-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.cf-cat-09-item{text-decoration:none;display:block;group}
+.cf-cat-09-img-wrap{aspect-ratio:4/5;background:#f5f5f4;margin-bottom:20px;overflow:hidden}
+.cf-cat-09-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.2,0.8,0.2,1);filter:brightness(0.95)}
+.cf-cat-09-item:hover .cf-cat-09-img{transform:scale(1.05);filter:brightness(1)}
+.cf-cat-09-label{font-size:22px;color:{{ section.settings.text_color }};margin-bottom:5px}
+.cf-cat-09-desc{font-family:sans-serif;color:#78716c;font-size:14px}
+@media(max-width:900px){.cf-cat-09-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cf-cat-09-grid{grid-template-columns:1fr}.cf-cat-09-header{flex-direction:column;align-items:flex-start;gap:20px}}
+</style>
+
+<div class="cf-cat-09">
+  <div class="cf-cat-09-inner">
+    <div class="cf-cat-09-header">
+      <h2 class="cf-cat-09-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-cat-09-link">{{ section.settings.btn_label }}</a>
+    </div>
+    <div class="cf-cat-09-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-09-item">
+          <div class="cf-cat-09-img-wrap">
+            {% if block.settings.image != blank %}
+              <img class="cf-cat-09-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+            {% endif %}
+          </div>
+          <div class="cf-cat-09-label">{{ block.settings.title }}</div>
+          <div class="cf-cat-09-desc">{{ block.settings.desc }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Furniture Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"Explore the spaces we furnish."},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":48},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW ALL COLLECTIONS"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#292524"},
+    {"type":"color","id":"accent_color","label":"Accent (Hover)","default":"#a8a29e"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Space",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Living Room"},
+        {"type":"text","id":"desc","label":"Description","default":"Sofas, coffee tables, and more."},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "09 · Furniture Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"Living Room","desc":"Create your sanctuary."}},
+        {"type":"category","settings":{"title":"Dining","desc":"Gather around."}},
+        {"type":"category","settings":{"title":"Bedroom","desc":"Rest and recharge."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

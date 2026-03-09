@@ -1,0 +1,72 @@
+<style>
+.cf-cat-03{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:monospace}
+.cf-cat-03-inner{max-width:1200px;margin:0 auto}
+.cf-cat-03-header{text-align:left;margin-bottom:40px;padding-left:15px;border-left:4px solid {{ section.settings.accent_color }}}
+.cf-cat-03-title{font-size:clamp(24px,4vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:700;margin:0}
+.cf-cat-03-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+.cf-cat-03-item{background:rgba(255,255,255,0.03);border:1px solid rgba(16,185,129,0.2);padding:30px;text-decoration:none;display:flex;flex-direction:column;align-items:center;transition:0.3s;border-radius:12px;position:relative;overflow:hidden}
+.cf-cat-03-item::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center, rgba(16,185,129,0.1) 0%, transparent 70%);opacity:0;transition:0.3s}
+.cf-cat-03-item:hover{border-color:{{ section.settings.accent_color }};transform:translateY(-5px);box-shadow:0 10px 30px rgba(16,185,129,0.1)}
+.cf-cat-03-item:hover::before{opacity:1}
+.cf-cat-03-icon{width:60px;height:60px;margin-bottom:20px;color:{{ section.settings.accent_color }};position:relative;z-index:1}
+.cf-cat-03-label{font-size:16px;color:{{ section.settings.text_color }};font-weight:700;text-transform:uppercase;letter-spacing:0.1em;position:relative;z-index:1}
+</style>
+
+<div class="cf-cat-03">
+  <div class="cf-cat-03-inner">
+    <div class="cf-cat-03-header">
+      <h2 class="cf-cat-03-title">> {{ section.settings.title }} _</h2>
+    </div>
+    <div class="cf-cat-03-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-03-item">
+          <div class="cf-cat-03-icon">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 120 }}" alt="{{ block.settings.title }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">
+            {% else %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            {% endif %}
+          </div>
+          <div class="cf-cat-03-label">{{ block.settings.title }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Tech Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"SYSTEM_MODULES"},
+    {"type":"range","id":"title_size","label":"Title Size","min":16,"max":48,"step":2,"default":32},
+    {"type":"color","id":"bg_color","label":"Background","default":"#0f172a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#f8fafc"},
+    {"type":"color","id":"accent_color","label":"Accent (Green)","default":"#10b981"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 8,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Square Image/Icon"},
+        {"type":"text","id":"title","label":"Title","default":"Hardware"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "03 · Tech Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"Laptops"}},
+        {"type":"category","settings":{"title":"Components"}},
+        {"type":"category","settings":{"title":"Peripherals"}},
+        {"type":"category","settings":{"title":"Audio"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

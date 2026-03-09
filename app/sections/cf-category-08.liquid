@@ -1,0 +1,68 @@
+<style>
+.cf-cat-08{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Comic Sans MS', 'Fredoka One', cursive}
+.cf-cat-08-inner{max-width:1200px;margin:0 auto}
+.cf-cat-08-header{text-align:center;margin-bottom:50px}
+.cf-cat-08-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;margin-bottom:15px;text-transform:uppercase;text-shadow:3px 3px 0 {{ section.settings.border_color }};transform:rotate(-2deg)}
+.cf-cat-08-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px}
+.cf-cat-08-item{background:{{ section.settings.card_bg }};text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px;border-radius:40px;border:4px solid {{ section.settings.border_color }};box-shadow:6px 6px 0 {{ section.settings.border_color }};transition:0.3s}
+.cf-cat-08-item:nth-child(even){background:{{ section.settings.card_bg_2 }}}
+.cf-cat-08-item:hover{transform:translateY(-8px) scale(1.02);box-shadow:10px 10px 0 {{ section.settings.border_color }}}
+.cf-cat-08-emoji{font-size:48px;margin-bottom:20px;transition:0.3s;}
+.cf-cat-08-item:hover .cf-cat-08-emoji{transform:rotate(15deg) scale(1.2)}
+.cf-cat-08-label{font-size:24px;font-weight:900;color:#fff;text-shadow:2px 2px 0 {{ section.settings.border_color }};text-transform:uppercase}
+</style>
+
+<div class="cf-cat-08">
+  <div class="cf-cat-08-inner">
+    <div class="cf-cat-08-header">
+      <h2 class="cf-cat-08-title">{{ section.settings.title }}</h2>
+    </div>
+    <div class="cf-cat-08-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-08-item">
+          <div class="cf-cat-08-emoji">{{ block.settings.emoji }}</div>
+          <div class="cf-cat-08-label">{{ block.settings.title }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Kids Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"SHOP BY AGE!"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":80,"step":2,"default":56},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fef3c7"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ef4444"},
+    {"type":"color","id":"border_color","label":"Border/Shadow","default":"#111111"},
+    {"type":"color","id":"card_bg","label":"Card Color 1","default":"#60a5fa"},
+    {"type":"color","id":"card_bg_2","label":"Card Color 2","default":"#34d399"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 8,
+      "settings": [
+        {"type":"text","id":"emoji","label":"Emoji Icon","default":"🧸"},
+        {"type":"text","id":"title","label":"Title","default":"0-2 Years"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "08 · Kids Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"0-2 Years","emoji":"🍼"}},
+        {"type":"category","settings":{"title":"3-5 Years","emoji":"🎨"}},
+        {"type":"category","settings":{"title":"6-8 Years","emoji":"🧩"}},
+        {"type":"category","settings":{"title":"9+ Years","emoji":"🚀"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

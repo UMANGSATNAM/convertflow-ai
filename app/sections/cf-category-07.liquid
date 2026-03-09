@@ -1,0 +1,72 @@
+<style>
+.cf-cat-07{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:system-ui,-apple-system,sans-serif}
+.cf-cat-07-inner{max-width:1200px;margin:0 auto}
+.cf-cat-07-header{margin-bottom:40px;text-align:center}
+.cf-cat-07-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:800;letter-spacing:-0.02em;margin-bottom:15px}
+.cf-cat-07-sub{font-size:18px;color:#64748b;max-width:600px;margin:0 auto}
+.cf-cat-07-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.cf-cat-07-item{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:30px;text-decoration:none;display:flex;align-items:flex-start;gap:20px;transition:0.3s;box-shadow:0 10px 15px -3px rgba(0,0,0,0.02)}
+.cf-cat-07-item:hover{transform:translateY(-5px);box-shadow:0 20px 25px -5px rgba(0,0,0,0.05);border-color:{{ section.settings.accent_color | color_modify: 'alpha', 0.5 }}}
+.cf-cat-07-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:{{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};color:{{ section.settings.accent_color }};border-radius:12px;flex-shrink:0}
+.cf-cat-07-content{flex:1}
+.cf-cat-07-label{font-size:18px;font-weight:700;color:{{ section.settings.text_color }};margin-bottom:6px}.cf-cat-07-desc{font-size:14px;color:#64748b;line-height:1.5}
+</style>
+
+<div class="cf-cat-07">
+  <div class="cf-cat-07-inner">
+    <div class="cf-cat-07-header">
+      <h2 class="cf-cat-07-title">{{ section.settings.title }}</h2>
+      <p class="cf-cat-07-sub">{{ section.settings.subtitle }}</p>
+    </div>
+    <div class="cf-cat-07-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-07-item">
+          <div class="cf-cat-07-icon">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          </div>
+          <div class="cf-cat-07-content">
+            <div class="cf-cat-07-label">{{ block.settings.title }}</div>
+            <div class="cf-cat-07-desc">{{ block.settings.desc }}</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · SaaS Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"Explore Solutions"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":64,"step":2,"default":42},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"Discover how our platform can supercharge your workflow."},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent (Indigo)","default":"#6366f1"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Card Feature",
+      "limit": 6,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Analytics & BI"},
+        {"type":"textarea","id":"desc","label":"Description","default":"Build custom reports and track key metrics in real-time."},
+        {"type":"text","id":"link","label":"Link","default":"/pages/features"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "07 · SaaS Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"Payments","desc":"Accept credit cards internationally effortlessly."}},
+        {"type":"category","settings":{"title":"Invoicing","desc":"Automate billing cycles and chase late payments."}},
+        {"type":"category","settings":{"title":"Capital","desc":"Get instant access to growth funding without dilution."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

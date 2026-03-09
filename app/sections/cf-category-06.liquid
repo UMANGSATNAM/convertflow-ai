@@ -1,0 +1,75 @@
+<style>
+.cf-cat-06{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-cat-06-inner{max-width:1400px;margin:0 auto}
+.cf-cat-06-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px}
+.cf-cat-06-title{font-size:clamp(32px,6vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;font-style:italic;line-height:0.9;margin:0;letter-spacing:-0.03em}
+.cf-cat-06-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.cf-cat-06-item{position:relative;height:240px;background:#1a1a1a;transform:skewX(-10deg);overflow:hidden;text-decoration:none;display:flex;align-items:flex-end;padding:20px;border:2px solid transparent;transition:0.3s}
+.cf-cat-06-item-inner{transform:skewX(10deg);width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;position:relative;z-index:2}
+.cf-cat-06-img{position:absolute;top:0;left:-20%;width:140%;height:140%;object-fit:cover;opacity:0.4;transition:0.5s;filter:grayscale(100%)}
+.cf-cat-06-item:hover{border-color:{{ section.settings.accent_color }}}
+.cf-cat-06-item:hover .cf-cat-06-img{opacity:0.8;filter:grayscale(0%);transform:scale(1.1)}
+.cf-cat-06-label{color:#fff;font-size:20px;font-weight:900;text-transform:uppercase;font-style:italic;text-shadow:2px 2px 4px rgba(0,0,0,0.8);transition:0.2s}
+.cf-cat-06-item:hover .cf-cat-06-label{color:{{ section.settings.accent_color }}}
+@media(max-width:1024px){.cf-cat-06-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cf-cat-06-grid{grid-template-columns:1fr;gap:20px}}
+</style>
+
+<div class="cf-cat-06">
+  <div class="cf-cat-06-inner">
+    <div class="cf-cat-06-header">
+      <h2 class="cf-cat-06-title">{{ section.settings.title }}</h2>
+    </div>
+    <div class="cf-cat-06-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-06-item">
+          {% if block.settings.image != blank %}
+             <img class="cf-cat-06-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+          {% else %}
+             <div class="cf-cat-06-img" style="background:linear-gradient(45deg,#222,#111)"></div>
+          {% endif %}
+          <div class="cf-cat-06-item-inner">
+             <div class="cf-cat-06-label">{{ block.settings.title }}</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Auto Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"SELECT YOUR UPGRADE"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":100,"step":4,"default":64},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent (Red)","default":"#ef4444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 8,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Background Image"},
+        {"type":"text","id":"title","label":"Title","default":"Exterior"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "06 · Auto Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"Exhaust Systems"}},
+        {"type":"category","settings":{"title":"Suspension"}},
+        {"type":"category","settings":{"title":"Wheels"}},
+        {"type":"category","settings":{"title":"Interior"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,78 @@
+<style>
+.cf-cat-10{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;overflow:hidden}
+.cf-cat-10-inner{max-width:1400px;margin:0 auto}
+.cf-cat-10-header{text-align:center;margin-bottom:60px}
+.cf-cat-10-title{font-size:clamp(40px,7vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;font-style:italic;line-height:1;margin:0}
+.cf-cat-10-title span{color:{{ section.settings.accent_color }}}
+.cf-cat-10-grid{display:flex;flex-wrap:wrap;gap:20px;justify-content:center}
+.cf-cat-10-item{position:relative;background:#111;text-decoration:none;display:flex;align-items:center;justify-content:center;height:120px;flex:1;min-width:250px;transform:skewX(-15deg);overflow:hidden;border:4px solid transparent;transition:0.2s}
+.cf-cat-10-item-inner{transform:skewX(15deg);position:relative;z-index:2;display:flex;align-items:center;gap:15px}
+.cf-cat-10-img{position:absolute;top:0;left:-20%;width:140%;height:100%;object-fit:cover;opacity:0.3;transition:0.4s;filter:grayscale(100%)}
+.cf-cat-10-item:hover{border-color:{{ section.settings.accent_color }}}
+.cf-cat-10-item:hover .cf-cat-10-img{opacity:0.6;filter:grayscale(0%);transform:scale(1.1)}
+.cf-cat-10-label{color:#fff;font-size:24px;font-weight:900;text-transform:uppercase;font-style:italic;transition:0.2s}
+.cf-cat-10-item:hover .cf-cat-10-label{color:{{ section.settings.accent_color }}}
+.cf-cat-10-icon{color:{{ section.settings.accent_color }};opacity:0;transform:translateX(-20px);transition:0.3s}
+.cf-cat-10-item:hover .cf-cat-10-icon{opacity:1;transform:translateX(0)}
+@media(max-width:768px){.cf-cat-10-grid{flex-direction:column}.cf-cat-10-item{transform:none}.cf-cat-10-item-inner{transform:none}}
+</style>
+
+<div class="cf-cat-10">
+  <div class="cf-cat-10-inner">
+    <div class="cf-cat-10-header">
+      <h2 class="cf-cat-10-title">{{ section.settings.title }}</h2>
+    </div>
+    <div class="cf-cat-10-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-10-item">
+          {% if block.settings.image != blank %}
+             <img class="cf-cat-10-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+          {% else %}
+             <div class="cf-cat-10-img" style="background:#222"></div>
+          {% endif %}
+          <div class="cf-cat-10-item-inner">
+             <div class="cf-cat-10-label">{{ block.settings.title }}</div>
+             <div class="cf-cat-10-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Fitness Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title (Wrap <span> for Red)","default":"FIND YOUR <span>WEAPON</span>"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":100,"step":4,"default":72},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent (Red)","default":"#dc2626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 8,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Background Image"},
+        {"type":"text","id":"title","label":"Title","default":"Pre-Workout"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "10 · Fitness Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"PRE-WORKOUT"}},
+        {"type":"category","settings":{"title":"PROTEIN"}},
+        {"type":"category","settings":{"title":"AMINO ACIDS"}},
+        {"type":"category","settings":{"title":"FAT BURNERS"}}
+      ]
+    }
+  ]
+}
+{% endschema %}
