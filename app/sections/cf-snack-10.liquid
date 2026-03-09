@@ -1,0 +1,35 @@
+<style>
+.cf-sn-10{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;overflow:hidden}
+.cf-sn-10-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;transform:skewX(-15deg);background:linear-gradient(90deg, #111, #222);border-left:6px solid {{ section.settings.accent_color }};padding:15px;box-shadow:10px 10px 30px rgba(0,0,0,0.5)}
+.cf-sn-10-content{display:flex;align-items:center;gap:30px;transform:skewX(15deg);width:100%;justify-content:space-between;padding:0 20px}
+.cf-sn-10-text{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;font-weight:900;text-transform:uppercase;font-style:italic;line-height:1}
+.cf-sn-10-text span{color:{{ section.settings.accent_color }}}
+.cf-sn-10-code{display:inline-flex;align-items:center;background:{{ section.settings.accent_color }};color:#fff;font-weight:900;font-size:18px;letter-spacing:0.05em;padding:10px 24px;cursor:pointer;transition:0.2s}
+.cf-sn-10-code:hover{background:#fff;color:{{ section.settings.accent_color }}}
+@media(max-width:768px){.cf-sn-10-inner{transform:none;border-left:0;border-top:6px solid {{ section.settings.accent_color }}}.cf-sn-10-content{transform:none;flex-direction:column;text-align:center;gap:15px}}
+</style>
+
+<div class="cf-sn-10">
+  <div class="cf-sn-10-inner">
+    <div class="cf-sn-10-content">
+      <div class="cf-sn-10-text">{{ section.settings.text }}</div>
+      <div class="cf-sn-10-code" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('NO EXCUSES. Code Grabbed.')">{{ section.settings.code }} <svg style="margin-left:8px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Fitness Snack",
+  "settings": [
+    {"type":"text","id":"text","label":"Text (Wrap <span> for Red)","default":"GET <span>10% OFF</span> YOUR PRE-WORKOUT"},
+    {"type":"text","id":"code","label":"Promo Code","default":"GAINS10"},
+    {"type":"range","id":"text_size","label":"Text Size","min":14,"max":32,"step":1,"default":20},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent (Red)","default":"#dc2626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20}
+  ],
+  "presets": [{"name":"10 · Fitness Snack"}]
+}
+{% endschema %}

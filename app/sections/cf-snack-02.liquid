@@ -1,0 +1,36 @@
+<style>
+.cf-sn-02{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-sn-02-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:30px;background:#000;border:2px dashed {{ section.settings.border_color }};padding:15px 30px;box-shadow:4px 4px 0 {{ section.settings.border_color }}}
+.cf-sn-02-text{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em}
+.cf-sn-02-code{display:inline-flex;align-items:center;background:{{ section.settings.accent_color }};color:#000;padding:6px 16px;font-weight:900;font-size:16px;letter-spacing:0.05em}
+.cf-sn-02-btn{cursor:pointer;background:transparent;border:0;padding:0 0 0 12px;margin-left:12px;border-left:2px solid rgba(0,0,0,0.2);color:#000;font-weight:900;font-size:12px;text-transform:uppercase}
+.cf-sn-02-btn:hover{color:#fff}
+@media(max-width:600px){.cf-sn-02-inner{flex-direction:column;text-align:center;gap:15px;padding:20px}}
+</style>
+
+<div class="cf-sn-02">
+  <div class="cf-sn-02-inner">
+    <div class="cf-sn-02-text">{{ section.settings.text }}</div>
+    <div class="cf-sn-02-code">
+      {{ section.settings.code }}
+      <button class="cf-sn-02-btn" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('COPIED')">COPY</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Streetwear Snack",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"FREE SHIPPING ON ORDERS OVER $150"},
+    {"type":"text","id":"code","label":"Promo Code","default":"DROPSHIP"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":32,"step":1,"default":18},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border/Shadow","default":"#ef4444"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Code/Tape Color","default":"#eab308"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20}
+  ],
+  "presets": [{"name":"02 · Streetwear Snack"}]
+}
+{% endschema %}

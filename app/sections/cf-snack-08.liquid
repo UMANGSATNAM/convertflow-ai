@@ -1,0 +1,40 @@
+<style>
+.cf-sn-08{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Comic Sans MS', 'Fredoka One', cursive}
+.cf-sn-08-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:{{ section.settings.card_bg }};border-radius:24px;border:4px solid {{ section.settings.border_color }};padding:15px 24px;box-shadow:6px 6px 0 {{ section.settings.border_color }}}
+.cf-sn-08-icon{font-size:32px;animation:cf-sn-08-bounce 2s infinite}
+.cf-sn-08-text-wrap{flex:1}
+.cf-sn-08-text{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;font-weight:900;text-transform:uppercase;text-shadow:2px 2px 0 {{ section.settings.border_color }}}
+.cf-sn-08-code{display:inline-block;padding:10px 24px;background:{{ section.settings.accent_color }};color:#fff;font-weight:900;font-size:18px;border-radius:100px;border:3px dashed #fff;box-shadow:0 0 0 3px {{ section.settings.accent_color }}, 4px 4px 0 {{ section.settings.border_color }};cursor:pointer;transition:0.2s}
+.cf-sn-08-code:hover{transform:scale(1.05) rotate(-2deg)}
+@keyframes cf-sn-08-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media(max-width:600px){.cf-sn-08-inner{flex-direction:column;text-align:center}.cf-sn-08-code{margin-top:10px}}
+</style>
+
+<div class="cf-sn-08">
+  <div class="cf-sn-08-inner">
+    <div class="cf-sn-08-icon">{{ section.settings.emoji }}</div>
+    <div class="cf-sn-08-text-wrap">
+      <div class="cf-sn-08-text">{{ section.settings.text }}</div>
+    </div>
+    <div class="cf-sn-08-code" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('Code Grabbed!')">{{ section.settings.code }}</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Kids Snack",
+  "settings": [
+    {"type":"text","id":"emoji","label":"Emoji","default":"🎁"},
+    {"type":"text","id":"text","label":"Text","default":"Grab 20% Off Your Next Toy!"},
+    {"type":"text","id":"code","label":"Promo Code","default":"PLAYTIME20"},
+    {"type":"range","id":"text_size","label":"Text Size","min":14,"max":32,"step":1,"default":20},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#fef3c7"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#60a5fa"},
+    {"type":"color","id":"border_color","label":"Border/Shadow","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#fef08a"},
+    {"type":"color","id":"accent_color","label":"Code Button Color","default":"#ef4444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":30}
+  ],
+  "presets": [{"name":"08 · Kids Snack"}]
+}
+{% endschema %}

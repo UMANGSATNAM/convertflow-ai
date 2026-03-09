@@ -1,0 +1,39 @@
+<style>
+.cf-sn-09{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:serif;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-sn-09-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:30px;padding:20px 0}
+.cf-sn-09-left{display:flex;align-items:center;gap:15px;color:{{ section.settings.text_color }}}
+.cf-sn-09-line{width:40px;height:1px;background:{{ section.settings.text_color }}}
+.cf-sn-09-text{font-size:{{ section.settings.text_size }}px;letter-spacing:0.05em}
+.cf-sn-09-code{display:inline-flex;align-items:center;gap:8px;font-family:sans-serif;font-size:12px;font-weight:600;letter-spacing:0.15em;color:{{ section.settings.accent_color }};padding:8px 24px;border:1px solid {{ section.settings.accent_color }};cursor:pointer;transition:0.3s;background:transparent}
+.cf-sn-09-code:hover{background:{{ section.settings.accent_color }};color:#fff}
+@media(max-width:600px){.cf-sn-09-inner{flex-direction:column;text-align:center}.cf-sn-09-line{display:none}}
+</style>
+
+<div class="cf-sn-09">
+  <div class="cf-sn-09-inner">
+    <div class="cf-sn-09-left">
+      <div class="cf-sn-09-line"></div>
+      <div class="cf-sn-09-text">{{ section.settings.text }}</div>
+    </div>
+    <div class="cf-sn-09-code" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('Code applied.')">
+      USE CODE: {{ section.settings.code }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Furniture Snack",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"Complimentary White Glove Delivery"},
+    {"type":"text","id":"code","label":"Promo Code","default":"HOME2025"},
+    {"type":"range","id":"text_size","label":"Text Size","min":14,"max":28,"step":1,"default":18},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f5f5f4"},
+    {"type":"color","id":"border_color","label":"Border Line","default":"#e7e5e4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#292524"},
+    {"type":"color","id":"accent_color","label":"Button Color","default":"#57534e"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":60,"step":5,"default":0}
+  ],
+  "presets": [{"name":"09 · Furniture Snack"}]
+}
+{% endschema %}

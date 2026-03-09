@@ -2,6 +2,7 @@ export const SECTION_CATEGORIES = [
     { id: 'header', name: 'Header', description: 'Navigation bars and branding', icon: 'Layout' },
     { id: 'marquee', name: 'Marquee / Tickers', description: 'Infinite scrolling announcement bands', icon: 'Type' },
     { id: 'promo', name: 'Promo Posters', description: 'Large format promotional banners', icon: 'Image' },
+    { id: 'snack', name: 'Promo Code Snacks', description: 'Compact discount code and offer bars', icon: 'Tag' },
     { id: 'announcement', name: 'Announcement Bars', description: '10 creative announcement styles', icon: 'Megaphone' },
     { id: 'hero', name: 'Hero Sections', description: '10 premium hero banners', icon: 'Image' }
 ];
@@ -39,6 +40,17 @@ export const SECTION_FILES = {
     'cf-promo-08': { category: 'promo', name: '08 · Kids Promo', file: 'cf-promo-08.liquid' },
     'cf-promo-09': { category: 'promo', name: '09 · Furniture Promo', file: 'cf-promo-09.liquid' },
     'cf-promo-10': { category: 'promo', name: '10 · Fitness Promo', file: 'cf-promo-10.liquid' },
+
+    'cf-snack-01': { category: 'snack', name: '01 · Luxury Snack', file: 'cf-snack-01.liquid' },
+    'cf-snack-02': { category: 'snack', name: '02 · Streetwear Snack', file: 'cf-snack-02.liquid' },
+    'cf-snack-03': { category: 'snack', name: '03 · Tech Snack', file: 'cf-snack-03.liquid' },
+    'cf-snack-04': { category: 'snack', name: '04 · Health Snack', file: 'cf-snack-04.liquid' },
+    'cf-snack-05': { category: 'snack', name: '05 · Beauty Snack', file: 'cf-snack-05.liquid' },
+    'cf-snack-06': { category: 'snack', name: '06 · Automotive Snack', file: 'cf-snack-06.liquid' },
+    'cf-snack-07': { category: 'snack', name: '07 · SaaS Snack', file: 'cf-snack-07.liquid' },
+    'cf-snack-08': { category: 'snack', name: '08 · Kids Snack', file: 'cf-snack-08.liquid' },
+    'cf-snack-09': { category: 'snack', name: '09 · Furniture Snack', file: 'cf-snack-09.liquid' },
+    'cf-snack-10': { category: 'snack', name: '10 · Fitness Snack', file: 'cf-snack-10.liquid' },
 
     'cf-announce-01': { category: 'announcement', name: '01 · Gradient Marquee', file: 'cf-announce-01.liquid' },
     'cf-announce-02': { category: 'announcement', name: '02 · Minimal Dark Bar', file: 'cf-announce-02.liquid' },

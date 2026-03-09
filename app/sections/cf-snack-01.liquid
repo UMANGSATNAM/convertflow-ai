@@ -1,0 +1,35 @@
+<style>
+.cf-sn-01{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-sn-01-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.cf-sn-01-text{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;letter-spacing:0.05em;font-style:italic}
+.cf-sn-01-code{display:inline-flex;align-items:center;gap:10px;padding:8px 20px;border:1px solid {{ section.settings.text_color }};background:transparent}
+.cf-sn-01-code span{font-family:sans-serif;font-weight:600;font-size:12px;letter-spacing:0.1em;color:{{ section.settings.text_color }}}
+.cf-sn-01-copy{cursor:pointer;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;border-bottom:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }}}
+@media(max-width:600px){.cf-sn-01-inner{flex-direction:column;text-align:center;gap:15px}}
+</style>
+
+<div class="cf-sn-01">
+  <div class="cf-sn-01-inner">
+    <div class="cf-sn-01-text">{{ section.settings.text }}</div>
+    <div class="cf-sn-01-code">
+      <span>{{ section.settings.code }}</span>
+      <div class="cf-sn-01-copy" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('Code Copied!')">Copy</div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Snack",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"Enjoy 15% off your first curation."},
+    {"type":"text","id":"code","label":"Promo Code","default":"WELCOME15"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":32,"step":1,"default":16},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border","default":"#e5e5e5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20}
+  ],
+  "presets": [{"name":"01 · Luxury Snack"}]
+}
+{% endschema %}

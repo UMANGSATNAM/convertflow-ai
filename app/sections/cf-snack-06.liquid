@@ -1,0 +1,39 @@
+<style>
+.cf-sn-06{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-sn-06-inner{max-width:900px;margin:0 auto;display:flex;align-items:stretch;background:#111;position:relative;overflow:hidden;transform:skewX(-10deg)}
+.cf-sn-06-left{background:{{ section.settings.accent_color }};padding:15px 30px;display:flex;align-items:center;justify-content:center}
+.cf-sn-06-text{color:#fff;font-size:{{ section.settings.text_size }}px;font-weight:900;text-transform:uppercase;font-style:italic;transform:skewX(10deg)}
+.cf-sn-06-right{flex:1;padding:15px 30px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid {{ section.settings.accent_color }};border-bottom:2px solid {{ section.settings.accent_color }};border-right:2px solid {{ section.settings.accent_color }}}
+.cf-sn-06-code{color:{{ section.settings.text_color }};font-size:24px;font-weight:900;letter-spacing:0.1em;transform:skewX(10deg)}
+.cf-sn-06-btn{background:#fff;border:0;color:#000;font-weight:900;padding:8px 20px;text-transform:uppercase;font-style:italic;cursor:pointer;transform:skewX(10deg);transition:0.2s}
+.cf-sn-06-btn:hover{background:{{ section.settings.accent_color }};color:#fff}
+@media(max-width:768px){.cf-sn-06-inner{flex-direction:column;transform:none}.cf-sn-06-left,.cf-sn-06-text,.cf-sn-06-right,.cf-sn-06-code,.cf-sn-06-btn{transform:none;text-align:center}.cf-sn-06-right{border-left:2px solid {{ section.settings.accent_color }}}}
+</style>
+
+<div class="cf-sn-06">
+  <div class="cf-sn-06-inner">
+    <div class="cf-sn-06-left">
+      <div class="cf-sn-06-text">{{ section.settings.text }}</div>
+    </div>
+    <div class="cf-sn-06-right">
+      <div class="cf-sn-06-code">{{ section.settings.code }}</div>
+      <button class="cf-sn-06-btn" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('COPIED')">COPY</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Auto Snack",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"FLASH SALE"},
+    {"type":"text","id":"code","label":"Promo Code","default":"RACE20"},
+    {"type":"range","id":"text_size","label":"Label Size","min":14,"max":32,"step":1,"default":20},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Code Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent (Red)","default":"#ef4444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20}
+  ],
+  "presets": [{"name":"06 · Auto Snack"}]
+}
+{% endschema %}

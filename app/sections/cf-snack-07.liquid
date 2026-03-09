@@ -1,0 +1,42 @@
+<style>
+.cf-sn-07{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:system-ui,-apple-system,sans-serif}
+.cf-sn-07-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px 30px;box-shadow:0 10px 15px -3px rgba(0,0,0,0.05)}
+.cf-sn-07-text-wrap{display:flex;flex-direction:column;gap:4px}
+.cf-sn-07-title{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;font-weight:700}
+.cf-sn-07-sub{color:#64748b;font-size:14px}
+.cf-sn-07-code-wrap{display:flex;border:1px solid #cbd5e1;border-radius:6px;overflow:hidden}
+.cf-sn-07-code{padding:10px 16px;background:#f8fafc;color:{{ section.settings.text_color }};font-family:monospace;font-weight:700;font-size:15px;border-right:1px solid #cbd5e1}
+.cf-sn-07-btn{padding:10px 20px;background:#fff;color:{{ section.settings.accent_color }};border:0;font-weight:600;font-size:14px;cursor:pointer;transition:0.2s}
+.cf-sn-07-btn:hover{background:{{ section.settings.accent_color }};color:#fff}
+@media(max-width:600px){.cf-sn-07-inner{flex-direction:column;text-align:center}.cf-sn-07-code-wrap{width:100%}.cf-sn-07-code{flex:1;text-align:center}}
+</style>
+
+<div class="cf-sn-07">
+  <div class="cf-sn-07-inner">
+    <div class="cf-sn-07-text-wrap">
+      <div class="cf-sn-07-title">{{ section.settings.text }}</div>
+      <div class="cf-sn-07-sub">{{ section.settings.sub }}</div>
+    </div>
+    <div class="cf-sn-07-code-wrap">
+      <div class="cf-sn-07-code">{{ section.settings.code }}</div>
+      <button class="cf-sn-07-btn" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('Copied')">Copy</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · SaaS Snack",
+  "settings": [
+    {"type":"text","id":"text","label":"Title","default":"Get 2 months free on Annual Billing"},
+    {"type":"text","id":"sub","label":"Subtitle","default":"Apply this code at checkout to claim your discount."},
+    {"type":"text","id":"code","label":"Promo Code","default":"ANNUAL2M"},
+    {"type":"range","id":"text_size","label":"Title Size","min":14,"max":24,"step":1,"default":16},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent (Blue/Indigo)","default":"#6366f1"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20}
+  ],
+  "presets": [{"name":"07 · SaaS Snack"}]
+}
+{% endschema %}

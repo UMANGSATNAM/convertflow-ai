@@ -1,0 +1,36 @@
+<style>
+.cf-sn-04{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-sn-04-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:15px;background:#fff;border-radius:100px;box-shadow:0 4px 15px rgba(0,0,0,0.05);padding:12px 24px}
+.cf-sn-04-icon{color:{{ section.settings.accent_color }};display:flex;align-items:center}
+.cf-sn-04-text{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;font-weight:500}
+.cf-sn-04-code{display:inline-flex;align-items:center;gap:10px;background:{{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};padding:6px 16px;border-radius:100px;color:{{ section.settings.accent_color }};font-weight:700;font-size:14px;cursor:pointer;transition:0.2s}
+.cf-sn-04-code:hover{background:{{ section.settings.accent_color }};color:#fff}
+@media(max-width:600px){.cf-sn-04-inner{flex-direction:column;text-align:center;border-radius:20px;padding:20px}}
+</style>
+
+<div class="cf-sn-04">
+  <div class="cf-sn-04-inner">
+    <div class="cf-sn-04-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+    <div class="cf-sn-04-text">{{ section.settings.text }}</div>
+    <div class="cf-sn-04-code" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');alert('Code applied!')">
+      {{ section.settings.code }}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Health Snack",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"Enjoy complimentary shipping on your organic bundle."},
+    {"type":"text","id":"code","label":"Promo Code","default":"FREESHIP"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":24,"step":1,"default":15},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#ecfccb"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#3f6212"},
+    {"type":"color","id":"accent_color","label":"Accent (Green)","default":"#65a30d"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20}
+  ],
+  "presets": [{"name":"04 · Health Snack"}]
+}
+{% endschema %}
