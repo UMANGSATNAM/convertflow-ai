@@ -279,21 +279,20 @@ export default function ThemeEditor() {
         <div style={S.root}>
             <style>{CSS}</style>
 
-            {/* ── TOPBAR ── */}
+            {/* ── TOP NAV BAR (Reverted to Shopify App Nav standard) ── */}
             <header style={S.topbar}>
                 <div style={S.topbarLeft}>
-                    <button className="te-icon-btn" onClick={() => navigate('/app')} title="Exit">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                    <button className="te-back-btn" onClick={() => navigate('/app')} title="Exit Editor">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                     </button>
-                    <div style={S.deviceToggle}>
-                        {[['desktop', '🖥'], ['mobile', '📱']].map(([d, icon]) => (
-                            <button key={d} className={`te-dev-btn${device === d ? ' active' : ''}`} onClick={() => setDevice(d)}>{icon}</button>
-                        ))}
-                    </div>
+                    <span style={S.topbarPageName}>Home page</span>
                 </div>
 
                 <div style={S.topbarCenter}>
-                    <span style={S.topbarPageName}>Home page</span>
+                    <div style={S.deviceToggle}>
+                        <button className={"te-dev-btn" + (device === 'desktop' ? ' active' : '')} onClick={() => setDevice('desktop')}><Monitor size={16} strokeWidth={2.5} /></button>
+                        <button className={"te-dev-btn" + (device === 'mobile' ? ' active' : '')} onClick={() => setDevice('mobile')}><Smartphone size={16} strokeWidth={2.5} /></button>
+                    </div>
                 </div>
 
                 <div style={S.topbarRight}>
@@ -302,28 +301,25 @@ export default function ThemeEditor() {
                             {toast.msg}
                         </span>
                     )}
-                    {isBusy && <span style={S.savingDot}>Saving…</span>}
+                    {isBusy && <span style={S.savingDot}>Saving...</span>}
                     <button
                         className="te-save-btn"
                         onClick={activeBlockId ? handleSaveLive : handleInject}
-                        disabled={isBusy || leftView === 'outline' || leftView === 'categories' || leftView === 'templates'}
+                        disabled={isBusy || (!activeBlockId && !selectedTemplateId)}
                     >
                         Save
                     </button>
                 </div>
             </header>
 
-            {/* ── BODY (2-PANEL) ── */}
-            <div style={S.body}>
-
-                {/* ── LEFT SIDEBAR (DYNAMIC) ── */}
-                <aside style={S.leftPanel}>
-
+            <div style={S.workspace}>
+                {/* ── LEFT SIDEBAR (Outline/Templates) ── */}
+                <aside style={S.leftSidebar}>
                     {/* STATE 0: OUTLINE */}
                     {leftView === 'outline' && (
-                        <div style={S.leftInner}>
+                        <div style={S.panelInner}>
                             <div style={S.panelHeader}>
-                                <span style={S.panelTitle}>Templates</span>
+                                <span style={S.panelTitle}>Sections</span>
                             </div>
 
                             <div style={S.outlineList}>
@@ -336,21 +332,20 @@ export default function ThemeEditor() {
                                     return (
                                         <div
                                             key={block.id}
-                                            className={`te-block-row${isActive ? ' active' : ''}`}
+                                            className={"te-block-row" + (isActive ? ' active' : '')}
                                             onClick={() => {
                                                 if (block.isCf) {
                                                     setActiveBlockId(block.id);
                                                     setSelectedTemplateId(null);
-                                                    setLeftView('settings');
                                                 }
                                             }}
                                         >
                                             <div style={S.blockRowLeft}>
                                                 <span style={S.dragHandle}>
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="5" r="1" /><circle cx="9" cy="12" r="1" /><circle cx="9" cy="19" r="1" /><circle cx="15" cy="5" r="1" /><circle cx="15" cy="12" r="1" /><circle cx="15" cy="19" r="1" /></svg>
+                                                    <Grid size={13} strokeWidth={2.5}/>
                                                 </span>
                                                 <span style={S.blockIcon}>
-                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
+                                                    {block.isCf ? <Palette size={14} /> : <Layout size={14} />}
                                                 </span>
                                                 <span style={S.blockLabel}>{label}</span>
                                             </div>
@@ -360,7 +355,7 @@ export default function ThemeEditor() {
                                                     onClick={(e) => { e.stopPropagation(); handleRemove(block.id); }}
                                                     title="Remove section"
                                                 >
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
                                                 </button>
                                             )}
                                         </div>
@@ -370,7 +365,7 @@ export default function ThemeEditor() {
 
                             <div style={S.addSectionArea}>
                                 <button className="te-text-btn" onClick={() => setLeftView('categories')}>
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                                     Add section
                                 </button>
                             </div>
@@ -379,10 +374,10 @@ export default function ThemeEditor() {
 
                     {/* STATE 1: CATEGORIES */}
                     {leftView === 'categories' && (
-                        <div style={S.leftInner}>
+                        <div style={S.panelInner}>
                             <div style={S.panelHeader}>
-                                <button className="te-back-btn" onClick={() => setLeftView('outline')}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                <button className="te-icon-back" onClick={() => setLeftView('outline')}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                                 </button>
                                 <span style={S.panelTitle}>Add section</span>
                             </div>
@@ -391,7 +386,7 @@ export default function ThemeEditor() {
                                     <button key={cat.id} className="te-list-item" onClick={() => handleSelectCategory(cat.id)}>
                                         <span style={S.listIcon}>{CAT_SVG[cat.id] || CAT_SVG.default}</span>
                                         <span style={S.listText}>{cat.name}</span>
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2" style={{ marginLeft: 'auto' }}><polyline points="9 18 15 12 9 6" /></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2.5" style={{ marginLeft: 'auto' }}><polyline points="9 18 15 12 9 6" /></svg>
                                     </button>
                                 ))}
                             </div>
@@ -400,10 +395,10 @@ export default function ThemeEditor() {
 
                     {/* STATE 2: TEMPLATES */}
                     {leftView === 'templates' && (
-                        <div style={S.leftInner}>
+                        <div style={S.panelInner}>
                             <div style={S.panelHeader}>
-                                <button className="te-back-btn" onClick={() => setLeftView('categories')}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                <button className="te-icon-back" onClick={() => setLeftView('categories')}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                                 </button>
                                 <span style={S.panelTitle}>{cfCats.find(c => c.id === activeCategoryId)?.name || 'Templates'}</span>
                             </div>
@@ -420,25 +415,52 @@ export default function ThemeEditor() {
                             </div>
                         </div>
                     )}
+                </aside>
 
-                    {/* STATE 3: SETTINGS (Edit New or Edit Existing) */}
-                    {leftView === 'settings' && (selectedTemplateId || activeBlockId) && (
-                        <div style={S.leftInner}>
+                {/* ── CENTER CANVAS (Persistent Full Preview) ── */}
+                <main style={S.canvas}>
+                    <div style={{
+                        ...S.previewFrame,
+                        width: device === 'mobile' ? '400px' : '100%',
+                        maxWidth: device === 'mobile' ? '400px' : '100%',
+                    }}>
+                        {!previewHtml && !activeBlockId && !selectedTemplateId && (
+                             <div style={S.previewPlaceholder}>
+                                 <div className="te-spinner" />
+                                 <p style={{marginTop: 12, color: '#6d7175', fontSize: 13}}>Loading original theme...</p>
+                             </div>
+                        )}
+                        {previewLoading && (
+                            <div style={S.previewOverlay}>
+                                <div className="te-spinner" />
+                            </div>
+                        )}
+                        {previewHtml && (
+                            <iframe
+                                srcDoc={previewHtml}
+                                style={{ ...S.previewIframe, opacity: previewLoading ? 0.5 : 1 }}
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                title="Live Preview"
+                            />
+                        )}
+                    </div>
+                </main>
+
+                {/* ── RIGHT SETTINGS PANEL (Conditional) ── */}
+                {(selectedTemplateId || activeBlockId) && (
+                    <aside style={S.rightSidebar}>
+                        <div style={S.panelInner}>
                             <div style={S.panelHeader}>
-                                <button className="te-back-btn" onClick={() => {
+                                <button className="te-icon-back" onClick={() => {
                                     if (activeBlockId) {
                                         setActiveBlockId(null);
                                         setSettings({});
-                                        setPreviewHtml('');
-                                        setLeftView('outline');
                                     } else {
-                                        setLeftView('templates');
                                         setSelectedTemplateId(null);
                                         setSettings({});
-                                        setPreviewHtml('');
                                     }
                                 }}>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                                 </button>
                                 <span style={S.panelTitle}>
                                     {templateSchema.name || (activeBlockId ? 'Edit Section' : 'Customize Section')}
@@ -446,13 +468,12 @@ export default function ThemeEditor() {
                             </div>
 
                             <div style={S.settingsScroll}>
-                                {/* Only show placement for new sections */}
                                 {!activeBlockId && (
                                     <div style={S.settingBlock}>
                                         <label style={S.settingLabel}>Inject Position</label>
                                         <div style={S.placementRow}>
                                             {[['top', 'Below Header'], ['bottom', 'Above Footer']].map(([v, label]) => (
-                                                <button key={v} className={`te-place-btn${placement === v ? ' active' : ''}`} onClick={() => setPlacement(v)}>
+                                                <button key={v} className={"te-place-btn" + (placement === v ? ' active' : '')} onClick={() => setPlacement(v)}>
                                                     {label}
                                                 </button>
                                             ))}
@@ -476,37 +497,8 @@ export default function ThemeEditor() {
                                 )}
                             </div>
                         </div>
-                    )}
-                </aside>
-
-                {/* ── RIGHT CANVAS (PREVIEW ONLY) ── */}
-                <main style={S.canvas}>
-                    <div style={{
-                        ...S.previewFrame,
-                        width: device === 'mobile' ? '400px' : '100%',
-                        maxWidth: device === 'mobile' ? '400px' : '100%',
-                    }}>
-                        {(!selectedTemplateId && !activeBlockId && !previewHtml) && (
-                            <div style={S.previewPlaceholder}>
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
-                                <p style={S.previewPlaceholderText}>Select a section from the sidebar to preview.</p>
-                            </div>
-                        )}
-                        {previewLoading && (
-                            <div style={S.previewOverlay}>
-                                <div className="te-spinner" />
-                            </div>
-                        )}
-                        {previewHtml && (
-                            <iframe
-                                srcDoc={previewHtml}
-                                style={{ ...S.previewIframe, opacity: previewLoading ? 0.5 : 1 }}
-                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                                title="Live Preview"
-                            />
-                        )}
-                    </div>
-                </main>
+                    </aside>
+                )}
             </div>
         </div>
     );
@@ -582,6 +574,7 @@ function SettingRow({ setting, value, onChange }) {
 
 // ─── SVG ICONS (PREMIUM) ──────────────────────────────────────────────────────
 
+
 const SVG_ICONS = {
     layout: <Layout size={20} strokeWidth={1.5} />,
     announcement: <Megaphone size={20} strokeWidth={1.5} />,
@@ -618,26 +611,11 @@ const CAT_SVG = {
 };
 
 const S = {
-    root: { display: 'flex', height: '100vh', overflow: 'hidden', background: '#f9fafb', fontFamily: '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
+    root: { display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: '#f4f6f8', fontFamily: '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
 
-    // ── GLOBAL SIDEBAR ──
-    globalSidebar: { width: 240, flexShrink: 0, background: '#f9fafb', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', zIndex: 20 },
-    gsbLogo: { padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 12 },
-    gsbLogoIcon: { background: '#202223', color: '#fff', borderRadius: 8, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' },
-    gsbLogoText: { fontSize: 15, fontWeight: 700, color: '#202223' },
-    gsbMenu: { padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 4, flex: 1 },
-    gsbLink: { display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px', fontSize: 14, fontWeight: 500, color: '#5c5f62', background: 'transparent', border: 'none', borderRadius: 6, cursor: 'pointer', textAlign: 'left', width: '100%' },
-    gsbDivider: { height: 1, background: '#dfe3e8', margin: '16px 0' },
-    gsbHeader: { fontSize: 11, fontWeight: 700, color: '#8c9196', letterSpacing: '0.05em', padding: '0 12px', marginBottom: 6 },
-    gsbActiveGroup: { display: 'flex', flexDirection: 'column' },
-    gsbSubLinkActive: { display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px 8px 36px', fontSize: 13, fontWeight: 600, color: '#2c6ecb', background: '#eef2ff', borderRadius: 6, cursor: 'pointer', position: 'relative' },
-    gsbActiveBar: { position: 'absolute', left: -16, top: '50%', transform: 'translateY(-50%)', width: 3, height: 16, background: '#2c6ecb', borderRadius: '0 4px 4px 0' },
-
-    // ── EDITOR SHELL ──
-    editorShell: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-
+    // ── TOP NAV BAR ──
     topbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 56, background: '#fff', borderBottom: '1px solid #dfe3e8', flexShrink: 0, zIndex: 10 },
-    topbarLeft: { display: 'flex', alignItems: 'center', width: 200 },
+    topbarLeft: { display: 'flex', alignItems: 'center', width: 200, gap: 16 },
     deviceToggle: { display: 'flex', background: '#f4f6f8', borderRadius: 6, padding: 4 },
     topbarCenter: { flex: 1, display: 'flex', justifyContent: 'center' },
     topbarPageName: { fontSize: 14, fontWeight: 600, color: '#202223' },
@@ -645,30 +623,32 @@ const S = {
     savingDot: { fontSize: 13, color: '#aaa' },
     toastBadge: { fontSize: 13, fontWeight: 600, padding: '6px 12px', borderRadius: 6 },
 
-    body: { display: 'flex', flex: 1, overflow: 'hidden' },
+    workspace: { display: 'flex', flex: 1, overflow: 'hidden' },
 
-    // ── INNER SIDEBAR ──
-    leftPanel: { width: 300, flexShrink: 0, background: '#fff', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
-    leftInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
-    panelHeader: { display: 'flex', alignItems: 'center', gap: 12, padding: '16px', borderBottom: '1px solid #f4f6f8' },
+    // ── LEFT SIDEBAR (Outline/Templates) ──
+    leftSidebar: { width: 320, flexShrink: 0, background: '#fff', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
+    
+    // ── RIGHT SIDEBAR (Settings) ──
+    rightSidebar: { width: 340, flexShrink: 0, background: '#fff', borderLeft: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
+    
+    // ── SHARED PANEL STYLES ──
+    panelInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
+    panelHeader: { display: 'flex', alignItems: 'center', gap: 12, padding: '16px', borderBottom: '1px solid #f4f6f8', flexShrink: 0 },
     panelTitle: { fontSize: 14, fontWeight: 600, color: '#202223', flex: 1 },
-
+    
     outlineList: { flex: 1, overflowY: 'auto', padding: '16px 12px' },
     emptyHint: { fontSize: 13, color: '#6d7175', textAlign: 'center', padding: '32px 16px' },
     blockRowLeft: { display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 },
-    dragHandle: { color: '#c4cdd5', cursor: 'pointer', display: 'flex' },
+    dragHandle: { color: '#c4cdd5', cursor: 'grab', display: 'flex' },
     blockIcon: { color: '#8c9196', display: 'flex' },
     blockLabel: { fontSize: 13, color: '#202223', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
-
-    addSectionArea: { padding: '16px', borderTop: '1px solid #dfe3e8', background: '#fff' },
+    
+    addSectionArea: { padding: '16px', borderTop: '1px solid #dfe3e8', background: '#fff', flexShrink: 0 },
 
     scrollArea: { flex: 1, overflowY: 'auto', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 4 },
     listIcon: { width: 20, height: 20, color: '#8c9196', display: 'flex', alignItems: 'center', justifyContent: 'center' },
     listText: { fontSize: 13, color: '#202223', fontWeight: 500 },
 
-    // ── RIGHT SETTINGS PANEL ──
-    rightPanel: { width: 340, flexShrink: 0, background: '#fff', borderLeft: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
-    rightInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
     settingsScroll: { flex: 1, overflowY: 'auto' },
     settingsList: { padding: '16px' },
     settingBlock: { marginBottom: 20 },
@@ -677,19 +657,18 @@ const S = {
     colorSwatch: { width: 36, height: 36, padding: 0, border: '1px solid #c4cdd5', borderRadius: 6, cursor: 'pointer', overflow: 'hidden' },
     colorCode: { fontSize: 13, color: '#202223', fontFamily: 'monospace', flex: 1, background: '#f4f6f8', padding: '8px 12px', border: '1px solid #c4cdd5', borderRadius: 6 },
     rangeVal: { fontSize: 13, fontWeight: 500, color: '#202223', minWidth: 40, textAlign: 'right' },
-
+    
     imageUploadBox: { border: '1px dashed #c4cdd5', borderRadius: 8, background: '#f9fafb', padding: 8, textAlign: 'center' },
     imageUploadLabel: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '24px 0', cursor: 'pointer', color: '#5c5f62', fontSize: 13, fontWeight: 500 },
     imagePreviewWrapper: { position: 'relative', width: '100%', height: 120, borderRadius: 4, overflow: 'hidden', background: '#fff', border: '1px solid #e1e3e5' },
     imagePreview: { width: '100%', height: '100%', objectFit: 'contain' },
 
-    // ── CENTER CANVAS ──
-    canvas: { flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflow: 'auto', background: '#f4f6f8', padding: '24px 40px' },
-    previewFrame: { background: '#fff', borderRadius: 8, boxShadow: '0 0 0 1px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05)', overflow: 'hidden', transition: 'width 0.3s ease', minHeight: 'calc(100vh - 100px)', position: 'relative' },
-    previewPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 400, gap: 16 },
-    previewPlaceholderText: { fontSize: 14, color: '#6d7175', textAlign: 'center' },
-    previewOverlay: { position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5, backdropFilter: 'blur(2px)' },
-    previewIframe: { width: '100%', height: '100%', minHeight: 'calc(100vh - 100px)', border: 'none', display: 'block', transition: 'opacity 0.2s' },
+    // ── CENTER CANVAS (Persistent) ──
+    canvas: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'hidden', background: '#f4f6f8' },
+    previewFrame: { background: '#fff', boxShadow: '0 0 0 1px rgba(0,0,0,0.05)', transition: 'width 0.3s ease', display: 'flex', flexDirection: 'column', flex: 1, width: '100%', position: 'relative' },
+    previewPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 16 },
+    previewOverlay: { position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 },
+    previewIframe: { width: '100%', height: '100%', border: 'none', display: 'block', transition: 'opacity 0.2s', flex: 1 },
 };
 
 const CSS = `
@@ -698,19 +677,19 @@ const CSS = `
 body { font-family: 'Inter', sans-serif; overflow: hidden; }
 
 /* Buttons */
-.te-icon-btn {
-  width: 36px; height: 36px; border-radius: 6px; border: none;
-  background: transparent; display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #a1a1aa; transition: all 0.15s;
-}
-.te-icon-btn:hover { background: rgba(0,0,0,0.05); color: #202223; }
-
 .te-back-btn {
   width: 32px; height: 32px; border-radius: 6px; border: 1px solid #dfe3e8;
   background: #fff; display: inline-flex; align-items: center; justify-content: center;
   cursor: pointer; color: #5c5f62; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 .te-back-btn:hover { background: #f9fafb; border-color: #c4cdd5; color: #202223; }
+
+.te-icon-back {
+  width: 32px; height: 32px; border-radius: 6px; border: none;
+  background: transparent; display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #5c5f62; transition: all 0.15s; margin-left: -8px;
+}
+.te-icon-back:hover { background: rgba(0,0,0,0.05); color: #202223; }
 
 .te-dev-btn {
   padding: 6px 12px; border: none; background: transparent; cursor: pointer;
@@ -733,9 +712,6 @@ body { font-family: 'Inter', sans-serif; overflow: hidden; }
   transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 .te-text-btn:hover { background: #f9fafb; border-color: #c4cdd5; }
-
-/* Global Sidebar */
-nav > div > button:hover { background: #f4f6f8!important; color: #202223!important; }
 
 /* Lists & Rows */
 .te-block-row {
@@ -784,7 +760,7 @@ nav > div > button:hover { background: #f4f6f8!important; color: #202223!importa
 .te-img-del-btn:hover { background: #d82c0d; }
 
 .te-spinner {
-  width: 28px; height: 28px; border: 3px solid #dfe3e8;
+  width: 24px; height: 24px; border: 2px solid #dfe3e8;
   border-top-color: #2c6ecb; border-radius: 50%;
   animation: te-spin 0.6s linear infinite;
 }
