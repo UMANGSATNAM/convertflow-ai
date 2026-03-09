@@ -122,16 +122,51 @@ export default function AppIndex() {
             `}</style>
 
       <div style={S.container}>
-        {/* Header */}
-        <div style={S.header}>
-          <div>
-            <h1 style={S.title}>Section Builder</h1>
-            <p style={S.subtitle}>Connected to <strong>{shop}</strong></p>
+        {/* ──── HERO: THEME EDITOR LAUNCH CARD ──── */}
+        <div style={S.editorHero}>
+          <div style={S.editorHeroLeft}>
+            <div style={S.editorHeroBadge}>NEW ✦ Visual Theme Editor</div>
+            <h2 style={S.editorHeroTitle}>Build your store like a Pro</h2>
+            <p style={S.editorHeroDesc}>
+              Our Shopify-style Theme Editor lets you pick from pre-made sections,
+              customize every setting, see a live preview, and inject directly into your
+              live theme — all in one place.
+            </p>
+            <a href="/app/theme-editor" style={S.editorHeroCta}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+              Open Theme Editor
+            </a>
           </div>
-          <a href="/app/theme-editor" style={S.editorBtn}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
-            Open Theme Editor
-          </a>
+          <div style={S.editorHeroRight}>
+            <div style={S.editorMock}>
+              <div style={S.editorMockTopbar}>
+                <span style={S.editorMockDot} />
+                <span style={{ ...S.editorMockDot, background: 'rgba(255,255,255,0.4)' }} />
+                <span style={{ ...S.editorMockDot, background: 'rgba(255,255,255,0.2)' }} />
+                <div style={S.editorMockTitle}>Theme Editor</div>
+              </div>
+              <div style={S.editorMockBody}>
+                <div style={S.editorMockLeft}>
+                  {['Header', 'Announcement', 'Hero Section', 'Products'].map((s, i) => (
+                    <div key={s} style={{ ...S.editorMockSection, opacity: i === 1 ? 1 : 0.5, borderLeft: i === 1 ? '3px solid #818cf8' : '3px solid transparent' }}>
+                      {i === 1 && <span style={{ color: '#818cf8', fontSize: 8, fontWeight: 800, marginRight: 4 }}>CF</span>}
+                      {s}
+                    </div>
+                  ))}
+                </div>
+                <div style={S.editorMockCenter}>
+                  <div style={{ width: '100%', height: 18, background: 'rgba(255,255,255,0.15)', borderRadius: 3, marginBottom: 6 }} />
+                  <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 3, marginBottom: 4 }} />
+                  <div style={{ width: '70%', height: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 3 }} />
+                </div>
+                <div style={S.editorMockRight}>
+                  <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.15)', borderRadius: 3, marginBottom: 8 }} />
+                  {[1, 2, 3].map(i => <div key={i} style={{ width: '100%', height: 28, background: 'rgba(255,255,255,0.07)', borderRadius: 4, marginBottom: 4 }} />)}
+                  <div style={{ ...S.editorMockInjectBtn }}>🚀 Inject</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions Banner */}
@@ -142,6 +177,7 @@ export default function AppIndex() {
             {result?.intent === 'fix_all' && <span style={{ fontSize: 12, color: result.ok ? '#059669' : '#dc2626' }}>{result.ok ? result.message : result.error}</span>}
             {result?.intent === 'remove_all_cf' && <span style={{ fontSize: 12, color: result.ok ? '#059669' : '#dc2626' }}>{result.ok ? result.message : result.error}</span>}
           </div>
+
           <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
             <fetcher.Form method="post">
               <input type="hidden" name="intent" value="fix_all" />
@@ -364,6 +400,25 @@ const S = {
   subtitle: { fontSize: 13, color: '#666', margin: 0 },
   sectionLabel: { fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 16 },
   toast: { padding: '12px 16px', borderRadius: 8, fontSize: 13, fontWeight: 500, border: '1px solid', marginBottom: 20, display: 'flex', alignItems: 'center' },
+
+  editorHero: { display: 'flex', background: 'linear-gradient(135deg, #111 0%, #1e1b4b 100%)', borderRadius: 20, padding: 40, marginTop: 10, marginBottom: 30, color: '#fff', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden' },
+  editorHeroLeft: { flex: 1, paddingRight: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' },
+  editorHeroBadge: { background: 'rgba(99,102,241,0.2)', color: '#818cf8', padding: '4px 12px', borderRadius: 100, fontSize: 11, fontWeight: 800, letterSpacing: '0.08em', marginBottom: 16 },
+  editorHeroTitle: { fontSize: 32, fontWeight: 800, margin: '0 0 16px', letterSpacing: '-0.02em', lineHeight: 1.2 },
+  editorHeroDesc: { fontSize: 15, color: 'rgba(255,255,255,0.7)', margin: '0 0 24px', lineHeight: 1.5, maxWidth: 400 },
+  editorHeroCta: { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: '#111', padding: '12px 24px', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none', transition: 'transform 0.2s', boxShadow: '0 4px 14px rgba(255,255,255,0.1)' },
+
+  editorHeroRight: { width: 340, flexShrink: 0, position: 'relative' },
+  editorMock: { background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', backdropFilter: 'blur(10px)', height: '100%', display: 'flex', flexDirection: 'column', transform: 'rotate(1deg) scale(1.05)', transformOrigin: 'right center' },
+  editorMockTopbar: { display: 'flex', alignItems: 'center', padding: '10px 12px', background: 'rgba(0,0,0,0.2)', borderBottom: '1px solid rgba(255,255,255,0.05)', gap: 6 },
+  editorMockDot: { width: 8, height: 8, borderRadius: 4, background: '#ef4444' },
+  editorMockTitle: { flex: 1, textAlign: 'center', fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.05em' },
+  editorMockBody: { display: 'flex', flex: 1 },
+  editorMockLeft: { width: 90, borderRight: '1px solid rgba(255,255,255,0.05)', padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 8 },
+  editorMockSection: { fontSize: 9, color: 'rgba(255,255,255,0.7)', background: 'rgba(255,255,255,0.05)', padding: '6px 8px', borderRadius: 4, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' },
+  editorMockCenter: { flex: 1, padding: 16 },
+  editorMockRight: { width: 80, borderLeft: '1px solid rgba(255,255,255,0.05)', padding: '12px 8px', display: 'flex', flexDirection: 'column' },
+  editorMockInjectBtn: { marginTop: 'auto', background: '#818cf8', color: '#fff', textAlign: 'center', padding: '6px', borderRadius: 4, fontSize: 10, fontWeight: 700 },
 
   setupCard: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '24px', marginBottom: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' },
   setupRow: { display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16 },
