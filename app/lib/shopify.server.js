@@ -65,7 +65,9 @@ export async function uploadAsset(shop, accessToken, themeId, assetKey, content)
     );
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(`${assetKey}: ${err.errors || res.statusText}`);
+        let errMsg = err.errors || res.statusText;
+        if (typeof errMsg === 'object') errMsg = JSON.stringify(errMsg);
+        throw new Error(`${assetKey}: ${errMsg}`);
     }
     return true;
 }

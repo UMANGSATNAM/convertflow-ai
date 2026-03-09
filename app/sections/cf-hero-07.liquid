@@ -1,5 +1,5 @@
 <style>
-.cf-hero-07{width:100%;min-height:{{ section.settings.height }}px;background:{{ section.settings.bg_color }};position:relative;overflow:hidden;display:flex;align-items:center}
+.cf-hero-07{padding-top:{{ section.settings.padding_top }}px;padding-bottom:{{ section.settings.padding_bottom }}px;width:100%;min-height:{{ section.settings.height }}px;background:{{ section.settings.bg_color }};position:relative;overflow:hidden;display:flex;align-items:center}
 .cf-hero-07-inner{width:100%;max-width:1200px;margin:0 auto;padding:80px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .cf-hero-07-tag{font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:{{ section.settings.accent }};margin-bottom:16px}
 .cf-hero-07 h1{font-size:clamp(30px,4vw,{{ section.settings.heading_size }}px);font-weight:800;color:{{ section.settings.heading_color }};margin:0 0 20px;line-height:1.1;letter-spacing:-0.02em}
@@ -53,6 +53,8 @@
 {
   "name": "07 · Video + Features Hero",
   "settings": [
+    {"type":"range","id":"padding_top","label":"Padding Top","min":0,"max":200,"step":5,"default":0},
+    {"type":"range","id":"padding_bottom","label":"Padding Bottom","min":0,"max":200,"step":5,"default":0},
     {"type":"text","id":"tag","label":"Tag","default":"WHY CHOOSE US"},
     {"type":"text","id":"heading","label":"Heading","default":"Premium Quality You Can Trust"},
     {"type":"textarea","id":"subheading","label":"Subheading","default":"Our products are ethically sourced and crafted with attention to every detail."},

@@ -136,6 +136,10 @@ export const action = async ({ request }) => {
         return json({ ok: false, error: "Unknown intent" });
     } catch (e) {
         console.error("Theme Editor Action Error:", e);
+        try {
+            const fs = require('fs');
+            fs.appendFileSync(process.cwd() + '/error.log', new Date().toISOString() + ' : ' + e.message + '\n');
+        } catch (err) { }
         return json({ ok: false, error: e.message });
     }
 };
@@ -168,16 +172,21 @@ export default function ThemeEditor() {
 
     // Sync page blocks from action response
     useEffect(() => {
-        if (fetcher.data?.pageBlocks) setPageBlocks(fetcher.data.pageBlocks);
-        if (fetcher.data?.message) {
-            setToast({ msg: fetcher.data.message, ok: fetcher.data.ok });
-            setTimeout(() => setToast(null), 3000);
+        if (!fetcher.data) return;
+        if (fetcher.data.pageBlocks) {
+            setPageBlocks(fetcher.data.pageBlocks);
         }
-        if (fetcher.data?.error) {
-            setToast({ msg: fetcher.data.error, ok: false });
-            setTimeout(() => setToast(null), 6000);
+        if (fetcher.data.ok && fetcher.data.message) {
+            setToast({ msg: fetcher.data.message, ok: true });
+            setTimeout(() => setToast(null), 4000);
         }
-        if (fetcher.data?.newBlockId) {
+        if (fetcher.data.error) {
+            setToast({ msg: '❌ ' + fetcher.data.error, ok: false });
+            setTimeout(() => setToast(null), 10000);
+            // Nuclear fallback so user ALWAYS sees the error
+            setTimeout(() => window.alert('Error: ' + fetcher.data.error), 100);
+        }
+        if (fetcher.data.newBlockId) {
             setActiveBlockId(fetcher.data.newBlockId);
             setSelectedTemplateId(null);
             setLeftView('outline');
@@ -272,6 +281,33 @@ export default function ThemeEditor() {
 
     const handleInject = () => {
         if (!selectedTemplateId) return;
+
+        // Optimistic UI: immediately add the block so user sees it
+        const tempId = `cf_${selectedTemplateId}_${Date.now().toString(36)}`;
+        const newBlock = {
+            id: tempId,
+            type: selectedTemplateId,
+            settings: { ...settings },
+            isCf: true,
+        };
+        setPageBlocks(prev => {
+            const blocks = [...prev];
+            if (placement === 'top') {
+                const hi = blocks.findIndex(b => b.type?.toLowerCase().includes('header') || b.id?.toLowerCase().includes('header'));
+                hi !== -1 ? blocks.splice(hi + 1, 0, newBlock) : blocks.unshift(newBlock);
+            } else {
+                const fi = blocks.findIndex(b => b.type?.toLowerCase().includes('footer') || b.id?.toLowerCase().includes('footer'));
+                fi !== -1 ? blocks.splice(fi, 0, newBlock) : blocks.push(newBlock);
+            }
+            return blocks;
+        });
+        setActiveBlockId(tempId);
+        setSelectedTemplateId(null);
+        setLeftView('outline');
+        setToast({ msg: '✓ Section added! Syncing to theme...', ok: true });
+        setTimeout(() => setToast(null), 3000);
+
+        // Backend sync
         const form = new FormData();
         form.append("intent", "inject_section");
         form.append("sectionId", selectedTemplateId);
@@ -330,6 +366,23 @@ export default function ThemeEditor() {
     return (
         <div style={S.root}>
             <style>{CSS}</style>
+
+            {/* ── TOAST NOTIFICATION ── */}
+            {toast && (
+                <div style={{
+                    position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
+                    zIndex: 99999, padding: '12px 24px', borderRadius: 8,
+                    background: toast.ok ? '#1a7f37' : '#d1242f', color: '#fff',
+                    fontSize: 14, fontWeight: 600, boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
+                    display: 'flex', alignItems: 'center', gap: 8, maxWidth: 500,
+                    animation: 'slideUp 0.3s ease'
+                }}>
+                    <span>{toast.msg}</span>
+                    <button onClick={() => setToast(null)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0, marginLeft: 8 }}>
+                        <X size={14} />
+                    </button>
+                </div>
+            )}
 
             {/* ── TOPMOST HEADER (PageFly Page Editor) ── */}
             <div style={S.topmostHeader}>
@@ -1079,5 +1132,6 @@ const CSS = `
       animation: te-spin 0.8s linear infinite;
   }
   @keyframes te-spin { to { transform: rotate(360deg); } }
+  @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 `;
 
