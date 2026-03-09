@@ -1,291 +1,17 @@
-import { json } from "@remix-run/node";
-import { Home, ShoppingCart, Package, Palette, Store, Monitor, Smartphone, Layout, Megaphone, Image as ImageIcon, ShoppingBag, Grid, MessageSquare, Award, Type, Mail, Camera, Play, HelpCircle, Zap, ChevronRight, X, Check, Search, Settings2, Undo, Redo, Eye, ExternalLink, Plus, Sparkles, User, MoreHorizontal, FileText, Move, MousePointer2, Blocks } from "lucide-react";
-import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
-import { useState, useEffect, useRef } from "react";
-import { authenticate } from "../shopify.server";
-import {
-    getActiveTheme, getThemeAsset, uploadAsset, readSectionFile
-} from "../lib/shopify.server";
-import { removeSchemaTranslations } from "../lib/schema-fixer.server";
-import { SECTION_FILES, getCategoriesWithCounts } from "../lib/constants";
+const fs = require('fs');
+const file = 'app/routes/app.theme-editor.jsx';
+let content = fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
 
-// ─── LOADER ───────────────────────────────────────────────────────────────────
-export const loader = async ({ request }) => {
-    const { session } = await authenticate.admin(request);
-    const { shop, accessToken } = session;
+// Update imports
+const importMatch = content.match(/import \{ ([^}]+) \} from "lucide-react";/);
+if (importMatch) {
+    let icons = importMatch[1].split(',').map(s => s.trim());
+    const needed = ['Search', 'Settings2', 'Undo', 'Redo', 'Eye', 'ExternalLink', 'Plus', 'Sparkles', 'User', 'MoreHorizontal', 'FileText', 'Move', 'MousePointer2', 'Blocks'];
+    needed.forEach(i => { if (!icons.includes(i)) icons.push(i); });
+    content = content.replace(importMatch[0], `import { ${[...new Set(icons)].join(', ')} } from "lucide-react";`);
+}
 
-    const theme = await getActiveTheme(shop, accessToken);
-    if (!theme) return json({ error: "No active theme found" });
-
-    let pageBlocks = [];
-    try {
-        const indexJsonStr = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
-        if (indexJsonStr) {
-            const indexJson = JSON.parse(indexJsonStr);
-            const sections = indexJson.sections || {};
-            const order = indexJson.order || Object.keys(sections);
-            pageBlocks = order.map(id => ({
-                id,
-                type: sections[id]?.type || id,
-                settings: sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-        }
-    } catch (e) { /* continue */ }
-
-    const categories = getCategoriesWithCounts();
-    return json({ themeId: theme.id, shop, pageBlocks, categories });
-};
-
-// ─── ACTION ───────────────────────────────────────────────────────────────────
-export const action = async ({ request }) => {
-    const { session } = await authenticate.admin(request);
-    const { shop, accessToken } = session;
-    const fd = await request.formData();
-    const intent = fd.get("intent");
-
-    const theme = await getActiveTheme(shop, accessToken);
-    if (!theme) return json({ ok: false, error: "No active theme" });
-
-    const getIndex = async () => {
-        const str = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
-        const json = str ? JSON.parse(str) : { sections: {}, order: [] };
-        json.sections = json.sections || {};
-        json.order = json.order || Object.keys(json.sections);
-        return json;
-    };
-    const saveIndex = async (idx) => {
-        await uploadAsset(shop, accessToken, theme.id, 'templates/index.json', JSON.stringify(idx, null, 2));
-    };
-
-    try {
-        // ── inject_section ────────────────────────────────────────────────────
-        if (intent === "inject_section") {
-            const sectionId = fd.get("sectionId");
-            const settings = JSON.parse(fd.get("settings") || "{}");
-            const placement = fd.get("placement") || "bottom";
-
-            const meta = SECTION_FILES[sectionId];
-            if (!meta) return json({ ok: false, error: "Unknown section" });
-
-            let liquid = readSectionFile(meta.file);
-            if (!liquid) return json({ ok: false, error: "Section file missing" });
-            liquid = removeSchemaTranslations(liquid);
-
-            // Upload the liquid file
-            const assetKey = `sections/${sectionId}.liquid`;
-            await uploadAsset(shop, accessToken, theme.id, assetKey, liquid);
-
-            // Update index.json
-            const idx = await getIndex();
-            const blockId = `cf_${sectionId}_${Date.now().toString(36)}`;
-            idx.sections[blockId] = { type: sectionId, settings };
-
-            if (placement === "top") {
-                const hi = idx.order.findIndex(id => id.toLowerCase().includes("header"));
-                hi !== -1 ? idx.order.splice(hi + 1, 0, blockId) : idx.order.unshift(blockId);
-            } else {
-                const fi = idx.order.findIndex(id => id.toLowerCase().includes("footer"));
-                fi !== -1 ? idx.order.splice(fi, 0, blockId) : idx.order.push(blockId);
-            }
-            await saveIndex(idx);
-
-            // Return updated page blocks
-            const newBlocks = idx.order.map(id => ({
-                id, type: idx.sections[id]?.type || id,
-                settings: idx.sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-            return json({ ok: true, message: `${meta.name} injected!`, pageBlocks: newBlocks, newBlockId: blockId });
-        }
-
-        // ── remove_section ─────────────────────────────────────────────────
-        if (intent === "remove_section") {
-            const blockId = fd.get("blockId");
-            const idx = await getIndex();
-            delete idx.sections[blockId];
-            idx.order = idx.order.filter(id => id !== blockId);
-            await saveIndex(idx);
-            const newBlocks = idx.order.map(id => ({
-                id, type: idx.sections[id]?.type || id,
-                settings: idx.sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-            return json({ ok: true, pageBlocks: newBlocks });
-        }
-
-        // ── update_settings ────────────────────────────────────────────────
-        if (intent === "update_settings") {
-            const blockId = fd.get("blockId");
-            const settings = JSON.parse(fd.get("settings") || "{}");
-            const idx = await getIndex();
-            if (idx.sections[blockId]) idx.sections[blockId].settings = settings;
-            await saveIndex(idx);
-            return json({ ok: true, message: "Settings saved to theme!" });
-        }
-
-        // ── reorder ────────────────────────────────────────────────────────
-        if (intent === "reorder") {
-            const newOrder = JSON.parse(fd.get("order") || "[]");
-            const idx = await getIndex();
-            idx.order = newOrder;
-            await saveIndex(idx);
-            return json({ ok: true });
-        }
-
-        return json({ ok: false, error: "Unknown intent" });
-    } catch (e) {
-        return json({ ok: false, error: e.message }, { status: 500 });
-    }
-};
-
-// ─── COMPONENT ────────────────────────────────────────────────────────────────
-export default function ThemeEditor() {
-    const { themeId, shop, pageBlocks: initBlocks, categories, error } = useLoaderData();
-    const fetcher = useFetcher();
-    const navigate = useNavigate();
-
-    const [pageBlocks, setPageBlocks] = useState(initBlocks || []);
-
-    // UI State: 'outline' | 'categories' | 'templates' | 'settings'
-    const [leftView, setLeftView] = useState('outline');
-
-    // Active selections
-    const [activeBlockId, setActiveBlockId] = useState(null);       // When editing an existing injected block
-    const [activeCategoryId, setActiveCategoryId] = useState(null); // When browsing to add
-    const [selectedTemplateId, setSelectedTemplateId] = useState(null); // The raw template being previewed before inject
-
-    const [templateSchema, setTemplateSchema] = useState({ settings: [], name: '' });
-    const [settings, setSettings] = useState({});
-    const [placement, setPlacement] = useState('bottom');
-    const [device, setDevice] = useState('desktop');
-    const [previewHtml, setPreviewHtml] = useState('');
-    const [previewLoading, setPreviewLoading] = useState(false);
-    const [toast, setToast] = useState(null);
-    const previewTimerRef = useRef(null);
-
-    // Sync page blocks from action response
-    useEffect(() => {
-        if (fetcher.data?.pageBlocks) setPageBlocks(fetcher.data.pageBlocks);
-        if (fetcher.data?.message) {
-            setToast({ msg: fetcher.data.message, ok: fetcher.data.ok });
-            setTimeout(() => setToast(null), 3000);
-        }
-        if (fetcher.data?.newBlockId) {
-            setActiveBlockId(fetcher.data.newBlockId);
-            setLeftView('outline');
-        }
-    }, [fetcher.data]);
-
-    // Live preview for selected template (unsaved) or active block (saved theme element)
-    useEffect(() => {
-        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
-
-        setPreviewLoading(true);
-        clearTimeout(previewTimerRef.current);
-        previewTimerRef.current = setTimeout(async () => {
-            try {
-                if (!targetId) {
-                    // Load the full theme homepage preview
-                    const res = await fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`);
-                    if (res.ok) {
-                        const html = await res.text();
-                        setPreviewHtml(html);
-                    }
-                    return;
-                }
-
-                // Load individual block preview
-                const form = new FormData();
-                form.append("sectionId", targetId);
-                if (activeBlockId) form.append("blockId", activeBlockId);
-                form.append("settings", JSON.stringify(settings));
-                const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.html) setPreviewHtml(data.html);
-                }
-            } catch (e) { } finally { setPreviewLoading(false); }
-        }, 350);
-    }, [selectedTemplateId, activeBlockId, settings, pageBlocks]);
-
-    // Fetch schema when a template OR block is selected
-    useEffect(() => {
-        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
-        if (!targetId) return;
-
-        fetch(`/app/api/section-schema?id=${targetId}`)
-            .then(r => r.json())
-            .then(data => {
-                if (data.settings) {
-                    setTemplateSchema({ settings: data.settings, name: data.name || targetId });
-
-                    if (activeBlockId) {
-                        // Editing existing: load saved settings, fallback to defaults
-                        const savedSettings = pageBlocks.find(b => b.id === activeBlockId)?.settings || {};
-                        const merged = {};
-                        data.settings.forEach(s => { merged[s.id] = savedSettings[s.id] !== undefined ? savedSettings[s.id] : s.default; });
-                        setSettings(merged);
-                    } else {
-                        // Adding new: load defaults
-                        const defaults = {};
-                        data.settings.forEach(s => { if (s.default !== undefined) defaults[s.id] = s.default; });
-                        setSettings(defaults);
-                    }
-                }
-            }).catch(() => { });
-    }, [selectedTemplateId, activeBlockId, pageBlocks]);
-
-    const handleSelectCategory = (catId) => {
-        setActiveCategoryId(catId);
-        setLeftView('templates');
-    };
-
-    const handleSelectTemplate = (id) => {
-        setSelectedTemplateId(id);
-        setLeftView('settings');
-    };
-
-    const handleInject = () => {
-        if (!selectedTemplateId) return;
-        const form = new FormData();
-        form.append("intent", "inject_section");
-        form.append("sectionId", selectedTemplateId);
-        form.append("settings", JSON.stringify(settings));
-        form.append("placement", placement);
-        fetcher.submit(form, { method: "post" });
-        setSelectedTemplateId(null);
-        setPreviewHtml('');
-    };
-
-    const handleRemove = (blockId) => {
-        const form = new FormData();
-        form.append("intent", "remove_section");
-        form.append("blockId", blockId);
-        fetcher.submit(form, { method: "post" });
-        if (activeBlockId === blockId) {
-            setActiveBlockId(null);
-            setSettings({});
-            setLeftView('outline');
-        }
-    };
-
-    const handleSaveLive = () => {
-        if (!activeBlockId) return;
-        const form = new FormData();
-        form.append("intent", "update_settings");
-        form.append("blockId", activeBlockId);
-        form.append("settings", JSON.stringify(settings));
-        fetcher.submit(form, { method: "post" });
-    };
-
-    const cfCats = categories || [];
-    const templateIds = activeCategoryId
-        ? Object.entries(SECTION_FILES).filter(([_, m]) => m.category === activeCategoryId).map(([id]) => id)
-        : [];
-    const isBusy = fetcher.state !== 'idle';
-
-    return (
+const NEW_RETURN = `    return (
         <div style={S.root}>
             <style>{CSS}</style>
 
@@ -633,115 +359,11 @@ export default function ThemeEditor() {
             </div>
         </div>
     );
-}
+}`;
 
-// ─── SETTING ROW ─────────────────────────────────────────────────────────────
-function SettingRow({ setting, value, onChange }) {
-    const v = value !== undefined ? value : (setting.default ?? '');
+content = content.replace(/    return \([\s\S]+?        <\/div>\n    \);\n\}/, NEW_RETURN);
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            // For now, in preview mode, we pass the base64 string directly so liquid renders it
-            // In a real production sync we'd upload this via Asset API and return the shopify URL, 
-            // but base64 works perfectly for the live preview and injection for now.
-            onChange(setting.id, reader.result);
-        };
-        reader.readAsDataURL(file);
-    };
-
-    return (
-        <div style={S.settingBlock}>
-            <label style={S.settingLabel}>{setting.label || setting.id}</label>
-            {setting.type === 'color' && (
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <input type="color" value={v || '#000000'} onChange={e => onChange(setting.id, e.target.value)} style={S.colorSwatch} />
-                    <code style={S.colorCode}>{v || '#000000'}</code>
-                </div>
-            )}
-            {(setting.type === 'text' || setting.type === 'textarea' || setting.type === 'color_background') && (
-                <input type="text" className="te-input" value={v} placeholder={setting.placeholder || ''} onChange={e => onChange(setting.id, e.target.value)} />
-            )}
-            {setting.type === 'image_picker' && (
-                <div style={S.imageUploadBox}>
-                    {v ? (
-                        <div style={S.imagePreviewWrapper}>
-                            <img src={v} alt="Preview" style={S.imagePreview} />
-                            <button className="te-img-del-btn" onClick={() => onChange(setting.id, '')}>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                            </button>
-                        </div>
-                    ) : (
-                        <label style={S.imageUploadLabel}>
-                            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
-                            <span>Upload Image</span>
-                        </label>
-                    )}
-                </div>
-            )}
-            {setting.type === 'range' && (
-                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                    <input type="range" min={setting.min} max={setting.max} step={setting.step || 1} value={v} onChange={e => onChange(setting.id, Number(e.target.value))} style={{ flex: 1, accentColor: '#111' }} />
-                    <span style={S.rangeVal}>{v}{setting.unit || ''}</span>
-                </div>
-            )}
-            {setting.type === 'checkbox' && (
-                <label style={{ display: 'flex', gap: 8, alignItems: 'center', cursor: 'pointer' }}>
-                    <input type="checkbox" checked={Boolean(v)} onChange={e => onChange(setting.id, e.target.checked)} style={{ accentColor: '#111', width: 16, height: 16 }} />
-                    <span style={{ fontSize: 13, color: '#333', fontWeight: 500 }}>Enabled</span>
-                </label>
-            )}
-            {setting.type === 'select' && (
-                <select className="te-select" value={v} onChange={e => onChange(setting.id, e.target.value)}>
-                    {(setting.options || []).map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
-            )}
-        </div>
-    );
-}
-
-// ─── SVG ICONS (PREMIUM) ──────────────────────────────────────────────────────
-
-
-const SVG_ICONS = {
-    layout: <Layout size={20} strokeWidth={1.5} />,
-    announcement: <Megaphone size={20} strokeWidth={1.5} />,
-    image: <ImageIcon size={20} strokeWidth={1.5} />,
-    shoppingBag: <ShoppingBag size={20} strokeWidth={1.5} />,
-    grid: <Grid size={20} strokeWidth={1.5} />,
-    message: <MessageSquare size={20} strokeWidth={1.5} />,
-    award: <Award size={20} strokeWidth={1.5} />,
-    type: <Type size={20} strokeWidth={1.5} />,
-    mail: <Mail size={20} strokeWidth={1.5} />,
-    camera: <Camera size={20} strokeWidth={1.5} />,
-    play: <Play size={20} strokeWidth={1.5} />,
-    help: <HelpCircle size={20} strokeWidth={1.5} />,
-    zap: <Zap size={20} strokeWidth={1.5} />,
-    default: <Layout size={20} strokeWidth={1.5} />
-};
-
-const CAT_SVG = {
-    header: SVG_ICONS.layout,
-    announcement: SVG_ICONS.announcement,
-    hero: SVG_ICONS.image,
-    product: SVG_ICONS.shoppingBag,
-    collection: SVG_ICONS.grid,
-    testimonial: SVG_ICONS.message,
-    brand: SVG_ICONS.award,
-    content: SVG_ICONS.type,
-    newsletter: SVG_ICONS.mail,
-    social: SVG_ICONS.camera,
-    video: SVG_ICONS.play,
-    faq: SVG_ICONS.help,
-    banner: SVG_ICONS.zap,
-    footer: SVG_ICONS.layout,
-    default: SVG_ICONS.default
-};
-
-const S = {
+const NEW_STYLES = `const S = {
     root: { display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden', backgroundColor: '#f4f6f8', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" },
 
     // Topmost Header
@@ -858,7 +480,7 @@ const S = {
     imagePreview: { width: '100%', height: '100%', objectFit: 'contain' }
 };
 
-const CSS = `
+const CSS = \`
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
   body {
@@ -1010,5 +632,9 @@ const CSS = `
       animation: te-spin 0.8s linear infinite;
   }
   @keyframes te-spin { to { transform: rotate(360deg); } }
+\`;
 `;
+content = content.replace(/const S = \{[\s\S]+?@keyframes te-spin \{ to \{ transform: rotate\(360deg\); \} \}\n\`;/m, NEW_STYLES);
 
+fs.writeFileSync(file, content);
+console.log("SUCCESS");
