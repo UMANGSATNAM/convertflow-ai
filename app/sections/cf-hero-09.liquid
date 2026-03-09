@@ -1,0 +1,78 @@
+<style>
+.cf-hero-09{width:100%;background:{{ section.settings.bg_color }};overflow:hidden}
+.cf-hero-09-inner{max-width:1200px;margin:0 auto;padding:80px 40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.cf-hero-09-sale{display:inline-flex;align-items:center;gap:6px;background:#dc2626;color:#fff;padding:6px 14px;border-radius:4px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:20px;width:fit-content;animation:cf-pulse-09 2s infinite}
+@keyframes cf-pulse-09{0%,100%{opacity:1}50%{opacity:0.7}}
+.cf-hero-09 h1{font-size:clamp(28px,3.5vw,{{ section.settings.heading_size }}px);font-weight:800;color:{{ section.settings.heading_color }};margin:0 0 8px;line-height:1.1}
+.cf-hero-09-price{display:flex;align-items:baseline;gap:12px;margin:16px 0 20px}
+.cf-hero-09-price .now{font-size:36px;font-weight:800;color:#dc2626}
+.cf-hero-09-price .was{font-size:18px;color:{{ section.settings.text_color }};text-decoration:line-through;opacity:0.6}
+.cf-hero-09 p{font-size:15px;color:{{ section.settings.text_color }};line-height:1.7;margin:0 0 28px;max-width:440px}
+.cf-hero-09-timer{display:flex;gap:12px;margin-bottom:32px}
+.cf-hero-09-timer div{text-align:center;min-width:56px;padding:12px 8px;background:{{ section.settings.heading_color }};border-radius:8px}
+.cf-hero-09-timer span{display:block;font-size:24px;font-weight:800;color:{{ section.settings.bg_color }}}
+.cf-hero-09-timer small{font-size:10px;text-transform:uppercase;color:{{ section.settings.bg_color }};opacity:0.7;letter-spacing:0.08em}
+.cf-hero-09-cta{display:inline-flex;padding:16px 40px;border-radius:8px;font-size:16px;font-weight:700;background:#dc2626;color:#fff;text-decoration:none;border:none;cursor:pointer;transition:0.2s;text-transform:uppercase;letter-spacing:0.04em}
+.cf-hero-09-cta:hover{background:#b91c1c;transform:scale(1.02)}
+.cf-hero-09-img{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:1;box-shadow:0 20px 60px rgba(0,0,0,0.1)}
+.cf-hero-09-img img{width:100%;height:100%;object-fit:cover}
+.cf-hero-09-badge{position:absolute;top:20px;right:20px;background:#dc2626;color:#fff;padding:8px 16px;border-radius:40px;font-size:14px;font-weight:700}
+@media(max-width:768px){.cf-hero-09-inner{grid-template-columns:1fr;padding:40px 24px}}
+</style>
+
+<section class="cf-hero-09">
+  <div class="cf-hero-09-inner">
+    <div>
+      <div class="cf-hero-09-sale">🔥 {{ section.settings.sale_badge }}</div>
+      <h1>{{ section.settings.heading }}</h1>
+      <div class="cf-hero-09-price">
+        <span class="now">{{ section.settings.sale_price }}</span>
+        <span class="was">{{ section.settings.original_price }}</span>
+      </div>
+      <p>{{ section.settings.description }}</p>
+      <div class="cf-hero-09-timer" id="cf-timer-09">
+        <div><span id="cf-d09">02</span><small>Days</small></div>
+        <div><span id="cf-h09">14</span><small>Hours</small></div>
+        <div><span id="cf-m09">33</span><small>Mins</small></div>
+        <div><span id="cf-s09">07</span><small>Secs</small></div>
+      </div>
+      <a href="{{ section.settings.btn_link }}" class="cf-hero-09-cta">{{ section.settings.btn_text }}</a>
+    </div>
+    <div class="cf-hero-09-img">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.heading }}">
+      {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#fecaca,#fef3c7)"></div>
+      {% endif %}
+      <div class="cf-hero-09-badge">-{{ section.settings.discount }}%</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){var d=parseInt('{{ section.settings.timer_days }}')||2,end=new Date();end.setDate(end.getDate()+d);function u(){var n=end-new Date();if(n<0)return;var dd=Math.floor(n/864e5),hh=Math.floor(n%864e5/36e5),mm=Math.floor(n%36e5/6e4),ss=Math.floor(n%6e4/1e3);var a=document.getElementById('cf-d09'),b=document.getElementById('cf-h09'),c=document.getElementById('cf-m09'),e=document.getElementById('cf-s09');if(a)a.textContent=String(dd).padStart(2,'0');if(b)b.textContent=String(hh).padStart(2,'0');if(c)c.textContent=String(mm).padStart(2,'0');if(e)e.textContent=String(ss).padStart(2,'0');}u();setInterval(u,1000);})();
+</script>
+
+{% schema %}
+{
+  "name": "09 · Flash Sale Hero",
+  "settings": [
+    {"type":"text","id":"sale_badge","label":"Sale Badge","default":"FLASH SALE - ENDS SOON"},
+    {"type":"text","id":"heading","label":"Heading","default":"Mega Summer Sale Is Here"},
+    {"type":"text","id":"sale_price","label":"Sale Price","default":"₹999"},
+    {"type":"text","id":"original_price","label":"Original Price","default":"₹2,499"},
+    {"type":"text","id":"discount","label":"Discount %","default":"60"},
+    {"type":"textarea","id":"description","label":"Description","default":"Don't miss out on our biggest sale of the season. Premium products at unbeatable prices."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"GRAB THE DEAL"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/sale"},
+    {"type":"image_picker","id":"image","label":"Product Image"},
+    {"type":"range","id":"timer_days","label":"Timer Days","min":1,"max":14,"step":1,"default":2},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fefce8"},
+    {"type":"color","id":"heading_color","label":"Heading Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#555555"},
+    {"type":"range","id":"heading_size","label":"Heading Size","min":28,"max":60,"step":2,"default":42},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":700,"step":50,"default":550}
+  ],
+  "presets": [{"name":"09 · Flash Sale Hero"}]
+}
+{% endschema %}

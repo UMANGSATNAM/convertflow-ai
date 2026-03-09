@@ -1,0 +1,58 @@
+<style>
+.cf-hero-05{width:100%;min-height:{{ section.settings.height }}px;background:{{ section.settings.bg_color }};display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.cf-hero-05-content{max-width:900px;padding:80px 24px;position:relative;z-index:1}
+.cf-hero-05-label{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:40px;font-size:13px;font-weight:600;background:{{ section.settings.label_bg }};color:{{ section.settings.label_color }};margin-bottom:28px}
+.cf-hero-05 h1{font-size:clamp(36px,5.5vw,{{ section.settings.heading_size }}px);font-weight:900;line-height:1.02;color:{{ section.settings.heading_color }};margin:0 0 20px;letter-spacing:-0.04em}
+.cf-hero-05 h1 em{font-style:normal;background:linear-gradient(135deg,{{ section.settings.gradient_1 }},{{ section.settings.gradient_2 }});-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cf-hero-05 p{font-size:18px;line-height:1.7;color:{{ section.settings.text_color }};margin:0 auto 40px;max-width:600px}
+.cf-hero-05-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.cf-hero-05-btn1{padding:16px 36px;border-radius:40px;font-weight:600;font-size:15px;background:{{ section.settings.heading_color }};color:{{ section.settings.bg_color }};text-decoration:none;border:none;cursor:pointer;transition:0.2s}
+.cf-hero-05-btn1:hover{opacity:0.9;transform:scale(1.02)}
+.cf-hero-05-btn2{padding:16px 36px;border-radius:40px;font-weight:600;font-size:15px;background:transparent;color:{{ section.settings.heading_color }};text-decoration:none;border:2px solid {{ section.settings.heading_color }};cursor:pointer;transition:0.2s;display:flex;align-items:center;gap:8px}
+.cf-hero-05-brands{display:flex;justify-content:center;gap:40px;margin-top:60px;opacity:0.3;flex-wrap:wrap}
+.cf-hero-05-brands span{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:{{ section.settings.heading_color }}}
+</style>
+
+<section class="cf-hero-05">
+  <div class="cf-hero-05-content">
+    {% if section.settings.label != blank %}<div class="cf-hero-05-label">{{ section.settings.label }}</div>{% endif %}
+    <h1>{{ section.settings.heading_before }} <em>{{ section.settings.heading_highlight }}</em> {{ section.settings.heading_after }}</h1>
+    <p>{{ section.settings.subheading }}</p>
+    <div class="cf-hero-05-btns">
+      <a href="{{ section.settings.btn_link }}" class="cf-hero-05-btn1">{{ section.settings.btn_text }}</a>
+      {% if section.settings.btn2_text != blank %}<a href="{{ section.settings.btn2_link }}" class="cf-hero-05-btn2">▶ {{ section.settings.btn2_text }}</a>{% endif %}
+    </div>
+    <div class="cf-hero-05-brands">
+      {%- assign brands = section.settings.brands | split: '|' -%}
+      {%- for brand in brands -%}<span>{{ brand | strip }}</span>{%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "05 · Gradient Text Hero",
+  "settings": [
+    {"type":"text","id":"label","label":"Label","default":"🚀 Just Launched"},
+    {"type":"text","id":"heading_before","label":"Heading (Before)","default":"Fashion That"},
+    {"type":"text","id":"heading_highlight","label":"Heading (Gradient)","default":"Speaks Volumes"},
+    {"type":"text","id":"heading_after","label":"Heading (After)","default":""},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"Premium quality meets modern aesthetics. From boardroom to brunch, we've got you covered."},
+    {"type":"text","id":"btn_text","label":"Primary Button","default":"Get Started"},
+    {"type":"text","id":"btn_link","label":"Primary Link","default":"/collections/all"},
+    {"type":"text","id":"btn2_text","label":"Secondary Button","default":"Watch Video"},
+    {"type":"text","id":"btn2_link","label":"Secondary Link","default":"#"},
+    {"type":"text","id":"brands","label":"Brand Names (| separated)","default":"Vogue | Harper's | GQ | Elle | Cosmopolitan"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fafaf9"},
+    {"type":"color","id":"heading_color","label":"Heading Color","default":"#18181b"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#71717a"},
+    {"type":"color","id":"gradient_1","label":"Gradient Start","default":"#6366f1"},
+    {"type":"color","id":"gradient_2","label":"Gradient End","default":"#ec4899"},
+    {"type":"color","id":"label_bg","label":"Label BG","default":"#fef3c7"},
+    {"type":"color","id":"label_color","label":"Label Color","default":"#92400e"},
+    {"type":"range","id":"heading_size","label":"Heading Size","min":36,"max":80,"step":2,"default":64},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":50,"default":600}
+  ],
+  "presets": [{"name":"05 · Gradient Text Hero"}]
+}
+{% endschema %}

@@ -1,0 +1,56 @@
+<style>
+.cf-hero-08{width:100%;min-height:{{ section.settings.height }}px;background:{{ section.settings.bg_color }};display:flex;align-items:center;position:relative;overflow:hidden}
+.cf-hero-08::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,{{ section.settings.glow_color }} 0%,transparent 60%);opacity:0.15;z-index:0}
+.cf-hero-08-inner{position:relative;z-index:1;width:100%;max-width:1200px;margin:0 auto;padding:80px 40px;text-align:center}
+.cf-hero-08-pre{font-size:16px;color:{{ section.settings.accent }};font-weight:600;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px}
+.cf-hero-08 h1{font-size:clamp(40px,6vw,{{ section.settings.heading_size }}px);font-weight:900;color:{{ section.settings.heading_color }};margin:0 0 24px;line-height:1;letter-spacing:-0.04em}
+.cf-hero-08 p{font-size:18px;color:{{ section.settings.text_color }};max-width:600px;margin:0 auto 40px;line-height:1.6}
+.cf-hero-08-btns{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:60px}
+.cf-hero-08-pri{padding:16px 40px;border-radius:40px;font-size:16px;font-weight:700;background:{{ section.settings.accent }};color:#fff;text-decoration:none;border:none;cursor:pointer;transition:0.3s;box-shadow:0 4px 20px {{ section.settings.accent }}44}
+.cf-hero-08-pri:hover{transform:translateY(-2px);box-shadow:0 8px 30px {{ section.settings.accent }}66}
+.cf-hero-08-sec{padding:16px 40px;border-radius:40px;font-size:16px;font-weight:600;background:transparent;color:{{ section.settings.heading_color }};text-decoration:none;border:2px solid rgba(255,255,255,0.2);cursor:pointer;transition:0.2s}
+.cf-hero-08-mockup{max-width:900px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1)}
+.cf-hero-08-mockup img{width:100%;display:block}
+@media(max-width:768px){.cf-hero-08-inner{padding:40px 24px}}
+</style>
+
+<section class="cf-hero-08">
+  <div class="cf-hero-08-inner">
+    <div class="cf-hero-08-pre">{{ section.settings.pre_heading }}</div>
+    <h1>{{ section.settings.heading }}</h1>
+    <p>{{ section.settings.subheading }}</p>
+    <div class="cf-hero-08-btns">
+      <a href="{{ section.settings.btn_link }}" class="cf-hero-08-pri">{{ section.settings.btn_text }}</a>
+      {% if section.settings.btn2_text != blank %}<a href="{{ section.settings.btn2_link }}" class="cf-hero-08-sec">{{ section.settings.btn2_text }}</a>{% endif %}
+    </div>
+    {% if section.settings.mockup_image != blank %}
+    <div class="cf-hero-08-mockup">
+      <img src="{{ section.settings.mockup_image | image_url: width: 1400 }}" alt="Product showcase" loading="eager">
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "08 · Dark SaaS Hero",
+  "settings": [
+    {"type":"text","id":"pre_heading","label":"Pre Heading","default":"⚡ Introducing ConvertFlow 2.0"},
+    {"type":"text","id":"heading","label":"Heading","default":"Build Stores That Convert"},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"The all-in-one platform to create stunning, high-converting Shopify stores in minutes."},
+    {"type":"text","id":"btn_text","label":"Primary Button","default":"Start Free Trial"},
+    {"type":"text","id":"btn_link","label":"Primary Link","default":"#"},
+    {"type":"text","id":"btn2_text","label":"Secondary Button","default":"Watch Demo"},
+    {"type":"text","id":"btn2_link","label":"Secondary Link","default":"#"},
+    {"type":"image_picker","id":"mockup_image","label":"Product Mockup"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#0a0a0a"},
+    {"type":"color","id":"heading_color","label":"Heading Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#a1a1aa"},
+    {"type":"color","id":"accent","label":"Accent","default":"#8b5cf6"},
+    {"type":"color","id":"glow_color","label":"Glow Color","default":"#8b5cf6"},
+    {"type":"range","id":"heading_size","label":"Heading Size","min":40,"max":88,"step":2,"default":68},
+    {"type":"range","id":"height","label":"Min Height","min":500,"max":900,"step":50,"default":700}
+  ],
+  "presets": [{"name":"08 · Dark SaaS Hero"}]
+}
+{% endschema %}

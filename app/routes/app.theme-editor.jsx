@@ -163,6 +163,7 @@ export default function ThemeEditor() {
     const [previewLoading, setPreviewLoading] = useState(false);
     const [toast, setToast] = useState(null);
     const previewTimerRef = useRef(null);
+    const [utilTab, setUtilTab] = useState('outline');
 
     // Sync page blocks from action response
     useEffect(() => {
@@ -350,14 +351,14 @@ export default function ThemeEditor() {
                 {/* ── EXTREME LEFT UTILITY BAR ── */}
                 <div style={S.utilityBar}>
                     <div style={S.utilityTop}>
-                        <button className="te-util-btn active"><Layout size={18} strokeWidth={2} /></button>
-                        <button className="te-util-btn"><Sparkles size={18} strokeWidth={2} /></button>
-                        <button className="te-util-btn"><Blocks size={18} strokeWidth={2} /></button>
-                        <button className="te-util-btn"><FileText size={18} strokeWidth={2} /></button>
-                        <button className="te-util-btn"><Settings2 size={18} strokeWidth={2} /></button>
+                        <button className={"te-util-btn" + (utilTab === 'outline' ? ' active' : '')} onClick={() => { setUtilTab('outline'); setLeftView('outline'); }} title="Page Outline"><Layout size={18} strokeWidth={2} /></button>
+                        <button className={"te-util-btn" + (utilTab === 'add' ? ' active' : '')} onClick={() => { setUtilTab('add'); setLeftView('categories'); }} title="Add Section"><Plus size={18} strokeWidth={2} /></button>
+                        <button className={"te-util-btn" + (utilTab === 'templates' ? ' active' : '')} onClick={() => { setUtilTab('templates'); setLeftView('categories'); }} title="Template Library"><Blocks size={18} strokeWidth={2} /></button>
+                        <button className={"te-util-btn" + (utilTab === 'layers' ? ' active' : '')} onClick={() => { setUtilTab('layers'); setLeftView('outline'); }} title="Layers"><FileText size={18} strokeWidth={2} /></button>
+                        <button className="te-util-btn" onClick={() => window.open(`https://${shop}/admin/themes`, '_blank')} title="Theme Settings"><Settings2 size={18} strokeWidth={2} /></button>
                     </div>
                     <div style={S.utilityBottom}>
-                        <button className="te-util-btn"><User size={18} strokeWidth={2} /></button>
+                        <button className="te-util-btn" onClick={() => navigate('/app')} title="Back to Dashboard"><User size={18} strokeWidth={2} /></button>
                     </div>
                 </div>
 
@@ -568,7 +569,7 @@ export default function ThemeEditor() {
                                 <h3 style={S.rightEmptyTitle}>Customize your pages</h3>
                                 <p style={S.rightEmptyText}>Select an element from the canvas or page outline to view its settings here.</p>
                                 <p style={S.rightEmptyText}>A ConvertFlow page works as a section in your Shopify theme. To edit theme sections, visit the theme editor. <a href="#" style={{ color: '#202223' }}>Learn more</a></p>
-                                <button className="te-text-action" style={{ padding: 0, marginTop: 8 }}><ExternalLink size={14} strokeWidth={2.5} /> Go to theme editor</button>
+                                <button className="te-text-action" style={{ padding: 0, marginTop: 8 }} onClick={() => window.open(`https://${shop}/admin/themes`, '_blank')}><ExternalLink size={14} strokeWidth={2.5} /> Go to theme editor</button>
 
                                 <div style={S.shortcutsBlock}>
                                     <h4 style={S.shortcutsTitle}>Keyboard shortcuts</h4>

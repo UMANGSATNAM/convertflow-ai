@@ -1,0 +1,44 @@
+<style>
+.cf-hero-01{position:relative;width:100%;min-height:{{ section.settings.height }}px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:{{ section.settings.bg_color }}}
+.cf-hero-01-bg{position:absolute;inset:0;background:linear-gradient(135deg,{{ section.settings.overlay_color_1 }} 0%,{{ section.settings.overlay_color_2 }} 100%);opacity:{{ section.settings.overlay_opacity | divided_by: 100.0 }};z-index:1}
+.cf-hero-01-content{position:relative;z-index:2;text-align:center;max-width:720px;padding:40px 24px}
+.cf-hero-01-badge{display:inline-block;padding:6px 18px;border-radius:40px;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:rgba(255,255,255,0.15);color:{{ section.settings.text_color }};margin-bottom:24px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2)}
+.cf-hero-01 h1{font-size:clamp(36px,5vw,{{ section.settings.heading_size }}px);font-weight:800;line-height:1.1;color:{{ section.settings.text_color }};margin:0 0 20px;font-family:-apple-system,sans-serif;letter-spacing:-0.02em}
+.cf-hero-01 p{font-size:18px;line-height:1.6;color:{{ section.settings.text_color }};opacity:0.85;margin:0 0 32px;max-width:560px;margin-left:auto;margin-right:auto}
+.cf-hero-01-cta{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;border-radius:{{ section.settings.btn_radius }}px;font-size:16px;font-weight:600;text-decoration:none;transition:all 0.3s;background:{{ section.settings.btn_bg }};color:{{ section.settings.btn_text }};border:none;cursor:pointer;letter-spacing:0.01em}
+.cf-hero-01-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.25)}
+</style>
+
+<section class="cf-hero-01">
+  <div class="cf-hero-01-bg"></div>
+  <div class="cf-hero-01-content">
+    {% if section.settings.badge != blank %}<span class="cf-hero-01-badge">{{ section.settings.badge }}</span>{% endif %}
+    <h1>{{ section.settings.heading }}</h1>
+    <p>{{ section.settings.subheading }}</p>
+    <a href="{{ section.settings.btn_link }}" class="cf-hero-01-cta">{{ section.settings.btn_text_label }} →</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "01 · Gradient Hero",
+  "settings": [
+    {"type":"text","id":"badge","label":"Badge Text","default":"✨ New Collection"},
+    {"type":"text","id":"heading","label":"Heading","default":"Elevate Your Everyday Style"},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"Discover our curated collection of premium essentials designed for the modern individual."},
+    {"type":"text","id":"btn_text_label","label":"Button Text","default":"Shop Now"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#0f0f0f"},
+    {"type":"color","id":"overlay_color_1","label":"Gradient Start","default":"#6366f1"},
+    {"type":"color","id":"overlay_color_2","label":"Gradient End","default":"#ec4899"},
+    {"type":"range","id":"overlay_opacity","label":"Overlay Opacity","min":0,"max":100,"step":5,"default":70},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"btn_bg","label":"Button Background","default":"#ffffff"},
+    {"type":"color","id":"btn_text","label":"Button Text Color","default":"#0f0f0f"},
+    {"type":"range","id":"btn_radius","label":"Button Radius","min":0,"max":40,"step":2,"default":8},
+    {"type":"range","id":"heading_size","label":"Heading Size (px)","min":36,"max":80,"step":2,"default":56},
+    {"type":"range","id":"height","label":"Section Height (px)","min":400,"max":800,"step":50,"default":600}
+  ],
+  "presets": [{"name":"01 · Gradient Hero"}]
+}
+{% endschema %}
