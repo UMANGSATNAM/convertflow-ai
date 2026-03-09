@@ -135,7 +135,8 @@ export const action = async ({ request }) => {
 
         return json({ ok: false, error: "Unknown intent" });
     } catch (e) {
-        return json({ ok: false, error: e.message }, { status: 500 });
+        console.error("Theme Editor Action Error:", e);
+        return json({ ok: false, error: e.message });
     }
 };
 
@@ -178,6 +179,7 @@ export default function ThemeEditor() {
         }
         if (fetcher.data?.newBlockId) {
             setActiveBlockId(fetcher.data.newBlockId);
+            setSelectedTemplateId(null);
             setLeftView('outline');
         }
     }, [fetcher.data]);
@@ -276,8 +278,6 @@ export default function ThemeEditor() {
         form.append("settings", JSON.stringify(settings));
         form.append("placement", placement);
         fetcher.submit(form, { method: "post" });
-        setSelectedTemplateId(null);
-        setPreviewHtml('');
     };
 
     const handleRemove = (blockId) => {
