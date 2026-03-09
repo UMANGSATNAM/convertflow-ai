@@ -76,6 +76,18 @@ export const action = async ({ request }) => {
             const assetKey = `sections/${sectionId}.liquid`;
             await uploadAsset(shop, accessToken, theme.id, assetKey, liquid);
 
+            // Verify the upload succeeded by checking the asset exists
+            const verifyRes = await fetch(
+                `https://${shop}/admin/api/2025-01/themes/${theme.id}/assets.json?asset[key]=${assetKey}`,
+                { headers: { 'X-Shopify-Access-Token': accessToken } }
+            );
+            if (!verifyRes.ok) {
+                return json({ ok: false, error: `Section file upload failed verification. Please try again.` });
+            }
+
+            // Small delay to let Shopify fully register the section file
+            await new Promise(r => setTimeout(r, 500));
+
             // Update index.json
             const idx = await getIndex();
             const blockId = `cf_${sectionId}_${Date.now().toString(36)}`;
