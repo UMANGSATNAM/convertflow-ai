@@ -1,0 +1,63 @@
+<style>
+.cf-tr-12{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-tr-12-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:center;gap:60px;flex-wrap:wrap}
+.cf-tr-12-item{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;min-width:200px}
+.cf-tr-12-icon{margin-bottom:20px;color:{{ section.settings.text_color }};stroke-width:1px}
+.cf-tr-12-title{font-size:16px;color:{{ section.settings.text_color }};font-weight:400;letter-spacing:0.05em;margin-bottom:10px}
+.cf-tr-12-desc{font-family:sans-serif;font-size:13px;color:#8a7a72;line-height:1.6;max-width:250px}
+@media(max-width:768px){.cf-tr-12-inner{flex-direction:column;gap:40px}}
+</style>
+
+<div class="cf-tr-12">
+  <div class="cf-tr-12-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tr-12-item">
+      <div class="cf-tr-12-icon">
+        {% if block.settings.icon == 'heart' %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        {% elsif block.settings.icon == 'package' %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        {% else %}
+           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="18" y="3" width="4" height="18"></rect><line x1="10" y1="21" x2="14" y2="21"></line><line x1="2" y1="21" x2="6" y2="21"></line><path d="M4 21V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v14"></path></svg>
+        {% endif %}
+      </div>
+      <div class="cf-tr-12-title">{{ block.settings.title }}</div>
+      <div class="cf-tr-12-desc">{{ block.settings.desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Trust",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fffaf9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"border_color","label":"Border","default":"#eeddd8"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":50}
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "limit": 4,
+      "settings": [
+        {"type":"select","id":"icon","label":"Icon","options":[{"value":"heart","label":"Heart"},{"value":"package","label":"Package"},{"value":"hanger","label":"Building/Brand"}],"default":"heart"},
+        {"type":"text","id":"title","label":"Title","default":"Ethically Made"},
+        {"type":"text","id":"desc","label":"Description","default":"Crafted with care in small batches."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "12 · Women's Trust",
+      "blocks": [
+        {"type":"trust","settings":{"icon":"package","title":"Complimentary Shipping","desc":"On all orders over $150."}},
+        {"type":"trust","settings":{"icon":"hanger","title":"Boutique Quality","desc":"Sourced from the finest materials."}},
+        {"type":"trust","settings":{"icon":"heart","title":"Ethical Production","desc":"Consciously crafted with love."}}
+      ]
+    }
+  ]
+}
+{% endschema %}

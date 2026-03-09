@@ -1,0 +1,84 @@
+<style>
+.cf-ft-12{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif;overflow:hidden}
+.cf-ft-12-inner{max-width:1400px;margin:0 auto}
+.cf-ft-12-header{text-align:center;margin-bottom:60px;display:flex;flex-direction:column;align-items:center;gap:15px}
+.cf-ft-12-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:400;margin:0;font-style:italic}
+.cf-ft-12-link{font-family:sans-serif;font-size:11px;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.15em;border-bottom:1px solid {{ section.settings.text_color }};padding-bottom:4px;transition:0.3s}
+.cf-ft-12-link:hover{color:{{ section.settings.accent_color }};border-color:{{ section.settings.accent_color }}}
+.cf-ft-12-slider{display:flex;gap:30px;overflow-x:auto;padding-bottom:30px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:{{ section.settings.accent_color }} transparent}
+.cf-ft-12-slider::-webkit-scrollbar{height:4px}.cf-ft-12-slider::-webkit-scrollbar-track{background:transparent}.cf-ft-12-slider::-webkit-scrollbar-thumb{background:{{ section.settings.accent_color }};border-radius:4px}
+.cf-ft-12-card{min-width:calc(100% / {{ section.settings.cols }} - 30px + (30px / {{ section.settings.cols }}));scroll-snap-align:start;text-decoration:none;display:flex;flex-direction:column;position:relative}
+.cf-ft-12-img-container{position:relative;aspect-ratio:4/5;background:#f2e8e5;margin-bottom:20px;overflow:hidden}
+.cf-ft-12-img{width:100%;height:100%;object-fit:cover;transition:opacity 0.5s ease}
+.cf-ft-12-img-hover{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.6s ease;transform:scale(1.03)}
+.cf-ft-12-card:hover .cf-ft-12-img-hover{opacity:1}
+.cf-ft-12-quick-buy{position:absolute;bottom:-50px;left:0;right:0;background:rgba(255,255,255,0.9);color:{{ section.settings.text_color }};padding:15px;text-align:center;font-family:sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;transition:bottom 0.4s ease}
+.cf-ft-12-img-container:hover .cf-ft-12-quick-buy{bottom:0}
+.cf-ft-12-info{display:flex;flex-direction:column;align-items:center;text-align:center}
+.cf-ft-12-name{font-size:16px;color:{{ section.settings.text_color }};font-weight:400;letter-spacing:0.02em;margin-bottom:8px}
+.cf-ft-12-price{font-family:sans-serif;font-size:13px;color:{{ section.settings.accent_color }};font-weight:400}
+@media(max-width:900px){.cf-ft-12-card{min-width:calc(50% - 15px)}}
+@media(max-width:500px){.cf-ft-12-card{min-width:85%}}
+</style>
+
+<div class="cf-ft-12">
+  <div class="cf-ft-12-inner">
+    <div class="cf-ft-12-header">
+      <h2 class="cf-ft-12-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.link }}" class="cf-ft-12-link">DISCOVER ALL</a>
+    </div>
+    
+    <div class="cf-ft-12-slider">
+      {% assign coll = collections[section.settings.collection] %}
+      {% if coll != blank and coll.products_count > 0 %}
+        {% for product in coll.products limit: section.settings.product_limit %}
+          <a href="{{ product.url }}" class="cf-ft-12-card">
+            <div class="cf-ft-12-img-container">
+              <img class="cf-ft-12-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title }}">
+              {% if product.images[1] %}
+                <img class="cf-ft-12-img-hover" src="{{ product.images[1] | image_url: width: 600 }}" alt="{{ product.title }}">
+              {% endif %}
+              <div class="cf-ft-12-quick-buy">+ QUICK VIEW</div>
+            </div>
+            <div class="cf-ft-12-info">
+              <div class="cf-ft-12-name">{{ product.title }}</div>
+              <div class="cf-ft-12-price">{{ product.price | money }}</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.product_limit) %}
+          <a href="#" class="cf-ft-12-card">
+            <div class="cf-ft-12-img-container">
+               <div style="width:100%;height:100%;background:#f2e8e5;display:flex;align-items:center;justify-content:center;color:#d4aba0;font-size:12px;letter-spacing:0.1em;font-family:sans-serif">PRODUCT {{ i }}</div>
+               <div class="cf-ft-12-quick-buy">+ QUICK VIEW</div>
+            </div>
+            <div class="cf-ft-12-info">
+              <div class="cf-ft-12-name">Silk Blouse</div>
+              <div class="cf-ft-12-price">$185.00</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"Latest Arrivals"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":72,"step":2,"default":48},
+    {"type":"text","id":"link","label":"Link","default":"/collections/all"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"product_limit","label":"Product Limit","min":4,"max":12,"step":1,"default":8},
+    {"type":"range","id":"cols","label":"Visible Columns (Desktop)","min":2,"max":5,"step":1,"default":4},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fffaf9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"accent_color","label":"Price/Scroll Color","default":"#d4aba0"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Featured"}]
+}
+{% endschema %}

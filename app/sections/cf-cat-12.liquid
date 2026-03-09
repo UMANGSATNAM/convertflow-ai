@@ -1,0 +1,89 @@
+<style>
+.cf-cat-12{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif}
+.cf-cat-12-inner{max-width:1400px;margin:0 auto}
+.cf-cat-12-header{text-align:center;margin-bottom:60px}
+.cf-cat-12-title{font-size:clamp(32px,6vw,{{ section.settings.title_size }}px);color:{{ section.settings.text_color }};font-weight:400;font-style:italic;letter-spacing:0.02em;margin:0}
+.cf-cat-12-grid{display:grid;grid-template-columns:repeat({{ section.settings.cols }}, 1fr);gap:20px;padding:20px 0}
+.cf-cat-12-card{text-decoration:none;display:flex;flex-direction:column;align-items:center;background:transparent;overflow:hidden}
+.cf-cat-12-img-wrap{width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:200px 200px 0 0;margin-bottom:20px}
+.cf-cat-12-img{width:100%;height:100%;object-fit:cover;transition:1.2s cubic-bezier(0.2,0.8,0.2,1);filter:brightness(0.95)}
+.cf-cat-12-card:hover .cf-cat-12-img{transform:scale(1.08);filter:brightness(1)}
+.cf-cat-12-name{font-size:18px;color:{{ section.settings.text_color }};text-align:center;letter-spacing:0.05em;margin-bottom:6px}
+.cf-cat-12-link{font-family:sans-serif;font-size:11px;color:{{ section.settings.accent_color }};text-transform:uppercase;letter-spacing:0.15em;transition:0.3s}
+.cf-cat-12-card:hover .cf-cat-12-link{color:{{ section.settings.text_color }}}
+@media(max-width:900px){.cf-cat-12-grid{grid-template-columns:repeat(2,1fr)}.cf-cat-12-img-wrap{border-radius:100px 100px 0 0}}
+@media(max-width:500px){.cf-cat-12-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cat-12">
+  <div class="cf-cat-12-inner">
+    <div class="cf-cat-12-header">
+      <h2 class="cf-cat-12-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-cat-12-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-12-card">
+          <div class="cf-cat-12-img-wrap">
+            {% if block.settings.image %}
+              <img class="cf-cat-12-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+            {% else %}
+               <div style="width:100%;height:100%;background:#f2e8e5;display:flex;align-items:center;justify-content:center;color:#d4aba0;font-size:12px;letter-spacing:0.1em;font-family:sans-serif">IMAGE</div>
+            {% endif %}
+          </div>
+          <div class="cf-cat-12-name">{{ block.settings.title }}</div>
+          <div class="cf-cat-12-link">View Shop</div>
+        </a>
+      {% endfor %}
+      
+      {% if section.blocks.size == 0 %}
+        {% for i in (1..section.settings.cols) %}
+          <a href="#" class="cf-cat-12-card">
+            <div class="cf-cat-12-img-wrap">
+              <div style="width:100%;height:100%;background:#f2e8e5;display:flex;align-items:center;justify-content:center;color:#d4aba0;font-size:12px;letter-spacing:0.1em;font-family:sans-serif">EDITORIAL</div>
+            </div>
+            <div class="cf-cat-12-name">Collection {{ i }}</div>
+            <div class="cf-cat-12-link">View Shop</div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Categories",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"Curated Selection"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":72,"step":2,"default":48},
+    {"type":"range","id":"cols","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":3},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fffaf9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"accent_color","label":"Link Color","default":"#d4aba0"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Dresses"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "12 · Women's Categories",
+      "blocks": [
+        {"type":"category","settings":{"title":"Ready to Wear"}},
+        {"type":"category","settings":{"title":"Dresses"}},
+        {"type":"category","settings":{"title":"Accessories"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

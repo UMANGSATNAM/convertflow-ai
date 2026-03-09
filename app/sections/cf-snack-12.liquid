@@ -1,0 +1,42 @@
+<style>
+.cf-sn-12{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:'Playfair Display',serif;position:relative}
+.cf-sn-12-inner{max-width:700px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:#fff;padding:20px 40px;border-radius:100px;box-shadow:0 10px 40px rgba(212,171,160,0.15)}
+.cf-sn-12-left{display:flex;align-items:center;gap:15px}
+.cf-sn-12-icon{color:{{ section.settings.accent_color }}}
+.cf-sn-12-text{font-size:16px;color:{{ section.settings.text_color }};font-style:italic}
+.cf-sn-12-code-wrap{display:flex;align-items:center;gap:15px}
+.cf-sn-12-code{font-family:sans-serif;font-size:14px;color:{{ section.settings.accent_color }};font-weight:600;letter-spacing:0.1em}
+.cf-sn-12-btn{background:{{ section.settings.text_color }};color:#fff;border:none;border-radius:50px;font-family:sans-serif;padding:8px 24px;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;transition:0.3s}
+.cf-sn-12-btn:hover{background:{{ section.settings.accent_color }}}
+@media(max-width:768px){.cf-sn-12-inner{flex-direction:column;border-radius:20px;text-align:center;padding:30px 20px}}
+</style>
+
+<div class="cf-sn-12">
+  <div class="cf-sn-12-inner">
+    <div class="cf-sn-12-left">
+      <div class="cf-sn-12-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      </div>
+      <div class="cf-sn-12-text">{{ section.settings.title }}</div>
+    </div>
+    <div class="cf-sn-12-code-wrap">
+      <div class="cf-sn-12-code" id="cf-sn-12-code">{{ section.settings.code }}</div>
+      <button class="cf-sn-12-btn" onclick="navigator.clipboard.writeText('{{ section.settings.code }}');this.innerHTML='Copied'">Copy</button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Snack",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"A gift for you: 15% off your first order"},
+    {"type":"text","id":"code","label":"Code","default":"WELCOME15"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#fffaf9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#d4aba0"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":40}
+  ],
+  "presets": [{"name":"12 · Women's Snack"}]
+}
+{% endschema %}

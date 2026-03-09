@@ -1,0 +1,59 @@
+<style>
+.cf-h-12{width:100%;background:{{ section.settings.bg_color }};padding:0 40px;height:{{ section.settings.height }}px;display:flex;align-items:center;justify-content:space-between;font-family:'Playfair Display',serif;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-h-12-nav{display:flex;gap:30px;align-items:center}
+.cf-h-12-link{text-decoration:none;color:{{ section.settings.text_color }};font-size:14px;letter-spacing:0.05em;transition:0.3s;font-style:italic}
+.cf-h-12-link:hover{color:{{ section.settings.accent_color }}}
+.cf-h-12-logo{font-size:{{ section.settings.logo_size }}px;color:{{ section.settings.text_color }};font-weight:400;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;text-align:center;flex:1}
+.cf-h-12-icons{display:flex;gap:20px;align-items:center}
+.cf-h-12-icon{color:{{ section.settings.text_color }};transition:0.3s;display:flex;stroke-width:1px}
+.cf-h-12-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-h-12-menu-btn{display:none;background:none;border:none;color:{{ section.settings.text_color }};cursor:pointer;padding:0}
+@media(max-width:900px){.cf-h-12-nav{display:none}.cf-h-12-menu-btn{display:block}.cf-h-12{padding:0 20px}}
+</style>
+
+<div class="cf-h-12">
+  <button class="cf-h-12-menu-btn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+  </button>
+  
+  <div class="cf-h-12-nav hidden md:flex">
+    {% for link in linklists[section.settings.menu].links limit:3 %}
+      <a href="{{ link.url }}" class="cf-h-12-link">{{ link.title }}</a>
+    {% else %}
+      <a href="#" class="cf-h-12-link">Clothing</a>
+      <a href="#" class="cf-h-12-link">Accessories</a>
+      <a href="#" class="cf-h-12-link">Editorial</a>
+    {% endfor %}
+  </div>
+  
+  <a href="/" class="cf-h-12-logo">{{ section.settings.logo_text }}</a>
+  
+  <div class="cf-h-12-icons">
+    <a href="/search" class="cf-h-12-icon" aria-label="Search">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </a>
+    <a href="/account" class="cf-h-12-icon hidden md:flex" aria-label="Account">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    </a>
+    <a href="/cart" class="cf-h-12-icon" aria-label="Cart">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"ELEGANCE"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":16,"max":48,"step":2,"default":28},
+    {"type":"link_list","id":"menu","label":"Left Menu"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fffaf9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"border_color","label":"Border Base","default":"#f2e8e5"},
+    {"type":"color","id":"accent_color","label":"Accent (Hover)","default":"#d4aba0"},
+    {"type":"range","id":"height","label":"Height","min":60,"max":120,"step":5,"default":90}
+  ],
+  "presets": [{"name":"12 · Women's Header"}]
+}
+{% endschema %}
