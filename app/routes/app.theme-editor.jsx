@@ -145,12 +145,15 @@ export default function ThemeEditor() {
     const navigate = useNavigate();
 
     const [pageBlocks, setPageBlocks] = useState(initBlocks || []);
-    const [activeBlockId, setActiveBlockId] = useState(null);
 
-    // Right panel state: 'categories' | 'templates' | 'settings'
-    const [rightView, setRightView] = useState('categories');
-    const [activeCategoryId, setActiveCategoryId] = useState(null);
-    const [selectedTemplateId, setSelectedTemplateId] = useState(null);
+    // UI State: 'outline' | 'categories' | 'templates' | 'settings'
+    const [leftView, setLeftView] = useState('outline');
+
+    // Active selections
+    const [activeBlockId, setActiveBlockId] = useState(null);       // When editing an existing injected block
+    const [activeCategoryId, setActiveCategoryId] = useState(null); // When browsing to add
+    const [selectedTemplateId, setSelectedTemplateId] = useState(null); // The raw template being previewed before inject
+
     const [templateSchema, setTemplateSchema] = useState({ settings: [], name: '' });
     const [settings, setSettings] = useState({});
     const [placement, setPlacement] = useState('bottom');
@@ -162,28 +165,28 @@ export default function ThemeEditor() {
 
     // Sync page blocks from action response
     useEffect(() => {
-        if (fetcher.data?.pageBlocks) {
-            setPageBlocks(fetcher.data.pageBlocks);
-        }
+        if (fetcher.data?.pageBlocks) setPageBlocks(fetcher.data.pageBlocks);
         if (fetcher.data?.message) {
             setToast({ msg: fetcher.data.message, ok: fetcher.data.ok });
             setTimeout(() => setToast(null), 3000);
         }
         if (fetcher.data?.newBlockId) {
             setActiveBlockId(fetcher.data.newBlockId);
-            setRightView('categories');
+            setLeftView('outline');
         }
     }, [fetcher.data]);
 
-    // Live preview for selected template
+    // Live preview for selected template (unsaved) or active block (saved theme element)
     useEffect(() => {
-        if (!selectedTemplateId) return;
+        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
+        if (!targetId) return;
+
         setPreviewLoading(true);
         clearTimeout(previewTimerRef.current);
         previewTimerRef.current = setTimeout(async () => {
             try {
                 const form = new FormData();
-                form.append("sectionId", selectedTemplateId);
+                form.append("sectionId", targetId);
                 form.append("settings", JSON.stringify(settings));
                 const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
                 if (res.ok) {
@@ -192,38 +195,43 @@ export default function ThemeEditor() {
                 }
             } catch (e) { } finally { setPreviewLoading(false); }
         }, 350);
-    }, [selectedTemplateId, settings]);
+    }, [selectedTemplateId, activeBlockId, settings, pageBlocks]);
 
-    // Fetch schema when a template is selected
+    // Fetch schema when a template OR block is selected
     useEffect(() => {
-        if (!selectedTemplateId) return;
-        const meta = SECTION_FILES[selectedTemplateId];
-        if (!meta) return;
-        // Fetch the liquid content via a quick POST to our preview (it returns schema embedded in html response header — not ideal, but we can use another server route)
-        // For now, use a side-channel fetch to get schema
-        fetch(`/app/api/section-schema?id=${selectedTemplateId}`)
+        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
+        if (!targetId) return;
+
+        fetch(`/app/api/section-schema?id=${targetId}`)
             .then(r => r.json())
             .then(data => {
                 if (data.settings) {
-                    setTemplateSchema({ settings: data.settings, name: data.name || selectedTemplateId });
-                    const defaults = {};
-                    data.settings.forEach(s => { if (s.default !== undefined) defaults[s.id] = s.default; });
-                    setSettings(defaults);
+                    setTemplateSchema({ settings: data.settings, name: data.name || targetId });
+
+                    if (activeBlockId) {
+                        // Editing existing: load saved settings, fallback to defaults
+                        const savedSettings = pageBlocks.find(b => b.id === activeBlockId)?.settings || {};
+                        const merged = {};
+                        data.settings.forEach(s => { merged[s.id] = savedSettings[s.id] !== undefined ? savedSettings[s.id] : s.default; });
+                        setSettings(merged);
+                    } else {
+                        // Adding new: load defaults
+                        const defaults = {};
+                        data.settings.forEach(s => { if (s.default !== undefined) defaults[s.id] = s.default; });
+                        setSettings(defaults);
+                    }
                 }
             }).catch(() => { });
-    }, [selectedTemplateId]);
+    }, [selectedTemplateId, activeBlockId, pageBlocks]);
 
     const handleSelectCategory = (catId) => {
         setActiveCategoryId(catId);
-        setSelectedTemplateId(null);
-        setSettings({});
-        setPreviewHtml('');
-        setRightView('templates');
+        setLeftView('templates');
     };
 
     const handleSelectTemplate = (id) => {
         setSelectedTemplateId(id);
-        setRightView('settings');
+        setLeftView('settings');
     };
 
     const handleInject = () => {
@@ -235,7 +243,6 @@ export default function ThemeEditor() {
         form.append("placement", placement);
         fetcher.submit(form, { method: "post" });
         setSelectedTemplateId(null);
-        setRightView('categories');
         setPreviewHtml('');
     };
 
@@ -244,13 +251,15 @@ export default function ThemeEditor() {
         form.append("intent", "remove_section");
         form.append("blockId", blockId);
         fetcher.submit(form, { method: "post" });
-        if (activeBlockId === blockId) setActiveBlockId(null);
+        if (activeBlockId === blockId) {
+            setActiveBlockId(null);
+            setSettings({});
+            setLeftView('outline');
+        }
     };
 
     const handleSaveLive = () => {
         if (!activeBlockId) return;
-        const block = pageBlocks.find(b => b.id === activeBlockId);
-        if (!block) return;
         const form = new FormData();
         form.append("intent", "update_settings");
         form.append("blockId", activeBlockId);
@@ -262,7 +271,6 @@ export default function ThemeEditor() {
     const templateIds = activeCategoryId
         ? Object.entries(SECTION_FILES).filter(([_, m]) => m.category === activeCategoryId).map(([id]) => id)
         : [];
-
     const isBusy = fetcher.state !== 'idle';
 
     return (
@@ -272,17 +280,9 @@ export default function ThemeEditor() {
             {/* ── TOPBAR ── */}
             <header style={S.topbar}>
                 <div style={S.topbarLeft}>
-                    <button className="te-icon-btn" onClick={() => navigate('/app')} title="Back to Dashboard">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                    <button className="te-icon-btn" onClick={() => navigate('/app')} title="Exit">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                     </button>
-                    <div style={S.topbarLogo}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3" /><path d="M3 9h18M9 21V9" /></svg>
-                        <span style={S.topbarTitle}>Theme Editor</span>
-                    </div>
-                    <div style={S.topbarBadge}>Homepage</div>
-                </div>
-
-                <div style={S.topbarCenter}>
                     <div style={S.deviceToggle}>
                         {[['desktop', '🖥'], ['mobile', '📱']].map(([d, icon]) => (
                             <button key={d} className={`te-dev-btn${device === d ? ' active' : ''}`} onClick={() => setDevice(d)}>{icon}</button>
@@ -290,82 +290,204 @@ export default function ThemeEditor() {
                     </div>
                 </div>
 
+                <div style={S.topbarCenter}>
+                    <span style={S.topbarPageName}>Home page</span>
+                </div>
+
                 <div style={S.topbarRight}>
                     {toast && (
                         <span style={{ ...S.toastBadge, background: toast.ok ? '#d1fae5' : '#fee2e2', color: toast.ok ? '#065f46' : '#991b1b' }}>
-                            {toast.ok ? '✓' : '✗'} {toast.msg}
+                            {toast.msg}
                         </span>
                     )}
                     {isBusy && <span style={S.savingDot}>Saving…</span>}
-                    <a href={`https://${shop}`} target="_blank" rel="noreferrer" className="te-outline-btn">View Store ↗</a>
+                    <button
+                        className="te-save-btn"
+                        onClick={activeBlockId ? handleSaveLive : handleInject}
+                        disabled={isBusy || leftView === 'outline' || leftView === 'categories' || leftView === 'templates'}
+                    >
+                        Save
+                    </button>
                 </div>
             </header>
 
-            {/* ── BODY ── */}
+            {/* ── BODY (2-PANEL) ── */}
             <div style={S.body}>
-                {/* ── LEFT: PAGE OUTLINE ── */}
+
+                {/* ── LEFT SIDEBAR (DYNAMIC) ── */}
                 <aside style={S.leftPanel}>
-                    <div style={S.panelHeader}>
-                        <span style={S.panelTitle}>Page Sections</span>
-                        <span style={S.panelCount}>{pageBlocks.length}</span>
-                    </div>
 
-                    <div style={S.outlineList}>
-                        {pageBlocks.length === 0 && (
-                            <p style={S.emptyHint}>No sections yet. Add your first section →</p>
-                        )}
-                        {pageBlocks.map((block, i) => {
-                            const isActive = block.id === activeBlockId;
-                            const label = block.isCf ? (SECTION_FILES[block.type]?.name || block.type) : block.type;
-                            return (
-                                <div
-                                    key={block.id}
-                                    className={`te-block-row${isActive ? ' active' : ''}`}
-                                    onClick={() => { setActiveBlockId(block.id); setRightView('categories'); }}
-                                >
-                                    <div style={S.blockRowLeft}>
-                                        <span style={S.dragHandle}>⠿</span>
-                                        {block.isCf && <span style={S.cfBadge}>CF</span>}
-                                        <span style={S.blockLabel}>{label}</span>
-                                    </div>
-                                    {block.isCf && (
-                                        <button
-                                            className="te-del-btn"
-                                            onClick={(e) => { e.stopPropagation(); handleRemove(block.id); }}
-                                            title="Remove section"
+                    {/* STATE 0: OUTLINE */}
+                    {leftView === 'outline' && (
+                        <div style={S.leftInner}>
+                            <div style={S.panelHeader}>
+                                <span style={S.panelTitle}>Templates</span>
+                            </div>
+
+                            <div style={S.outlineList}>
+                                {pageBlocks.length === 0 && (
+                                    <p style={S.emptyHint}>No sections yet.</p>
+                                )}
+                                {pageBlocks.map((block) => {
+                                    const isActive = block.id === activeBlockId;
+                                    const label = block.isCf ? (SECTION_FILES[block.type]?.name || block.type) : block.type;
+                                    return (
+                                        <div
+                                            key={block.id}
+                                            className={`te-block-row${isActive ? ' active' : ''}`}
+                                            onClick={() => {
+                                                if (block.isCf) {
+                                                    setActiveBlockId(block.id);
+                                                    setSelectedTemplateId(null);
+                                                    setLeftView('settings');
+                                                }
+                                            }}
                                         >
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                                        </button>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                                            <div style={S.blockRowLeft}>
+                                                <span style={S.dragHandle}>
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="5" r="1" /><circle cx="9" cy="12" r="1" /><circle cx="9" cy="19" r="1" /><circle cx="15" cy="5" r="1" /><circle cx="15" cy="12" r="1" /><circle cx="15" cy="19" r="1" /></svg>
+                                                </span>
+                                                <span style={S.blockIcon}>
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
+                                                </span>
+                                                <span style={S.blockLabel}>{label}</span>
+                                            </div>
+                                            {block.isCf && (
+                                                <button
+                                                    className="te-del-btn"
+                                                    onClick={(e) => { e.stopPropagation(); handleRemove(block.id); }}
+                                                    title="Remove section"
+                                                >
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                                                </button>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
 
-                    <div style={S.addSectionArea}>
-                        <button
-                            className="te-add-btn"
-                            onClick={() => { setActiveBlockId(null); setRightView('categories'); setSelectedTemplateId(null); setPreviewHtml(''); }}
-                        >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                            Add Section
-                        </button>
-                    </div>
+                            <div style={S.addSectionArea}>
+                                <button className="te-text-btn" onClick={() => setLeftView('categories')}>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                    Add section
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* STATE 1: CATEGORIES */}
+                    {leftView === 'categories' && (
+                        <div style={S.leftInner}>
+                            <div style={S.panelHeader}>
+                                <button className="te-back-btn" onClick={() => setLeftView('outline')}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                </button>
+                                <span style={S.panelTitle}>Add section</span>
+                            </div>
+                            <div style={S.scrollArea}>
+                                {cfCats.map(cat => (
+                                    <button key={cat.id} className="te-list-item" onClick={() => handleSelectCategory(cat.id)}>
+                                        <span style={S.listIcon}>{CAT_SVG[cat.id] || CAT_SVG.default}</span>
+                                        <span style={S.listText}>{cat.name}</span>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2" style={{ marginLeft: 'auto' }}><polyline points="9 18 15 12 9 6" /></svg>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* STATE 2: TEMPLATES */}
+                    {leftView === 'templates' && (
+                        <div style={S.leftInner}>
+                            <div style={S.panelHeader}>
+                                <button className="te-back-btn" onClick={() => setLeftView('categories')}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                </button>
+                                <span style={S.panelTitle}>{cfCats.find(c => c.id === activeCategoryId)?.name || 'Templates'}</span>
+                            </div>
+                            <div style={S.scrollArea}>
+                                {templateIds.map(id => {
+                                    const meta = SECTION_FILES[id];
+                                    return (
+                                        <button key={id} className="te-list-item" onClick={() => handleSelectTemplate(id)}>
+                                            <span style={S.listIcon}>{CAT_SVG.default}</span>
+                                            <span style={S.listText}>{meta?.name || id}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* STATE 3: SETTINGS (Edit New or Edit Existing) */}
+                    {leftView === 'settings' && (selectedTemplateId || activeBlockId) && (
+                        <div style={S.leftInner}>
+                            <div style={S.panelHeader}>
+                                <button className="te-back-btn" onClick={() => {
+                                    if (activeBlockId) {
+                                        setActiveBlockId(null);
+                                        setSettings({});
+                                        setPreviewHtml('');
+                                        setLeftView('outline');
+                                    } else {
+                                        setLeftView('templates');
+                                        setSelectedTemplateId(null);
+                                        setSettings({});
+                                        setPreviewHtml('');
+                                    }
+                                }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                </button>
+                                <span style={S.panelTitle}>
+                                    {templateSchema.name || (activeBlockId ? 'Edit Section' : 'Customize Section')}
+                                </span>
+                            </div>
+
+                            <div style={S.settingsScroll}>
+                                {/* Only show placement for new sections */}
+                                {!activeBlockId && (
+                                    <div style={S.settingBlock}>
+                                        <label style={S.settingLabel}>Inject Position</label>
+                                        <div style={S.placementRow}>
+                                            {[['top', 'Below Header'], ['bottom', 'Above Footer']].map(([v, label]) => (
+                                                <button key={v} className={`te-place-btn${placement === v ? ' active' : ''}`} onClick={() => setPlacement(v)}>
+                                                    {label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {templateSchema.settings.length === 0 ? (
+                                    <div style={{ padding: 20, textAlign: 'center', color: '#888', fontSize: 13 }}>Loading settings...</div>
+                                ) : (
+                                    <div style={S.settingsList}>
+                                        {templateSchema.settings.map(s => (
+                                            <SettingRow
+                                                key={s.id}
+                                                setting={s}
+                                                value={settings[s.id]}
+                                                onChange={(id, val) => setSettings(prev => ({ ...prev, [id]: val }))}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </aside>
 
-                {/* ── CENTER: PREVIEW ── */}
+                {/* ── RIGHT CANVAS (PREVIEW ONLY) ── */}
                 <main style={S.canvas}>
                     <div style={{
                         ...S.previewFrame,
-                        width: device === 'mobile' ? '390px' : '100%',
-                        maxWidth: device === 'mobile' ? '390px' : '100%',
+                        width: device === 'mobile' ? '400px' : '100%',
+                        maxWidth: device === 'mobile' ? '400px' : '100%',
                     }}>
-                        {!selectedTemplateId && !previewHtml && (
+                        {(!selectedTemplateId && !activeBlockId && !previewHtml) && (
                             <div style={S.previewPlaceholder}>
-                                <div style={S.previewPlaceholderIcon}>
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3" /><path d="M3 9h18M9 21V9" /></svg>
-                                </div>
-                                <p style={S.previewPlaceholderText}>Select a template from the right panel to preview it here.</p>
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ddd" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>
+                                <p style={S.previewPlaceholderText}>Select a section from the sidebar to preview.</p>
                             </div>
                         )}
                         {previewLoading && (
@@ -376,112 +498,13 @@ export default function ThemeEditor() {
                         {previewHtml && (
                             <iframe
                                 srcDoc={previewHtml}
-                                style={{ ...S.previewIframe, opacity: previewLoading ? 0 : 1 }}
-                                sandbox="allow-scripts allow-same-origin"
-                                title="Section Preview"
+                                style={{ ...S.previewIframe, opacity: previewLoading ? 0.5 : 1 }}
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                title="Live Preview"
                             />
                         )}
                     </div>
                 </main>
-
-                {/* ── RIGHT: TEMPLATE GALLERY / SETTINGS ── */}
-                <aside style={S.rightPanel}>
-                    {/* Category picker */}
-                    {rightView === 'categories' && (
-                        <div style={S.rightInner}>
-                            <div style={S.panelHeader}>
-                                <span style={S.panelTitle}>Add a Section</span>
-                            </div>
-                            <p style={S.rightHint}>Choose a section type to browse templates</p>
-                            <div style={S.catGrid}>
-                                {cfCats.map(cat => (
-                                    <button key={cat.id} className="te-cat-card" onClick={() => handleSelectCategory(cat.id)}>
-                                        <span style={S.catIcon}>{CAT_ICONS[cat.id] || '◻'}</span>
-                                        <span style={S.catName}>{cat.name}</span>
-                                        <span style={S.catCount}>{cat.count}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Template gallery */}
-                    {rightView === 'templates' && (
-                        <div style={S.rightInner}>
-                            <div style={S.panelHeader}>
-                                <button className="te-icon-btn" onClick={() => setRightView('categories')}>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
-                                </button>
-                                <span style={S.panelTitle}>{cfCats.find(c => c.id === activeCategoryId)?.name || 'Templates'}</span>
-                            </div>
-                            <div style={S.templateList}>
-                                {templateIds.map(id => {
-                                    const meta = SECTION_FILES[id];
-                                    const isSelected = selectedTemplateId === id;
-                                    return (
-                                        <button
-                                            key={id}
-                                            className={`te-tmpl-card${isSelected ? ' selected' : ''}`}
-                                            onClick={() => handleSelectTemplate(id)}
-                                        >
-                                            <div style={S.tmplThumb}>
-                                                <span style={S.tmplThumbIcon}>{TEMPLATE_ICONS[id] || '◻'}</span>
-                                            </div>
-                                            <div style={S.tmplInfo}>
-                                                <span style={S.tmplName}>{meta?.name || id}</span>
-                                                <span style={S.tmplHint}>Click to preview</span>
-                                            </div>
-                                            {isSelected && <span style={S.tmplCheckmark}>✓</span>}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Settings panel */}
-                    {rightView === 'settings' && selectedTemplateId && (
-                        <div style={S.rightInner}>
-                            <div style={S.panelHeader}>
-                                <button className="te-icon-btn" onClick={() => setRightView('templates')}>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
-                                </button>
-                                <span style={S.panelTitle}>{SECTION_FILES[selectedTemplateId]?.name || selectedTemplateId}</span>
-                            </div>
-
-                            {/* Placement */}
-                            <div style={S.settingBlock}>
-                                <label style={S.settingLabel}>Inject Position</label>
-                                <div style={S.placementRow}>
-                                    {[['top', 'Below Header'], ['bottom', 'Above Footer']].map(([v, label]) => (
-                                        <button key={v} className={`te-place-btn${placement === v ? ' active' : ''}`} onClick={() => setPlacement(v)}>
-                                            {label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div style={S.settingsDivider} />
-
-                            {/* Settings */}
-                            {templateSchema.settings.length === 0 ? (
-                                <p style={S.emptyHint}>Loading settings…</p>
-                            ) : (
-                                <div style={S.settingsList}>
-                                    {templateSchema.settings.map(s => (
-                                        <SettingRow key={s.id} setting={s} value={settings[s.id]} onChange={(id, val) => setSettings(prev => ({ ...prev, [id]: val }))} />
-                                    ))}
-                                </div>
-                            )}
-
-                            <div style={S.injectActions}>
-                                <button className="te-inject-btn" onClick={handleInject} disabled={isBusy}>
-                                    {isBusy ? '⏳ Injecting…' : '🚀 Inject to Theme'}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </aside>
             </div>
         </div>
     );
@@ -490,6 +513,20 @@ export default function ThemeEditor() {
 // ─── SETTING ROW ─────────────────────────────────────────────────────────────
 function SettingRow({ setting, value, onChange }) {
     const v = value !== undefined ? value : (setting.default ?? '');
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            // For now, in preview mode, we pass the base64 string directly so liquid renders it
+            // In a real production sync we'd upload this via Asset API and return the shopify URL, 
+            // but base64 works perfectly for the live preview and injection for now.
+            onChange(setting.id, reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
     return (
         <div style={S.settingBlock}>
             <label style={S.settingLabel}>{setting.label || setting.id}</label>
@@ -502,6 +539,24 @@ function SettingRow({ setting, value, onChange }) {
             {(setting.type === 'text' || setting.type === 'textarea' || setting.type === 'color_background') && (
                 <input type="text" className="te-input" value={v} placeholder={setting.placeholder || ''} onChange={e => onChange(setting.id, e.target.value)} />
             )}
+            {setting.type === 'image_picker' && (
+                <div style={S.imageUploadBox}>
+                    {v ? (
+                        <div style={S.imagePreviewWrapper}>
+                            <img src={v} alt="Preview" style={S.imagePreview} />
+                            <button className="te-img-del-btn" onClick={() => onChange(setting.id, '')}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                            </button>
+                        </div>
+                    ) : (
+                        <label style={S.imageUploadLabel}>
+                            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+                            <span>Upload Image</span>
+                        </label>
+                    )}
+                </div>
+            )}
             {setting.type === 'range' && (
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                     <input type="range" min={setting.min} max={setting.max} step={setting.step || 1} value={v} onChange={e => onChange(setting.id, Number(e.target.value))} style={{ flex: 1, accentColor: '#111' }} />
@@ -511,7 +566,7 @@ function SettingRow({ setting, value, onChange }) {
             {setting.type === 'checkbox' && (
                 <label style={{ display: 'flex', gap: 8, alignItems: 'center', cursor: 'pointer' }}>
                     <input type="checkbox" checked={Boolean(v)} onChange={e => onChange(setting.id, e.target.checked)} style={{ accentColor: '#111', width: 16, height: 16 }} />
-                    <span style={{ fontSize: 13, color: '#555' }}>Enabled</span>
+                    <span style={{ fontSize: 13, color: '#333', fontWeight: 500 }}>Enabled</span>
                 </label>
             )}
             {setting.type === 'select' && (
@@ -523,195 +578,192 @@ function SettingRow({ setting, value, onChange }) {
     );
 }
 
-// ─── CATEGORY / TEMPLATE ICONS ────────────────────────────────────────────────
-const CAT_ICONS = {
-    header: '◻',
-    announcement: '📢',
-    hero: '🖼',
-    product: '🛍',
-    collection: '🗂',
-    testimonial: '💬',
-    brand: '🏆',
-    content: '📝',
-    newsletter: '✉',
-    social: '📸',
-    video: '▶',
-    faq: '❓',
-    banner: '⚡',
-    footer: '◼',
+// ─── SVG ICONS (PREMIUM) ──────────────────────────────────────────────────────
+const SVG_ICONS = {
+    layout: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" /></svg>,
+    announcement: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>,
+    image: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>,
+    shoppingBag: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>,
+    grid: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>,
+    message: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>,
+    award: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="7" /><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" /></svg>,
+    type: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="4 7 4 4 20 4 20 7" /><line x1="9" y1="20" x2="15" y2="20" /><line x1="12" y1="4" x2="12" y2="20" /></svg>,
+    mail: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>,
+    camera: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>,
+    play: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg>,
+    help: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>,
+    zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>,
+    default: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /></svg>
 };
 
-const TEMPLATE_ICONS = {
-    'cf-header-premium': '🔷',
-    'cf-header-advanced': '🌈',
-    'cf-announce-01': '🎉',
-    'cf-announce-02': '⬛',
-    'cf-announce-03': '⏱',
-    'cf-announce-04': '💎',
-    'cf-announce-05': '🌟',
-    'cf-announce-06': '😎',
-    'cf-announce-07': '🎯',
-    'cf-announce-08': '🌊',
-    'cf-announce-09': '📣',
-    'cf-announce-10': '🎁',
+const CAT_SVG = {
+    header: SVG_ICONS.layout,
+    announcement: SVG_ICONS.announcement,
+    hero: SVG_ICONS.image,
+    product: SVG_ICONS.shoppingBag,
+    collection: SVG_ICONS.grid,
+    testimonial: SVG_ICONS.message,
+    brand: SVG_ICONS.award,
+    content: SVG_ICONS.type,
+    newsletter: SVG_ICONS.mail,
+    social: SVG_ICONS.camera,
+    video: SVG_ICONS.play,
+    faq: SVG_ICONS.help,
+    banner: SVG_ICONS.zap,
+    footer: SVG_ICONS.layout,
+    default: SVG_ICONS.default
 };
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const S = {
-    root: { display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: '#f4f4f5', fontFamily: '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
-    topbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 52, background: '#0f0f0f', borderBottom: '1px solid #222', flexShrink: 0, zIndex: 10 },
-    topbarLeft: { display: 'flex', alignItems: 'center', gap: 12 },
-    topbarLogo: { display: 'flex', alignItems: 'center', gap: 8 },
-    topbarTitle: { fontSize: 14, fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' },
-    topbarBadge: { background: '#1f1f1f', border: '1px solid #333', borderRadius: 4, padding: '2px 8px', fontSize: 11, color: '#aaa', fontWeight: 600 },
-    topbarCenter: { display: 'flex', alignItems: 'center', gap: 12 },
-    topbarRight: { display: 'flex', alignItems: 'center', gap: 10 },
-    deviceToggle: { display: 'flex', background: '#1a1a1a', borderRadius: 6, border: '1px solid #2a2a2a', overflow: 'hidden' },
-    savingDot: { fontSize: 12, color: '#888' },
-    toastBadge: { fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 5 },
+    root: { display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: '#f4f6f8', fontFamily: '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
+
+    // Topbar matches Shopify admin style
+    topbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 56, background: '#1a1a1a', borderBottom: '1px solid #333', flexShrink: 0, zIndex: 10 },
+    topbarLeft: { display: 'flex', alignItems: 'center', gap: 16, width: 300 },
+    deviceToggle: { display: 'flex', background: '#333', borderRadius: 6, padding: 2 },
+    topbarCenter: { flex: 1, display: 'flex', justifyContent: 'center' },
+    topbarPageName: { fontSize: 13, fontWeight: 600, color: '#fff', background: '#333', padding: '6px 16px', borderRadius: 20 },
+    topbarRight: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, width: 300 },
+    savingDot: { fontSize: 13, color: '#aaa' },
+    toastBadge: { fontSize: 13, fontWeight: 600, padding: '6px 12px', borderRadius: 6 },
 
     body: { display: 'flex', flex: 1, overflow: 'hidden' },
 
-    leftPanel: { width: 240, flexShrink: 0, background: '#fff', borderRight: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-    panelHeader: { display: 'flex', alignItems: 'center', gap: 8, padding: '14px 16px 10px', borderBottom: '1px solid #f0f0f0' },
-    panelTitle: { fontSize: 13, fontWeight: 700, color: '#111', flex: 1, letterSpacing: '-0.01em' },
-    panelCount: { fontSize: 11, fontWeight: 700, color: '#888', background: '#f4f4f5', borderRadius: 10, padding: '1px 7px' },
-    outlineList: { flex: 1, overflowY: 'auto', padding: '8px 0' },
-    emptyHint: { fontSize: 12, color: '#aaa', textAlign: 'center', padding: '24px 16px', lineHeight: 1.5 },
-    blockRowLeft: { display: 'flex', alignItems: 'center', gap: 7, flex: 1, minWidth: 0 },
-    dragHandle: { fontSize: 12, color: '#ccc', cursor: 'grab', flexShrink: 0 },
-    cfBadge: { fontSize: 9, fontWeight: 800, color: '#6366f1', background: '#eef2ff', borderRadius: 3, padding: '1px 4px', flexShrink: 0 },
-    blockLabel: { fontSize: 13, color: '#333', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
-    addSectionArea: { padding: '12px 16px', borderTop: '1px solid #f0f0f0' },
+    // Left Panel is fixed width
+    leftPanel: { width: 320, flexShrink: 0, background: '#fff', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
+    leftInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
 
-    canvas: { flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflow: 'auto', background: '#ebebeb', padding: '24px', paddingTop: 24 },
-    previewFrame: { background: '#fff', borderRadius: 8, boxShadow: '0 4px 24px rgba(0,0,0,0.10)', overflow: 'hidden', transition: 'width 0.3s ease', minHeight: 500, position: 'relative' },
-    previewPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 400, gap: 12 },
-    previewPlaceholderIcon: { opacity: 0.3 },
-    previewPlaceholderText: { fontSize: 13, color: '#aaa', textAlign: 'center', maxWidth: 200, lineHeight: 1.5 },
-    previewOverlay: { position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 },
-    previewIframe: { width: '100%', minHeight: 500, border: 'none', display: 'block', transition: 'opacity 0.2s' },
+    panelHeader: { display: 'flex', alignItems: 'center', gap: 12, padding: '16px', borderBottom: '1px solid #f4f6f8' },
+    panelTitle: { fontSize: 14, fontWeight: 600, color: '#202223', flex: 1 },
 
-    rightPanel: { width: 300, flexShrink: 0, background: '#fff', borderLeft: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-    rightInner: { display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' },
-    rightHint: { fontSize: 12, color: '#aaa', padding: '0 16px 10px', margin: 0 },
-    catGrid: { padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', flex: 1 },
-    catIcon: { fontSize: 16, width: 24, textAlign: 'center' },
-    catName: { fontSize: 13, fontWeight: 600, color: '#111', flex: 1 },
-    catCount: { fontSize: 11, color: '#aaa', fontWeight: 700 },
+    outlineList: { flex: 1, overflowY: 'auto', padding: '8px 12px' },
+    emptyHint: { fontSize: 13, color: '#6d7175', textAlign: 'center', padding: '32px 16px' },
+    blockRowLeft: { display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 },
+    dragHandle: { color: '#c4cdd5', cursor: 'grab', display: 'flex' },
+    blockIcon: { color: '#8c9196', display: 'flex' },
+    blockLabel: { fontSize: 13, color: '#202223', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
 
-    templateList: { flex: 1, overflowY: 'auto', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 6 },
-    tmplThumb: { width: 44, height: 36, background: '#f7f7f7', borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid #eee' },
-    tmplThumbIcon: { fontSize: 18 },
-    tmplInfo: { flex: 1, display: 'flex', flexDirection: 'column', gap: 2 },
-    tmplName: { fontSize: 13, fontWeight: 600, color: '#111' },
-    tmplHint: { fontSize: 11, color: '#aaa' },
-    tmplCheckmark: { fontSize: 14, color: '#111', fontWeight: 900, flexShrink: 0 },
+    addSectionArea: { padding: '16px', borderTop: '1px solid #dfe3e8', background: '#f9fafb' },
 
-    settingsList: { flex: 1, overflowY: 'auto', padding: '0 16px 8px' },
-    settingsDivider: { height: 1, background: '#f0f0f0', margin: '8px 0' },
-    settingBlock: { padding: '10px 16px 0' },
-    settingLabel: { display: 'block', fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 },
-    colorSwatch: { width: 32, height: 28, padding: '2px', border: '1px solid #e0e0e0', borderRadius: 5, cursor: 'pointer' },
-    colorCode: { fontSize: 12, color: '#555', background: '#f7f7f7', padding: '3px 7px', borderRadius: 4 },
-    rangeVal: { fontSize: 12, fontWeight: 700, color: '#333', minWidth: 32, textAlign: 'right' },
-    placementRow: { display: 'flex', gap: 6 },
-    injectActions: { padding: '12px 16px 16px', borderTop: '1px solid #f0f0f0', marginTop: 'auto' },
+    scrollArea: { flex: 1, overflowY: 'auto', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 4 },
+    listIcon: { width: 20, height: 20, color: '#5c5f62', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    listText: { fontSize: 13, color: '#202223', fontWeight: 500 },
+
+    settingsScroll: { flex: 1, overflowY: 'auto' },
+    settingsList: { padding: '16px' },
+    settingBlock: { marginBottom: 20 },
+    settingLabel: { display: 'block', fontSize: 12, fontWeight: 500, color: '#202223', marginBottom: 8 },
+    placementRow: { display: 'flex', gap: 8 },
+    colorSwatch: { width: 36, height: 36, padding: 0, border: '1px solid #c4cdd5', borderRadius: 6, cursor: 'pointer', overflow: 'hidden' },
+    colorCode: { fontSize: 13, color: '#202223', fontFamily: 'monospace', flex: 1, background: '#f4f6f8', padding: '8px 12px', border: '1px solid #c4cdd5', borderRadius: 6 },
+    rangeVal: { fontSize: 13, fontWeight: 500, color: '#202223', minWidth: 40, textAlign: 'right' },
+
+    imageUploadBox: { border: '1px dashed #c4cdd5', borderRadius: 8, background: '#f9fafb', padding: 8, textAlign: 'center' },
+    imageUploadLabel: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '24px 0', cursor: 'pointer', color: '#5c5f62', fontSize: 13, fontWeight: 500 },
+    imagePreviewWrapper: { position: 'relative', width: '100%', height: 120, borderRadius: 4, overflow: 'hidden', background: '#fff', border: '1px solid #e1e3e5' },
+    imagePreview: { width: '100%', height: '100%', objectFit: 'contain' },
+
+    // Right Canvas takes remaining width smoothly
+    canvas: { flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflow: 'auto', padding: '24px 40px' },
+    previewFrame: { background: '#fff', borderRadius: 8, boxShadow: '0 0 0 1px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.05)', overflow: 'hidden', transition: 'width 0.3s ease', minHeight: 'calc(100vh - 100px)', position: 'relative' },
+    previewPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: 400, gap: 16 },
+    previewPlaceholderText: { fontSize: 14, color: '#6d7175', textAlign: 'center' },
+    previewOverlay: { position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5, backdropFilter: 'blur(2px)' },
+    previewIframe: { width: '100%', height: '100%', minHeight: 'calc(100vh - 100px)', border: 'none', display: 'block', transition: 'opacity 0.2s' },
 };
 
 // ─── CSS ─────────────────────────────────────────────────────────────────────
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; }
+body { font-family: 'Inter', sans-serif; overflow: hidden; }
 
+/* Buttons */
 .te-icon-btn {
-  width: 30px; height: 30px; border-radius: 6px; border: 1px solid #2a2a2a;
+  width: 36px; height: 36px; border-radius: 6px; border: none;
   background: transparent; display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #aaa; transition: all 0.15s;
+  cursor: pointer; color: #a1a1aa; transition: all 0.15s;
 }
-.te-icon-btn:hover { background: #1a1a1a; color: #fff; }
+.te-icon-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+.te-back-btn {
+  width: 32px; height: 32px; border-radius: 6px; border: 1px solid #dfe3e8;
+  background: #fff; display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #5c5f62; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.te-back-btn:hover { background: #f9fafb; border-color: #c4cdd5; color: #202223; }
 
 .te-dev-btn {
-  padding: 5px 10px; border: none; background: transparent; cursor: pointer;
-  font-size: 13px; color: #666; transition: all 0.15s;
+  padding: 6px 12px; border: none; background: transparent; cursor: pointer;
+  font-size: 14px; color: #a1a1aa; transition: all 0.1s; border-radius: 4px;
 }
-.te-dev-btn.active { background: #333; color: #fff; }
-.te-dev-btn:first-child { border-radius: 5px 0 0 5px; }
-.te-dev-btn:last-child { border-radius: 0 5px 5px 0; }
+.te-dev-btn.active { background: #444; color: #fff; }
 
-.te-outline-btn {
-  padding: 6px 14px; border: 1px solid #333; border-radius: 6px; background: transparent;
-  font-size: 12px; font-weight: 600; color: #fff; text-decoration: none;
-  transition: all 0.15s; cursor: pointer;
+.te-save-btn {
+  padding: 8px 16px; border-radius: 6px; border: none;
+  background: #008060; color: #fff; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 0 rgba(0,0,0,0.1);
 }
-.te-outline-btn:hover { background: #1a1a1a; }
+.te-save-btn:hover:not(:disabled) { background: #006e52; }
+.te-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+.te-text-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; border: 1px solid #dfe3e8; border-radius: 6px; background: #fff;
+  font-size: 13px; font-weight: 600; color: #202223; cursor: pointer; 
+  transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.te-text-btn:hover { background: #f9fafb; border-color: #c4cdd5; }
+
+/* Lists & Rows */
 .te-block-row {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 16px; cursor: pointer; transition: background 0.12s;
-  border-left: 3px solid transparent;
+  padding: 10px 12px; cursor: pointer; transition: background 0.12s;
+  border-radius: 6px; margin-bottom: 2px;
 }
-.te-block-row:hover { background: #f9f9f9; }
-.te-block-row.active { background: #f4f4ff; border-left-color: #6366f1; }
+.te-block-row:hover { background: #f4f6f8; }
+.te-block-row.active { background: #eef2ff; color: #2c6ecb; }
 
 .te-del-btn {
-  width: 22px; height: 22px; border-radius: 4px; border: none;
+  width: 24px; height: 24px; border-radius: 4px; border: none;
   background: transparent; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #ccc; opacity: 0; transition: all 0.15s;
+  cursor: pointer; color: #8c9196; opacity: 0; transition: all 0.1s;
 }
 .te-block-row:hover .te-del-btn { opacity: 1; }
-.te-del-btn:hover { background: #fee2e2; color: #dc2626; }
+.te-del-btn:hover { background: #fee2e2; color: #d82c0d; }
 
-.te-add-btn {
-  width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 8px; border: 1.5px dashed #d4d4d4; border-radius: 7px; background: transparent;
-  font-size: 12px; font-weight: 700; color: #888; cursor: pointer; 
-  transition: all 0.15s; letter-spacing: 0.01em;
+.te-list-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  border: 1px solid transparent; border-radius: 6px; background: transparent;
+  cursor: pointer; transition: all 0.1s; text-align: left; width: 100%;
 }
-.te-add-btn:hover { border-color: #6366f1; color: #6366f1; background: #f4f4ff; }
-
-.te-cat-card {
-  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-  border: 1px solid #efefef; border-radius: 8px; background: #fff;
-  cursor: pointer; transition: all 0.15s; text-align: left;
-  width: 100%;
-}
-.te-cat-card:hover { border-color: #111; background: #fafafa; }
-
-.te-tmpl-card {
-  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
-  border: 1.5px solid #efefef; border-radius: 8px; background: #fff;
-  cursor: pointer; transition: all 0.15s; text-align: left; width: 100%;
-}
-.te-tmpl-card:hover { border-color: #aaa; }
-.te-tmpl-card.selected { border-color: #111; box-shadow: 0 0 0 2px rgba(0,0,0,0.06); }
+.te-list-item:hover { background: #f4f6f8; }
 
 .te-place-btn {
-  flex: 1; padding: 7px 10px; border: 1.5px solid #e5e5e5; border-radius: 6px;
-  background: #fff; font-size: 12px; font-weight: 600; cursor: pointer; 
-  color: #555; transition: all 0.15s;
+  flex: 1; padding: 10px; border: 1px solid #c4cdd5; border-radius: 6px;
+  background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; 
+  color: #5c5f62; transition: all 0.15s;
 }
-.te-place-btn.active { border-color: #111; background: #111; color: #fff; }
+.te-place-btn.active { border-color: #2c6ecb; background: #eef2ff; color: #2c6ecb; font-weight: 600; }
 
 .te-input, .te-select {
-  width: 100%; border: 1.5px solid #e5e5e5; border-radius: 6px;
-  padding: 7px 10px; font-size: 13px; font-family: inherit;
-  background: #fafafa; transition: border 0.15s; outline: none;
+  width: 100%; border: 1px solid #c4cdd5; border-radius: 6px;
+  padding: 8px 12px; font-size: 13px; font-family: inherit; color: #202223;
+  background: #fff; transition: border 0.15s; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
 }
-.te-input:focus, .te-select:focus { border-color: #111; background: #fff; }
+.te-input:focus, .te-select:focus { border-color: #2c6ecb; box-shadow: 0 0 0 1px #2c6ecb; }
 
-.te-inject-btn {
-  width: 100%; padding: 12px; border: none; border-radius: 8px;
-  background: #111; color: #fff; font-size: 14px; font-weight: 700;
-  cursor: pointer; letter-spacing: -0.01em; transition: all 0.15s;
+.te-img-del-btn {
+  position: absolute; top: 6px; right: 6px; width: 24px; height: 24px;
+  background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
-.te-inject-btn:hover { background: #333; transform: translateY(-1px); }
-.te-inject-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.te-img-del-btn:hover { background: #d82c0d; }
 
 .te-spinner {
-  width: 22px; height: 22px; border: 2.5px solid #e5e5e5;
-  border-top-color: #111; border-radius: 50%;
+  width: 28px; height: 28px; border: 3px solid #dfe3e8;
+  border-top-color: #2c6ecb; border-radius: 50%;
   animation: te-spin 0.6s linear infinite;
 }
 @keyframes te-spin { to { transform: rotate(360deg); } }

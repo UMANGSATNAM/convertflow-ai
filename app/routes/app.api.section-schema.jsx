@@ -26,7 +26,7 @@ export const loader = async ({ request }) => {
 
     try {
         const schema = JSON.parse(m[1].trim());
-        const ALLOWED = ['text', 'color', 'color_background', 'range', 'checkbox', 'select', 'textarea'];
+        const ALLOWED = ['text', 'color', 'color_background', 'range', 'checkbox', 'select', 'textarea', 'image_picker'];
         const settings = (schema.settings || []).filter(s => ALLOWED.includes(s.type));
         return json({ settings, name: schema.name || meta.name });
     } catch {
