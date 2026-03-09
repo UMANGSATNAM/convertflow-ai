@@ -1,0 +1,34 @@
+<style>
+.cf-mq-02{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;font-weight:900;text-transform:uppercase;font-size:{{ section.settings.text_size }}px;display:flex;flex-direction:column;gap:{{ section.settings.gap }}px;padding:{{ section.settings.padding_y }}px 0}
+.cf-mq-02-line{display:flex;white-space:nowrap}
+.cf-mq-02-line.l1{animation:cf-mq-02-sl {{ section.settings.speed }}s linear infinite}
+.cf-mq-02-line.l2{animation:cf-mq-02-sr {{ section.settings.speed }}s linear infinite reverse;color:{{ section.settings.accent_color }};-webkit-text-stroke:1px {{ section.settings.text_color }}}
+.cf-mq-02-item{padding:0 20px;line-height:1}
+@keyframes cf-mq-02-sl{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes cf-mq-02-sr{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+</style>
+<div class="cf-mq-02">
+  <div class="cf-mq-02-line l1">
+    {% assign reps = (1..10) %}{% for i in reps %}<div class="cf-mq-02-item">{{ section.settings.text1 }}</div>{% endfor %}
+  </div>
+  <div class="cf-mq-02-line l2">
+    {% assign reps = (1..10) %}{% for i in reps %}<div class="cf-mq-02-item">{{ section.settings.text2 }}</div>{% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "02 · Streetwear Marquee",
+  "settings": [
+    {"type":"text","id":"text1","label":"Text Line 1","default":"NEW DROPS EVERY FRIDAY"},
+    {"type":"text","id":"text2","label":"Text Line 2","default":"SECURE YOUR PAIR NOW"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#fff"},
+    {"type":"color","id":"accent_color","label":"Outline Color","default":"transparent"},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":5,"max":40,"step":1,"default":15},
+    {"type":"range","id":"text_size","label":"Text Size","min":24,"max":120,"step":4,"default":48},
+    {"type":"range","id":"gap","label":"Gap Between Lines","min":0,"max":40,"step":2,"default":10},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":80,"step":4,"default":20}
+  ],
+  "presets": [{"name":"02 · Streetwear Marquee"}]
+}
+{% endschema %}

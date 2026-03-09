@@ -1,0 +1,37 @@
+<style>
+.cf-mq-08{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;border-bottom:4px solid {{ section.settings.border_color }}}
+.cf-mq-08-wrap{display:flex;white-space:nowrap;animation:cf-mq-08-s {{ section.settings.speed }}s linear infinite}
+.cf-mq-08-item{font-family:'Comic Sans MS','Fredoka One',cursive;font-size:{{ section.settings.text_size }}px;font-weight:900;padding:0 30px;display:flex;align-items:center;gap:30px}
+.cf-mq-08-t1{color:{{ section.settings.color_1 }};text-shadow:2px 2px 0 #111;animation:cf-mq-bounce 2s ease-in-out infinite}
+.cf-mq-08-t2{color:{{ section.settings.color_2 }};text-shadow:2px 2px 0 #111;animation:cf-mq-bounce 2s ease-in-out infinite 1s}
+@keyframes cf-mq-08-s{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes cf-mq-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+</style>
+<div class="cf-mq-08">
+  <div class="cf-mq-08-wrap">
+    {% assign reps = (1..15) %}
+    {% for i in reps %}
+      <div class="cf-mq-08-item">
+        <span class="cf-mq-08-t1">{{ section.settings.text1 }}</span>
+        <span class="cf-mq-08-t2">{{ section.settings.text2 }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "08 · Kids Marquee",
+  "settings": [
+    {"type":"text","id":"text1","label":"Text 1","default":"PLAYTIME IS HERE!"},
+    {"type":"text","id":"text2","label":"Text 2","default":"🎉 FUN FOR EVERYONE 🎉"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fef3c7"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#111111"},
+    {"type":"color","id":"color_1","label":"Color 1","default":"#ef4444"},
+    {"type":"color","id":"color_2","label":"Color 2","default":"#3b82f6"},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":60,"step":2,"default":25},
+    {"type":"range","id":"text_size","label":"Text Size","min":16,"max":48,"step":2,"default":24},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":16}
+  ],
+  "presets": [{"name":"08 · Kids Marquee"}]
+}
+{% endschema %}

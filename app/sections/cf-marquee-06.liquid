@@ -1,0 +1,33 @@
+<style>
+.cf-mq-06{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;border-top:2px solid {{ section.settings.accent_color }};border-bottom:2px solid {{ section.settings.accent_color }}}
+.cf-mq-06-wrap{display:flex;white-space:nowrap;animation:cf-mq-06-s {{ section.settings.speed }}s linear infinite}
+.cf-mq-06-item{font-family:sans-serif;color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;font-weight:900;font-style:italic;text-transform:uppercase;padding:0 30px;display:flex;align-items:center;gap:30px;letter-spacing:0.05em}
+.cf-mq-06-icon{color:{{ section.settings.accent_color }};font-weight:900;font-style:italic;transform:skewX(-15deg)}
+@keyframes cf-mq-06-s{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+<div class="cf-mq-06">
+  <div class="cf-mq-06-wrap">
+    {% assign reps = (1..15) %}
+    {% for i in reps %}
+      <div class="cf-mq-06-item">
+        <span>{{ section.settings.text }}</span>
+        <div class="cf-mq-06-icon">///</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "06 · Automotive Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"PERFORMANCE PARTS BUILT TO WIN"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#ef4444"},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":5,"max":40,"step":1,"default":15},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":48,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":16}
+  ],
+  "presets": [{"name":"06 · Automotive Marquee"}]
+}
+{% endschema %}

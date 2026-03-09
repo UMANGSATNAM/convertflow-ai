@@ -1,0 +1,30 @@
+<style>
+.cf-mq-03{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;font-family:monospace;border-top:2px dashed {{ section.settings.accent_color }};border-bottom:2px dashed {{ section.settings.accent_color }}}
+.cf-mq-03-wrap{display:flex;white-space:nowrap;animation:cf-mq-03-s {{ section.settings.speed }}s linear infinite}
+.cf-mq-03-item{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;padding:0 30px;display:flex;align-items:center;gap:30px}
+.cf-mq-03-sep{color:{{ section.settings.accent_color }}}
+@keyframes cf-mq-03-s{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+<div class="cf-mq-03">
+  <div class="cf-mq-03-wrap">
+    {% assign reps = (1..15) %}
+    {% for i in reps %}
+      <div class="cf-mq-03-item"><span>> {{ section.settings.text }} _</span><span class="cf-mq-03-sep">|</span></div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "03 · Tech Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"SYSTEM.UPGRADE.SUCCESS // 30% OFF"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#0f172a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#fff"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#10b981"},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":32,"step":1,"default":14},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":16}
+  ],
+  "presets": [{"name":"03 · Tech Marquee"}]
+}
+{% endschema %}

@@ -1,0 +1,29 @@
+<style>
+.cf-mq-01{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-mq-01-wrap{display:flex;white-space:nowrap;animation:cf-mq-01-slide {{ section.settings.speed }}s linear infinite}
+.cf-mq-01-item{font-family:'Playfair Display',serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};text-transform:uppercase;letter-spacing:0.1em;padding:0 40px}
+@keyframes cf-mq-01-slide{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+</style>
+<div class="cf-mq-01">
+  <div class="cf-mq-01-wrap">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-01-item">{{ section.settings.text }}</div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "01 · Luxury Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"Complimentary Worldwide Shipping on All Orders"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e5e5e5"},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":60,"step":5,"default":30},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":36,"step":1,"default":13},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12}
+  ],
+  "presets": [{"name":"01 · Luxury Marquee"}]
+}
+{% endschema %}

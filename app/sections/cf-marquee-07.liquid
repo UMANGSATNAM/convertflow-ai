@@ -1,0 +1,34 @@
+<style>
+.cf-mq-07{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;font-family:system-ui,-apple-system,sans-serif}
+.cf-mq-07-wrap{display:flex;white-space:nowrap;animation:cf-mq-07-s {{ section.settings.speed }}s linear infinite}
+.cf-mq-07-item{color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;font-weight:600;padding:0 40px;display:flex;align-items:center;gap:40px}
+.cf-mq-07-badge{background:{{ section.settings.accent_color }};color:#fff;padding:4px 10px;border-radius:20px;font-size:0.85em;font-weight:700}
+@keyframes cf-mq-07-s{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+<div class="cf-mq-07">
+  <div class="cf-mq-07-wrap">
+    {% assign reps = (1..12) %}
+    {% for i in reps %}
+      <div class="cf-mq-07-item">
+        <div class="cf-mq-07-badge">{{ section.settings.badge }}</div>
+        <span>{{ section.settings.text }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "07 · SaaS Marquee",
+  "settings": [
+    {"type":"text","id":"badge","label":"Badge Text","default":"NEW"},
+    {"type":"text","id":"text","label":"Main Text","default":"Integrate with over 50+ payment gateways instantly"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#334155"},
+    {"type":"color","id":"accent_color","label":"Badge Color","default":"#6366f1"},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":60,"step":2,"default":30},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":28,"step":1,"default":15},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":32,"step":1,"default":12}
+  ],
+  "presets": [{"name":"07 · SaaS Marquee"}]
+}
+{% endschema %}

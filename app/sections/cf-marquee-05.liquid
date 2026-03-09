@@ -1,0 +1,33 @@
+<style>
+.cf-mq-05{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0}
+.cf-mq-05-wrap{display:flex;white-space:nowrap;animation:cf-mq-05-s {{ section.settings.speed }}s linear infinite}
+.cf-mq-05-item{font-family:'Georgia',serif;color:{{ section.settings.text_color }};font-size:{{ section.settings.text_size }}px;padding:0 30px;display:flex;align-items:center;gap:30px}
+.cf-mq-05-icon{color:{{ section.settings.accent_color }};display:flex;align-items:center}
+@keyframes cf-mq-05-s{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+<div class="cf-mq-05">
+  <div class="cf-mq-05-wrap">
+    {% assign reps = (1..15) %}
+    {% for i in reps %}
+      <div class="cf-mq-05-item">
+        <span>{{ section.settings.text }}</span>
+        <div class="cf-mq-05-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.8-6.3 4.8 2.3-7.4-6-4.6h7.6z"/></svg></div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "05 · Beauty Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"Glow Like Never Before — Shop the New Collection"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fffbfb"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4a3c31"},
+    {"type":"color","id":"accent_color","label":"Star Color","default":"#d4aba0"},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":60,"step":2,"default":35},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":32,"step":1,"default":15},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12}
+  ],
+  "presets": [{"name":"05 · Beauty Marquee"}]
+}
+{% endschema %}
