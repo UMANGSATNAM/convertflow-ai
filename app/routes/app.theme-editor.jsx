@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { Home, ShoppingCart, Package, Palette, Store, Monitor, Smartphone, Layout, Megaphone, Image as ImageIcon, ShoppingBag, Grid, MessageSquare, Award, Type, Mail, Camera, Play, HelpCircle, Zap } from "lucide-react";
+import { Home, ShoppingCart, Package, Palette, Store, Monitor, Smartphone, Layout, Megaphone, Image as ImageIcon, ShoppingBag, Grid, MessageSquare, Award, Type, Mail, Camera, Play, HelpCircle, Zap, ChevronRight, X, Check } from "lucide-react";
 import { useLoaderData, useFetcher, useNavigate } from "@remix-run/react";
 import { useState, useEffect, useRef } from "react";
 import { authenticate } from "../shopify.server";
@@ -289,13 +289,16 @@ export default function ThemeEditor() {
         <div style={S.root}>
             <style>{CSS}</style>
 
-            {/* ── TOP NAV BAR (Reverted to Shopify App Nav standard) ── */}
+            {/* ── TOP NAV BAR (PageFly Style) ── */}
             <header style={S.topbar}>
                 <div style={S.topbarLeft}>
-                    <button className="te-back-btn" onClick={() => navigate('/app')} title="Exit Editor">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                    <button className="te-icon-back" onClick={() => navigate('/app')} title="Exit Editor">
+                        <Home size={16} strokeWidth={2.5} />
                     </button>
-                    <span style={S.topbarPageName}>Home page</span>
+                    <div style={S.topbarTitleGroup}>
+                        <span style={S.topbarPageName}>Home page</span>
+                        <span style={S.statusPill}>Unpublished</span>
+                    </div>
                 </div>
 
                 <div style={S.topbarCenter}>
@@ -307,8 +310,8 @@ export default function ThemeEditor() {
 
                 <div style={S.topbarRight}>
                     {toast && (
-                        <span style={{ ...S.toastBadge, background: toast.ok ? '#d1fae5' : '#fee2e2', color: toast.ok ? '#065f46' : '#991b1b' }}>
-                            {toast.msg}
+                        <span style={{ ...S.toastBadge, background: toast.ok ? '#e3f1df' : '#fee2e2', color: toast.ok ? '#065f46' : '#991b1b' }}>
+                            <Check size={12} style={{ marginRight: 4, display: 'inline-block' }} /> {toast.msg}
                         </span>
                     )}
                     {isBusy && <span style={S.savingDot}>Saving...</span>}
@@ -317,24 +320,25 @@ export default function ThemeEditor() {
                         onClick={activeBlockId ? handleSaveLive : handleInject}
                         disabled={isBusy || (!activeBlockId && !selectedTemplateId)}
                     >
-                        Save
+                        Publish
                     </button>
                 </div>
             </header>
 
             <div style={S.workspace}>
-                {/* ── LEFT SIDEBAR (Outline/Templates) ── */}
+                {/* ── LEFT SIDEBAR (PageFly Outline) ── */}
                 <aside style={S.leftSidebar}>
                     {/* STATE 0: OUTLINE */}
                     {leftView === 'outline' && (
                         <div style={S.panelInner}>
                             <div style={S.panelHeader}>
-                                <span style={S.panelTitle}>Sections</span>
+                                <span style={S.panelTitle}>Page content</span>
+                                <button className="te-icon-btn"><X size={16} strokeWidth={2.5} /></button>
                             </div>
 
                             <div style={S.outlineList}>
                                 {pageBlocks.length === 0 && (
-                                    <p style={S.emptyHint}>No sections yet.</p>
+                                    <p style={S.emptyHint}>No element selected</p>
                                 )}
                                 {pageBlocks.map((block) => {
                                     const isActive = block.id === activeBlockId;
@@ -352,7 +356,7 @@ export default function ThemeEditor() {
                                         >
                                             <div style={S.blockRowLeft}>
                                                 <span style={S.dragHandle}>
-                                                    <Grid size={13} strokeWidth={2.5} />
+                                                    <ChevronRight size={14} strokeWidth={2.5} />
                                                 </span>
                                                 <span style={S.blockIcon}>
                                                     {block.isCf ? <Palette size={14} /> : <Layout size={14} />}
@@ -365,19 +369,30 @@ export default function ThemeEditor() {
                                                     onClick={(e) => { e.stopPropagation(); handleRemove(block.id); }}
                                                     title="Remove section"
                                                 >
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+                                                    <X size={14} strokeWidth={2.5} />
                                                 </button>
                                             )}
                                         </div>
                                     );
                                 })}
-                            </div>
 
-                            <div style={S.addSectionArea}>
-                                <button className="te-text-btn" onClick={() => setLeftView('categories')}>
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                                    Add section
-                                </button>
+                                <div style={{ padding: '8px 12px', marginTop: '4px' }}>
+                                    <button className="te-text-btn" onClick={() => setLeftView('categories')}>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                        Add section
+                                    </button>
+                                </div>
+
+                                <div style={{ marginTop: 24 }}>
+                                    <div style={S.contextHeader}>Header</div>
+                                    <div style={S.contextBlock}>
+                                        <div style={S.blockRowLeft}><Layout size={14} color="#5c5f62" /><span style={{ fontSize: 13, color: '#5c5f62' }}>Theme header</span></div>
+                                    </div>
+                                    <div style={{ ...S.contextHeader, marginTop: 16 }}>Footer</div>
+                                    <div style={S.contextBlock}>
+                                        <div style={S.blockRowLeft}><Layout size={14} color="#5c5f62" /><span style={{ fontSize: 13, color: '#5c5f62' }}>Theme footer</span></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -387,16 +402,17 @@ export default function ThemeEditor() {
                         <div style={S.panelInner}>
                             <div style={S.panelHeader}>
                                 <button className="te-icon-back" onClick={() => setLeftView('outline')}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                    <ChevronRight size={16} strokeWidth={2.5} style={{ transform: 'rotate(180deg)' }} />
                                 </button>
                                 <span style={S.panelTitle}>Add section</span>
+                                <div style={{ width: 28 }}></div>
                             </div>
                             <div style={S.scrollArea}>
                                 {cfCats.map(cat => (
                                     <button key={cat.id} className="te-list-item" onClick={() => handleSelectCategory(cat.id)}>
-                                        <span style={S.listIcon}>{CAT_SVG[cat.id] || CAT_SVG.default}</span>
+                                        <span style={S.listIcon}>{CAT_SVG[cat.id] || <Layout size={16} strokeWidth={2} />}</span>
                                         <span style={S.listText}>{cat.name}</span>
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2.5" style={{ marginLeft: 'auto' }}><polyline points="9 18 15 12 9 6" /></svg>
+                                        <ChevronRight size={14} strokeWidth={2.5} style={{ marginLeft: 'auto', color: '#8c9196' }} />
                                     </button>
                                 ))}
                             </div>
@@ -408,16 +424,17 @@ export default function ThemeEditor() {
                         <div style={S.panelInner}>
                             <div style={S.panelHeader}>
                                 <button className="te-icon-back" onClick={() => setLeftView('categories')}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                    <ChevronRight size={16} strokeWidth={2.5} style={{ transform: 'rotate(180deg)' }} />
                                 </button>
                                 <span style={S.panelTitle}>{cfCats.find(c => c.id === activeCategoryId)?.name || 'Templates'}</span>
+                                <div style={{ width: 28 }}></div>
                             </div>
-                            <div style={S.scrollArea}>
+                            <div style={{ ...S.scrollArea, padding: '12px 0' }}>
                                 {templateIds.map(id => {
                                     const meta = SECTION_FILES[id];
                                     return (
                                         <button key={id} className="te-list-item" onClick={() => handleSelectTemplate(id)}>
-                                            <span style={S.listIcon}>{CAT_SVG.default}</span>
+                                            <span style={S.listIcon}><Palette size={16} strokeWidth={2} /></span>
                                             <span style={S.listText}>{meta?.name || id}</span>
                                         </button>
                                     );
@@ -429,6 +446,9 @@ export default function ThemeEditor() {
 
                 {/* ── CENTER CANVAS (Persistent Full Preview) ── */}
                 <main style={S.canvas}>
+                    <div style={{ ...S.canvasHeader, maxWidth: device === 'mobile' ? '400px' : '100%' }}>
+                        {device === 'desktop' ? '1440px, 100%' : '375px, 100%'}
+                    </div>
                     <div style={{
                         ...S.previewFrame,
                         width: device === 'mobile' ? '400px' : '100%',
@@ -437,7 +457,7 @@ export default function ThemeEditor() {
                         {!previewHtml && !activeBlockId && !selectedTemplateId && (
                             <div style={S.previewPlaceholder}>
                                 <div className="te-spinner" />
-                                <p style={{ marginTop: 12, color: '#6d7175', fontSize: 13 }}>Loading original theme...</p>
+                                <p style={S.previewPlaceholderText}>Loading visual canvas...</p>
                             </div>
                         )}
                         {previewLoading && (
@@ -470,11 +490,12 @@ export default function ThemeEditor() {
                                         setSettings({});
                                     }
                                 }}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+                                    <X size={16} strokeWidth={2.5} />
                                 </button>
                                 <span style={S.panelTitle}>
                                     {templateSchema.name || (activeBlockId ? 'Edit Section' : 'Customize Section')}
                                 </span>
+                                <div style={{ width: 28 }}></div>
                             </div>
 
                             <div style={S.settingsScroll}>
@@ -492,7 +513,7 @@ export default function ThemeEditor() {
                                 )}
 
                                 {templateSchema.settings.length === 0 ? (
-                                    <div style={{ padding: 20, textAlign: 'center', color: '#888', fontSize: 13 }}>Loading settings...</div>
+                                    <div style={{ padding: 40, textAlign: 'center', color: '#8c9196', fontSize: 13 }}>Loading parameters...</div>
                                 ) : (
                                     <div style={S.settingsList}>
                                         {templateSchema.settings.map(s => (
@@ -621,158 +642,245 @@ const CAT_SVG = {
 };
 
 const S = {
-    root: { display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: '#f4f6f8', fontFamily: '"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif' },
+    root: { display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden', backgroundColor: '#f4f6f8', fontFamily: "'Inter', sans-serif" },
 
-    // ── TOP NAV BAR ──
-    topbar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 56, background: '#fff', borderBottom: '1px solid #dfe3e8', flexShrink: 0, zIndex: 10 },
-    topbarLeft: { display: 'flex', alignItems: 'center', width: 200, gap: 16 },
-    deviceToggle: { display: 'flex', background: '#f4f6f8', borderRadius: 6, padding: 4 },
-    topbarCenter: { flex: 1, display: 'flex', justifyContent: 'center' },
-    topbarPageName: { fontSize: 14, fontWeight: 600, color: '#202223' },
-    topbarRight: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12, width: 200 },
-    savingDot: { fontSize: 13, color: '#aaa' },
-    toastBadge: { fontSize: 13, fontWeight: 600, padding: '6px 12px', borderRadius: 6 },
+    // Topbar (PageFly header)
+    topbar: {
+        height: '56px', backgroundColor: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 16px', borderBottom: '1px solid #e4e5e7', flexShrink: 0, zIndex: 10
+    },
+    topbarLeft: { display: 'flex', alignItems: 'center', gap: '8px' },
+    brandIcon: { width: '24px', height: '24px', backgroundColor: '#1a73e8', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#fff', fontSize: '12px', fontWeight: 'bold' },
+    topbarTitleGroup: { display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '8px' },
+    topbarPageName: { fontSize: '14px', fontWeight: '500', color: '#202223' },
+    statusPill: { fontSize: '11px', backgroundColor: '#f4f6f8', color: '#5c5f62', padding: '2px 8px', borderRadius: '12px', fontWeight: '500' },
+
+    topbarCenter: { display: 'flex', alignItems: 'center', gap: '16px' },
+    deviceToggle: { display: 'flex', gap: '4px', backgroundColor: '#f4f6f8', padding: '4px', borderRadius: '6px' },
+
+    topbarRight: { display: 'flex', alignItems: 'center', gap: '12px' },
+    savingDot: { fontSize: '13px', color: '#5c5f62' },
+    toastBadge: { fontSize: '13px', padding: '4px 8px', borderRadius: '4px' },
 
     workspace: { display: 'flex', flex: 1, overflow: 'hidden' },
 
-    // ── LEFT SIDEBAR (Outline/Templates) ──
-    leftSidebar: { width: 320, flexShrink: 0, background: '#fff', borderRight: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
+    // Left Sidebar (Page Content / Context)
+    leftSidebar: {
+        width: '280px', backgroundColor: '#ffffff', borderRight: '1px solid #e4e5e7',
+        display: 'flex', flexDirection: 'column', flexShrink: 0, zIndex: 5
+    },
+    panelInner: { display: 'flex', flexDirection: 'column', height: '100%' },
+    panelHeader: {
+        padding: '16px', borderBottom: '1px solid #e4e5e7',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+    },
+    panelTitleGroup: { display: 'flex', alignItems: 'center', gap: '12px' },
+    panelTitle: { fontSize: '14px', fontWeight: '600', color: '#202223', margin: 0 },
 
-    // ── RIGHT SIDEBAR (Settings) ──
-    rightSidebar: { width: 340, flexShrink: 0, background: '#fff', borderLeft: '1px solid #dfe3e8', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 5 },
+    outlineList: { flex: 1, overflowY: 'auto', padding: '16px 8px' },
+    emptyHint: { padding: '20px', textAlign: 'center', color: '#8c9196', fontSize: '13px', margin: 0 },
 
-    // ── SHARED PANEL STYLES ──
-    panelInner: { display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' },
-    panelHeader: { display: 'flex', alignItems: 'center', gap: 12, padding: '16px', borderBottom: '1px solid #f4f6f8', flexShrink: 0 },
-    panelTitle: { fontSize: 14, fontWeight: 600, color: '#202223', flex: 1 },
+    // Aesthetic structural row markers
+    contextBlock: { padding: '8px', marginBottom: '8px', backgroundColor: '#f9fafb', borderRadius: '6px', border: '1px dashed #e4e5e7' },
+    contextHeader: { fontSize: '11px', textTransform: 'uppercase', color: '#8c9196', fontWeight: '600', marginBottom: '8px', paddingLeft: '4px' },
 
-    outlineList: { flex: 1, overflowY: 'auto', padding: '16px 12px' },
-    emptyHint: { fontSize: 13, color: '#6d7175', textAlign: 'center', padding: '32px 16px' },
-    blockRowLeft: { display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 },
-    dragHandle: { color: '#c4cdd5', cursor: 'grab', display: 'flex' },
-    blockIcon: { color: '#8c9196', display: 'flex' },
-    blockLabel: { fontSize: 13, color: '#202223', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
+    blockRowLeft: { display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' },
+    dragHandle: { color: '#c9cccf', display: 'flex' }, // Now repurposed for Chevron
+    blockIcon: { color: '#5c5f62', display: 'flex' },
+    blockLabel: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '13px' },
 
-    addSectionArea: { padding: '16px', borderTop: '1px solid #dfe3e8', background: '#fff', flexShrink: 0 },
+    addSectionArea: { padding: '16px', borderTop: '1px solid #e4e5e7', display: 'flex', justifyContent: 'center', background: '#fff' },
 
-    scrollArea: { flex: 1, overflowY: 'auto', padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 4 },
-    listIcon: { width: 20, height: 20, color: '#8c9196', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-    listText: { fontSize: 13, color: '#202223', fontWeight: 500 },
+    scrollArea: { flex: 1, overflowY: 'auto' },
+    listIcon: { color: '#5c5f62', display: 'flex' },
+    listText: { fontSize: '13px', fontWeight: '500' },
 
-    settingsScroll: { flex: 1, overflowY: 'auto' },
-    settingsList: { padding: '16px' },
-    settingBlock: { marginBottom: 20 },
-    settingLabel: { display: 'block', fontSize: 12, fontWeight: 500, color: '#202223', marginBottom: 8 },
-    placementRow: { display: 'flex', gap: 8, padding: '0 16px 16px' },
+    // Center Canvas (Preview iframe)
+    canvas: {
+        flex: 1, position: 'relative', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', backgroundColor: '#f4f6f8', overflow: 'hidden', padding: '0'
+    },
+    canvasHeader: { width: '100%', padding: '12px 24px', display: 'flex', justifyContent: 'center', color: '#8c9196', fontSize: '12px' },
+    previewFrame: {
+        flex: 1, width: '100%', maxWidth: '100%', height: '100%',
+        backgroundColor: '#fff', position: 'relative', transition: 'width 0.3s ease, max-width 0.3s ease',
+        boxShadow: '0 0 0 1px #e4e5e7', // Gives the iframe a crisp edge against the gray canvas
+    },
+    previewPlaceholder: { position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' },
+    previewPlaceholderText: { marginTop: '16px', color: '#8c9196', fontSize: '13px' },
+    previewOverlay: { position: 'absolute', inset: 0, backgroundColor: 'rgba(255, 255, 255, 0.4)', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(1px)' },
+    previewIframe: { width: '100%', height: '100%', border: 'none', transition: 'opacity 0.2s', backgroundColor: '#fff' },
+
+    // Right Sidebar (Properties/Settings)
+    rightSidebar: {
+        width: '320px', backgroundColor: '#ffffff', borderLeft: '1px solid #e4e5e7',
+        display: 'flex', flexDirection: 'column', flexShrink: 0, zIndex: 5,
+        boxShadow: '-4px 0 16px rgba(0,0,0,0.03)'
+    },
+    settingsScroll: { flex: 1, overflowY: 'auto', padding: '0' },
+    settingBlock: { padding: '24px 20px', borderBottom: '1px solid #f4f6f8' },
+    settingLabel: { display: 'block', fontSize: '13px', fontWeight: '500', color: '#202223', marginBottom: '8px' },
+    settingsList: { display: 'flex', flexDirection: 'column', gap: '0' },
+    placementRow: { display: 'flex', width: '100%', borderRadius: '4px' },
+
+    // Setting rows padding resets
     colorSwatch: { width: 36, height: 36, padding: 0, border: '1px solid #c4cdd5', borderRadius: 6, cursor: 'pointer', overflow: 'hidden' },
     colorCode: { fontSize: 13, color: '#202223', fontFamily: 'monospace', flex: 1, background: '#f4f6f8', padding: '8px 12px', border: '1px solid #c4cdd5', borderRadius: 6 },
     rangeVal: { fontSize: 13, fontWeight: 500, color: '#202223', minWidth: 40, textAlign: 'right' },
-
     imageUploadBox: { border: '1px dashed #c4cdd5', borderRadius: 8, background: '#f9fafb', padding: 8, textAlign: 'center' },
     imageUploadLabel: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '24px 0', cursor: 'pointer', color: '#5c5f62', fontSize: 13, fontWeight: 500 },
     imagePreviewWrapper: { position: 'relative', width: '100%', height: 120, borderRadius: 4, overflow: 'hidden', background: '#fff', border: '1px solid #e1e3e5' },
-    imagePreview: { width: '100%', height: '100%', objectFit: 'contain' },
-
-    // ── CENTER CANVAS (Persistent) ──
-    canvas: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'hidden', background: '#f4f6f8' },
-    previewFrame: { background: '#fff', boxShadow: '0 0 0 1px rgba(0,0,0,0.05)', transition: 'width 0.3s ease', display: 'flex', flexDirection: 'column', flex: 1, width: '100%', position: 'relative' },
-    previewPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 16 },
-    previewOverlay: { position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 },
-    previewIframe: { width: '100%', height: '100%', border: 'none', display: 'block', transition: 'opacity 0.2s', flex: 1 },
+    imagePreview: { width: '100%', height: '100%', objectFit: 'contain' }
 };
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; overflow: hidden; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-/* Buttons */
-.te-back-btn {
-  width: 32px; height: 32px; border-radius: 6px; border: 1px solid #dfe3e8;
-  background: #fff; display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #5c5f62; transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-.te-back-btn:hover { background: #f9fafb; border-color: #c4cdd5; color: #202223; }
+  body {
+      margin: 0; padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f4f6f8;
+      color: #202223;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
 
-.te-icon-back {
-  width: 32px; height: 32px; border-radius: 6px; border: none;
-  background: transparent; display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #5c5f62; transition: all 0.15s; margin-left: -8px;
-}
-.te-icon-back:hover { background: rgba(0,0,0,0.05); color: #202223; }
+  /* Outline List Sub-Hover Effects */
+  .te-block-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 16px 6px 12px;
+      margin: 1px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #5c5f62;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      user-select: none;
+      font-size: 13px;
+  }
+  .te-block-row:hover {
+      background-color: #f6f6f7;
+      color: #202223;
+  }
+  .te-block-row.active {
+      background-color: #e3f1df; /* Very subtle PageFly active tint */
+      color: #202223;
+      font-weight: 500;
+  }
 
-.te-dev-btn {
-  padding: 6px 12px; border: none; background: transparent; cursor: pointer;
-  font-size: 14px; color: #8c9196; transition: all 0.1s; border-radius: 4px;
-}
-.te-dev-btn.active { background: #fff; color: #202223; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .te-del-btn {
+      background: none; border: none; padding: 4px; cursor: pointer;
+      color: #8c9196; opacity: 0; border-radius: 3px; display: flex; align-items: center; justify-content: center;
+  }
+  .te-block-row:hover .te-del-btn { opacity: 1; }
+  .te-del-btn:hover { background-color: #e4e5e7; color: #d82c0d; opacity: 1; }
 
-.te-save-btn {
-  padding: 8px 16px; border-radius: 6px; border: none;
-  background: #008060; color: #fff; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: background 0.15s; box-shadow: 0 1px 0 rgba(0,0,0,0.1);
-}
-.te-save-btn:hover:not(:disabled) { background: #006e52; }
-.te-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  /* Category/Template List Items */
+  .te-list-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px;
+      width: 100%; text-align: left;
+      background: none; border: none; cursor: pointer;
+      color: #5c5f62;
+      border-bottom: 1px solid #f4f6f8;
+      transition: background-color 0.15s ease;
+      font-family: inherit;
+  }
+  .te-list-item:hover {
+      background-color: #f6f6f7;
+      color: #202223;
+  }
 
-.te-text-btn {
-  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 10px; border: 1px solid #dfe3e8; border-radius: 6px; background: #fff;
-  font-size: 13px; font-weight: 600; color: #202223; cursor: pointer; 
-  transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-.te-text-btn:hover { background: #f9fafb; border-color: #c4cdd5; }
+  /* Buttons */
+  .te-text-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      background: none; border: none; cursor: pointer;
+      color: #1a73e8; /* Classic blue for Add Section */
+      font-size: 13px; font-weight: 500; width: 100%;
+      padding: 8px 12px; border-radius: 4px;
+      transition: background-color 0.15s ease;
+      font-family: inherit;
+  }
+  .te-text-btn:hover { background-color: #f1f8fe; }
 
-/* Lists & Rows */
-.te-block-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 12px; cursor: pointer; transition: background 0.12s;
-  border-radius: 6px; margin-bottom: 2px;
-}
-.te-block-row:hover { background: #f4f6f8; }
-.te-block-row.active { background: #eef2ff; color: #2c6ecb; }
-.te-block-row.active .te-del-btn { opacity: 1; }
+  .te-icon-back, .te-icon-btn {
+      display: flex; justify-content: center; align-items: center;
+      width: 28px; height: 28px;
+      background: none; border: none; cursor: pointer; color: #5c5f62;
+      border-radius: 4px; padding: 0;
+  }
+  .te-icon-back:hover, .te-icon-btn:hover { background-color: #f4f6f8; color: #202223; }
 
-.te-del-btn {
-  width: 28px; height: 28px; border-radius: 6px; border: none;
-  background: transparent; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #8c9196; opacity: 0; transition: all 0.1s;
-}
-.te-block-row:hover .te-del-btn { opacity: 1; }
-.te-del-btn:hover { background: #fee2e2; color: #d82c0d; }
+  .te-dev-btn {
+      display: flex; justify-content: center; align-items: center;
+      width: 32px; height: 32px;
+      background: none; border: none; cursor: pointer; color: #8c9196;
+      border-radius: 4px; transition: all 0.1s ease;
+  }
+  .te-dev-btn:hover { color: #202223; background-color: #e4e5e7; }
+  .te-dev-btn.active { color: #202223; background-color: #e4e5e7; }
 
-.te-list-item {
-  display: flex; align-items: center; gap: 12px; padding: 12px;
-  border: 1px solid transparent; border-radius: 6px; background: transparent;
-  cursor: pointer; transition: all 0.1s; text-align: left; width: 100%;
-}
-.te-list-item:hover { background: #f4f6f8; }
+  /* PageFly 'Publish' primary style */
+  .te-save-btn {
+      background: #202223; color: white;
+      border: none; padding: 6px 16px; border-radius: 4px;
+      font-weight: 500; font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      font-family: inherit;
+  }
+  .te-save-btn:hover:not(:disabled) { background: #000000; }
+  .te-save-btn:disabled { background: #e4e5e7; color: #8c9196; cursor: not-allowed; }
 
-.te-place-btn {
-  flex: 1; padding: 10px; border: 1px solid #c4cdd5; border-radius: 6px;
-  background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; 
-  color: #5c5f62; transition: all 0.15s;
-}
-.te-place-btn.active { border-color: #2c6ecb; background: #eef2ff; color: #2c6ecb; font-weight: 600; }
+  /* Settings Inputs */
+  .te-input, .te-select {
+      width: 100%; box-sizing: border-box;
+      padding: 8px 12px;
+      border: 1px solid #c9cccf; border-radius: 4px;
+      font-size: 13px; color: #202223; font-family: inherit;
+      background: #ffffff;
+      outline: none; transition: border-color 0.2s ease;
+  }
+  .te-input:focus, .te-select:focus { border-color: #1a73e8; box-shadow: 0 0 0 1px #1a73e8; }
+  
+  .te-color-pick {
+      width: 36px; height: 36px; padding: 0; border: 1px solid #c9cccf;
+      border-radius: 4px; cursor: pointer; outline: none;
+  }
+  .te-color-pick::-webkit-color-swatch-wrapper { padding: 0; }
+  .te-color-pick::-webkit-color-swatch { border: none; border-radius: 3px; }
 
-.te-input, .te-select {
-  width: 100%; border: 1px solid #c4cdd5; border-radius: 6px;
-  padding: 8px 12px; font-size: 13px; font-family: inherit; color: #202223;
-  background: #fff; transition: border 0.15s; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
-}
-.te-input:focus, .te-select:focus { border-color: #2c6ecb; box-shadow: 0 0 0 1px #2c6ecb; }
+  .te-check-row {
+      display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;
+  }
+  .te-checkbox {
+      width: 16px; height: 16px; border: 1px solid #c9cccf; border-radius: 3px;
+      accent-color: #1a73e8; cursor: pointer;
+  }
 
-.te-img-del-btn {
-  position: absolute; top: 6px; right: 6px; width: 24px; height: 24px;
-  background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center; cursor: pointer;
-}
-.te-img-del-btn:hover { background: #d82c0d; }
+  .te-place-btn {
+      flex: 1; padding: 8px 0; border: 1px solid #c9cccf; background: #fff;
+      cursor: pointer; font-size: 13px; transition: all 0.2s;
+      color: #5c5f62; font-family: inherit;
+  }
+  .te-place-btn:first-child { border-radius: 4px 0 0 4px; border-right: none; }
+  .te-place-btn:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+  .te-place-btn.active { background: #f4f6f8; color: #202223; font-weight: 500; z-index: 1; border: 1px solid #c9cccf;}
 
-.te-spinner {
-  width: 24px; height: 24px; border: 2px solid #dfe3e8;
-  border-top-color: #2c6ecb; border-radius: 50%;
-  animation: te-spin 0.6s linear infinite;
-}
-@keyframes te-spin { to { transform: rotate(360deg); } }
+  /* Scrollbars - refined minimal look */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d2d5d8; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #aeb4b9; }
+
+  .te-img-del-btn {
+      position: absolute; top: 6px; right: 6px; width: 24px; height: 24px;
+      background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+
+  .te-spinner {
+      width: 20px; height: 20px;
+      border: 2px solid #e4e5e7; border-top-color: #202223;
+      border-radius: 50%;
+      animation: te-spin 0.8s linear infinite;
+  }
+  @keyframes te-spin { to { transform: rotate(360deg); } }
 `;
