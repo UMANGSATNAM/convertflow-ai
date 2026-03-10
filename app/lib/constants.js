@@ -193,20 +193,6 @@ export const SECTION_FILES = {
     'cf-hero-08': { category: 'hero', name: '08 · Dark SaaS Hero', file: 'cf-hero-08.liquid' },
     'cf-hero-09': { category: 'hero', name: '09 · Flash Sale Hero', file: 'cf-hero-09.liquid' },
     'cf-hero-10': { category: 'hero', name: '10 · Product Showcase Hero', file: 'cf-hero-10.liquid' },
-};
-
-export function getSectionsByCategory(categoryId) {
-    return Object.entries(SECTION_FILES)
-        .filter(([_, meta]) => meta.category === categoryId)
-        .map(([id, meta]) => ({ id, ...meta }));
-}
-
-export function getCategoriesWithCounts() {
-    return SECTION_CATEGORIES.map(cat => ({
-        ...cat,
-        count: Object.values(SECTION_FILES).filter(s => s.category === cat.id).length,
-    }));
-}
     'cf-cat-01-v10': { category: 'category', name: '01 · Luxury Category (v10)', file: 'cf-cat-01-v10.liquid' },
     'cf-cat-01-v2': { category: 'category', name: '01 · Luxury Category (v2)', file: 'cf-cat-01-v2.liquid' },
     'cf-cat-01-v3': { category: 'category', name: '01 · Luxury Category (v3)', file: 'cf-cat-01-v3.liquid' },
@@ -333,3 +319,17 @@ export function getCategoriesWithCounts() {
     'cf-trust-13-v7': { category: 'trust', name: '13 · Brand Trust (v7)', file: 'cf-trust-13-v7.liquid' },
     'cf-trust-13-v8': { category: 'trust', name: '13 · Brand Trust (v8)', file: 'cf-trust-13-v8.liquid' },
     'cf-trust-13-v9': { category: 'trust', name: '13 · Brand Trust (v9)', file: 'cf-trust-13-v9.liquid' },
+};
+
+export function getSectionsByCategory(categoryId) {
+    return Object.entries(SECTION_FILES)
+        .filter(([_, meta]) => meta.category === categoryId)
+        .map(([id, meta]) => ({ id, ...meta }));
+}
+
+export function getCategoriesWithCounts() {
+    return SECTION_CATEGORIES.map(cat => ({
+        ...cat,
+        count: Object.values(SECTION_FILES).filter(s => s.category === cat.id).length,
+    }));
+}
