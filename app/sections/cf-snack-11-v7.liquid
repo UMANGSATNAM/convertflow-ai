@@ -1,0 +1,47 @@
+<style>
+.cf-sn-11-v7{width:100%;display:flex;font-family:sans-serif;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};min-height:{{ section.settings.height }}px}
+.cf-sn-11-v7-img-col{flex:1;position:relative;background:#d4d4d4}
+.cf-sn-11-v7-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.cf-sn-11-v7-text-col{flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 80px}
+.cf-sn-11-v7-tag{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:15px;color:{{ section.settings.accent_color }}}
+.cf-sn-11-v7-title{font-size:clamp(30px,4vw,{{ section.settings.title_size }}px);font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 20px 0;letter-spacing:-0.02em}
+.cf-sn-11-v7-desc{font-size:15px;opacity:0.8;line-height:1.5;margin-bottom:30px;max-width:400px}
+.cf-sn-11-v7-btn{display:inline-block;padding:12px 0;color:{{ section.settings.text_color }};text-decoration:none;font-size:14px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;border-bottom:2px solid {{ section.settings.border_color }};align-self:flex-start;transition:0.3s}
+.cf-sn-11-v7-btn:hover{color:{{ section.settings.accent_color }};border-color:{{ section.settings.accent_color }}}
+@media(max-width:900px){.cf-sn-11-v7{flex-direction:column}.cf-sn-11-v7-img-col{min-height:300px}.cf-sn-11-v7-text-col{padding:40px 20px;text-align:center;align-items:center}}
+</style>
+
+<div class="cf-sn-11-v7">
+  <div class="cf-sn-11-v7-img-col">
+    {% if section.settings.image %}
+      <img src="{{ section.settings.image | image_url: width: 1000 }}" class="cf-sn-11-v7-img">
+    {% endif %}
+  </div>
+  <div class="cf-sn-11-v7-text-col">
+    <span class="cf-sn-11-v7-tag">{{ section.settings.tag }}</span>
+    <h3 class="cf-sn-11-v7-title">{{ section.settings.title }}</h3>
+    <p class="cf-sn-11-v7-desc">{{ section.settings.desc }}</p>
+    <a href="{{ section.settings.btn_link }}" class="cf-sn-11-v7-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack (v7)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"tag","label":"Tag","default":"TRENDING NOW"},
+    {"type":"text","id":"title","label":"Title","default":"THE OVERSHIRT"},
+    {"type":"range","id":"title_size","label":"Title Size","min":30,"max":80,"step":2,"default":48},
+    {"type":"textarea","id":"desc","label":"Description","default":"The perfect transitional piece. Heavy enough for a jacket, tailored enough for a shirt."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP OVERSHIRTS"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F0F0F0"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#5A5A5A"},
+    {"type":"color","id":"border_color","label":"Button Underline","default":"#CCCCCC"},
+    {"type":"range","id":"height","label":"Min Height (px)","min":300,"max":800,"step":20,"default":500}
+  ],
+  "presets": [{"name":"11 · Men's Snack (v7)"}]
+}
+{% endschema %}

@@ -1,0 +1,56 @@
+<style>
+.cf-sn-11-v9{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;color:{{ section.settings.text_color }};text-align:center}
+.cf-sn-11-v9-inner{max-width:800px;margin:0 auto}
+.cf-sn-11-v9-title{font-size:32px;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;margin:0 0 10px 0}
+.cf-sn-11-v9-desc{font-size:16px;opacity:0.8;margin:0 0 30px 0}
+.cf-sn-11-v9-features{display:flex;justify-content:center;gap:40px;margin-bottom:40px}
+.cf-sn-11-v9-feature{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
+.cf-sn-11-v9-icon{color:{{ section.settings.accent_color }}}
+.cf-sn-11-v9-btn{display:inline-block;padding:16px 40px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};text-decoration:none;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:0.1em;border-radius:4px;transition:0.3s}
+.cf-sn-11-v9-btn:hover{background:{{ section.settings.accent_color }}}
+@media(max-width:768px){.cf-sn-11-v9-features{flex-direction:column;gap:15px;align-items:center}}
+</style>
+
+<div class="cf-sn-11-v9">
+  <div class="cf-sn-11-v9-inner">
+    <h3 class="cf-sn-11-v9-title">{{ section.settings.title }}</h3>
+    <p class="cf-sn-11-v9-desc">{{ section.settings.desc }}</p>
+    
+    <div class="cf-sn-11-v9-features">
+      <div class="cf-sn-11-v9-feature">
+        <svg class="cf-sn-11-v9-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        {{ section.settings.f1 }}
+      </div>
+      <div class="cf-sn-11-v9-feature">
+        <svg class="cf-sn-11-v9-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        {{ section.settings.f2 }}
+      </div>
+      <div class="cf-sn-11-v9-feature">
+        <svg class="cf-sn-11-v9-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        {{ section.settings.f3 }}
+      </div>
+    </div>
+    
+    <a href="{{ section.settings.btn_link }}" class="cf-sn-11-v9-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack (v9)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"THE SIGNATURE FIT"},
+    {"type":"text","id":"desc","label":"Description","default":"Pre-shrunk, heavyweight cotton designed to drape perfectly."},
+    {"type":"text","id":"f1","label":"Feature 1","default":"100% Organic Cotton"},
+    {"type":"text","id":"f2","label":"Feature 2","default":"Pre-Shrunk"},
+    {"type":"text","id":"f3","label":"Feature 3","default":"Made in Portugal"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP THE FIT"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F2F2F2"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover & Icon Color","default":"#5A5A5A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Snack (v9)"}]
+}
+{% endschema %}

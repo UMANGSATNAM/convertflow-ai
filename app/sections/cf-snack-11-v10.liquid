@@ -1,0 +1,40 @@
+<style>
+.cf-sn-11-v10{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;color:{{ section.settings.text_color }};text-align:center;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-sn-11-v10-inner{max-width:600px;margin:0 auto}
+.cf-sn-11-v10-title{font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 15px 0}
+.cf-sn-11-v10-desc{font-size:14px;opacity:0.8;margin:0 0 30px 0}
+.cf-sn-11-v10-btns{display:flex;justify-content:center;gap:20px}
+.cf-sn-11-v10-btn{flex:1;padding:15px;border:2px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};text-decoration:none;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;transition:0.3s;max-width:250px}
+.cf-sn-11-v10-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:600px){.cf-sn-11-v10-btns{flex-direction:column;align-items:center}.cf-sn-11-v10-btn{width:100%}}
+</style>
+
+<div class="cf-sn-11-v10">
+  <div class="cf-sn-11-v10-inner">
+    <h3 class="cf-sn-11-v10-title">{{ section.settings.title }}</h3>
+    <p class="cf-sn-11-v10-desc">{{ section.settings.desc }}</p>
+    <div class="cf-sn-11-v10-btns">
+      <a href="{{ section.settings.link_1 }}" class="cf-sn-11-v10-btn">{{ section.settings.btn_1 }}</a>
+      <a href="{{ section.settings.link_2 }}" class="cf-sn-11-v10-btn">{{ section.settings.btn_2 }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack (v10)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"CHOOSE YOUR STYLE"},
+    {"type":"text","id":"desc","label":"Description","default":"Explore our curated collections designed for every aspect of your life."},
+    {"type":"text","id":"btn_1","label":"Left Button","default":"SHOP CASUAL"},
+    {"type":"url","id":"link_1","label":"Left Link"},
+    {"type":"text","id":"btn_2","label":"Right Button","default":"SHOP FORMAL"},
+    {"type":"url","id":"link_2","label":"Right Link"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text & Border Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Section Divider","default":"#E2E2E2"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Snack (v10)"}]
+}
+{% endschema %}

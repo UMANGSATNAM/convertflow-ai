@@ -1,0 +1,52 @@
+<style>
+.cf-sn-11-v2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-sn-11-v2-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;border:2px solid {{ section.settings.border_color }};padding:30px 40px;background:{{ section.settings.inner_bg }};box-shadow:6px 6px 0 {{ section.settings.border_color }}}
+.cf-sn-11-v2-text{flex:1;display:flex;align-items:center;gap:30px}
+.cf-sn-11-v2-huge{font-size:{{ section.settings.title_size }}px;font-weight:900;color:transparent;-webkit-text-stroke:1px {{ section.settings.text_color }};line-height:1}
+.cf-sn-11-v2-info{display:flex;flex-direction:column;gap:5px}
+.cf-sn-11-v2-title{font-size:16px;font-weight:800;color:{{ section.settings.text_color }};text-transform:uppercase;letter-spacing:0.05em;margin:0}
+.cf-sn-11-v2-desc{font-size:13px;color:{{ section.settings.text_color }};opacity:0.8;margin:0;max-width:300px}
+.cf-sn-11-v2-right{display:flex;align-items:center;gap:20px}
+.cf-sn-11-v2-code{background:{{ section.settings.text_color }};color:{{ section.settings.inner_bg }};padding:10px 20px;font-family:monospace;font-size:16px;font-weight:700;letter-spacing:0.1em;cursor:pointer;position:relative}
+.cf-sn-11-v2-code:hover::after{content:'CLICK TO COPY';position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:10px;padding:4px 8px;border-radius:2px;white-space:nowrap;font-family:sans-serif}
+.cf-sn-11-v2-btn{display:inline-block;padding:12px 24px;background:transparent;border:2px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};text-decoration:none;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;transition:0.3s}
+.cf-sn-11-v2-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.inner_bg }}}
+@media(max-width:900px){.cf-sn-11-v2-inner{flex-direction:column;gap:20px;text-align:center;padding:20px}.cf-sn-11-v2-text{flex-direction:column;gap:15px}.cf-sn-11-v2-right{flex-direction:column;width:100%}.cf-sn-11-v2-code,.cf-sn-11-v2-btn{width:100%;text-align:center}}
+</style>
+
+<div class="cf-sn-11-v2">
+  <div class="cf-sn-11-v2-inner">
+    <div class="cf-sn-11-v2-text">
+       <span class="cf-sn-11-v2-huge">{{ section.settings.huge_text }}</span>
+       <div class="cf-sn-11-v2-info">
+         <h3 class="cf-sn-11-v2-title">{{ section.settings.title }}</h3>
+         <p class="cf-sn-11-v2-desc">{{ section.settings.desc }}</p>
+       </div>
+    </div>
+    <div class="cf-sn-11-v2-right">
+       <div class="cf-sn-11-v2-code" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); alert('Code copied map!')">{{ section.settings.code }}</div>
+       <a href="{{ section.settings.btn_link }}" class="cf-sn-11-v2-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack (v2)",
+  "settings": [
+    {"type":"text","id":"huge_text","label":"Huge Outline Text","default":"20%"},
+    {"type":"text","id":"title","label":"Title","default":"THE WINTER SALE"},
+    {"type":"text","id":"desc","label":"Description","default":"Take 20% off all outerwear and cold weather accessories."},
+    {"type":"text","id":"code","label":"Discount Code","default":"COLD20"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP THE EVENT"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Outside Background","default":"#F4F4F4"},
+    {"type":"color","id":"inner_bg","label":"Inner Box Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border/Shadow Color","default":"#111111"},
+    {"type":"range","id":"title_size","label":"Huge Text Size","min":40,"max":100,"step":5,"default":60},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":80,"step":5,"default":40}
+  ],
+  "presets": [{"name":"11 · Men's Snack (v2)"}]
+}
+{% endschema %}

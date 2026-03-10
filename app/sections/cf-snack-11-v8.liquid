@@ -1,0 +1,34 @@
+<style>
+.cf-sn-11-v8{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;display:flex}
+.cf-sn-11-v8-track{display:flex;white-space:nowrap;animation:cf-sn-11-v8-scroll {{ section.settings.speed }}s linear infinite}
+.cf-sn-11-v8-item{display:inline-flex;align-items:center;padding:0 30px;font-family:sans-serif;font-size:{{ section.settings.text_size }}px;color:{{ section.settings.text_color }};font-weight:800;letter-spacing:0.02em;text-transform:uppercase}
+.cf-sn-11-v8-icon{margin-right:30px;width:{{ section.settings.text_size | times: 1.2 }}px;height:{{ section.settings.text_size | times: 1.2 }}px}
+@keyframes cf-sn-11-v8-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-sn-11-v8">
+  <div class="cf-sn-11-v8-track">
+    {% for i in (1..10) %}
+      <div class="cf-sn-11-v8-item">
+        <svg class="cf-sn-11-v8-icon" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        {{ section.settings.text }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack (v8)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"FREE RETURNS ON ALL ORDERS"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":48,"step":1,"default":15},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Icon Color","default":"#4CAF50"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12},
+    {"type":"range","id":"speed","label":"Speed (Seconds)","min":10,"max":100,"step":5,"default":30}
+  ],
+  "presets": [{"name":"11 · Men's Snack (v8)"}]
+}
+{% endschema %}

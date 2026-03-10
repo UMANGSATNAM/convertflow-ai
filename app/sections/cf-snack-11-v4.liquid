@@ -1,0 +1,38 @@
+<style>
+.cf-sn-11-v4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-sn-11-v4-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;background:{{ section.settings.accent_color }};border-radius:100px;padding:10px 10px 10px 30px;justify-content:space-between}
+.cf-sn-11-v4-left{display:flex;align-items:center;gap:15px}
+.cf-sn-11-v4-icon{width:40px;height:40px;background:{{ section.settings.bg_color }};border-radius:50%;display:flex;align-items:center;justify-content:center;color:{{ section.settings.text_color }}}
+.cf-sn-11-v4-title{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin:0;color:{{ section.settings.bg_color }}}
+.cf-sn-11-v4-btn{display:inline-block;padding:15px 30px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};text-decoration:none;font-size:13px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;border-radius:100px;transition:0.3s}
+.cf-sn-11-v4-btn:hover{transform:scale(1.02);box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+@media(max-width:600px){.cf-sn-11-v4-inner{flex-direction:column;border-radius:20px;padding:20px;gap:15px;text-align:center}.cf-sn-11-v4-left{flex-direction:column}.cf-sn-11-v4-btn{width:100%}}
+</style>
+
+<div class="cf-sn-11-v4">
+  <div class="cf-sn-11-v4-inner">
+    <div class="cf-sn-11-v4-left">
+      <div class="cf-sn-11-v4-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      </div>
+      <h3 class="cf-sn-11-v4-title">{{ section.settings.title }}</h3>
+    </div>
+    <a href="{{ section.settings.btn_link }}" class="cf-sn-11-v4-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack (v4)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"EARLY ACCESS: THE BLACK FRIDAY EVENT"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"UNLOCK NOW"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Outside Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Pill Background","default":"#1A1A1A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":25}
+  ],
+  "presets": [{"name":"11 · Men's Snack (v4)"}]
+}
+{% endschema %}

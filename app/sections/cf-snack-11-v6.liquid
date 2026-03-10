@@ -1,0 +1,35 @@
+<style>
+.cf-sn-11-v6{width:100%;height:{{ section.settings.height }}px;background:{{ section.settings.bg_color }};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-sn-11-v6-bg-text{position:absolute;font-size:300px;font-weight:900;color:transparent;-webkit-text-stroke:2px {{ section.settings.accent_color }};opacity:0.2;white-space:nowrap;line-height:1;margin:0;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cf-sn-11-v6-content{position:relative;z-index:2;display:flex;align-items:center;gap:30px}
+.cf-sn-11-v6-title{font-size:{{ section.settings.title_size }}px;margin:0;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;background:{{ section.settings.bg_color }};padding:0 20px}
+.cf-sn-11-v6-btn{padding:15px 30px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};text-decoration:none;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;transition:0.3s}
+.cf-sn-11-v6-btn:hover{background:transparent;color:{{ section.settings.text_color }};box-shadow:inset 0 0 0 2px {{ section.settings.text_color }}}
+@media(max-width:768px){.cf-sn-11-v6-content{flex-direction:column;text-align:center}.cf-sn-11-v6-bg-text{font-size:150px}}
+</style>
+
+<div class="cf-sn-11-v6">
+  <div class="cf-sn-11-v6-bg-text">{{ section.settings.bg_text }}</div>
+  <div class="cf-sn-11-v6-content">
+    <h3 class="cf-sn-11-v6-title">{{ section.settings.title }}</h3>
+    <a href="{{ section.settings.btn_link }}" class="cf-sn-11-v6-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Snack (v6)",
+  "settings": [
+    {"type":"text","id":"bg_text","label":"Background Giant Word","default":"SALE"},
+    {"type":"text","id":"title","label":"Front Title","default":"FINAL MARKDOWNS"},
+    {"type":"range","id":"title_size","label":"Front Title Size","min":20,"max":80,"step":2,"default":40},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP NOW"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Giant Word Outline Color","default":"#333333"},
+    {"type":"range","id":"height","label":"Height (px)","min":100,"max":600,"step":10,"default":250}
+  ],
+  "presets": [{"name":"11 · Men's Snack (v6)"}]
+}
+{% endschema %}
