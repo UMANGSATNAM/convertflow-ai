@@ -1,0 +1,56 @@
+<style>
+.cf-cat-11-v9{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-cat-11-v9-inner{max-width:1600px;margin:0 auto;display:flex;gap:10px}
+.cf-cat-11-v9-card{flex:1;height:{{ section.settings.height }}px;position:relative;text-decoration:none;overflow:hidden;transition:flex 0.6s cubic-bezier(0.25, 1, 0.5, 1)}
+.cf-cat-11-v9-card:hover{flex:2}
+.cf-cat-11-v9-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.6);transition:0.6s}
+.cf-cat-11-v9-card:hover .cf-cat-11-v9-img{filter:brightness(0.9);transform:scale(1.05)}
+.cf-cat-11-v9-label{position:absolute;bottom:30px;left:30px;color:#fff;font-size:24px;font-weight:900;text-transform:uppercase;margin:0;letter-spacing:0.05em;z-index:2;transform:rotate(-90deg);transform-origin:left bottom;transition:0.4s;white-space:nowrap}
+.cf-cat-11-v9-card:hover .cf-cat-11-v9-label{transform:rotate(0deg);bottom:40px}
+@media(max-width:900px){.cf-cat-11-v9-inner{flex-direction:column;height:auto}.cf-cat-11-v9-card{height:150px}.cf-cat-11-v9-label{transform:rotate(0deg);bottom:20px;left:20px}.cf-cat-11-v9-card:hover{flex:1;height:300px}}
+</style>
+
+<div class="cf-cat-11-v9">
+  <div class="cf-cat-11-v9-inner">
+    {% for i in (1..5) %}
+      {% capture img_key %}img_{{ i }}{% endcapture %}
+      {% capture label_key %}label_{{ i }}{% endcapture %}
+      {% capture link_key %}link_{{ i }}{% endcapture %}
+      <a href="{{ section.settings[link_key] }}" class="cf-cat-11-v9-card">
+         {% if section.settings[img_key] %}
+           <img src="{{ section.settings[img_key] | image_url: width: 800 }}" class="cf-cat-11-v9-img">
+         {% else %}
+           <div style="background:#444;" class="cf-cat-11-v9-img"></div>
+         {% endif %}
+         <h3 class="cf-cat-11-v9-label">{{ section.settings[label_key] }}</h3>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Category (v9)",
+  "settings": [
+    {"type":"image_picker","id":"img_1","label":"Image 1"},
+    {"type":"text","id":"label_1","label":"Label 1","default":"NEW"},
+    {"type":"url","id":"link_1","label":"Link 1"},
+    {"type":"image_picker","id":"img_2","label":"Image 2"},
+    {"type":"text","id":"label_2","label":"Label 2","default":"TOPS"},
+    {"type":"url","id":"link_2","label":"Link 2"},
+    {"type":"image_picker","id":"img_3","label":"Image 3"},
+    {"type":"text","id":"label_3","label":"Label 3","default":"BOTTOMS"},
+    {"type":"url","id":"link_3","label":"Link 3"},
+    {"type":"image_picker","id":"img_4","label":"Image 4"},
+    {"type":"text","id":"label_4","label":"Label 4","default":"SHOES"},
+    {"type":"url","id":"link_4","label":"Link 4"},
+    {"type":"image_picker","id":"img_5","label":"Image 5"},
+    {"type":"text","id":"label_5","label":"Label 5","default":"ACCESSORIES"},
+    {"type":"url","id":"link_5","label":"Link 5"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"range","id":"height","label":"Accordion Height (px)","min":400,"max":800,"step":20,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":0}
+  ],
+  "presets": [{"name":"11 · Men's Category (v9)"}]
+}
+{% endschema %}

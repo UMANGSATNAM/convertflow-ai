@@ -1,0 +1,52 @@
+<style>
+.cf-cat-11-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-cat-11-v6-inner{max-width:1400px;margin:0 auto}
+.cf-cat-11-v6-grid{display:grid;grid-template-columns:repeat(6, 1fr);gap:10px}
+.cf-cat-11-v6-card{display:flex;align-items:center;justify-content:center;background:{{ section.settings.card_bg }};color:{{ section.settings.text_color }};text-decoration:none;padding:40px 20px;border:1px solid {{ section.settings.border_color }};text-align:center;transition:0.3s;position:relative;overflow:hidden}
+.cf-cat-11-v6-card:hover{background:{{ section.settings.hover_bg }};color:{{ section.settings.hover_text }};transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.05)}
+.cf-cat-11-v6-label{font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin:0}
+@media(max-width:1024px){.cf-cat-11-v6-grid{grid-template-columns:repeat(3, 1fr)}}
+@media(max-width:600px){.cf-cat-11-v6-grid{grid-template-columns:repeat(2, 1fr)}.cf-cat-11-v6-card{padding:25px 10px}.cf-cat-11-v6-label{font-size:13px}}
+</style>
+
+<div class="cf-cat-11-v6">
+  <div class="cf-cat-11-v6-inner">
+    <div class="cf-cat-11-v6-grid">
+      {% for i in (1..6) %}
+        {% capture label_key %}label_{{ i }}{% endcapture %}
+        {% capture link_key %}link_{{ i }}{% endcapture %}
+        <a href="{{ section.settings[link_key] }}" class="cf-cat-11-v6-card">
+          <h3 class="cf-cat-11-v6-label">{{ section.settings[label_key] }}</h3>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Category (v6)",
+  "settings": [
+    {"type":"text","id":"label_1","label":"Label 1","default":"SWEATSHIRTS"},
+    {"type":"url","id":"link_1","label":"Link 1"},
+    {"type":"text","id":"label_2","label":"Label 2","default":"TEES"},
+    {"type":"url","id":"link_2","label":"Link 2"},
+    {"type":"text","id":"label_3","label":"Label 3","default":"BOTTOMS"},
+    {"type":"url","id":"link_3","label":"Link 3"},
+    {"type":"text","id":"label_4","label":"Label 4","default":"OUTERWEAR"},
+    {"type":"url","id":"link_4","label":"Link 4"},
+    {"type":"text","id":"label_5","label":"Label 5","default":"HEADWEAR"},
+    {"type":"url","id":"link_5","label":"Link 5"},
+    {"type":"text","id":"label_6","label":"Label 6","default":"SOCKS"},
+    {"type":"url","id":"link_6","label":"Link 6"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F4F4F4"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"hover_bg","label":"Hover Background","default":"#111111"},
+    {"type":"color","id":"hover_text","label":"Hover Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#E2E2E2"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"11 · Men's Category (v6)"}]
+}
+{% endschema %}

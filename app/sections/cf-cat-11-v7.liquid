@@ -1,0 +1,68 @@
+<style>
+.cf-cat-11-v7{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-cat-11-v7-inner{max-width:1400px;margin:0 auto;display:flex;gap:30px}
+.cf-cat-11-v7-hero{flex:2;position:relative;text-decoration:none;display:block;overflow:hidden;min-height:500px}
+.cf-cat-11-v7-sidebar{flex:1;display:flex;flex-direction:column;gap:15px}
+.cf-cat-11-v7-hero-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-cat-11-v7-hero:hover .cf-cat-11-v7-hero-img{transform:scale(1.03)}
+.cf-cat-11-v7-overlay{position:absolute;bottom:0;left:0;width:100%;padding:40px;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent)}
+.cf-cat-11-v7-title{color:#fff;font-size:36px;font-weight:900;text-transform:uppercase;margin:0;line-height:1}
+.cf-cat-11-v7-side-item{flex:1;position:relative;text-decoration:none;display:block;overflow:hidden;min-height:220px}
+.cf-cat-11-v7-side-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-cat-11-v7-side-item:hover .cf-cat-11-v7-side-img{transform:scale(1.05)}
+.cf-cat-11-v7-side-title{color:#fff;font-size:24px;font-weight:800;text-transform:uppercase;margin:0;position:absolute;bottom:20px;left:20px;z-index:2}
+.cf-cat-11-v7-side-item::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:50%;background:linear-gradient(to top, rgba(0,0,0,0.7), transparent);z-index:1}
+@media(max-width:900px){.cf-cat-11-v7-inner{flex-direction:column}.cf-cat-11-v7-sidebar{flex-direction:row}.cf-cat-11-v7-side-item{min-height:300px}}
+@media(max-width:600px){.cf-cat-11-v7-sidebar{flex-direction:column}.cf-cat-11-v7-hero{min-height:400px}.cf-cat-11-v7-side-item{min-height:250px}}
+</style>
+
+<div class="cf-cat-11-v7">
+  <div class="cf-cat-11-v7-inner">
+    <a href="{{ section.settings.hero_link }}" class="cf-cat-11-v7-hero">
+      {% if section.settings.hero_img %}
+        <img src="{{ section.settings.hero_img | image_url: width: 1200 }}" class="cf-cat-11-v7-hero-img">
+      {% else %}
+        <div style="background:#555;width:100%;height:100%" class="cf-cat-11-v7-hero-img"></div>
+      {% endif %}
+      <div class="cf-cat-11-v7-overlay">
+        <h3 class="cf-cat-11-v7-title">{{ section.settings.hero_title }}</h3>
+      </div>
+    </a>
+    
+    <div class="cf-cat-11-v7-sidebar">
+      {% for i in (1..2) %}
+        {% capture img_key %}side_img_{{ i }}{% endcapture %}
+        {% capture label_key %}side_title_{{ i }}{% endcapture %}
+        {% capture link_key %}side_link_{{ i }}{% endcapture %}
+        <a href="{{ section.settings[link_key] }}" class="cf-cat-11-v7-side-item">
+          {% if section.settings[img_key] %}
+            <img src="{{ section.settings[img_key] | image_url: width: 600 }}" class="cf-cat-11-v7-side-img">
+          {% else %}
+            <div style="background:#333;width:100%;height:100%" class="cf-cat-11-v7-side-img"></div>
+          {% endif %}
+          <h4 class="cf-cat-11-v7-side-title">{{ section.settings[label_key] }}</h4>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Category (v7)",
+  "settings": [
+    {"type":"image_picker","id":"hero_img","label":"Main Hero Image"},
+    {"type":"text","id":"hero_title","label":"Main Category Title","default":"CASUAL ESSENTIALS"},
+    {"type":"url","id":"hero_link","label":"Main Category Link"},
+    {"type":"image_picker","id":"side_img_1","label":"Side Image 1"},
+    {"type":"text","id":"side_title_1","label":"Side Title 1","default":"FORMAL WEAR"},
+    {"type":"url","id":"side_link_1","label":"Side Link 1"},
+    {"type":"image_picker","id":"side_img_2","label":"Side Image 2"},
+    {"type":"text","id":"side_title_2","label":"Side Title 2","default":"ACCESSORIES"},
+    {"type":"url","id":"side_link_2","label":"Side Link 2"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Category (v7)"}]
+}
+{% endschema %}

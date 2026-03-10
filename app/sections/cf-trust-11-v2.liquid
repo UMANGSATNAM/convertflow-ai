@@ -1,0 +1,62 @@
+<style>
+.cf-trust-11-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-trust-11-v2-inner{max-width:1400px;margin:0 auto}
+.cf-trust-11-v2-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:40px}
+.cf-trust-11-v2-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:15px;padding:30px;background:{{ section.settings.card_bg }};border:1px solid {{ section.settings.border_color }};transition:0.3s}
+.cf-trust-11-v2-item:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.05)}
+.cf-trust-11-v2-icon-wrap{width:60px;height:60px;border-radius:50%;background:{{ section.settings.bg_color }};display:flex;align-items:center;justify-content:center;color:{{ section.settings.text_color }}}
+.cf-trust-11-v2-title{font-size:16px;font-weight:900;text-transform:uppercase;margin:0;letter-spacing:0.05em}
+.cf-trust-11-v2-desc{font-size:14px;opacity:0.8;margin:0;line-height:1.5}
+@media(max-width:900px){.cf-trust-11-v2-grid{grid-template-columns:repeat(2,1fr);gap:20px}}
+@media(max-width:600px){.cf-trust-11-v2-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-trust-11-v2">
+  <div class="cf-trust-11-v2-inner">
+    <div class="cf-trust-11-v2-grid">
+      {% for i in (1..4) %}
+        {% capture title_key %}title_{{ i }}{% endcapture %}
+        {% capture desc_key %}desc_{{ i }}{% endcapture %}
+        {% capture icon_key %}icon_{{ i }}{% endcapture %}
+        
+        <div class="cf-trust-11-v2-item">
+          <div class="cf-trust-11-v2-icon-wrap">
+            {{ section.settings[icon_key] }}
+          </div>
+          <h3 class="cf-trust-11-v2-title">{{ section.settings[title_key] }}</h3>
+          <p class="cf-trust-11-v2-desc">{{ section.settings[desc_key] }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Trust (v2)",
+  "settings": [
+    {"type":"html","id":"icon_1","label":"Icon 1 (SVG)","default":"<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'></path><polyline points='22 4 12 14.01 9 11.01'></polyline></svg>"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"PREMIUM QUALITY"},
+    {"type":"textarea","id":"desc_1","label":"Desc 1","default":"Sourced from the finest mills globally."},
+    
+    {"type":"html","id":"icon_2","label":"Icon 2 (SVG)","default":"<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'></circle><polyline points='12 6 12 12 16 14'></polyline></svg>"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"LIFETIME GUARANTEE"},
+    {"type":"textarea","id":"desc_2","label":"Desc 2","default":"Built to last. Repaired or replaced, forever."},
+    
+    {"type":"html","id":"icon_3","label":"Icon 3 (SVG)","default":"<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path><polyline points='3.27 6.96 12 12.01 20.73 6.96'></polyline><line x1='12' y1='22.08' x2='12' y2='12'></line></svg>"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"FREE GLOBAL SHIPPING"},
+    {"type":"textarea","id":"desc_3","label":"Desc 3","default":"On all orders over $200."},
+    
+    {"type":"html","id":"icon_4","label":"Icon 4 (SVG)","default":"<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'></circle><path d='M8 14s1.5 2 4 2 4-2 4-2'></path><line x1='9' y1='9' x2='9.01' y2='9'></line><line x1='15' y1='9' x2='15.01' y2='9'></line></svg>"},
+    {"type":"text","id":"title_4","label":"Title 4","default":"HASSLE-FREE RETURNS"},
+    {"type":"textarea","id":"desc_4","label":"Desc 4","default":"30 days to decide, no questions asked."},
+    
+    {"type":"color","id":"bg_color","label":"Background","default":"#FAFAFA"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#EAEAEE"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Trust (v2)"}]
+}
+{% endschema %}

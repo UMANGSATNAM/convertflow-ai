@@ -1,0 +1,61 @@
+<style>
+.cf-trust-11-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-trust-11-v8-inner{max-width:1400px;margin:0 auto;display:flex;align-items:stretch;gap:20px;justify-content:center}
+.cf-trust-11-v8-item{flex:1;display:flex;align-items:center;background:{{ section.settings.card_bg }};padding:25px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.03);max-width:350px;gap:20px;transition:0.3s;border:1px solid transparent}
+.cf-trust-11-v8-item:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,0.06);border-color:{{ section.settings.accent_color }}}
+.cf-trust-11-v8-icon{width:50px;height:50px;background:{{ section.settings.bg_color }};border-radius:50%;display:flex;align-items:center;justify-content:center;color:{{ section.settings.accent_color }};flex-shrink:0}
+.cf-trust-11-v8-icon svg{width:24px;height:24px}
+.cf-trust-11-v8-text{display:flex;flex-direction:column;gap:5px}
+.cf-trust-11-v8-title{font-size:15px;font-weight:900;text-transform:uppercase;margin:0;letter-spacing:0.02em}
+.cf-trust-11-v8-desc{font-size:13px;opacity:0.7;margin:0}
+@media(max-width:900px){.cf-trust-11-v8-inner{flex-wrap:wrap}.cf-trust-11-v8-item{flex:0 0 calc(50% - 10px);max-width:none}}
+@media(max-width:600px){.cf-trust-11-v8-item{flex:0 0 100%}}
+</style>
+
+<div class="cf-trust-11-v8">
+  <div class="cf-trust-11-v8-inner">
+    {% for i in (1..4) %}
+      {% capture title_key %}title_{{ i }}{% endcapture %}
+      {% capture desc_key %}desc_{{ i }}{% endcapture %}
+      {% capture icon_key %}icon_{{ i }}{% endcapture %}
+      
+      <div class="cf-trust-11-v8-item">
+        <div class="cf-trust-11-v8-icon">{{ section.settings[icon_key] }}</div>
+        <div class="cf-trust-11-v8-text">
+          <h3 class="cf-trust-11-v8-title">{{ section.settings[title_key] }}</h3>
+          <p class="cf-trust-11-v8-desc">{{ section.settings[desc_key] }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Trust (v8)",
+  "settings": [
+    {"type":"html","id":"icon_1","label":"Icon 1 (SVG)","default":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path><polyline points='3.27 6.96 12 12.01 20.73 6.96'></polyline><line x1='12' y1='22.08' x2='12' y2='12'></line></svg>"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"FREE SHIPPING"},
+    {"type":"textarea","id":"desc_1","label":"Desc 1","default":"On all orders over $150."},
+    
+    {"type":"html","id":"icon_2","label":"Icon 2 (SVG)","default":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'></path><polyline points='22 4 12 14.01 9 11.01'></polyline></svg>"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"FREE EXCHANGES"},
+    {"type":"textarea","id":"desc_2","label":"Desc 2","default":"30 days to decide."},
+    
+    {"type":"html","id":"icon_3","label":"Icon 3 (SVG)","default":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'></rect><path d='M7 11V7a5 5 0 0 1 10 0v4'></path></svg>"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"SECURE CHECKOUT"},
+    {"type":"textarea","id":"desc_3","label":"Desc 3","default":"100% encrypted & safe."},
+    
+    {"type":"html","id":"icon_4","label":"Icon 4 (SVG)","default":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'></path><polyline points='7 10 12 15 17 10'></polyline><line x1='12' y1='15' x2='12' y2='3'></line></svg>"},
+    {"type":"text","id":"title_4","label":"Title 4","default":"APP EXCLUSIVE DISCOUNTS"},
+    {"type":"textarea","id":"desc_4","label":"Desc 4","default":"Get 15% off in-app."},
+    
+    {"type":"color","id":"bg_color","label":"Background App/Icon","default":"#F4F4F4"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Icon & Border Hover","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"11 · Men's Trust (v8)"}]
+}
+{% endschema %}

@@ -1,0 +1,78 @@
+<style>
+.cf-cat-11-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-cat-11-v2-inner{max-width:1400px;margin:0 auto}
+.cf-cat-11-v2-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;border-bottom:2px solid {{ section.settings.border_color }};padding-bottom:20px}
+.cf-cat-11-v2-title{font-size:32px;font-weight:900;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0;letter-spacing:-0.02em}
+.cf-cat-11-v2-link{font-size:14px;font-weight:700;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.05em;transition:0.3s}
+.cf-cat-11-v2-link:hover{color:{{ section.settings.accent_color }}}
+.cf-cat-11-v2-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:20px}
+.cf-cat-11-v2-card{position:relative;display:block;text-decoration:none;overflow:hidden;background:#ebebeb}
+.cf-cat-11-v2-img{width:100%;aspect-ratio:3/4;object-fit:cover;transition:0.5s;filter:grayscale(20%)}
+.cf-cat-11-v2-card:hover .cf-cat-11-v2-img{transform:scale(1.05);filter:grayscale(0%)}
+.cf-cat-11-v2-info{position:absolute;bottom:0;left:0;width:100%;padding:20px;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);display:flex;justify-content:space-between;align-items:flex-end}
+.cf-cat-11-v2-name{color:#fff;font-size:16px;font-weight:800;text-transform:uppercase;margin:0;letter-spacing:0.05em}
+.cf-cat-11-v2-count{color:#bbb;font-size:12px;font-weight:600}
+@media(max-width:900px){.cf-cat-11-v2-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cf-cat-11-v2-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cat-11-v2">
+  <div class="cf-cat-11-v2-inner">
+    <div class="cf-cat-11-v2-header">
+      <h2 class="cf-cat-11-v2-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-cat-11-v2-link">{{ section.settings.btn_label }} &rarr;</a>
+    </div>
+    <div class="cf-cat-11-v2-grid">
+      {% for i in (1..4) %}
+        {% capture img_key %}img_{{ i }}{% endcapture %}
+        {% capture label_key %}label_{{ i }}{% endcapture %}
+        {% capture count_key %}count_{{ i }}{% endcapture %}
+        {% capture link_key %}link_{{ i }}{% endcapture %}
+        <a href="{{ section.settings[link_key] }}" class="cf-cat-11-v2-card">
+          {% if section.settings[img_key] %}
+            <img src="{{ section.settings[img_key] | image_url: width: 600 }}" class="cf-cat-11-v2-img">
+          {% else %}
+            <div style="width:100%;aspect-ratio:3/4;background:#222"></div>
+          {% endif %}
+          <div class="cf-cat-11-v2-info">
+            <h3 class="cf-cat-11-v2-name">{{ section.settings[label_key] }}</h3>
+            <span class="cf-cat-11-v2-count">{{ section.settings[count_key] }}</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Category (v2)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"THE COLLECTIONS"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW ALL"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"img_1","label":"Image 1"},
+    {"type":"text","id":"label_1","label":"Label 1","default":"OUTERWEAR"},
+    {"type":"text","id":"count_1","label":"Count 1","default":"24 ITEMS"},
+    {"type":"url","id":"link_1","label":"Link 1"},
+    {"type":"image_picker","id":"img_2","label":"Image 2"},
+    {"type":"text","id":"label_2","label":"Label 2","default":"KNITWEAR"},
+    {"type":"text","id":"count_2","label":"Count 2","default":"18 ITEMS"},
+    {"type":"url","id":"link_2","label":"Link 2"},
+    {"type":"image_picker","id":"img_3","label":"Image 3"},
+    {"type":"text","id":"label_3","label":"Label 3","default":"BOTTOMS"},
+    {"type":"text","id":"count_3","label":"Count 3","default":"32 ITEMS"},
+    {"type":"url","id":"link_3","label":"Link 3"},
+    {"type":"image_picker","id":"img_4","label":"Image 4"},
+    {"type":"text","id":"label_4","label":"Label 4","default":"ACCESSORIES"},
+    {"type":"text","id":"count_4","label":"Count 4","default":"45 ITEMS"},
+    {"type":"url","id":"link_4","label":"Link 4"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Line","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Accent","default":"#666666"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Category (v2)"}]
+}
+{% endschema %}

@@ -1,0 +1,71 @@
+<style>
+.cf-cat-11-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-cat-11-v5-inner{max-width:1400px;margin:0 auto}
+.cf-cat-11-v5-row{display:flex;align-items:center;border-top:1px solid {{ section.settings.border_color }};text-decoration:none;padding:30px 20px;transition:0.3s;position:relative;overflow:hidden}
+.cf-cat-11-v5-row:last-child{border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-cat-11-v5-row:hover{background:{{ section.settings.hover_bg }}}
+.cf-cat-11-v5-num{font-size:16px;font-weight:700;color:{{ section.settings.text_color }};width:50px;opacity:0.5;transition:0.3s}
+.cf-cat-11-v5-row:hover .cf-cat-11-v5-num{opacity:1;color:{{ section.settings.accent_color }}}
+.cf-cat-11-v5-label{font-size:clamp(30px,5vw,64px);font-weight:900;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0;letter-spacing:-0.03em;flex:1;transition:transform 0.3s}
+.cf-cat-11-v5-row:hover .cf-cat-11-v5-label{transform:translateX(20px)}
+.cf-cat-11-v5-img-wrap{position:absolute;right:10vw;top:50%;transform:translateY(-50%) rotate(10deg);width:250px;aspect-ratio:4/5;opacity:0;visibility:hidden;transition:0.4s cubic-bezier(0.1, 0.7, 0.1, 1);z-index:2;pointer-events:none}
+.cf-cat-11-v5-row:hover .cf-cat-11-v5-img-wrap{opacity:1;visibility:visible;transform:translateY(-50%) rotate(0deg)}
+.cf-cat-11-v5-img{width:100%;height:100%;object-fit:cover;box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+.cf-cat-11-v5-icon{color:{{ section.settings.text_color }};opacity:0;transform:translateX(-20px);transition:0.3s}
+.cf-cat-11-v5-row:hover .cf-cat-11-v5-icon{opacity:1;transform:translateX(0)}
+@media(max-width:768px){.cf-cat-11-v5-img-wrap{display:none}.cf-cat-11-v5-row{padding:20px 10px}.cf-cat-11-v5-row:hover .cf-cat-11-v5-label{transform:translateX(10px)}}
+</style>
+
+<div class="cf-cat-11-v5">
+  <div class="cf-cat-11-v5-inner">
+    {% for i in (1..5) %}
+      {% capture img_key %}img_{{ i }}{% endcapture %}
+      {% capture label_key %}label_{{ i }}{% endcapture %}
+      {% capture link_key %}link_{{ i }}{% endcapture %}
+      <a href="{{ section.settings[link_key] }}" class="cf-cat-11-v5-row">
+        <span class="cf-cat-11-v5-num">0{{ i }}</span>
+        <h3 class="cf-cat-11-v5-label">{{ section.settings[label_key] }}</h3>
+        <div class="cf-cat-11-v5-img-wrap">
+           {% if section.settings[img_key] %}
+             <img src="{{ section.settings[img_key] | image_url: width: 600 }}" class="cf-cat-11-v5-img">
+           {% else %}
+             <div style="background:#555;width:100%;height:100%"></div>
+           {% endif %}
+        </div>
+        <div class="cf-cat-11-v5-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Category (v5)",
+  "settings": [
+    {"type":"image_picker","id":"img_1","label":"Image 1"},
+    {"type":"text","id":"label_1","label":"Label 1","default":"JACKETS & COATS"},
+    {"type":"url","id":"link_1","label":"Link 1"},
+    {"type":"image_picker","id":"img_2","label":"Image 2"},
+    {"type":"text","id":"label_2","label":"Label 2","default":"SHIRTS"},
+    {"type":"url","id":"link_2","label":"Link 2"},
+    {"type":"image_picker","id":"img_3","label":"Image 3"},
+    {"type":"text","id":"label_3","label":"Label 3","default":"TROUSERS"},
+    {"type":"url","id":"link_3","label":"Link 3"},
+    {"type":"image_picker","id":"img_4","label":"Image 4"},
+    {"type":"text","id":"label_4","label":"Label 4","default":"SHOES"},
+    {"type":"url","id":"link_4","label":"Link 4"},
+    {"type":"image_picker","id":"img_5","label":"Image 5"},
+    {"type":"text","id":"label_5","label":"Label 5","default":"BAGS & LEATHER"},
+    {"type":"url","id":"link_5","label":"Link 5"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"hover_bg","label":"Hover Row Background","default":"#F4F4F4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#E2E2E2"},
+    {"type":"color","id":"accent_color","label":"Accent Hover","default":"#A37B5C"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Category (v5)"}]
+}
+{% endschema %}

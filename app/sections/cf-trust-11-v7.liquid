@@ -1,0 +1,65 @@
+<style>
+.cf-trust-11-v7{width:100%;height:{{ section.settings.height }}vh;background-image:url('{{ section.settings.bg_image | image_url: width: 2000 }}');background-size:cover;background-position:center;position:relative;display:flex;align-items:center;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-trust-11-v7-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right, rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }}), rgba(0,0,0,0.2))}
+.cf-trust-11-v7-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;width:100%;padding:40px;display:flex}
+.cf-trust-11-v7-content{max-width:500px}
+.cf-trust-11-v7-title{font-size:clamp(40px,5vw,72px);font-weight:900;text-transform:uppercase;margin:0 0 40px 0;line-height:0.9;letter-spacing:-0.03em}
+.cf-trust-11-v7-list{display:flex;flex-direction:column;gap:30px}
+.cf-trust-11-v7-item{display:flex;align-items:flex-start;gap:20px}
+.cf-trust-11-v7-icon{width:32px;height:32px;color:{{ section.settings.accent_color }};flex-shrink:0}
+.cf-trust-11-v7-text h3{font-size:16px;font-weight:800;text-transform:uppercase;margin:0 0 5px 0;letter-spacing:0.05em}
+.cf-trust-11-v7-text p{font-size:14px;opacity:0.8;margin:0;line-height:1.5}
+@media(max-width:768px){.cf-trust-11-v7-overlay{background:rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }})}.cf-trust-11-v7-title{font-size:40px}}
+</style>
+
+<div class="cf-trust-11-v7">
+  <div class="cf-trust-11-v7-overlay"></div>
+  <div class="cf-trust-11-v7-inner">
+    <div class="cf-trust-11-v7-content">
+      <h2 class="cf-trust-11-v7-title">{{ section.settings.title }}</h2>
+      <div class="cf-trust-11-v7-list">
+        {% for i in (1..3) %}
+          {% capture title_key %}title_{{ i }}{% endcapture %}
+          {% capture desc_key %}desc_{{ i }}{% endcapture %}
+          {% capture icon_key %}icon_{{ i }}{% endcapture %}
+          
+          <div class="cf-trust-11-v7-item">
+            <div class="cf-trust-11-v7-icon">{{ section.settings[icon_key] }}</div>
+            <div class="cf-trust-11-v7-text">
+              <h3>{{ section.settings[title_key] }}</h3>
+              <p>{{ section.settings[desc_key] }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Trust (v7)",
+  "settings": [
+    {"type":"image_picker","id":"bg_image","label":"Background Image"},
+    {"type":"range","id":"overlay_opacity","label":"Left Overlay Opacity","min":0,"max":100,"step":5,"default":80},
+    {"type":"text","id":"title","label":"Header Title","default":"BUILT DIFFERENT."},
+    
+    {"type":"html","id":"icon_1","label":"Icon 1 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'></circle><polyline points='12 6 12 12 16 14'></polyline></svg>"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"LIFETIME GUARANTEE"},
+    {"type":"textarea","id":"desc_1","label":"Desc 1","default":"We repair or replace any manufacturer defects, forever."},
+    
+    {"type":"html","id":"icon_2","label":"Icon 2 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z'></path><line x1='7' y1='7' x2='7.01' y2='7'></line></svg>"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"SUSTAINABLE MATERIALS"},
+    {"type":"textarea","id":"desc_2","label":"Desc 2","default":"100% organic cottons and recycled materials."},
+    
+    {"type":"html","id":"icon_3","label":"Icon 3 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'></path><polyline points='22 4 12 14.01 9 11.01'></polyline></svg>"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"FREE EXCHANGES"},
+    {"type":"textarea","id":"desc_3","label":"Desc 3","default":"Not the perfect fit? Exchange it for free within 30 days."},
+    
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Icon Accent Color","default":"#A37B5C"},
+    {"type":"range","id":"height","label":"Height (vh)","min":60,"max":100,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Trust (v7)"}]
+}
+{% endschema %}

@@ -1,0 +1,103 @@
+<style>
+.cf-feat-11-v7{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-feat-11-v7-inner{max-width:1400px;margin:0 auto}
+.cf-feat-11-v7-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px}
+.cf-feat-11-v7-title{font-size:36px;font-weight:900;text-transform:uppercase;margin:0;letter-spacing:-0.02em}
+.cf-feat-11-v7-arrows{display:flex;gap:10px}
+.cf-feat-11-v7-arrow{width:40px;height:40px;border:1px solid {{ section.settings.border_color }};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:0.3s;color:{{ section.settings.text_color }}}
+.cf-feat-11-v7-arrow:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-feat-11-v7-carousel{display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;padding-bottom:20px}
+.cf-feat-11-v7-carousel::-webkit-scrollbar{display:none}
+.cf-feat-11-v7-card{flex:0 0 300px;text-decoration:none;display:flex;flex-direction:column;gap:15px;group;transition:0.3s}
+.cf-feat-11-v7-card:hover{transform:translateY(-5px)}
+.cf-feat-11-v7-img-wrap{width:100%;height:400px;background:#ebebeb;overflow:hidden;position:relative}
+.cf-feat-11-v7-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-feat-11-v7-card:hover .cf-feat-11-v7-img{transform:scale(1.05)}
+.cf-feat-11-v7-info{display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center}
+.cf-feat-11-v7-name{font-size:14px;font-weight:800;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0}
+.cf-feat-11-v7-price{font-size:14px;color:{{ section.settings.text_color }};margin:0;opacity:0.8}
+@media(max-width:768px){.cf-feat-11-v7-card{flex:0 0 260px}.cf-feat-11-v7-img-wrap{height:350px}}
+</style>
+
+<div class="cf-feat-11-v7">
+  <div class="cf-feat-11-v7-inner">
+    <div class="cf-feat-11-v7-header">
+      <h2 class="cf-feat-11-v7-title">{{ section.settings.title }}</h2>
+      <div class="cf-feat-11-v7-arrows">
+        <div class="cf-feat-11-v7-arrow" onclick="document.querySelector('.cf-feat-11-v7-carousel').scrollBy({left:-320,behavior:'smooth'})">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </div>
+        <div class="cf-feat-11-v7-arrow" onclick="document.querySelector('.cf-feat-11-v7-carousel').scrollBy({left:320,behavior:'smooth'})">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cf-feat-11-v7-carousel">
+      {% for i in (1..6) %}
+        {% capture img_key %}img_{{ i }}{% endcapture %}
+        {% capture title_key %}title_{{ i }}{% endcapture %}
+        {% capture price_key %}price_{{ i }}{% endcapture %}
+        {% capture link_key %}link_{{ i }}{% endcapture %}
+        <a href="{{ section.settings[link_key] }}" class="cf-feat-11-v7-card">
+          <div class="cf-feat-11-v7-img-wrap">
+             {% if section.settings[img_key] %}
+               <img src="{{ section.settings[img_key] | image_url: width: 600 }}" class="cf-feat-11-v7-img">
+             {% else %}
+               <div style="background:#555;width:100%;height:100%"></div>
+             {% endif %}
+          </div>
+          <div class="cf-feat-11-v7-info">
+            <h3 class="cf-feat-11-v7-name">{{ section.settings[title_key] }}</h3>
+            <p class="cf-feat-11-v7-price">{{ section.settings[price_key] }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Featured (v7)",
+  "settings": [
+    {"type":"text","id":"title","label":"Section Title","default":"TRENDING RIGHT NOW"},
+    
+    {"type":"image_picker","id":"img_1","label":"Product 1 Image"},
+    {"type":"text","id":"title_1","label":"Product 1 Title","default":"VARSITY JACKET"},
+    {"type":"text","id":"price_1","label":"Product 1 Price","default":"$190"},
+    {"type":"url","id":"link_1","label":"Product 1 Link"},
+    
+    {"type":"image_picker","id":"img_2","label":"Product 2 Image"},
+    {"type":"text","id":"title_2","label":"Product 2 Title","default":"RELAXED DENIM"},
+    {"type":"text","id":"price_2","label":"Product 2 Price","default":"$120"},
+    {"type":"url","id":"link_2","label":"Product 2 Link"},
+    
+    {"type":"image_picker","id":"img_3","label":"Product 3 Image"},
+    {"type":"text","id":"title_3","label":"Product 3 Title","default":"CHUNKY LOAFER"},
+    {"type":"text","id":"price_3","label":"Product 3 Price","default":"$210"},
+    {"type":"url","id":"link_3","label":"Product 3 Link"},
+    
+    {"type":"image_picker","id":"img_4","label":"Product 4 Image"},
+    {"type":"text","id":"title_4","label":"Product 4 Title","default":"WORK JACKET"},
+    {"type":"text","id":"price_4","label":"Product 4 Price","default":"$150"},
+    {"type":"url","id":"link_4","label":"Product 4 Link"},
+    
+    {"type":"image_picker","id":"img_5","label":"Product 5 Image"},
+    {"type":"text","id":"title_5","label":"Product 5 Title","default":"GRAPHIC HOODIE"},
+    {"type":"text","id":"price_5","label":"Product 5 Price","default":"$85"},
+    {"type":"url","id":"link_5","label":"Product 5 Link"},
+    
+    {"type":"image_picker","id":"img_6","label":"Product 6 Image"},
+    {"type":"text","id":"title_6","label":"Product 6 Title","default":"CARGO PANTS"},
+    {"type":"text","id":"price_6","label":"Product 6 Price","default":"$110"},
+    {"type":"url","id":"link_6","label":"Product 6 Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Arrow Border","default":"#E2E2E2"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Featured (v7)"}]
+}
+{% endschema %}

@@ -1,0 +1,89 @@
+<style>
+.cf-feat-11-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-feat-11-v2-inner{max-width:1400px;margin:0 auto}
+.cf-feat-11-v2-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;padding-bottom:15px;border-bottom:2px solid {{ section.settings.border_color }}}
+.cf-feat-11-v2-title{font-size:36px;font-weight:900;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0;letter-spacing:-0.02em}
+.cf-feat-11-v2-link{font-size:14px;font-weight:700;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.05em;transition:0.3s}
+.cf-feat-11-v2-link:hover{color:{{ section.settings.accent_color }}}
+.cf-feat-11-v2-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:20px}
+.cf-feat-11-v2-card{text-decoration:none;display:flex;flex-direction:column;gap:15px;group;transition:0.3s}
+.cf-feat-11-v2-img-wrap{width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;background:#ebebeb}
+.cf-feat-11-v2-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:0.5s;filter:grayscale(100%)}
+.cf-feat-11-v2-card:hover .cf-feat-11-v2-img{transform:scale(1.05);filter:grayscale(0%)}
+.cf-feat-11-v2-info{display:flex;justify-content:space-between;align-items:flex-start}
+.cf-feat-11-v2-name{font-size:14px;font-weight:800;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0 0 5px 0}
+.cf-feat-11-v2-type{font-size:12px;color:{{ section.settings.text_color }};opacity:0.6;margin:0}
+.cf-feat-11-v2-price{font-size:14px;font-weight:700;color:{{ section.settings.text_color }};margin:0}
+@media(max-width:900px){.cf-feat-11-v2-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<div class="cf-feat-11-v2">
+  <div class="cf-feat-11-v2-inner">
+    <div class="cf-feat-11-v2-header">
+      <h2 class="cf-feat-11-v2-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-feat-11-v2-link">{{ section.settings.btn_label }} &rarr;</a>
+    </div>
+    <div class="cf-feat-11-v2-grid">
+      {% for i in (1..4) %}
+        {% capture img_key %}img_{{ i }}{% endcapture %}
+        {% capture title_key %}title_{{ i }}{% endcapture %}
+        {% capture type_key %}type_{{ i }}{% endcapture %}
+        {% capture price_key %}price_{{ i }}{% endcapture %}
+        {% capture link_key %}link_{{ i }}{% endcapture %}
+        <a href="{{ section.settings[link_key] }}" class="cf-feat-11-v2-card">
+          <div class="cf-feat-11-v2-img-wrap">
+            {% if section.settings[img_key] %}
+              <img src="{{ section.settings[img_key] | image_url: width: 600 }}" class="cf-feat-11-v2-img">
+            {% else %}
+              <div style="background:#ddd;width:100%;height:100%" class="cf-feat-11-v2-img"></div>
+            {% endif %}
+          </div>
+          <div class="cf-feat-11-v2-info">
+            <div>
+              <h3 class="cf-feat-11-v2-name">{{ section.settings[title_key] }}</h3>
+              <p class="cf-feat-11-v2-type">{{ section.settings[type_key] }}</p>
+            </div>
+            <p class="cf-feat-11-v2-price">{{ section.settings[price_key] }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Featured (v2)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"THE NEW ARRIVALS"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW ALL"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"img_1","label":"Product 1 Image"},
+    {"type":"text","id":"title_1","label":"Product 1 Title","default":"CHORE JACKET"},
+    {"type":"text","id":"type_1","label":"Product 1 Type","default":"Outerwear"},
+    {"type":"text","id":"price_1","label":"Product 1 Price","default":"$185"},
+    {"type":"url","id":"link_1","label":"Product 1 Link"},
+    {"type":"image_picker","id":"img_2","label":"Product 2 Image"},
+    {"type":"text","id":"title_2","label":"Product 2 Title","default":"OXFORD SHIRT"},
+    {"type":"text","id":"type_2","label":"Product 2 Type","default":"Tops"},
+    {"type":"text","id":"price_2","label":"Product 2 Price","default":"$95"},
+    {"type":"url","id":"link_2","label":"Product 2 Link"},
+    {"type":"image_picker","id":"img_3","label":"Product 3 Image"},
+    {"type":"text","id":"title_3","label":"Product 3 Title","default":"STRAIGHT DENIM"},
+    {"type":"text","id":"type_3","label":"Product 3 Type","default":"Bottoms"},
+    {"type":"text","id":"price_3","label":"Product 3 Price","default":"$140"},
+    {"type":"url","id":"link_3","label":"Product 3 Link"},
+    {"type":"image_picker","id":"img_4","label":"Product 4 Image"},
+    {"type":"text","id":"title_4","label":"Product 4 Title","default":"LEATHER BOOT"},
+    {"type":"text","id":"type_4","label":"Product 4 Type","default":"Footwear"},
+    {"type":"text","id":"price_4","label":"Product 4 Price","default":"$250"},
+    {"type":"url","id":"link_4","label":"Product 4 Link"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Accent","default":"#5A5A5A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Featured (v2)"}]
+}
+{% endschema %}

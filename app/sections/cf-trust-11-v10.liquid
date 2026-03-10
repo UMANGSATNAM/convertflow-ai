@@ -1,0 +1,69 @@
+<style>
+.cf-trust-11-v10{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;}
+.cf-trust-11-v10-inner{max-width:1400px;margin:0 auto}
+.cf-trust-11-v10-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:20px}
+.cf-trust-11-v10-item{position:relative;height:350px;background:#111;text-decoration:none;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid {{ section.settings.border_color }}}
+.cf-trust-11-v10-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.4;transition:0.6s;filter:grayscale(100%)}
+.cf-trust-11-v10-item:hover .cf-trust-11-v10-img{opacity:0.2;transform:scale(1.05)}
+.cf-trust-11-v10-content{position:relative;z-index:2;text-align:center;padding:30px;color:{{ section.settings.text_color }};display:flex;flex-direction:column;align-items:center;gap:15px}
+.cf-trust-11-v10-icon{width:48px;height:48px;color:{{ section.settings.accent_color }}}
+.cf-trust-11-v10-title{font-size:20px;font-weight:900;text-transform:uppercase;margin:0;letter-spacing:0.05em}
+.cf-trust-11-v10-desc{font-size:15px;opacity:0.9;margin:0;max-width:300px}
+@media(max-width:900px){.cf-trust-11-v10-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-trust-11-v10">
+  <div class="cf-trust-11-v10-inner">
+    <div class="cf-trust-11-v10-grid">
+      {% for i in (1..3) %}
+        {% capture img_key %}img_{{ i }}{% endcapture %}
+        {% capture title_key %}title_{{ i }}{% endcapture %}
+        {% capture desc_key %}desc_{{ i }}{% endcapture %}
+        {% capture icon_key %}icon_{{ i }}{% endcapture %}
+        
+        <div class="cf-trust-11-v10-item">
+          {% if section.settings[img_key] %}
+            <img src="{{ section.settings[img_key] | image_url: width: 800 }}" class="cf-trust-11-v10-img">
+          {% else %}
+            <div style="background:#555;" class="cf-trust-11-v10-img"></div>
+          {% endif %}
+          
+          <div class="cf-trust-11-v10-content">
+            <div class="cf-trust-11-v10-icon">{{ section.settings[icon_key] }}</div>
+            <h3 class="cf-trust-11-v10-title">{{ section.settings[title_key] }}</h3>
+            <p class="cf-trust-11-v10-desc">{{ section.settings[desc_key] }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Trust (v10)",
+  "settings": [
+    {"type":"image_picker","id":"img_1","label":"Image 1"},
+    {"type":"html","id":"icon_1","label":"Icon 1 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'></polygon></svg>"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"CRAFTED TO LAST"},
+    {"type":"textarea","id":"desc_1","label":"Desc 1","default":"We use only the highest quality materials designed to age beautifully."},
+    
+    {"type":"image_picker","id":"img_2","label":"Image 2"},
+    {"type":"html","id":"icon_2","label":"Icon 2 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path><polyline points='3.27 6.96 12 12.01 20.73 6.96'></polyline><line x1='12' y1='22.08' x2='12' y2='12'></line></svg>"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"FREE SHIPPING"},
+    {"type":"textarea","id":"desc_2","label":"Desc 2","default":"Enjoy complimentary carbon-neutral shipping on all domestic orders."},
+    
+    {"type":"image_picker","id":"img_3","label":"Image 3"},
+    {"type":"html","id":"icon_3","label":"Icon 3 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'></circle><polyline points='12 6 12 12 16 14'></polyline></svg>"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"30 DAY RETURNS"},
+    {"type":"textarea","id":"desc_3","label":"Desc 3","default":"If it's not perfect, send it back for a full refund or exchange."},
+    
+    {"type":"color","id":"bg_color","label":"Background","default":"#FAFAFA"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"border_color","label":"Image Border","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Icon Color","default":"#FFFFFF"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Trust (v10)"}]
+}
+{% endschema %}

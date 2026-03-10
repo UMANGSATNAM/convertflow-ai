@@ -1,0 +1,55 @@
+<style>
+.cf-trust-11-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-trust-11-v3-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;border-top:2px solid {{ section.settings.border_color }};border-bottom:2px solid {{ section.settings.border_color }};padding:40px 0}
+.cf-trust-11-v3-item{flex:1;display:flex;align-items:center;gap:20px;padding:0 30px;border-right:1px solid {{ section.settings.border_color }}}
+.cf-trust-11-v3-item:last-child{border-right:none}
+.cf-trust-11-v3-icon{width:40px;height:40px;color:{{ section.settings.text_color }}}
+.cf-trust-11-v3-text{display:flex;flex-direction:column;gap:5px}
+.cf-trust-11-v3-title{font-size:16px;font-weight:900;text-transform:uppercase;margin:0;letter-spacing:0.02em}
+.cf-trust-11-v3-desc{font-size:13px;opacity:0.7;margin:0}
+@media(max-width:900px){.cf-trust-11-v3-inner{flex-wrap:wrap;gap:40px 0;border-left:none;border-right:none;padding:30px 0}.cf-trust-11-v3-item{flex:0 0 50%;border-right:none;border-bottom:1px solid {{ section.settings.border_color }};padding-bottom:20px}.cf-trust-11-v3-item:nth-child(3),.cf-trust-11-v3-item:nth-child(4){border-bottom:none;padding-bottom:0}}
+@media(max-width:600px){.cf-trust-11-v3-item{flex:0 0 100%;border-bottom:1px solid {{ section.settings.border_color }};padding:20px}.cf-trust-11-v3-item:last-child{border-bottom:none}}
+</style>
+
+<div class="cf-trust-11-v3">
+  <div class="cf-trust-11-v3-inner">
+    {% for i in (1..3) %}
+      {% capture title_key %}title_{{ i }}{% endcapture %}
+      {% capture desc_key %}desc_{{ i }}{% endcapture %}
+      {% capture icon_key %}icon_{{ i }}{% endcapture %}
+      
+      <div class="cf-trust-11-v3-item">
+        <div class="cf-trust-11-v3-icon">{{ section.settings[icon_key] }}</div>
+        <div class="cf-trust-11-v3-text">
+          <h3 class="cf-trust-11-v3-title">{{ section.settings[title_key] }}</h3>
+          <p class="cf-trust-11-v3-desc">{{ section.settings[desc_key] }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Trust (v3)",
+  "settings": [
+    {"type":"html","id":"icon_1","label":"Icon 1 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='20 6 9 17 4 12'></polyline></svg>"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"GUARANTEED AUTHENTIC"},
+    {"type":"textarea","id":"desc_1","label":"Desc 1","default":"Direct from the makers."},
+    
+    {"type":"html","id":"icon_2","label":"Icon 2 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'></rect><path d='M7 11V7a5 5 0 0 1 10 0v4'></path></svg>"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"SECURE CHECKOUT"},
+    {"type":"textarea","id":"desc_2","label":"Desc 2","default":"Encrypted & safe processing."},
+    
+    {"type":"html","id":"icon_3","label":"Icon 3 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path><polyline points='3.27 6.96 12 12.01 20.73 6.96'></polyline><line x1='12' y1='22.08' x2='12' y2='12'></line></svg>"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"GLOBAL DELIVERY"},
+    {"type":"textarea","id":"desc_3","label":"Desc 3","default":"Fast shipping worldwide."},
+    
+    {"type":"color","id":"bg_color","label":"Background","default":"#F2F2F2"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#CCCCCC"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Trust (v3)"}]
+}
+{% endschema %}

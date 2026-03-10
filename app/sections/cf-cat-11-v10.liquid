@@ -1,0 +1,56 @@
+<style>
+.cf-cat-11-v10{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-cat-11-v10-inner{max-width:1200px;margin:0 auto;text-align:center}
+.cf-cat-11-v10-title{font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0 0 50px 0}
+.cf-cat-11-v10-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:30px}
+.cf-cat-11-v10-card{display:flex;flex-direction:column;align-items:center;text-decoration:none;width:150px;transition:0.3s}
+.cf-cat-11-v10-card:hover{transform:translateY(-10px)}
+.cf-cat-11-v10-icon{width:80px;height:80px;border:2px solid {{ section.settings.border_color }};border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:15px;color:{{ section.settings.text_color }};transition:0.3s;background:{{ section.settings.bg_color }}}
+.cf-cat-11-v10-card:hover .cf-cat-11-v10-icon{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};border-color:{{ section.settings.text_color }}}
+.cf-cat-11-v10-label{font-size:12px;font-weight:800;text-transform:uppercase;color:{{ section.settings.text_color }};letter-spacing:0.05em;margin:0}
+@media(max-width:600px){.cf-cat-11-v10-card{width:120px}}
+</style>
+
+<div class="cf-cat-11-v10">
+  <div class="cf-cat-11-v10-inner">
+    <h2 class="cf-cat-11-v10-title">{{ section.settings.title }}</h2>
+    <div class="cf-cat-11-v10-grid">
+      {% for i in (1..6) %}
+        {% capture label_key %}label_{{ i }}{% endcapture %}
+        {% capture link_key %}link_{{ i }}{% endcapture %}
+        <a href="{{ section.settings[link_key] }}" class="cf-cat-11-v10-card">
+          <div class="cf-cat-11-v10-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="6.5"></line></svg>
+          </div>
+          <p class="cf-cat-11-v10-label">{{ section.settings[label_key] }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Category (v10)",
+  "settings": [
+    {"type":"text","id":"title","label":"Section Title","default":"SHOP BY CATEGORY"},
+    {"type":"text","id":"label_1","label":"Label 1","default":"OUTERWEAR"},
+    {"type":"url","id":"link_1","label":"Link 1"},
+    {"type":"text","id":"label_2","label":"Label 2","default":"KNITWEAR"},
+    {"type":"url","id":"link_2","label":"Link 2"},
+    {"type":"text","id":"label_3","label":"Label 3","default":"SHIRTS"},
+    {"type":"url","id":"link_3","label":"Link 3"},
+    {"type":"text","id":"label_4","label":"Label 4","default":"DENIM"},
+    {"type":"url","id":"link_4","label":"Link 4"},
+    {"type":"text","id":"label_5","label":"Label 5","default":"FOOTWEAR"},
+    {"type":"url","id":"link_5","label":"Link 5"},
+    {"type":"text","id":"label_6","label":"Label 6","default":"ACCESSORIES"},
+    {"type":"url","id":"link_6","label":"Link 6"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F9F9F9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Icon Border","default":"#CCCCCC"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Category (v10)"}]
+}
+{% endschema %}

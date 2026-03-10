@@ -1,0 +1,107 @@
+<style>
+.cf-feat-11-v4{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-feat-11-v4-inner{max-width:1400px;margin:0 auto}
+.cf-feat-11-v4-top{text-align:center;margin-bottom:60px}
+.cf-feat-11-v4-title{font-size:48px;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;margin:0 0 15px 0}
+.cf-feat-11-v4-subtitle{font-size:16px;opacity:0.8;max-width:500px;margin:0 auto}
+.cf-feat-11-v4-grid{display:grid;grid-template-columns:1fr 2fr 1fr;gap:20px}
+.cf-feat-11-v4-card{display:flex;flex-direction:column;gap:15px;text-decoration:none}
+.cf-feat-11-v4-img-wrap{width:100%;aspect-ratio:3/4;overflow:hidden;background:#e5e5e5;position:relative}
+.cf-feat-11-v4-card.cf-center .cf-feat-11-v4-img-wrap{aspect-ratio:3/5}
+.cf-feat-11-v4-img{width:100%;height:100%;object-fit:cover;transition:0.4s}
+.cf-feat-11-v4-card:hover .cf-feat-11-v4-img{transform:scale(1.05)}
+.cf-feat-11-v4-badge{position:absolute;top:15px;left:15px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-size:10px;font-weight:800;padding:5px 10px;text-transform:uppercase;letter-spacing:0.1em}
+.cf-feat-11-v4-info{text-align:center}
+.cf-feat-11-v4-name{font-size:15px;font-weight:800;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0 0 5px 0}
+.cf-feat-11-v4-price{font-size:14px;color:{{ section.settings.text_color }};margin:0}
+@media(max-width:900px){.cf-feat-11-v4-grid{grid-template-columns:1fr 1fr}.cf-feat-11-v4-card.cf-center{grid-column:1/-1;order:-1}.cf-feat-11-v4-card.cf-center .cf-feat-11-v4-img-wrap{aspect-ratio:16/9}}
+@media(max-width:600px){.cf-feat-11-v4-grid{grid-template-columns:1fr}.cf-feat-11-v4-card.cf-center .cf-feat-11-v4-img-wrap{aspect-ratio:3/4}}
+</style>
+
+<div class="cf-feat-11-v4">
+  <div class="cf-feat-11-v4-inner">
+    <div class="cf-feat-11-v4-top">
+      <h2 class="cf-feat-11-v4-title">{{ section.settings.title }}</h2>
+      <p class="cf-feat-11-v4-subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+    
+    <div class="cf-feat-11-v4-grid">
+      <!-- Left -->
+      <a href="{{ section.settings.link_1 }}" class="cf-feat-11-v4-card">
+        <div class="cf-feat-11-v4-img-wrap">
+          {% if section.settings.img_1 %}
+            <img src="{{ section.settings.img_1 | image_url: width: 600 }}" class="cf-feat-11-v4-img">
+          {% else %}
+            <div style="background:#555;width:100%;height:100%"></div>
+          {% endif %}
+        </div>
+        <div class="cf-feat-11-v4-info">
+          <h3 class="cf-feat-11-v4-name">{{ section.settings.title_1 }}</h3>
+          <p class="cf-feat-11-v4-price">{{ section.settings.price_1 }}</p>
+        </div>
+      </a>
+      
+      <!-- Center (Hero) -->
+      <a href="{{ section.settings.link_2 }}" class="cf-feat-11-v4-card cf-center">
+        <div class="cf-feat-11-v4-img-wrap">
+          {% if section.settings.badge_2 != blank %}<div class="cf-feat-11-v4-badge">{{ section.settings.badge_2 }}</div>{% endif %}
+          {% if section.settings.img_2 %}
+            <img src="{{ section.settings.img_2 | image_url: width: 1000 }}" class="cf-feat-11-v4-img">
+          {% else %}
+            <div style="background:#333;width:100%;height:100%"></div>
+          {% endif %}
+        </div>
+        <div class="cf-feat-11-v4-info">
+          <h3 class="cf-feat-11-v4-name">{{ section.settings.title_2 }}</h3>
+          <p class="cf-feat-11-v4-price">{{ section.settings.price_2 }}</p>
+        </div>
+      </a>
+      
+      <!-- Right -->
+      <a href="{{ section.settings.link_3 }}" class="cf-feat-11-v4-card">
+        <div class="cf-feat-11-v4-img-wrap">
+          {% if section.settings.img_3 %}
+            <img src="{{ section.settings.img_3 | image_url: width: 600 }}" class="cf-feat-11-v4-img">
+          {% else %}
+            <div style="background:#555;width:100%;height:100%"></div>
+          {% endif %}
+        </div>
+        <div class="cf-feat-11-v4-info">
+          <h3 class="cf-feat-11-v4-name">{{ section.settings.title_3 }}</h3>
+          <p class="cf-feat-11-v4-price">{{ section.settings.price_3 }}</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Featured (v4)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"THE HERO PIECES"},
+    {"type":"textarea","id":"subtitle","label":"Subtitle","default":"Three staple items that anchor any modern wardrobe."},
+    
+    {"type":"text","id":"title_1","label":"Left Title","default":"OXFORD SHIRT"},
+    {"type":"text","id":"price_1","label":"Left Price","default":"$95"},
+    {"type":"image_picker","id":"img_1","label":"Left Image"},
+    {"type":"url","id":"link_1","label":"Left Link"},
+    
+    {"type":"text","id":"badge_2","label":"Center Badge","default":"SOLD OUT IN 48 HOURS"},
+    {"type":"text","id":"title_2","label":"Center Title","default":"THE WOOL TOPCOAT"},
+    {"type":"text","id":"price_2","label":"Center Price","default":"$350"},
+    {"type":"image_picker","id":"img_2","label":"Center Image"},
+    {"type":"url","id":"link_2","label":"Center Link"},
+    
+    {"type":"text","id":"title_3","label":"Right Title","default":"CHELSEA BOOT"},
+    {"type":"text","id":"price_3","label":"Right Price","default":"$220"},
+    {"type":"image_picker","id":"img_3","label":"Right Image"},
+    {"type":"url","id":"link_3","label":"Right Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Featured (v4)"}]
+}
+{% endschema %}

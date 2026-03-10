@@ -1,0 +1,93 @@
+<style>
+.cf-feat-11-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-feat-11-v6-inner{max-width:1400px;margin:0 auto}
+.cf-feat-11-v6-header{text-align:center;margin-bottom:50px}
+.cf-feat-11-v6-title{font-size:40px;font-weight:900;text-transform:uppercase;margin:0 0 15px 0;letter-spacing:-0.02em}
+.cf-feat-11-v6-desc{font-size:16px;opacity:0.8;max-width:600px;margin:0 auto}
+.cf-feat-11-v6-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:30px}
+.cf-feat-11-v6-card{display:flex;flex-direction:column;gap:20px;text-decoration:none;border-bottom:3px solid transparent;padding-bottom:10px;transition:0.3s}
+.cf-feat-11-v6-card:hover{border-color:{{ section.settings.text_color }}}
+.cf-feat-11-v6-img-wrap{width:100%;aspect-ratio:4/5;background:#ebebeb;overflow:hidden;position:relative}
+.cf-feat-11-v6-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:0.6s}
+.cf-feat-11-v6-card:hover .cf-feat-11-v6-img{transform:scale(1.05)}
+.cf-feat-11-v6-badge{position:absolute;top:15px;right:15px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};padding:5px 10px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase}
+.cf-feat-11-v6-info{display:flex;justify-content:space-between;align-items:flex-end}
+.cf-feat-11-v6-name{font-size:18px;font-weight:800;text-transform:uppercase;color:{{ section.settings.text_color }};margin:0 0 5px 0}
+.cf-feat-11-v6-price{font-size:16px;font-weight:500;color:{{ section.settings.text_color }};margin:0}
+.cf-feat-11-v6-btn{display:inline-block;padding:8px 20px;background:transparent;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};font-size:11px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;transition:0.3s}
+.cf-feat-11-v6-card:hover .cf-feat-11-v6-btn{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:900px){.cf-feat-11-v6-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.cf-feat-11-v6-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-feat-11-v6">
+  <div class="cf-feat-11-v6-inner">
+    <div class="cf-feat-11-v6-header">
+      <h2 class="cf-feat-11-v6-title">{{ section.settings.title }}</h2>
+      <p class="cf-feat-11-v6-desc">{{ section.settings.desc }}</p>
+    </div>
+    
+    <div class="cf-feat-11-v6-grid">
+      {% for i in (1..3) %}
+         {% capture img_key %}img_{{ i }}{% endcapture %}
+         {% capture title_key %}title_{{ i }}{% endcapture %}
+         {% capture price_key %}price_{{ i }}{% endcapture %}
+         {% capture link_key %}link_{{ i }}{% endcapture %}
+         {% capture badge_key %}badge_{{ i }}{% endcapture %}
+         
+         <a href="{{ section.settings[link_key] }}" class="cf-feat-11-v6-card">
+           <div class="cf-feat-11-v6-img-wrap">
+             {% if section.settings[badge_key] != blank %}
+               <div class="cf-feat-11-v6-badge">{{ section.settings[badge_key] }}</div>
+             {% endif %}
+             {% if section.settings[img_key] %}
+               <img src="{{ section.settings[img_key] | image_url: width: 800 }}" class="cf-feat-11-v6-img">
+             {% else %}
+               <div style="background:#555;width:100%;height:100%"></div>
+             {% endif %}
+           </div>
+           <div class="cf-feat-11-v6-info">
+             <div>
+               <h3 class="cf-feat-11-v6-name">{{ section.settings[title_key] }}</h3>
+               <p class="cf-feat-11-v6-price">{{ section.settings[price_key] }}</p>
+             </div>
+             <span class="cf-feat-11-v6-btn">QUICK VIEW</span>
+           </div>
+         </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Featured (v6)",
+  "settings": [
+    {"type":"text","id":"title","label":"Section Title","default":"STAFF PICKS"},
+    {"type":"textarea","id":"desc","label":"Section Description","default":"Hand-selected by our team for unmatched quality, versatile fit, and timeless style."},
+    
+    {"type":"image_picker","id":"img_1","label":"Product 1 Image"},
+    {"type":"text","id":"badge_1","label":"Product 1 Badge","default":"NEW"},
+    {"type":"text","id":"title_1","label":"Product 1 Title","default":"ITALIAN WOOL COAT"},
+    {"type":"text","id":"price_1","label":"Product 1 Price","default":"$450"},
+    {"type":"url","id":"link_1","label":"Product 1 Link"},
+    
+    {"type":"image_picker","id":"img_2","label":"Product 2 Image"},
+    {"type":"text","id":"badge_2","label":"Product 2 Badge","default":"BEST SELLER"},
+    {"type":"text","id":"title_2","label":"Product 2 Title","default":"MERINO WOOL SWEATER"},
+    {"type":"text","id":"price_2","label":"Product 2 Price","default":"$125"},
+    {"type":"url","id":"link_2","label":"Product 2 Link"},
+    
+    {"type":"image_picker","id":"img_3","label":"Product 3 Image"},
+    {"type":"text","id":"badge_3","label":"Product 3 Badge","default":"LIMITED"},
+    {"type":"text","id":"title_3","label":"Product 3 Title","default":"JAPANESE SELVEDGE"},
+    {"type":"text","id":"price_3","label":"Product 3 Price","default":"$190"},
+    {"type":"url","id":"link_3","label":"Product 3 Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background","default":"#F2F2F2"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"11 · Men's Featured (v6)"}]
+}
+{% endschema %}

@@ -1,0 +1,60 @@
+<style>
+.cf-trust-11-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-trust-11-v5-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }};padding:40px 0}
+.cf-trust-11-v5-left{flex:0 0 400px;border-right:1px solid {{ section.settings.border_color }};padding-right:40px}
+.cf-trust-11-v5-title{font-size:32px;font-weight:900;text-transform:uppercase;margin:0 0 10px 0;letter-spacing:-0.02em}
+.cf-trust-11-v5-desc{font-size:14px;opacity:0.7;margin:0}
+.cf-trust-11-v5-icons{flex:1;display:flex;justify-content:space-around;padding-left:40px}
+.cf-trust-11-v5-item{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.cf-trust-11-v5-icon{width:48px;height:48px;color:{{ section.settings.text_color }}}
+.cf-trust-11-v5-name{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin:0}
+@media(max-width:900px){.cf-trust-11-v5-inner{flex-direction:column;text-align:center}.cf-trust-11-v5-left{flex:auto;border-right:none;border-bottom:1px solid {{ section.settings.border_color }};padding-right:0;padding-bottom:40px;margin-bottom:40px}.cf-trust-11-v5-icons{padding-left:0;flex-wrap:wrap;gap:30px}}
+@media(max-width:600px){.cf-trust-11-v5-icons{grid-template-columns:1fr 1fr;display:grid}}
+</style>
+
+<div class="cf-trust-11-v5">
+  <div class="cf-trust-11-v5-inner">
+    <div class="cf-trust-11-v5-left">
+      <h2 class="cf-trust-11-v5-title">{{ section.settings.title }}</h2>
+      <p class="cf-trust-11-v5-desc">{{ section.settings.desc }}</p>
+    </div>
+    <div class="cf-trust-11-v5-icons">
+      {% for i in (1..4) %}
+        {% capture title_key %}title_{{ i }}{% endcapture %}
+        {% capture icon_key %}icon_{{ i }}{% endcapture %}
+        <div class="cf-trust-11-v5-item">
+          <div class="cf-trust-11-v5-icon">{{ section.settings[icon_key] }}</div>
+          <h3 class="cf-trust-11-v5-name">{{ section.settings[title_key] }}</h3>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Trust (v5)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"THE STANDARDS"},
+    {"type":"textarea","id":"desc","label":"Header Desc","default":"We build our garments with four core promises."},
+    
+    {"type":"html","id":"icon_1","label":"Icon 1 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'></polygon></svg>"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"PREMIUM MATERIALS"},
+    
+    {"type":"html","id":"icon_2","label":"Icon 2 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'></circle><polyline points='12 6 12 12 16 14'></polyline></svg>"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"LIFETIME GUARANTEE"},
+    
+    {"type":"html","id":"icon_3","label":"Icon 3 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'></path><polyline points='3.27 6.96 12 12.01 20.73 6.96'></polyline><line x1='12' y1='22.08' x2='12' y2='12'></line></svg>"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"FREE SHIPPING"},
+    
+    {"type":"html","id":"icon_4","label":"Icon 4 (SVG)","default":"<svg width='100%' height='100%' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='1 4 1 10 7 10'></polyline><polyline points='23 20 23 14 17 14'></polyline><path d='M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15'></path></svg>"},
+    {"type":"text","id":"title_4","label":"Title 4","default":"EASY RETURNS"},
+    
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"border_color","label":"Border/ Divider Line","default":"#333333"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Trust (v5)"}]
+}
+{% endschema %}
