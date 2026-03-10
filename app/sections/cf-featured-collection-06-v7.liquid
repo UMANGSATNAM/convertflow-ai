@@ -1,0 +1,199 @@
+<div class="cf-auto-fc-v7" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px; overflow: hidden;">
+  <div class="cf-auto-fc-v7-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+      <div>
+        <div style="font-family: 'Syne', sans-serif; font-size: 14px; color: {{ section.settings.accent_color }}; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">
+          {{ section.settings.kicker }}
+        </div>
+        <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0; line-height: 1.1;">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+      
+      <!-- Nav Arrows (Visual for CSS scroll) -->
+      <div style="display: flex; gap: 10px;">
+        <button onclick="document.getElementById('cf-slider-fc-v7-{{ section.id }}').scrollBy({left: -400, behavior: 'smooth'})" style="width: 45px; height: 45px; background: transparent; border: 1px solid {{ section.settings.text_color }}; display: flex; align-items: center; justify-content: center; color: {{ section.settings.text_color }}; cursor: pointer; transition: all 0.2s;" class="cf-nav-fc-v7">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button onclick="document.getElementById('cf-slider-fc-v7-{{ section.id }}').scrollBy({left: 400, behavior: 'smooth'})" style="width: 45px; height: 45px; background: {{ section.settings.accent_color }}; border: 1px solid {{ section.settings.accent_color }}; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; transition: all 0.2s;" class="cf-nav-fc-v7-fill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Slanted Cards Slider -->
+    <div id="cf-slider-fc-v7-{{ section.id }}" style="display: flex; gap: 30px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 20px 0 60px 0; scrollbar-width: none; -ms-overflow-style: none;">
+      <style>#cf-slider-fc-v7-{{ section.id }}::-webkit-scrollbar { display: none; }</style>
+      
+      {% for i in (1..section.settings.products) %}
+        {% capture img %}product_img_{{i}}{% endcapture %}
+        {% capture title %}product_title_{{i}}{% endcapture %}
+        {% capture price %}product_price_{{i}}{% endcapture %}
+        {% capture link %}product_link_{{i}}{% endcapture %}
+
+        <div class="cf-auto-fc-v7-card" style="flex: 0 0 350px; scroll-snap-align: start; position: relative; background: {{ section.settings.card_bg }}; transform: skewX(-5deg); transition: box-shadow 0.3s, transform 0.3s; box-shadow: 10px 10px 0 rgba(0,0,0,0.05);">
+          
+          <a href="{{ section.settings[link] | default: '#' }}" style="display: block; text-decoration: none;">
+            <!-- Unskew contents inside -->
+            <div style="transform: skewX(5deg);">
+              
+              <div style="padding: 40px; text-align: center; height: 280px; position: relative;">
+                 {% if section.settings[img] %}
+                  <img src="{{ section.settings[img] | image_url: width: 500 }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s; mix-blend-mode: multiply;" class="cf-img-v7" alt="{{ section.settings[title] }}">
+                {% else %}
+                   <div style="width:100%; height:100%; background: #eaeaea;"></div>
+                {% endif %}
+              </div>
+
+              <div style="padding: 0 30px 30px 30px; display: flex; flex-direction: column; align-items: flex-start;">
+                <!-- Category/Brand fake label -->
+                <span style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; color: {{ section.settings.accent_color }}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                  FEATURED PART
+                </span>
+                <h3 style="font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: {{ section.settings.text_color }}; margin: 0 0 15px 0; text-transform: uppercase; line-height: 1.2;">
+                  {{ section.settings[title] | default: 'Suspension Kit' }}
+                </h3>
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                  <span style="font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 800; color: {{ section.settings.text_color }};">
+                    {{ section.settings[price] | default: '$899.00' }}
+                  </span>
+                  
+                  <div class="cf-btn-add-v7" style="width: 40px; height: 40px; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; transform: skewX(-10deg); transition: background 0.2s;">
+                    <div style="transform: skewX(10deg);">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </a>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;700;800&display=swap');
+  
+  .cf-nav-fc-v7:hover { background: {{ section.settings.text_color }} !important; color: {{ section.settings.bg_color }} !important; }
+  .cf-nav-fc-v7-fill:hover { filter: brightness(1.2); }
+  
+  .cf-auto-fc-v7-card:hover { transform: skewX(-5deg) translateY(-10px); box-shadow: 15px 15px 0 rgba(0,0,0,0.1); }
+  .cf-auto-fc-v7-card:hover .cf-img-v7 { transform: scale(1.1); }
+  .cf-auto-fc-v7-card:hover .cf-btn-add-v7 { background: {{ section.settings.accent_color }} !important; }
+
+  @media (max-width: 768px) {
+    .cf-auto-fc-v7-container > div:first-child { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .cf-auto-fc-v7-card { flex: 0 0 300px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Slant Carousel",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#00ffcc"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "PREMIUM UPGRADES"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "POPULAR PARTS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "products",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 6
+    },
+    { "type": "header", "content": "Product 1" },
+    { "type": "image_picker", "id": "product_img_1", "label": "Image" },
+    { "type": "text", "id": "product_title_1", "label": "Title", "default": "Adjustable Coilovers" },
+    { "type": "text", "id": "product_price_1", "label": "Price", "default": "$1,150.00" },
+    { "type": "url", "id": "product_link_1", "label": "Link" },
+    { "type": "header", "content": "Product 2" },
+    { "type": "image_picker", "id": "product_img_2", "label": "Image" },
+    { "type": "text", "id": "product_title_2", "label": "Title", "default": "Cold Air Intake" },
+    { "type": "text", "id": "product_price_2", "label": "Price", "default": "$299.99" },
+    { "type": "url", "id": "product_link_2", "label": "Link" },
+    { "type": "header", "content": "Product 3" },
+    { "type": "image_picker", "id": "product_img_3", "label": "Image" },
+    { "type": "text", "id": "product_title_3", "label": "Title", "default": "Cat-Back Exhaust" },
+    { "type": "text", "id": "product_price_3", "label": "Price", "default": "$850.00" },
+    { "type": "url", "id": "product_link_3", "label": "Link" },
+    { "type": "header", "content": "Product 4" },
+    { "type": "image_picker", "id": "product_img_4", "label": "Image" },
+    { "type": "text", "id": "product_title_4", "label": "Title", "default": "Performance Radiator" },
+    { "type": "text", "id": "product_price_4", "label": "Price", "default": "$450.00" },
+    { "type": "url", "id": "product_link_4", "label": "Link" },
+    { "type": "header", "content": "Product 5" },
+    { "type": "image_picker", "id": "product_img_5", "label": "Image" },
+    { "type": "text", "id": "product_title_5", "label": "Title", "default": "LED Headlight Assembly" },
+    { "type": "text", "id": "product_price_5", "label": "Price", "default": "$320.00" },
+    { "type": "url", "id": "product_link_5", "label": "Link" },
+    { "type": "header", "content": "Product 6" },
+    { "type": "image_picker", "id": "product_img_6", "label": "Image" },
+    { "type": "text", "id": "product_title_6", "label": "Title", "default": "Performance Tires Set" },
+    { "type": "text", "id": "product_price_6", "label": "Price", "default": "$800.00" },
+    { "type": "url", "id": "product_link_6", "label": "Link" }
+  ]
+}
+{% endschema %}

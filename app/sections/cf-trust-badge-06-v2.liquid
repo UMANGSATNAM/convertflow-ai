@@ -1,0 +1,112 @@
+<div class="cf-auto-trust-v2" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px; border-top: 1px solid {{ section.settings.border_color }}; border-bottom: 1px solid {{ section.settings.border_color }};">
+  <div class="cf-auto-trust-v2-container" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: stretch; justify-content: space-between; overflow-x: auto; scrollbar-width: none;">
+    <style>.cf-auto-trust-v2-container::-webkit-scrollbar { display: none; }</style>
+
+    {% for i in (1..section.settings.badges) %}
+      {% capture icon %}badge_icon_{{i}}{% endcapture %}
+      {% capture title %}badge_title_{{i}}{% endcapture %}
+      {% capture text %}badge_text_{{i}}{% endcapture %}
+
+      <div class="cf-auto-trust-v2-item" style="flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px 40px; position: relative; {{ forloop.last == false ? 'border-right: 1px dashed ' | append: section.settings.border_color | append: ';' : '' }}">
+        
+        <!-- Hover highlight overlay -->
+        <div class="cf-trust-hover-v2" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: {{ section.settings.accent_color | color_modify: 'alpha', 0.05 }}; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 1;"></div>
+        
+        <div style="width: 50px; height: 50px; margin-bottom: 15px; color: {{ section.settings.accent_color }}; z-index: 2; display: flex; align-items: center; justify-content: center; transform: scale(1); transition: transform 0.3s;" class="cf-icon-wrap-v2">
+          {{ section.settings[icon] }}
+        </div>
+        
+        <h3 style="font-family: 'Arial Black', Impact, sans-serif; font-size: 16px; font-weight: 900; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: 1px; z-index: 2;">
+          {{ section.settings[title] | default: 'Fast Shipping' }}
+        </h3>
+        
+        <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: {{ section.settings.text_color }}; opacity: 0.7; margin: 0; z-index: 2;">
+          {{ section.settings[text] | default: 'Orders processed in 24h' }}
+        </p>
+
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+<style>
+  .cf-auto-trust-v2-item:hover .cf-trust-hover-v2 { opacity: 1; }
+  .cf-auto-trust-v2-item:hover .cf-icon-wrap-v2 { transform: scale(1.1); }
+
+  @media (max-width: 1024px) {
+    .cf-auto-trust-v2-container { justify-content: flex-start; padding-bottom: 10px; }
+    .cf-auto-trust-v2-item { padding: 20px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Standard Parts Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon Color",
+      "default": "#e60000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Line Color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 4
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"1\" y=\"3\" width=\"15\" height=\"13\"></rect><polygon points=\"16 8 20 8 23 11 23 16 16 16 16 8\"></polygon><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"></circle><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"></circle></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "FREE SHIPPING" },
+    { "type": "text", "id": "badge_text_1", "label": "Text", "default": "On orders over $99" },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"></path></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "SECURE CHECKOUT" },
+    { "type": "text", "id": "badge_text_2", "label": "Text", "default": "Encrypted payment" },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "FITMENT GUARANTEE" },
+    { "type": "text", "id": "badge_text_3", "label": "Text", "default": "Returns accepted within 30 days" },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>" },
+    { "type": "text", "id": "badge_title_4", "label": "Title", "default": "EXPERT SUPPORT" },
+    { "type": "text", "id": "badge_text_4", "label": "Text", "default": "Call us 8am-8pm EST" },
+    { "type": "header", "content": "Badge 5" },
+    { "type": "textarea", "id": "badge_icon_5", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_5", "label": "Title" },
+    { "type": "text", "id": "badge_text_5", "label": "Text" }
+  ]
+}
+{% endschema %}

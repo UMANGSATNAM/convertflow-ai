@@ -1,0 +1,216 @@
+<div class="cf-auto-fc-v6" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px; overflow: hidden;">
+  <div class="cf-auto-fc-v6-container" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: stretch; border: 2px solid {{ section.settings.border_color }};">
+    
+    <!-- Heavy Left Panel -->
+    <div style="flex: 0 0 350px; background: {{ section.settings.accent_color }}; color: #fff; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center; position: relative;">
+      
+      <!-- Faded background element -->
+      <div style="font-family: 'Syne', sans-serif; font-size: 150px; font-weight: 800; color: #fff; opacity: 0.1; position: absolute; top: 0; left: -20px; line-height: 0.8; user-select: none; pointer-events: none;">
+        {{ section.settings.bg_text }}
+      </div>
+
+      <div style="position: relative; z-index: 2;">
+        <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; text-transform: uppercase; margin: 0 0 15px 0; line-height: 1.1; letter-spacing: -1px;">
+          {{ section.settings.title }}
+        </h2>
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; opacity: 0.9; margin: 0 0 40px 0;">
+          {{ section.settings.subtitle }}
+        </p>
+        
+        {% if section.settings.show_btn %}
+          <a href="{{ section.settings.btn_link }}" class="cf-btn-fc-v6" style="display: inline-flex; align-items: center; justify-content: space-between; width: 100%; background: #000; color: #fff; padding: 15px 20px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; text-transform: uppercase; text-decoration: none; transition: background 0.2s;">
+            <span>{{ section.settings.btn_text }}</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Horizontal List Setup -->
+    <div style="flex: 1; background: {{ section.settings.card_bg }}; display: flex; flex-direction: column;">
+      
+      {% for i in (1..section.settings.products) %}
+        {% capture img %}product_img_{{i}}{% endcapture %}
+        {% capture title %}product_title_{{i}}{% endcapture %}
+        {% capture price %}product_price_{{i}}{% endcapture %}
+        {% capture link %}product_link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-fc-v6-item" style="flex: 1; display: flex; align-items: center; padding: 20px 40px; border-bottom: 1px solid {{ section.settings.border_color }}; text-decoration: none; transition: background 0.2s;">
+          
+          <div style="width: 100px; height: 100px; flex: 0 0 auto; background: #f0f0f0; margin-right: 30px; display: flex; align-items: center; justify-content: center;">
+            {% if section.settings[img] %}
+              <img src="{{ section.settings[img] | image_url: width: 250 }}" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply;" alt="{{ section.settings[title] }}">
+            {% endif %}
+          </div>
+          
+          <div style="flex: 1;">
+            <h3 style="font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: {{ section.settings.text_color }}; margin: 0 0 5px 0; text-transform: uppercase;">
+              {{ section.settings[title] | default: 'Suspension Component' }}
+            </h3>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: {{ section.settings.accent_color }}; font-weight: 700; text-transform: uppercase;">In Stock</span>
+              <span style="width: 4px; height: 4px; border-radius: 50%; background: {{ section.settings.border_color }};"></span>
+              <span style="font-family: 'Inter', sans-serif; font-size: 13px; color: {{ section.settings.text_color }}; opacity: 0.6;">Ships in 24h</span>
+            </div>
+          </div>
+
+          <div style="font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: {{ section.settings.text_color }}; margin-left: 20px;">
+            {{ section.settings[price] | default: '$450.00' }}
+          </div>
+
+          <!-- Arrow Icon -->
+          <div class="cf-arrow-v6" style="margin-left: 40px; color: {{ section.settings.text_color }}; opacity: 0.2; transition: all 0.2s;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+
+        </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;600;700&display=swap');
+  
+  .cf-btn-fc-v6:hover { background: #222 !important; }
+  .cf-auto-fc-v6-item:last-child { border-bottom: none; }
+  .cf-auto-fc-v6-item:hover { background: rgba(0,0,0,0.02); }
+  .cf-auto-fc-v6-item:hover .cf-arrow-v6 { opacity: 1; transform: translateX(5px); color: {{ section.settings.accent_color }}; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-fc-v6-container { flex-direction: column; }
+    .cf-auto-fc-v6-container > div:first-child { flex: none; width: 100%; border-right: none; border-bottom: 2px solid {{ section.settings.border_color }}; }
+    .cf-auto-fc-v6-item { padding: 20px; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-fc-v6-item { flex-direction: column; text-align: center; gap: 15px; }
+    .cf-auto-fc-v6-item > div:first-child { margin-right: 0; }
+    .cf-auto-fc-v6-item > div:nth-child(3) { margin-left: 0; }
+    .cf-auto-fc-v6-item > div:last-child { display: none; }
+    .cf-auto-fc-v6-item > div:nth-child(2) > div { justify-content: center; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth List Block",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "List Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Sidebar Banner Color",
+      "default": "#ea0000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "bg_text",
+      "label": "Large Background Text",
+      "default": "PRO"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "PRO-SERIES COMPONENTS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 42
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Engineered for maximum performance and durability on the track."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_btn",
+      "label": "Show Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "VIEW ENTIRE SERIES"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "products",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 4
+    },
+    { "type": "header", "content": "Product 1" },
+    { "type": "image_picker", "id": "product_img_1", "label": "Image" },
+    { "type": "text", "id": "product_title_1", "label": "Title", "default": "Adjustable Control Arms" },
+    { "type": "text", "id": "product_price_1", "label": "Price", "default": "$350.00" },
+    { "type": "url", "id": "product_link_1", "label": "Link" },
+    { "type": "header", "content": "Product 2" },
+    { "type": "image_picker", "id": "product_img_2", "label": "Image" },
+    { "type": "text", "id": "product_title_2", "label": "Title", "default": "Sway Bar Kit Front/Rear" },
+    { "type": "text", "id": "product_price_2", "label": "Price", "default": "$480.00" },
+    { "type": "url", "id": "product_link_2", "label": "Link" },
+    { "type": "header", "content": "Product 3" },
+    { "type": "image_picker", "id": "product_img_3", "label": "Image" },
+    { "type": "text", "id": "product_title_3", "label": "Title", "default": "Strut Tower Brace" },
+    { "type": "text", "id": "product_price_3", "label": "Price", "default": "$195.00" },
+    { "type": "url", "id": "product_link_3", "label": "Link" },
+    { "type": "header", "content": "Product 4" },
+    { "type": "image_picker", "id": "product_img_4", "label": "Image" },
+    { "type": "text", "id": "product_title_4", "label": "Title", "default": "Performance Bushing set" },
+    { "type": "text", "id": "product_price_4", "label": "Price", "default": "$125.00" },
+    { "type": "url", "id": "product_link_4", "label": "Link" }
+  ]
+}
+{% endschema %}

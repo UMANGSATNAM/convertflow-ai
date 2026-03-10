@@ -1,0 +1,108 @@
+<div class="cf-auto-trust-v10" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v10-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat({{ section.settings.badges }}, 1fr); gap: 15px;">
+    
+    {% for i in (1..section.settings.badges) %}
+      {% capture icon %}badge_icon_{{i}}{% endcapture %}
+      {% capture title %}badge_title_{{i}}{% endcapture %}
+
+      <div class="cf-auto-trust-v10-item" style="display: flex; align-items: center; justify-content: center; background: {{ section.settings.card_bg }}; padding: 20px; border: 1px dashed {{ section.settings.border_color }}; color: {{ section.settings.text_color }}; text-decoration: none; transition: all 0.2s;">
+        
+        <div style="color: {{ section.settings.accent_color }}; margin-right: 15px; display: flex;" class="cf-icon-v10">
+          {{ section.settings[icon] | default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24"><polyline points="20 6 9 17 4 12"></polyline></svg>' }}
+        </div>
+        
+        <div style="font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;">
+          {{ section.settings[title] | default: 'Trusted Feature' }}
+        </div>
+
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+  
+  .cf-auto-trust-v10-item:hover { background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }} !important; border-style: solid; }
+  .cf-auto-trust-v10-item:hover .cf-icon-v10 { color: {{ section.settings.bg_color }} !important; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-trust-v10-container { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 480px) {
+    .cf-auto-trust-v10-container { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Dashed Label Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Label Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon Color",
+      "default": "#ea0000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Dashed Border",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 4
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"></polygon></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "SAME DAY SHIPPING" },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"16\"></line><line x1=\"8\" y1=\"12\" x2=\"16\" y2=\"12\"></line></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "LIFETIME WARRANTY" },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><rect x=\"1\" y=\"3\" width=\"15\" height=\"13\"></rect><polygon points=\"16 8 20 8 23 11 23 16 16 16 16 8\"></polygon><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"></circle><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"></circle></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "FREE RETURNS" },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"></path><polyline points=\"22 4 12 14.01 9 11.01\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_4", "label": "Title", "default": "VERIFIED FITMENT" },
+    { "type": "header", "content": "Badge 5" },
+    { "type": "textarea", "id": "badge_icon_5", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_5", "label": "Title" }
+  ]
+}
+{% endschema %}

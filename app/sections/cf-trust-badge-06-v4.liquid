@@ -1,0 +1,104 @@
+<div class="cf-auto-trust-v4" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v4-container" style="max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+    
+    {% for i in (1..section.settings.badges) %}
+      {% capture icon %}badge_icon_{{i}}{% endcapture %}
+      {% capture title %}badge_title_{{i}}{% endcapture %}
+
+      <div class="cf-auto-trust-v4-item" style="display: flex; align-items: center; background: {{ section.settings.card_bg }}; padding: 15px 30px; border-radius: 40px; border: 2px solid {{ section.settings.border_color }}; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s;">
+        
+        <div style="color: {{ section.settings.accent_color }}; margin-right: 15px; display: flex;" class="cf-icon-v4">
+          {{ section.settings[icon] | default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24"><polyline points="20 6 9 17 4 12"></polyline></svg>' }}
+        </div>
+        
+        <div style="font-family: 'Exo 2', sans-serif; font-size: 16px; font-weight: 700; color: {{ section.settings.text_color }}; text-transform: uppercase; letter-spacing: 1px;">
+          {{ section.settings[title] | default: 'Trusted Feature' }}
+        </div>
+
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+  
+  .cf-auto-trust-v4-item:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: {{ section.settings.accent_color }}; }
+  .cf-auto-trust-v4-item:hover .cf-icon-v4 { transform: scale(1.1); }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Pill Badge Row",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Pill Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon/Hover Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "transparent"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 4
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 8v4l3 3\"></path></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "FAST FULFILLMENT" },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"></path></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "100% SECURE" },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><polyline points=\"22 12 18 12 15 21 9 3 6 12 2 12\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "PERFORMANCE GUARANTEE" },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line><polyline points=\"10 9 9 9 8 9\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_4", "label": "Title", "default": "OEM SPECS" },
+    { "type": "header", "content": "Badge 5" },
+    { "type": "textarea", "id": "badge_icon_5", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_5", "label": "Title" },
+    { "type": "header", "content": "Badge 6" },
+    { "type": "textarea", "id": "badge_icon_6", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_6", "label": "Title" }
+  ]
+}
+{% endschema %}

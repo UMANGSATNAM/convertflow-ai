@@ -1,0 +1,147 @@
+<div class="cf-auto-trust-v7" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v7-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 40px;">
+      <h2 style="font-family: 'Arial Black', Impact, sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 900; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: -1px;">
+        {{ section.settings.title }}
+      </h2>
+      <div style="width: 60px; height: 5px; background: {{ section.settings.accent_color }};"></div>
+    </div>
+
+    <div class="cf-auto-trust-v7-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.badges }}, 1fr); gap: 30px;">
+      
+      {% for i in (1..section.settings.badges) %}
+        {% capture icon %}badge_icon_{{i}}{% endcapture %}
+        {% capture title %}badge_title_{{i}}{% endcapture %}
+        {% capture text %}badge_text_{{i}}{% endcapture %}
+
+        <div class="cf-auto-trust-v7-item" style="background: {{ section.settings.card_bg }}; border: 2px solid {{ section.settings.border_color }}; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: border-color 0.3s, transform 0.3s; box-shadow: 8px 8px 0 rgba(0,0,0,0.05);">
+          
+          <div style="width: 50px; height: 50px; background: {{ section.settings.accent_color }}; color: #fff; display: flex; align-items: center; justify-content: center; position: absolute; top: -25px; border: 4px solid {{ section.settings.bg_color }}; transition: transform 0.3s;" class="cf-icon-v7">
+            {{ section.settings[icon] | replace: 'width="24"', 'width="24"' | replace: 'height="24"', 'height="24"' }}
+          </div>
+          
+          <h3 style="font-family: 'Arial Black', Impact, sans-serif; font-size: 18px; font-weight: 900; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 20px 0 10px 0;">
+            {{ section.settings[title] | default: 'Free Delivery' }}
+          </h3>
+          
+          <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; color: {{ section.settings.text_color }}; opacity: 0.8; margin: 0; line-height: 1.4;">
+            {{ section.settings[text] | default: 'On all orders over $150.' }}
+          </p>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .cf-auto-trust-v7-item:hover { transform: translateY(-5px); border-color: {{ section.settings.accent_color }}; }
+  .cf-auto-trust-v7-item:hover .cf-icon-v7 { transform: rotate(10deg) scale(1.1); }
+
+  @media (max-width: 1024px) {
+    .cf-auto-trust-v7-grid { grid-template-columns: repeat(2, 1fr) !important; padding-top: 25px; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-trust-v7-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Racing Flag Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#d90000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "WHY CHOOSE US"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 4
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "FAST FULFILLMENT" },
+    { "type": "text", "id": "badge_text_1", "label": "Text", "default": "Same day shipping on orders placed before 2PM." },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"></path><polyline points=\"22 4 12 14.01 9 11.01\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "100% FIT GUARANTEE" },
+    { "type": "text", "id": "badge_text_2", "label": "Text", "default": "Use our vehicle selector to ensure perfect fitment." },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"></rect><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"></path></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "SECURE CHECKOUT" },
+    { "type": "text", "id": "badge_text_3", "label": "Text", "default": "Industry leading encryption for all payments." },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"></polygon></svg>" },
+    { "type": "text", "id": "badge_title_4", "label": "Title", "default": "TOP RATED SUPPORT" },
+    { "type": "text", "id": "badge_text_4", "label": "Text", "default": "Real gearheads ready to help you out." },
+    { "type": "header", "content": "Badge 5" },
+    { "type": "textarea", "id": "badge_icon_5", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_5", "label": "Title" },
+    { "type": "text", "id": "badge_text_5", "label": "Text" },
+    { "type": "header", "content": "Badge 6" },
+    { "type": "textarea", "id": "badge_icon_6", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_6", "label": "Title" },
+    { "type": "text", "id": "badge_text_6", "label": "Text" }
+  ]
+}
+{% endschema %}

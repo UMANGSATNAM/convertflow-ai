@@ -1,0 +1,152 @@
+<div class="cf-auto-trust-v8" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v8-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 50px;">
+      <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: -1px;">
+        {{ section.settings.title }}
+      </h2>
+      <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.7; margin: 0; max-width: 600px;">
+        {{ section.settings.subtitle }}
+      </p>
+    </div>
+
+    <!-- Minimal Line Icons Grid -->
+    <div class="cf-auto-trust-v8-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.badges }}, 1fr); gap: 40px; border-top: 2px solid {{ section.settings.border_color }}; padding-top: 40px;">
+      
+      {% for i in (1..section.settings.badges) %}
+        {% capture icon %}badge_icon_{{i}}{% endcapture %}
+        {% capture title %}badge_title_{{i}}{% endcapture %}
+        {% capture text %}badge_text_{{i}}{% endcapture %}
+
+        <div class="cf-auto-trust-v8-item" style="display: flex; gap: 20px; align-items: flex-start;">
+          
+          <div style="color: {{ section.settings.accent_color }}; flex: 0 0 40px; transition: transform 0.3s;" class="cf-icon-v8">
+            {{ section.settings[icon] | default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="40" height="40"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>' }}
+          </div>
+          
+          <div>
+            <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0;">
+              {{ section.settings[title] | default: 'Feature' }}
+            </h3>
+            <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ section.settings.text_color }}; opacity: 0.7; margin: 0; line-height: 1.5;">
+              {{ section.settings[text] | default: 'Short description goes here.' }}
+            </p>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400&display=swap');
+  
+  .cf-auto-trust-v8-item:hover .cf-icon-v8 { transform: scale(1.1) translateX(-5px); }
+
+  @media (max-width: 900px) {
+    .cf-auto-trust-v8-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-trust-v8-grid { grid-template-columns: 1fr; gap: 30px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Line Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon Color",
+      "default": "#00ffcc"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Top Line Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "THE PRO STANDARD"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 40
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Everything you need to upgrade, build, and maintain."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 3
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" width=\"40\" height=\"40\"><rect x=\"2\" y=\"7\" width=\"20\" height=\"14\" rx=\"2\" ry=\"2\"></rect><path d=\"M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16\"></path></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "PRO GRADE" },
+    { "type": "text", "id": "badge_text_1", "label": "Text", "default": "Tested and used by professionals." },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" width=\"40\" height=\"40\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"></path></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "GUARANTEED" },
+    { "type": "text", "id": "badge_text_2", "label": "Text", "default": "Covered by our iron-clad warranty." },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" width=\"40\" height=\"40\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "FAST DELIVERY" },
+    { "type": "text", "id": "badge_text_3", "label": "Text", "default": "Get back on the road sooner." },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_4", "label": "Title" },
+    { "type": "text", "id": "badge_text_4", "label": "Text" },
+    { "type": "header", "content": "Badge 5" },
+    { "type": "textarea", "id": "badge_icon_5", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_5", "label": "Title" },
+    { "type": "text", "id": "badge_text_5", "label": "Text" },
+    { "type": "header", "content": "Badge 6" },
+    { "type": "textarea", "id": "badge_icon_6", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_6", "label": "Title" },
+    { "type": "text", "id": "badge_text_6", "label": "Text" }
+  ]
+}
+{% endschema %}

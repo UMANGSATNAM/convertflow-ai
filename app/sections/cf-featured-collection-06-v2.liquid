@@ -1,0 +1,226 @@
+<div class="cf-auto-fc-v2" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-fc-v2-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+      <div>
+        <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: -1px;">
+          {{ section.settings.title }}
+        </h2>
+        <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.7; margin: 0; font-weight: 400;">
+          {{ section.settings.subtitle }}
+        </p>
+      </div>
+      {% if section.settings.show_view_all %}
+        <a href="{{ section.settings.view_all_link }}" class="cf-btn-fc-v2" style="display: inline-flex; align-items: center; gap: 8px; background: {{ section.settings.accent_color }}; color: #000; padding: 12px 25px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; text-transform: uppercase; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;">
+          View Catalog <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="cf-auto-fc-v2-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 30px;">
+      
+      {% for i in (1..section.settings.products) %}
+        {% capture img %}product_img_{{i}}{% endcapture %}
+        {% capture title %}product_title_{{i}}{% endcapture %}
+        {% capture price %}product_price_{{i}}{% endcapture %}
+        {% capture old_price %}product_old_price_{{i}}{% endcapture %}
+        {% capture link %}product_link_{{i}}{% endcapture %}
+        {% capture badge %}product_badge_{{i}}{% endcapture %}
+
+        <div class="cf-auto-fc-v2-card" style="background: {{ section.settings.card_bg }}; border: 1px solid {{ section.settings.border_color }}; position: relative; transition: border-color 0.3s, transform 0.3s; display: flex; flex-direction: column;">
+          
+          <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; display: block; position: relative;">
+            <div style="padding-top: 100%; position: relative; background: #fafafa; overflow: hidden;">
+              {% if section.settings[img] %}
+                <img src="{{ section.settings[img] | image_url: width: 600 }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" class="cf-img-fc-v2" alt="{{ section.settings[title] }}">
+              {% else %}
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #eaeaea; display: flex; align-items: center; justify-content: center;">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                </div>
+              {% endif %}
+            </div>
+            
+            {% if section.settings[badge] != blank %}
+              <div style="position: absolute; top: 15px; left: 15px; background: {{ section.settings.accent_color }}; color: #000; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; letter-spacing: 1px;">
+                {{ section.settings[badge] }}
+              </div>
+            {% endif %}
+          </a>
+
+          <div style="padding: 25px 20px; flex: 1; display: flex; flex-direction: column;">
+            <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; color: inherit; flex: 1;">
+              <h3 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: {{ section.settings.text_color }}; margin: 0 0 10px 0; line-height: 1.4;">
+                {{ section.settings[title] | default: 'Performance Component' }}
+              </h3>
+            </a>
+            
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+              <span style="font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: {{ section.settings.text_color }};">
+                {{ section.settings[price] | default: '$299.99' }}
+              </span>
+              {% if section.settings[old_price] != blank %}
+                <span style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ section.settings.text_color }}; opacity: 0.5; text-decoration: line-through;">
+                  {{ section.settings[old_price] }}
+                </span>
+              {% endif %}
+            </div>
+
+            <button class="cf-btn-add-v2" style="width: 100%; background: transparent; color: {{ section.settings.text_color }}; border: 1px solid {{ section.settings.text_color }}; padding: 12px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s;">
+              Add to Cart
+            </button>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Inter:wght@400;600&display=swap');
+  
+  .cf-btn-fc-v2:hover { transform: translateY(-2px); box-shadow: 0 5px 15px {{ section.settings.accent_color | color_modify: 'alpha', 0.4 }}; }
+  .cf-auto-fc-v2-card:hover { border-color: {{ section.settings.text_color }}; transform: translateY(-5px); }
+  .cf-auto-fc-v2-card:hover .cf-img-fc-v2 { transform: scale(1.05); }
+  .cf-btn-add-v2:hover { background: {{ section.settings.text_color }}; color: {{ section.settings.card_bg }}; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-fc-v2-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 20px; }
+  }
+  @media (max-width: 768px) {
+    .cf-auto-fc-v2-container > div:first-child { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .cf-auto-fc-v2-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 15px; }
+  }
+  @media (max-width: 480px) {
+    .cf-auto-fc-v2-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Product Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#00ffcc"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "NEW ARRIVALS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The latest performance parts for your build."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Button",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 4
+    },
+    { "type": "header", "content": "Product 1" },
+    { "type": "image_picker", "id": "product_img_1", "label": "Image" },
+    { "type": "text", "id": "product_title_1", "label": "Title", "default": "Cold Air Intake System Series 4" },
+    { "type": "text", "id": "product_price_1", "label": "Price", "default": "$349.99" },
+    { "type": "text", "id": "product_old_price_1", "label": "Compare Price" },
+    { "type": "text", "id": "product_badge_1", "label": "Badge", "default": "NEW" },
+    { "type": "url", "id": "product_link_1", "label": "Link" },
+    { "type": "header", "content": "Product 2" },
+    { "type": "image_picker", "id": "product_img_2", "label": "Image" },
+    { "type": "text", "id": "product_title_2", "label": "Title", "default": "Performance Exhaust Muffler" },
+    { "type": "text", "id": "product_price_2", "label": "Price", "default": "$189.00" },
+    { "type": "text", "id": "product_old_price_2", "label": "Compare Price", "default": "$220.00" },
+    { "type": "text", "id": "product_badge_2", "label": "Badge", "default": "SALE" },
+    { "type": "url", "id": "product_link_2", "label": "Link" },
+    { "type": "header", "content": "Product 3" },
+    { "type": "image_picker", "id": "product_img_3", "label": "Image" },
+    { "type": "text", "id": "product_title_3", "label": "Title", "default": "Coilover Suspension Kit" },
+    { "type": "text", "id": "product_price_3", "label": "Price", "default": "$950.00" },
+    { "type": "text", "id": "product_old_price_3", "label": "Compare Price" },
+    { "type": "text", "id": "product_badge_3", "label": "Badge" },
+    { "type": "url", "id": "product_link_3", "label": "Link" },
+    { "type": "header", "content": "Product 4" },
+    { "type": "image_picker", "id": "product_img_4", "label": "Image" },
+    { "type": "text", "id": "product_title_4", "label": "Title", "default": "Stage 2 Tuning Module" },
+    { "type": "text", "id": "product_price_4", "label": "Price", "default": "$499.00" },
+    { "type": "text", "id": "product_old_price_4", "label": "Compare Price" },
+    { "type": "text", "id": "product_badge_4", "label": "Badge", "default": "BEST SELLER" },
+    { "type": "url", "id": "product_link_4", "label": "Link" }
+  ]
+}
+{% endschema %}

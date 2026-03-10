@@ -17,7 +17,13 @@
 <header class="cf-head-06">
   <div class="cf-head-06-inner">
     <div class="cf-head-06-left">
-      <a href="/" class="cf-head-06-logo">{{ section.settings.logo_text }}</a>
+      <a href="/" class="cf-head-06-logo" style="display: flex; align-items: center;">
+        {% if section.settings.logo_image %}
+          <img src="{{ section.settings.logo_image }}" alt="{{ section.settings.logo_text }}" style="max-height: {{ section.settings.logo_size | times: 1.5 }}px; width: auto; max-width: 200px;">
+        {% else %}
+          {{ section.settings.logo_text }}
+        {% endif %}
+      </a>
     </div>
     <div class="cf-head-06-menu">
       <a href="{{ section.settings.link_1_url }}" class="cf-head-06-link">{{ section.settings.link_1 }}</a>
@@ -39,6 +45,7 @@
 {
   "name": "06 · Automotive Header",
   "settings": [
+    {"type":"image_picker","id":"logo_image","label":"Logo Image (URL for now)","info":"Paste an image URL here"},
     {"type":"text","id":"logo_text","label":"Logo Text","default":"TORQUE"},
     {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":56,"step":2,"default":36},
     {"type":"text","id":"link_1","label":"Link 1","default":"Parts"},

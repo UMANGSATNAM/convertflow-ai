@@ -1,0 +1,209 @@
+<div class="cf-auto-fc-v4" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-fc-v4-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 50px;">
+      <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: -0.5px;">
+        {{ section.settings.title }}
+      </h2>
+      <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid {{ section.settings.accent_color }}; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+        <div style="width: 8px; height: 8px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+      </div>
+    </div>
+
+    <!-- Tech/Precision Grid -->
+    <div class="cf-auto-fc-v4-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 1px; background: {{ section.settings.border_color }}; border: 1px solid {{ section.settings.border_color }};">
+      
+      {% for i in (1..section.settings.products) %}
+        {% capture img %}product_img_{{i}}{% endcapture %}
+        {% capture title %}product_title_{{i}}{% endcapture %}
+        {% capture price %}product_price_{{i}}{% endcapture %}
+        {% capture spec %}product_spec_{{i}}{% endcapture %}
+        {% capture link %}product_link_{{i}}{% endcapture %}
+
+        <div class="cf-auto-fc-v4-card" style="background: {{ section.settings.bg_color }}; position: relative; display: flex; flex-direction: column; overflow: hidden; group">
+          
+          <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; display: block; position: relative; padding-top: 80%;">
+             <!-- Crosshairs overlay -->
+            <div style="position: absolute; top: 20px; left: 20px; width: 15px; height: 15px; border-top: 2px solid {{ section.settings.accent_color }}; border-left: 2px solid {{ section.settings.accent_color }}; z-index: 2; opacity: 0;" class="cf-xhair"></div>
+            <div style="position: absolute; bottom: 20px; right: 20px; width: 15px; height: 15px; border-bottom: 2px solid {{ section.settings.accent_color }}; border-right: 2px solid {{ section.settings.accent_color }}; z-index: 2; opacity: 0;" class="cf-xhair"></div>
+
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 40px;">
+              {% if section.settings[img] %}
+                <img src="{{ section.settings[img] | image_url: width: 600 }}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1)); transition: transform 0.5s;" class="cf-img-fc-v4" alt="{{ section.settings[title] }}">
+              {% else %}
+                <div style="width: 100%; height: 100%; background: #eee;"></div>
+              {% endif %}
+            </div>
+          </a>
+
+          <div style="padding: 20px 30px 40px 30px; text-align: center; flex: 1; display: flex; flex-direction: column;">
+            {% if section.settings[spec] != blank %}
+              <span style="font-family: 'Inter', sans-serif; font-size: 11px; color: {{ section.settings.text_color }}; opacity: 0.5; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">
+                {{ section.settings[spec] }}
+              </span>
+            {% endif %}
+            
+            <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; color: inherit; flex: 1;">
+              <h3 style="font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: {{ section.settings.text_color }}; margin: 0 0 15px 0; text-transform: uppercase;">
+                {{ section.settings[title] | default: 'Precision Part Name' }}
+              </h3>
+            </a>
+            
+            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid {{ section.settings.border_color }}; padding-top: 20px; margin-top: auto;">
+              <span style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; color: {{ section.settings.text_color }};">
+                {{ section.settings[price] | default: '$149.00' }}
+              </span>
+              <button style="background: transparent; border: none; padding: 0; cursor: pointer; color: {{ section.settings.text_color }}; transition: color 0.2s;" class="cf-btn-icon-v4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;600&display=swap');
+  
+  .cf-auto-fc-v4-card:hover .cf-img-fc-v4 { transform: translateY(-10px); }
+  .cf-auto-fc-v4-card:hover .cf-btn-icon-v4 { color: {{ section.settings.accent_color }} !important; }
+  .cf-auto-fc-v4-card:hover .cf-xhair { opacity: 1 !important; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-fc-v4-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-fc-v4-grid { grid-template-columns: 1fr !important; }
+    .cf-auto-fc-v4-grid { border: none; gap: 20px; background: transparent !important; }
+    .cf-auto-fc-v4-card { border: 1px solid {{ section.settings.border_color }}; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Precision Tech Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#0052cc"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Grid Lines",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "OEM REPLACEMENTS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 8
+    },
+    { "type": "header", "content": "Product 1" },
+    { "type": "image_picker", "id": "product_img_1", "label": "Image" },
+    { "type": "text", "id": "product_spec_1", "label": "Spec/SKU", "default": "SKU: 902-12X" },
+    { "type": "text", "id": "product_title_1", "label": "Title", "default": "Fuel Injector Assembly" },
+    { "type": "text", "id": "product_price_1", "label": "Price", "default": "$115.00" },
+    { "type": "url", "id": "product_link_1", "label": "Link" },
+    { "type": "header", "content": "Product 2" },
+    { "type": "image_picker", "id": "product_img_2", "label": "Image" },
+    { "type": "text", "id": "product_spec_2", "label": "Spec/SKU", "default": "SKU: 44-77A" },
+    { "type": "text", "id": "product_title_2", "label": "Title", "default": "Ignition Coil Pack" },
+    { "type": "text", "id": "product_price_2", "label": "Price", "default": "$85.00" },
+    { "type": "url", "id": "product_link_2", "label": "Link" },
+    { "type": "header", "content": "Product 3" },
+    { "type": "image_picker", "id": "product_img_3", "label": "Image" },
+    { "type": "text", "id": "product_spec_3", "label": "Spec/SKU", "default": "O2-SENSOR" },
+    { "type": "text", "id": "product_title_3", "label": "Title", "default": "Oxygen Sensor (Front)" },
+    { "type": "text", "id": "product_price_3", "label": "Price", "default": "$65.00" },
+    { "type": "url", "id": "product_link_3", "label": "Link" },
+    { "type": "header", "content": "Product 4" },
+    { "type": "image_picker", "id": "product_img_4", "label": "Image" },
+    { "type": "text", "id": "product_spec_4", "label": "Spec/SKU", "default": "ALT-120A" },
+    { "type": "text", "id": "product_title_4", "label": "Title", "default": "Alternator 120 Amp" },
+    { "type": "text", "id": "product_price_4", "label": "Price", "default": "$240.00" },
+    { "type": "url", "id": "product_link_4", "label": "Link" },
+    { "type": "header", "content": "Product 5" },
+    { "type": "image_picker", "id": "product_img_5", "label": "Image" },
+    { "type": "text", "id": "product_spec_5", "label": "Spec/SKU", "default": "W-PUMP-X" },
+    { "type": "text", "id": "product_title_5", "label": "Title", "default": "Water Pump Key" },
+    { "type": "text", "id": "product_price_5", "label": "Price", "default": "$95.00" },
+    { "type": "url", "id": "product_link_5", "label": "Link" },
+    { "type": "header", "content": "Product 6" },
+    { "type": "image_picker", "id": "product_img_6", "label": "Image" },
+    { "type": "text", "id": "product_spec_6", "label": "Spec/SKU", "default": "BELT-SR" },
+    { "type": "text", "id": "product_title_6", "label": "Title", "default": "Serpentine Drive Belt" },
+    { "type": "text", "id": "product_price_6", "label": "Price", "default": "$28.00" },
+    { "type": "url", "id": "product_link_6", "label": "Link" },
+    { "type": "header", "content": "Product 7" },
+    { "type": "image_picker", "id": "product_img_7", "label": "Image" },
+    { "type": "text", "id": "product_spec_7", "label": "Spec/SKU", "default": "BRK-PAD" },
+    { "type": "text", "id": "product_title_7", "label": "Title", "default": "Ceramic Brake Pads" },
+    { "type": "text", "id": "product_price_7", "label": "Price", "default": "$55.00" },
+    { "type": "url", "id": "product_link_7", "label": "Link" },
+    { "type": "header", "content": "Product 8" },
+    { "type": "image_picker", "id": "product_img_8", "label": "Image" },
+    { "type": "text", "id": "product_spec_8", "label": "Spec/SKU", "default": "FLTR-OIL" },
+    { "type": "text", "id": "product_title_8", "label": "Title", "default": "Premium Oil Filter" },
+    { "type": "text", "id": "product_price_8", "label": "Price", "default": "$12.99" },
+    { "type": "url", "id": "product_link_8", "label": "Link" }
+  ]
+}
+{% endschema %}

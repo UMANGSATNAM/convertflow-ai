@@ -20,6 +20,7 @@ export const action = async ({ request }) => {
 
   const blocksJson = formData.get("blocks"); // Optional array of full page blocks
   const sectionId = formData.get("sectionId"); // Used for single template preview
+  const categoryId = formData.get("categoryId"); // Used for fetching a grid of templates
   const activeBlockId = formData.get("activeBlockId");
 
   let bodyHtml = '';
@@ -37,8 +38,20 @@ export const action = async ({ request }) => {
     try { settings = JSON.parse(formData.get("settings") || "{}"); } catch { }
     const blockId = formData.get("blockId") || 'preview-section';
     bodyHtml = renderSectionHtml(sectionId, settings, blockId);
+  } else if (categoryId) {
+    // Render MULTIPLE TEMPLATES for Visual Grid Picker
+    const { SECTION_FILES } = require("../lib/constants");
+    const templates = Object.entries(SECTION_FILES).filter(([_, meta]) => meta.category === categoryId);
+
+    const results = {};
+    for (const [id, _] of templates) {
+      // For grid previews we use empty settings to rely on placeholders
+      results[id] = renderSectionHtml(id, {}, 'preview-grid-' + id);
+    }
+    // Return early with the JSON map, no full document needed for the grid snippets
+    return json({ templates: results });
   } else {
-    return json({ error: "Missing blocks or sectionId" }, { status: 400 });
+    return json({ error: "Missing blocks, sectionId, or categoryId" }, { status: 400 });
   }
 
   const interactiveScript = `
@@ -51,8 +64,18 @@ export const action = async ({ request }) => {
       .shopify-section { outline: 2px solid transparent; transition: outline 0.15s; position: relative; }
       .shopify-section:hover { outline: 2px solid #2c6ecb; outline-offset: -2px; cursor: pointer; z-index: 10; }
       .shopify-section.active { outline: 3px solid #005bd3; outline-offset: -3px; z-index: 11; }
+      
+      /* Disable links and forms in the preview iframe to prevent Shopify routing errors */
+      a, form, button { pointer-events: none !important; }
     </style>
     <script>
+      // Cancel all click events on links to prevent 404 No Route Matches error
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('a') || e.target.closest('form')) {
+          e.preventDefault();
+        }
+      }, true);
+
       // Highlight active block if provided
       const activeId = '${activeBlockId || ''}';
       if (activeId) {

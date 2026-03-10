@@ -1,0 +1,228 @@
+<div class="cf-auto-fc-v8" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-fc-v8-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 50px; text-align: center;">
+      <!-- Diamond Icon -->
+      <div style="width: 20px; height: 20px; background: {{ section.settings.accent_color }}; transform: rotate(45deg); margin-bottom: 20px;"></div>
+      
+      <h2 style="font-family: 'Exo 2', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: 2px;">
+        {{ section.settings.title }}
+      </h2>
+      <p style="font-family: 'Exo 2', sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.8; margin: 0;">
+        {{ section.settings.subtitle }}
+      </p>
+    </div>
+
+    <!-- 2 Column Layout with Image Breakouts -->
+    <div class="cf-auto-fc-v8-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 40px;">
+      
+      {% for i in (1..section.settings.products) %}
+        {% capture img %}product_img_{{i}}{% endcapture %}
+        {% capture title %}product_title_{{i}}{% endcapture %}
+        {% capture price %}product_price_{{i}}{% endcapture %}
+        {% capture link %}product_link_{{i}}{% endcapture %}
+        {% capture type_label %}product_type_{{i}}{% endcapture %}
+
+        <div class="cf-auto-fc-v8-item" style="display: flex; gap: 30px; align-items: center; border-bottom: 1px solid {{ section.settings.border_color }}; padding-bottom: 30px;">
+          
+          <a href="{{ section.settings[link] | default: '#' }}" style="width: 150px; height: 150px; flex: 0 0 auto; border-radius: 50%; border: 4px solid {{ section.settings.card_bg }}; box-shadow: 0 10px 20px rgba(0,0,0,0.1); overflow: hidden; position: relative; background: #fff; z-index: 2;">
+            {% if section.settings[img] %}
+              <img src="{{ section.settings[img] | image_url: width: 300 }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s;" class="cf-img-v8" alt="{{ section.settings[title] }}">
+            {% else %}
+               <div style="width:100%; height:100%; background: #eaeaea;"></div>
+            {% endif %}
+          </a>
+
+          <div style="flex: 1;">
+            <div style="font-family: 'Exo 2', sans-serif; font-size: 12px; font-weight: 700; color: {{ section.settings.accent_color }}; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;">
+              {{ section.settings[type_label] | default: 'Part Category' }}
+            </div>
+            <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; color: inherit;">
+              <h3 style="font-family: 'Exo 2', sans-serif; font-size: 22px; font-weight: 800; color: {{ section.settings.text_color }}; margin: 0 0 10px 0; text-transform: uppercase; line-height: 1.2;">
+                {{ section.settings[title] | default: 'Suspension Kit Assembly' }}
+              </h3>
+            </a>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+               <span style="font-family: 'Exo 2', sans-serif; font-size: 20px; font-weight: 700; color: {{ section.settings.text_color }};">
+                {{ section.settings[price] | default: '$450.00' }}
+              </span>
+              <a href="{{ section.settings[link] | default: '#' }}" class="cf-add-v8" style="min-width: 40px; height: 40px; border-radius: 20px; background: transparent; border: 2px solid {{ section.settings.text_color }}; color: {{ section.settings.text_color }}; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s; padding: 0 15px; font-family: 'Exo 2', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase;">
+                <span class="cf-add-text" style="display: none; margin-right: 5px;">View Part</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+    {% if section.settings.show_btn %}
+      <div style="text-align: center; margin-top: 50px;">
+        <a href="{{ section.settings.btn_link }}" class="cf-btn-main-v8" style="display: inline-block; background: {{ section.settings.accent_color }}; color: #fff; padding: 15px 40px; border-radius: 30px; font-family: 'Exo 2', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;">
+          {{ section.settings.btn_text }}
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800&display=swap');
+  
+  .cf-auto-fc-v8-item:hover .cf-img-v8 { transform: scale(1.1); }
+  .cf-auto-fc-v8-item:hover .cf-add-v8 { background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; padding: 0 20px; }
+  .cf-auto-fc-v8-item:hover .cf-add-text { display: inline-block; }
+  .cf-btn-main-v8:hover { transform: translateY(-3px); box-shadow: 0 10px 20px {{ section.settings.accent_color | color_modify: 'alpha', 0.3 }}; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-fc-v8-grid { grid-template-columns: 1fr; gap: 30px; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-fc-v8-item { flex-direction: column; text-align: center; gap: 15px; }
+    .cf-add-v8 { margin: 0 auto; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Mechanics Frame Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Image Border/Bg",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider Line Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "HARDWARE & TOOLS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 40
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Professional grade equipment for your garage setup."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_btn",
+      "label": "Show Bottom Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "BROWSE FULL CATALOG"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 6
+    },
+    { "type": "header", "content": "Product 1" },
+    { "type": "image_picker", "id": "product_img_1", "label": "Image" },
+    { "type": "text", "id": "product_type_1", "label": "Category Label", "default": "Power Tools" },
+    { "type": "text", "id": "product_title_1", "label": "Title", "default": "Impact Wrench 1/2-Inch" },
+    { "type": "text", "id": "product_price_1", "label": "Price", "default": "$150.00" },
+    { "type": "url", "id": "product_link_1", "label": "Link" },
+    { "type": "header", "content": "Product 2" },
+    { "type": "image_picker", "id": "product_img_2", "label": "Image" },
+    { "type": "text", "id": "product_type_2", "label": "Category Label", "default": "Diagnostic" },
+    { "type": "text", "id": "product_title_2", "label": "Title", "default": "OBD2 Smart Scanner" },
+    { "type": "text", "id": "product_price_2", "label": "Price", "default": "$89.99" },
+    { "type": "url", "id": "product_link_2", "label": "Link" },
+    { "type": "header", "content": "Product 3" },
+    { "type": "image_picker", "id": "product_img_3", "label": "Image" },
+    { "type": "text", "id": "product_type_3", "label": "Category Label", "default": "Lifting" },
+    { "type": "text", "id": "product_title_3", "label": "Title", "default": "3-Ton Floor Jack" },
+    { "type": "text", "id": "product_price_3", "label": "Price", "default": "$199.00" },
+    { "type": "url", "id": "product_link_3", "label": "Link" },
+    { "type": "header", "content": "Product 4" },
+    { "type": "image_picker", "id": "product_img_4", "label": "Image" },
+    { "type": "text", "id": "product_type_4", "label": "Category Label", "default": "Hand Tools" },
+    { "type": "text", "id": "product_title_4", "label": "Title", "default": "Metric Socket Set 120pc" },
+    { "type": "text", "id": "product_price_4", "label": "Price", "default": "$115.00" },
+    { "type": "url", "id": "product_link_4", "label": "Link" },
+    { "type": "header", "content": "Product 5" },
+    { "type": "image_picker", "id": "product_img_5", "label": "Image" },
+    { "type": "text", "id": "product_type_5", "label": "Category Label", "default": "Air Tools" },
+    { "type": "text", "id": "product_title_5", "label": "Title", "default": "Pneumatic Air Ratchet" },
+    { "type": "text", "id": "product_price_5", "label": "Price", "default": "$65.00" },
+    { "type": "url", "id": "product_link_5", "label": "Link" },
+    { "type": "header", "content": "Product 6" },
+    { "type": "image_picker", "id": "product_img_6", "label": "Image" },
+    { "type": "text", "id": "product_type_6", "label": "Category Label", "default": "Storage" },
+    { "type": "text", "id": "product_title_6", "label": "Title", "default": "Rolling Tool Cabinet" },
+    { "type": "text", "id": "product_price_6", "label": "Price", "default": "$399.00" },
+    { "type": "url", "id": "product_link_6", "label": "Link" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,122 @@
+<div class="cf-auto-trust-v3" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v3-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="background: {{ section.settings.card_bg }}; border: 1px solid {{ section.settings.border_color }}; padding: 30px; display: grid; grid-template-columns: repeat({{ section.settings.badges }}, 1fr); gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+      
+      {% for i in (1..section.settings.badges) %}
+        {% capture icon %}badge_icon_{{i}}{% endcapture %}
+        {% capture title %}badge_title_{{i}}{% endcapture %}
+        {% capture text %}badge_text_{{i}}{% endcapture %}
+
+        <div class="cf-auto-trust-v3-item" style="display: flex; align-items: center; gap: 20px; padding: 15px;">
+          
+          <!-- Gear shaped icon bg -->
+          <div style="width: 60px; height: 60px; min-width: 60px; background: {{ section.settings.bg_color }}; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; color: {{ section.settings.accent_color }}; transition: transform 0.3s;" class="cf-icon-wrap-v3">
+            <div style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border: 2px dashed {{ section.settings.accent_color }}; opacity: 0.3; border-radius: 12px; pointer-events: none;" class="cf-gear-v3"></div>
+            {{ section.settings[icon] | replace: 'width="24"', 'width="28"' | replace: 'height="24"', 'height="28"' }}
+          </div>
+          
+          <div>
+            <h3 style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0;">
+              {{ section.settings[title] | default: 'Free Shipping' }}
+            </h3>
+            <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: {{ section.settings.text_color }}; opacity: 0.7; margin: 0; line-height: 1.4;">
+              {{ section.settings[text] | default: 'On all orders.' }}
+            </p>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400&display=swap');
+  
+  .cf-auto-trust-v3-item:hover .cf-icon-wrap-v3 { transform: translateY(-3px); }
+  @keyframes spin-gear { 100% { transform: rotate(360deg); } }
+  .cf-auto-trust-v3-item:hover .cf-gear-v3 { animation: spin-gear 4s linear infinite; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-trust-v3-container > div { grid-template-columns: repeat(2, 1fr); padding: 20px; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-trust-v3-container > div { grid-template-columns: 1fr; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Box Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Box Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#00ffcc"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#eaeaea"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 4
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"></polygon></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "FAST SHIPPING" },
+    { "type": "text", "id": "badge_text_1", "label": "Text", "default": "Next day delivery options" },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"11\" width=\"18\" height=\"11\" rx=\"2\" ry=\"2\"></rect><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"></path></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "SECURE VAULT" },
+    { "type": "text", "id": "badge_text_2", "label": "Text", "default": "100% secure payment" },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"></path><polyline points=\"22 4 12 14.01 9 11.01\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "VERIFIED FIT" },
+    { "type": "text", "id": "badge_text_3", "label": "Text", "default": "Guaranteed to match" },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line></svg>" },
+    { "type": "text", "id": "badge_title_4", "label": "Title", "default": "SUPPORT 24/7" },
+    { "type": "text", "id": "badge_text_4", "label": "Text", "default": "Always here to help" }
+  ]
+}
+{% endschema %}

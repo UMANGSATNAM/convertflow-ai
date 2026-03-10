@@ -1,0 +1,118 @@
+<div class="cf-auto-trust-v9" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v9-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="background: {{ section.settings.card_bg }}; display: flex; flex-wrap: wrap; border: 4px solid {{ section.settings.border_color }};">
+      
+      {% for i in (1..section.settings.badges) %}
+        {% capture icon %}badge_icon_{{i}}{% endcapture %}
+        {% capture title %}badge_title_{{i}}{% endcapture %}
+        {% capture text %}badge_text_{{i}}{% endcapture %}
+
+        <div class="cf-auto-trust-v9-item" style="flex: 1; min-width: 300px; display: flex; align-items: stretch; border-right: 4px solid {{ section.settings.border_color }}; transition: background 0.3s;">
+          
+          <div style="width: 80px; background: {{ section.settings.accent_color }}; color: #fff; display: flex; align-items: center; justify-content: center; border-right: 4px solid {{ section.settings.border_color }};" class="cf-icon-wrap-v9">
+            <div style="transition: transform 0.3s;" class="cf-icon-v9">
+              {{ section.settings[icon] | replace: 'width="24"', 'width="32"' | replace: 'height="24"', 'height="32"' }}
+            </div>
+          </div>
+          
+          <div style="padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3 style="font-family: 'Arial Black', Impact, sans-serif; font-size: 18px; font-weight: 900; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0; line-height: 1.1;">
+              {{ section.settings[title] | default: 'Performance Part' }}
+            </h3>
+            <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 700; color: {{ section.settings.text_color }}; opacity: 0.6; margin: 0;">
+              {{ section.settings[text] | default: 'Built to spec.' }}
+            </p>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .cf-auto-trust-v9-item:hover { background: #f0f0f0; }
+  .cf-auto-trust-v9-item:last-child { border-right: none; }
+  .cf-auto-trust-v9-item:hover .cf-icon-v9 { transform: scale(1.1); }
+
+  @media (max-width: 950px) {
+    .cf-auto-trust-v9-item { flex: 0 0 100%; border-right: none; border-bottom: 4px solid {{ section.settings.border_color }}; }
+    .cf-auto-trust-v9-item:last-child { border-bottom: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Heavy Mechanic Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Block Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon Box Color",
+      "default": "#e60000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Thick Lines",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 3
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><rect x=\"2\" y=\"7\" width=\"20\" height=\"14\" rx=\"2\" ry=\"2\"></rect><path d=\"M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16\"></path></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "HEAVY DUTY PARTS" },
+    { "type": "text", "id": "badge_text_1", "label": "Text", "default": "Built for any terrain" },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"></path><polyline points=\"22 4 12 14.01 9 11.01\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "FITMENT CHECK" },
+    { "type": "text", "id": "badge_text_2", "label": "Text", "default": "100% Guaranteed Fit" },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "EXPERT HELP" },
+    { "type": "text", "id": "badge_text_3", "label": "Text", "default": "Available 24/7" },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_4", "label": "Title" },
+    { "type": "text", "id": "badge_text_4", "label": "Text" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,220 @@
+<div class="cf-auto-fc-v3" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-fc-v3-container" style="max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px;">
+    
+    <!-- Left Sticky Header / Promo Area -->
+    <div class="cf-auto-fc-v3-info" style="flex: 0 0 300px;">
+      <div style="position: sticky; top: 40px;">
+        <div style="width: 50px; height: 4px; background: {{ section.settings.accent_color }}; margin-bottom: 20px;"></div>
+        <h2 style="font-family: 'Oswald', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 700; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 15px 0; line-height: 1.1;">
+          {{ section.settings.title }}
+        </h2>
+        <p style="font-family: 'Roboto', sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.8; margin: 0 0 30px 0; line-height: 1.5;">
+          {{ section.settings.subtitle }}
+        </p>
+        {% if section.settings.show_btn %}
+          <a href="{{ section.settings.btn_link }}" class="cf-btn-fc-v3" style="display: inline-block; background: transparent; border: 2px solid {{ section.settings.accent_color }}; color: {{ section.settings.text_color }}; padding: 12px 30px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; transition: all 0.2s;">
+            {{ section.settings.btn_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Products Grid -->
+    <div class="cf-auto-fc-v3-grid" style="flex: 1; display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 20px;">
+      
+      {% for i in (1..section.settings.products) %}
+        {% capture img %}product_img_{{i}}{% endcapture %}
+        {% capture title %}product_title_{{i}}{% endcapture %}
+        {% capture price %}product_price_{{i}}{% endcapture %}
+        {% capture link %}product_link_{{i}}{% endcapture %}
+
+        <div class="cf-auto-fc-v3-card" style="background: {{ section.settings.card_bg }}; border: 1px solid {{ section.settings.border_color }}; display: flex; flex-direction: column; overflow: hidden;">
+          
+          <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; display: block; height: 250px; position: relative; overflow: hidden; background: #f9f9f9; padding: 20px;">
+            {% if section.settings[img] %}
+              <img src="{{ section.settings[img] | image_url: width: 400 }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.4s; mix-blend-mode: multiply;" class="cf-img-fc-v3" alt="{{ section.settings[title] }}">
+            {% else %}
+               <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #eaeaea;"></div>
+            {% endif %}
+            
+            <!-- Quick Add Overlay -->
+            <div class="cf-quick-v3" style="position: absolute; bottom: -50px; left: 0; width: 100%; background: rgba(0,0,0,0.8); color: #fff; padding: 10px; text-align: center; font-family: 'Oswald', sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: bottom 0.3s;">
+              Quick View
+            </div>
+          </a>
+
+          <div style="padding: 20px; text-align: center; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+            <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; color: inherit;">
+              <h3 style="font-family: 'Roboto', sans-serif; font-size: 15px; font-weight: 500; color: {{ section.settings.text_color }}; margin: 0 0 10px 0; line-height: 1.4;">
+                {{ section.settings[title] | default: 'Auto Accessory' }}
+              </h3>
+            </a>
+            <span style="font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; color: {{ section.settings.accent_color }};">
+              {{ section.settings[price] | default: '$99.99' }}
+            </span>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto:wght@400;500&display=swap');
+  
+  .cf-btn-fc-v3:hover { background: {{ section.settings.accent_color }} !important; color: #fff !important; }
+  .cf-auto-fc-v3-card:hover .cf-img-fc-v3 { transform: scale(1.1); }
+  .cf-auto-fc-v3-card:hover .cf-quick-v3 { bottom: 0; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-fc-v3-container { flex-direction: column; }
+    .cf-auto-fc-v3-info { flex: none; width: 100%; text-align: center; margin-bottom: 20px; }
+    .cf-auto-fc-v3-info > div { position: relative; top: 0; }
+    .cf-auto-fc-v3-info > div > div { margin: 0 auto 20px auto; }
+    .cf-auto-fc-v3-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  }
+  @media (max-width: 768px) {
+    .cf-auto-fc-v3-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 480px) {
+    .cf-auto-fc-v3-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Sidebar Feature Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#d9534f"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card Border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "PIT STOP DEALS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Grab these essentials before you hit the track or the trail."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_btn",
+      "label": "Show Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "VIEW ALL OFFERS"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "products",
+      "min": 2,
+      "max": 9,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 6
+    },
+    { "type": "header", "content": "Product 1" },
+    { "type": "image_picker", "id": "product_img_1", "label": "Image" },
+    { "type": "text", "id": "product_title_1", "label": "Title", "default": "Mechanics Tool Set 150pc" },
+    { "type": "text", "id": "product_price_1", "label": "Price", "default": "$129.99" },
+    { "type": "url", "id": "product_link_1", "label": "Link" },
+    { "type": "header", "content": "Product 2" },
+    { "type": "image_picker", "id": "product_img_2", "label": "Image" },
+    { "type": "text", "id": "product_title_2", "label": "Title", "default": "Synthetic Motor Oil 5W-30" },
+    { "type": "text", "id": "product_price_2", "label": "Price", "default": "$34.50" },
+    { "type": "url", "id": "product_link_2", "label": "Link" },
+    { "type": "header", "content": "Product 3" },
+    { "type": "image_picker", "id": "product_img_3", "label": "Image" },
+    { "type": "text", "id": "product_title_3", "label": "Title", "default": "Heavy Duty Floor Jack" },
+    { "type": "text", "id": "product_price_3", "label": "Price", "default": "$189.00" },
+    { "type": "url", "id": "product_link_3", "label": "Link" },
+    { "type": "header", "content": "Product 4" },
+    { "type": "image_picker", "id": "product_img_4", "label": "Image" },
+    { "type": "text", "id": "product_title_4", "label": "Title", "default": "Shop Towels (Pack of 50)" },
+    { "type": "text", "id": "product_price_4", "label": "Price", "default": "$19.99" },
+    { "type": "url", "id": "product_link_4", "label": "Link" },
+    { "type": "header", "content": "Product 5" },
+    { "type": "image_picker", "id": "product_img_5", "label": "Image" },
+    { "type": "text", "id": "product_title_5", "label": "Title", "default": "Engine Degreaser Spray" },
+    { "type": "text", "id": "product_price_5", "label": "Price", "default": "$8.50" },
+    { "type": "url", "id": "product_link_5", "label": "Link" },
+    { "type": "header", "content": "Product 6" },
+    { "type": "image_picker", "id": "product_img_6", "label": "Image" },
+    { "type": "text", "id": "product_title_6", "label": "Title", "default": "LED Work Light Magnetic" },
+    { "type": "text", "id": "product_price_6", "label": "Price", "default": "$45.00" },
+    { "type": "url", "id": "product_link_6", "label": "Link" }
+  ]
+}
+{% endschema %}

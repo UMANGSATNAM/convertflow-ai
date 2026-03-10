@@ -1,0 +1,93 @@
+<div class="cf-auto-trust-v6" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v6-container" style="max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
+    
+    <div style="display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; text-align: center;">
+      {% for i in (1..section.settings.badges) %}
+        {% capture icon %}badge_icon_{{i}}{% endcapture %}
+        {% capture title %}badge_title_{{i}}{% endcapture %}
+
+        <div class="cf-auto-trust-v6-item" style="display: flex; flex-direction: column; align-items: center; max-width: 200px;">
+          
+          <div style="width: 70px; height: 70px; border-radius: 50%; border: 3px solid {{ section.settings.accent_color }}; display: flex; align-items: center; justify-content: center; color: {{ section.settings.text_color }}; margin-bottom: 15px; background: transparent; transition: all 0.3s;" class="cf-icon-wrap-v6">
+            {{ section.settings[icon] | replace: 'width="24"', 'width="30"' | replace: 'height="24"', 'height="30"' }}
+          </div>
+          
+          <div style="font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 500; color: {{ section.settings.text_color }}; text-transform: uppercase; letter-spacing: 2px;">
+            {{ section.settings[title] | default: 'Trusted Feature' }}
+          </div>
+          
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap');
+  
+  .cf-auto-trust-v6-item:hover .cf-icon-wrap-v6 { background: {{ section.settings.accent_color }}; color: {{ section.settings.bg_color }}; transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Clean Circle Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Ring/Hover Color",
+      "default": "#0047cc"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 4
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16 14\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "SAME DAY DISPATCH" },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><rect x=\"1\" y=\"3\" width=\"15\" height=\"13\"></rect><polygon points=\"16 8 20 8 23 11 23 16 16 16 16 8\"></polygon><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"></circle><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"></circle></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "FREE SHIPPING" },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"></path><polyline points=\"3.27 6.96 12 12.01 20.73 6.96\"></polyline><line x1=\"12\" y1=\"22.08\" x2=\"12\" y2=\"12\"></line></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "OEM QUALITY" },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" width=\"24\" height=\"24\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"></path><polyline points=\"22 4 12 14.01 9 11.01\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_4", "label": "Title", "default": "GUARANTEED FIT" },
+    { "type": "header", "content": "Badge 5" },
+    { "type": "textarea", "id": "badge_icon_5", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_5", "label": "Title" },
+    { "type": "header", "content": "Badge 6" },
+    { "type": "textarea", "id": "badge_icon_6", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_6", "label": "Title" }
+  ]
+}
+{% endschema %}

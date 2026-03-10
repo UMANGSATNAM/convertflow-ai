@@ -1,0 +1,190 @@
+<div class="cf-auto-fc-v5" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-fc-v5-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 50px;">
+      <h2 style="font-family: 'Arial Black', Impact, sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 900; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: -2px; font-style: italic;">
+        {{ section.settings.title }}
+      </h2>
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; color: #fff; background: {{ section.settings.accent_color }}; padding: 5px 20px; text-transform: uppercase; letter-spacing: 2px; transform: skewX(-15deg);">
+        <span style="display: inline-block; transform: skewX(15deg);">{{ section.settings.subtitle }}</span>
+      </div>
+    </div>
+
+    <!-- Wide Block Grid -->
+    <div class="cf-auto-fc-v5-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 20px;">
+      
+      {% for i in (1..section.settings.products) %}
+        {% capture img %}product_img_{{i}}{% endcapture %}
+        {% capture title %}product_title_{{i}}{% endcapture %}
+        {% capture price %}product_price_{{i}}{% endcapture %}
+        {% capture tag %}product_tag_{{i}}{% endcapture %}
+        {% capture link %}product_link_{{i}}{% endcapture %}
+
+        <div class="cf-auto-fc-v5-card" style="background: {{ section.settings.card_bg }}; display: flex; align-items: stretch; border: 4px solid {{ section.settings.border_color }}; overflow: hidden; transition: border-color 0.2s, transform 0.2s;">
+          
+          <!-- Image squarish left side -->
+          <a href="{{ section.settings[link] | default: '#' }}" style="width: 40%; min-width: 150px; text-decoration: none; position: relative; background: #fff; display: flex; align-items: center; justify-content: center; border-right: 4px solid {{ section.settings.border_color }};">
+            {% if section.settings[img] %}
+              <img src="{{ section.settings[img] | image_url: width: 400 }}" style="width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s;" class="cf-img-fc-v5" alt="{{ section.settings[title] }}">
+            {% else %}
+               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            {% endif %}
+            
+            {% if section.settings[tag] != blank %}
+              <div style="position: absolute; top: 0; left: 0; background: #000; color: #fff; font-family: 'Helvetica Neue', Helvetica, monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 8px;">
+                {{ section.settings[tag] }}
+              </div>
+            {% endif %}
+          </a>
+
+          <!-- Content Right side -->
+          <div style="flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center;">
+            <a href="{{ section.settings[link] | default: '#' }}" style="text-decoration: none; color: inherit;">
+              <h3 style="font-family: 'Arial Black', Impact, sans-serif; font-size: 18px; font-weight: 900; color: {{ section.settings.text_color }}; margin: 0 0 10px 0; text-transform: uppercase; line-height: 1.1;">
+                {{ section.settings[title] | default: 'Heavy Duty Part' }}
+              </h3>
+            </a>
+            
+            <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 700; color: {{ section.settings.accent_color }}; margin-bottom: 15px;">
+              {{ section.settings[price] | default: '$1,200' }}
+            </div>
+
+            <button class="cf-btn-add-v5" style="align-self: flex-start; background: #000; color: #fff; border: none; padding: 10px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background 0.2s;">
+              BUY NOW
+            </button>
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .cf-auto-fc-v5-card:hover { border-color: #000; transform: translate(-2px, -2px); box-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
+  .cf-auto-fc-v5-card:hover > a { border-right-color: #000; }
+  .cf-btn-add-v5:hover { background: {{ section.settings.accent_color }} !important; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-fc-v5-grid { grid-template-columns: repeat(1, 1fr) !important; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-fc-v5-card { flex-direction: column; border-bottom-width: 4px; }
+    .cf-auto-fc-v5-card > a { width: 100%; padding-top: 60%; border-right: none; border-bottom: 4px solid {{ section.settings.border_color }}; }
+    .cf-auto-fc-v5-card:hover > a { border-bottom-color: #000; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Racing Block Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#e60000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Thick Lines",
+      "default": "#cccccc"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "TRACK DAY UPGRADES"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub-banner Text",
+      "default": "HOT ITEMS"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "products",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Number of Products",
+      "default": 4
+    },
+    { "type": "header", "content": "Product 1" },
+    { "type": "image_picker", "id": "product_img_1", "label": "Image" },
+    { "type": "text", "id": "product_title_1", "label": "Title", "default": "Big Brake Kit Front" },
+    { "type": "text", "id": "product_price_1", "label": "Price", "default": "$1,450" },
+    { "type": "text", "id": "product_tag_1", "label": "Corner Tag", "default": "RACE SPEC" },
+    { "type": "url", "id": "product_link_1", "label": "Link" },
+    { "type": "header", "content": "Product 2" },
+    { "type": "image_picker", "id": "product_img_2", "label": "Image" },
+    { "type": "text", "id": "product_title_2", "label": "Title", "default": "Forged Alloy Wheels 18x9" },
+    { "type": "text", "id": "product_price_2", "label": "Price", "default": "$2,200" },
+    { "type": "text", "id": "product_tag_2", "label": "Corner Tag" },
+    { "type": "url", "id": "product_link_2", "label": "Link" },
+    { "type": "header", "content": "Product 3" },
+    { "type": "image_picker", "id": "product_img_3", "label": "Image" },
+    { "type": "text", "id": "product_title_3", "label": "Title", "default": "Performance Intercooler" },
+    { "type": "text", "id": "product_price_3", "label": "Price", "default": "$650" },
+    { "type": "text", "id": "product_tag_3", "label": "Corner Tag", "default": "BOLT ON" },
+    { "type": "url", "id": "product_link_3", "label": "Link" },
+    { "type": "header", "content": "Product 4" },
+    { "type": "image_picker", "id": "product_img_4", "label": "Image" },
+    { "type": "text", "id": "product_title_4", "label": "Title", "default": "Carbon Fiber Wing" },
+    { "type": "text", "id": "product_price_4", "label": "Price", "default": "$899" },
+    { "type": "text", "id": "product_tag_4", "label": "Corner Tag" },
+    { "type": "url", "id": "product_link_4", "label": "Link" }
+  ]
+}
+{% endschema %}

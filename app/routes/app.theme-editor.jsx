@@ -123,6 +123,7 @@ export const action = async ({ request }) => {
             const sectionId = fd.get("sectionId");
             const settings = JSON.parse(fd.get("settings") || "{}");
             const placement = fd.get("placement") || "bottom";
+            const trustedOrder = JSON.parse(fd.get("trustedOrder") || "[]"); // Use frontend state
 
             const meta = SECTION_FILES[sectionId];
             if (!meta) return json({ ok: false, error: "Unknown section" });
@@ -147,8 +148,14 @@ export const action = async ({ request }) => {
             // Small delay to let Shopify fully register the section file
             await new Promise(r => setTimeout(r, 500));
 
-            // Update index.json
+            // Update index.json using the trusted frontend state + new section
             const idx = await getIndex();
+
+            // If the frontend provided a trusted order array that is newer or larger, use it to sync the index
+            if (trustedOrder.length >= idx.order.length) {
+                idx.order = trustedOrder;
+            }
+
             const blockId = `cf_${sectionId}_${Date.now().toString(36)}`;
             idx.sections[blockId] = { type: sectionId, settings: sanitizeSettingsForTheme(settings) };
 
@@ -159,6 +166,13 @@ export const action = async ({ request }) => {
                 const fi = idx.order.findIndex(id => id.toLowerCase().includes("footer"));
                 fi !== -1 ? idx.order.splice(fi, 0, blockId) : idx.order.push(blockId);
             }
+            // Explicitly sync sections with order again before saving
+            idx.order.forEach(id => {
+                if (!idx.sections[id]) {
+                    idx.sections[id] = { type: id.replace('cf_', ''), settings: {} };
+                }
+            });
+
             await saveIndex(idx);
 
             // Return updated page blocks
@@ -240,6 +254,10 @@ export default function ThemeEditor() {
     const [toast, setToast] = useState(null);
     const previewTimerRef = useRef(null);
     const [utilTab, setUtilTab] = useState('outline');
+
+    // Visual Grid State
+    const [gridPreviews, setGridPreviews] = useState({});
+    const [gridLoading, setGridLoading] = useState(false);
 
     // Sync page blocks from action response
     useEffect(() => {
@@ -333,9 +351,27 @@ export default function ThemeEditor() {
             }).catch(() => { });
     }, [selectedTemplateId, activeBlockId, pageBlocks]);
 
-    const handleSelectCategory = (catId) => {
+    const handleSelectCategory = async (catId) => {
         setActiveCategoryId(catId);
         setLeftView('templates');
+
+        // Fetch Grid Previews
+        setGridLoading(true);
+        try {
+            const form = new FormData();
+            form.append("categoryId", catId);
+            const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.templates) {
+                    setGridPreviews(data.templates);
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setGridLoading(false);
+        }
     };
 
     const handleSelectTemplate = (id) => {
@@ -383,6 +419,7 @@ export default function ThemeEditor() {
         form.append("sectionId", selectedTemplateId);
         form.append("settings", JSON.stringify(settings));
         form.append("placement", placement);
+        form.append("trustedOrder", JSON.stringify(pageBlocks.map(b => b.id)));
         fetcher.submit(form, { method: "post" });
     };
 
@@ -659,7 +696,7 @@ export default function ThemeEditor() {
                         </div>
                     )}
 
-                    {/* STATE 2: TEMPLATES */}
+                    {/* STATE 2: TEMPLATES (Visual Grid) */}
                     {leftView === 'templates' && (
                         <div style={S.panelInner}>
                             <div style={S.panelHeader}>
@@ -669,16 +706,66 @@ export default function ThemeEditor() {
                                 <span style={S.panelTitle}>{cfCats.find(c => c.id === activeCategoryId)?.name || 'Templates'}</span>
                                 <div style={{ width: 28 }}></div>
                             </div>
-                            <div style={{ ...S.scrollArea, padding: '12px 0' }}>
-                                {templateIds.map(id => {
-                                    const meta = SECTION_FILES[id];
-                                    return (
-                                        <button key={id} className="te-list-item" onClick={() => handleSelectTemplate(id)}>
-                                            <span style={S.listIcon}><Palette size={16} strokeWidth={2} /></span>
-                                            <span style={S.listText}>{meta?.name || id}</span>
-                                        </button>
-                                    );
-                                })}
+                            <div style={{ ...S.scrollArea, padding: '16px' }}>
+                                {gridLoading ? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 200, opacity: 0.5 }}>
+                                        <div className="te-spinner" style={{ marginBottom: 12 }}></div>
+                                        <span style={{ fontSize: 13, color: '#202223' }}>Loading previews...</span>
+                                    </div>
+                                ) : (
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 16 }}>
+                                        {templateIds.map(id => {
+                                            const meta = SECTION_FILES[id];
+                                            const html = gridPreviews[id];
+                                            return (
+                                                <div
+                                                    key={id}
+                                                    onClick={() => handleSelectTemplate(id)}
+                                                    className="te-grid-item"
+                                                    style={{
+                                                        border: '1px solid #e1e3e5',
+                                                        borderRadius: 6,
+                                                        overflow: 'hidden',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        background: '#fff',
+                                                        transition: 'border-color 0.2s, box-shadow 0.2s',
+                                                    }}
+                                                >
+                                                    <div style={{
+                                                        background: '#f4f6f8',
+                                                        padding: '12px',
+                                                        borderBottom: '1px solid #e1e3e5',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        minHeight: 100,
+                                                        position: 'relative'
+                                                    }}>
+                                                        {html ? (
+                                                            <div style={{ width: '100%', zoom: 0.25, pointerEvents: 'none', transformOrigin: 'top center' }} dangerouslySetInnerHTML={{ __html: html }} />
+                                                        ) : (
+                                                            <div className="te-spinner" style={{ width: 16, height: 16 }}></div>
+                                                        )}
+                                                        <div className="te-grid-item-overlay" style={{
+                                                            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                                                            background: 'rgba(255,255,255,0.7)',
+                                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                            opacity: 0, transition: 'opacity 0.2s',
+                                                            backdropFilter: 'blur(2px)'
+                                                        }}>
+                                                            <div style={{ background: '#2c6ecb', color: '#fff', padding: '6px 12px', borderRadius: 4, fontSize: 13, fontWeight: 500 }}>Select</div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ padding: '8px 12px', fontSize: 13, color: '#202223', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {meta?.name || id}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -1204,7 +1291,11 @@ const CSS = `
       border-radius: 50%;
       animation: te-spin 0.8s linear infinite;
   }
-  @keyframes te-spin { to { transform: rotate(360deg); } }
+  .te-util-btn.active { color: #202223; background: #e4e5e7; }
+
+  .te-grid-item:hover { border-color: #2c6ecb !important; box-shadow: 0 0 0 1px #2c6ecb; }
+  .te-grid-item:hover .te-grid-item-overlay { opacity: 1 !important; }
+
+  @keyframes te-spin { 100% { transform: rotate(360deg); } }
   @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 `;
-

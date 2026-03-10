@@ -1,0 +1,117 @@
+<div class="cf-auto-trust-v5" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-trust-v5-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat({{ section.settings.badges }}, 1fr); gap: 20px;">
+    
+    {% for i in (1..section.settings.badges) %}
+      {% capture icon %}badge_icon_{{i}}{% endcapture %}
+      {% capture title %}badge_title_{{i}}{% endcapture %}
+      {% capture text %}badge_text_{{i}}{% endcapture %}
+
+      <div class="cf-auto-trust-v5-item" style="background: {{ section.settings.card_bg }}; display: flex; flex-direction: column; align-items: flex-start; padding: 30px; border-left: 4px solid {{ section.settings.accent_color }}; position: relative; overflow: hidden; transition: transform 0.2s;">
+        
+        <!-- Faded large icon in background -->
+        <div style="position: absolute; right: -10px; bottom: -20px; color: {{ section.settings.text_color }}; opacity: 0.05; transform: scale(3); pointer-events: none;">
+          {{ section.settings[icon] | default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><circle cx="12" cy="12" r="10"></circle></svg>' }}
+        </div>
+
+        <div style="color: {{ section.settings.accent_color }}; margin-bottom: 20px; display: inline-flex; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px;" class="cf-icon-wrap-v5">
+          {{ section.settings[icon] | replace: 'width="24"', 'width="32"' | replace: 'height="24"', 'height="32"' }}
+        </div>
+        
+        <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: 1px;">
+          {{ section.settings[title] | default: 'Trust Guarantee' }}
+        </h3>
+        
+        <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ section.settings.text_color }}; opacity: 0.7; margin: 0; position: relative; z-index: 2;">
+          {{ section.settings[text] | default: 'We stand behind our parts.' }}
+        </p>
+
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Inter:wght@400&display=swap');
+  
+  .cf-auto-trust-v5-item:hover { transform: translateY(-3px) translateX(3px); box-shadow: -5px 5px 0 rgba(0,0,0,0.1); }
+  .cf-auto-trust-v5-item:hover .cf-icon-wrap-v5 { background: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }}; }
+
+  @media (max-width: 1024px) {
+    .cf-auto-trust-v5-container { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-trust-v5-container { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Off-Road Block Trust",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#eaeaea"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Edge Color",
+      "default": "#ff5500"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "badges",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Number of Badges",
+      "default": 4
+    },
+    { "type": "header", "content": "Badge 1" },
+    { "type": "textarea", "id": "badge_icon_1", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><rect x=\"2\" y=\"7\" width=\"20\" height=\"14\" rx=\"2\" ry=\"2\"></rect><path d=\"M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16\"></path></svg>" },
+    { "type": "text", "id": "badge_title_1", "label": "Title", "default": "HEAVY DUTY" },
+    { "type": "text", "id": "badge_text_1", "label": "Text", "default": "Parts built to withstand extreme conditions." },
+    { "type": "header", "content": "Badge 2" },
+    { "type": "textarea", "id": "badge_icon_2", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"16\"></line><line x1=\"8\" y1=\"12\" x2=\"16\" y2=\"12\"></line></svg>" },
+    { "type": "text", "id": "badge_title_2", "label": "Title", "default": "LIFETIME WARRANTY" },
+    { "type": "text", "id": "badge_text_2", "label": "Text", "default": "Guaranteed for as long as you own the vehicle." },
+    { "type": "header", "content": "Badge 3" },
+    { "type": "textarea", "id": "badge_icon_3", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"></path><polyline points=\"22 4 12 14.01 9 11.01\"></polyline></svg>" },
+    { "type": "text", "id": "badge_title_3", "label": "Title", "default": "EXPERT VERIFIED" },
+    { "type": "text", "id": "badge_text_3", "label": "Text", "default": "Checked by our team of master mechanics." },
+    { "type": "header", "content": "Badge 4" },
+    { "type": "textarea", "id": "badge_icon_4", "label": "SVG Icon HTML", "default": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" width=\"24\" height=\"24\"><rect x=\"1\" y=\"3\" width=\"15\" height=\"13\"></rect><polygon points=\"16 8 20 8 23 11 23 16 16 16 16 8\"></polygon><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"></circle><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"></circle></svg>" },
+    { "type": "text", "id": "badge_title_4", "label": "Title", "default": "TRAIL DELIVERY" },
+    { "type": "text", "id": "badge_text_4", "label": "Text", "default": "We ship fast, straight to your garage." },
+    { "type": "header", "content": "Badge 5" },
+    { "type": "textarea", "id": "badge_icon_5", "label": "SVG Icon HTML" },
+    { "type": "text", "id": "badge_title_5", "label": "Title" },
+    { "type": "text", "id": "badge_text_5", "label": "Text" }
+  ]
+}
+{% endschema %}
