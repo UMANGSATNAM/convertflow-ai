@@ -1,0 +1,62 @@
+<style>
+.cf-trust-12-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }}}
+.cf-trust-12-v6-inner{max-width:1400px;margin:0 auto;text-align:center}
+.cf-trust-12-v6-title{font-size:clamp(32px, 5vw, 60px);font-weight:300;margin:0 0 60px 0;text-transform:uppercase;letter-spacing:0.02em}
+.cf-trust-12-v6-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:20px}
+.cf-trust-12-v6-card{display:flex;flex-direction:column;align-items:center;padding:50px 20px;border-radius:200px 200px 0 0;background:{{ section.settings.card_bg }};border:1px solid {{ section.settings.border_color }};transition:0.4s}
+.cf-trust-12-v6-card:hover{background:{{ section.settings.hover_bg }};border-color:transparent;transform:translateY(-10px)}
+.cf-trust-12-v6-icon{width:60px;height:60px;display:flex;align-items:center;justify-content:center;color:{{ section.settings.accent_color }};margin-bottom:30px}
+.cf-trust-12-v6-card-title{font-size:22px;margin:0 0 15px 0;font-style:italic}
+.cf-trust-12-v6-card-desc{font-family:sans-serif;font-size:13px;line-height:1.6;opacity:0.8;margin:0}
+@media(max-width:1024px){.cf-trust-12-v6-grid{grid-template-columns:repeat(2, 1fr)}}
+@media(max-width:600px){.cf-trust-12-v6-grid{grid-template-columns:1fr}.cf-trust-12-v6-card{border-radius:100px 100px 0 0;padding:40px 20px}}
+</style>
+
+<div class="cf-trust-12-v6">
+  <div class="cf-trust-12-v6-inner">
+    {% if section.settings.title != blank %}
+      <h2 class="cf-trust-12-v6-title">{{ section.settings.title }}</h2>
+    {% endif %}
+    
+    <div class="cf-trust-12-v6-grid">
+      {% for i in (1..4) %}
+        <div class="cf-trust-12-v6-card">
+          <div class="cf-trust-12-v6-icon">
+            {% if i == 1 %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+            {% elsif i == 2 %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            {% elsif i == 3 %}
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            {% else %}
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="40" height="40"><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line><line x1="4.93" y1="19.07" x2="19.07" y2="4.93"></line></svg>
+            {% endif %}
+          </div>
+          <h3 class="cf-trust-12-v6-card-title">
+            {% if i == 1 %}Refined Quality{% elsif i == 2 %}Elegant Packaging{% elsif i == 3 %}Trusted Source{% else %}Global Scale{% endif %}
+          </h3>
+          <p class="cf-trust-12-v6-card-desc">
+            {% if i == 1 %}Meticulously crafted with high-end fabrics.{% elsif i == 2 %}A beautiful unboxing experience.{% elsif i == 3 %}Ethically acquired materials.{% else %}Shipping across the globe daily.{% endif %}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Trust (v6)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Difference"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Arch Background","default":"transparent"},
+    {"type":"color","id":"hover_bg","label":"Hover Arch Background","default":"#F4ECE4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Icon Color","default":"#A88A70"},
+    {"type":"color","id":"border_color","label":"Arch Border Color","default":"#EAEAEE"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Trust (v6)"}]
+}
+{% endschema %}

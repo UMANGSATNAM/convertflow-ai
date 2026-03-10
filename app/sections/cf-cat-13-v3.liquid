@@ -1,0 +1,63 @@
+<style>
+.cf-cat-13-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-cat-13-v3-inner{max-width:1400px;margin:0 auto}
+.cf-cat-13-v3-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:2fr 1.5fr;gap:20px;height:700px}
+.cf-cat-13-v3-card{position:relative;background:#eee;overflow:hidden;text-decoration:none;display:flex;align-items:flex-end;padding:30px}
+.cf-cat-13-v3-large{grid-row:1 / span 2;grid-column:1}
+.cf-cat-13-v3-top-right{grid-row:1;grid-column:2}
+.cf-cat-13-v3-bottom-right{grid-row:2;grid-column:2}
+.cf-cat-13-v3-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:0.8s}
+.cf-cat-13-v3-card:hover .cf-cat-13-v3-img{transform:scale(1.03)}
+.cf-cat-13-v3-overlay{position:absolute;bottom:0;left:0;width:100%;height:60%;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);z-index:2}
+.cf-cat-13-v3-title{position:relative;z-index:3;color:#fff;font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;margin:0;display:flex;align-items:center;gap:15px}
+.cf-cat-13-v3-title::after{content:"\2192";font-size:20px;transition:0.3s;opacity:0;transform:translateX(-10px)}
+.cf-cat-13-v3-card:hover .cf-cat-13-v3-title::after{opacity:1;transform:translateX(0)}
+.cf-cat-13-v3-large .cf-cat-13-v3-title{font-size:clamp(36px, 4vw, 56px)}
+@media(max-width:900px){
+  .cf-cat-13-v3-grid{height:auto;grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .cf-cat-13-v3-large{grid-row:auto;grid-column:auto;height:450px}
+  .cf-cat-13-v3-top-right{height:300px}
+  .cf-cat-13-v3-bottom-right{height:300px}
+}
+</style>
+
+<div class="cf-cat-13-v3">
+  <div class="cf-cat-13-v3-inner">
+    <div class="cf-cat-13-v3-grid">
+      
+      <a href="#" class="cf-cat-13-v3-card cf-cat-13-v3-large">
+        <div class="cf-cat-13-v3-img" style="background:#444;"></div>
+        <div class="cf-cat-13-v3-overlay"></div>
+        <h3 class="cf-cat-13-v3-title">{{ section.settings.cat_1 }}</h3>
+      </a>
+      
+      <a href="#" class="cf-cat-13-v3-card cf-cat-13-v3-top-right">
+        <div class="cf-cat-13-v3-img" style="background:#666;"></div>
+        <div class="cf-cat-13-v3-overlay"></div>
+        <h3 class="cf-cat-13-v3-title">{{ section.settings.cat_2 }}</h3>
+      </a>
+      
+      <a href="#" class="cf-cat-13-v3-card cf-cat-13-v3-bottom-right">
+        <div class="cf-cat-13-v3-img" style="background:#888;"></div>
+        <div class="cf-cat-13-v3-overlay"></div>
+        <h3 class="cf-cat-13-v3-title">{{ section.settings.cat_3 }}</h3>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Category (v3)",
+  "settings": [
+    {"type":"text","id":"cat_1","label":"Category 1 (Large)","default":"FW24 RUNWAY"},
+    {"type":"text","id":"cat_2","label":"Category 2 (Top)","default":"ESSENTIALS"},
+    {"type":"text","id":"cat_3","label":"Category 3 (Bottom)","default":"FOOTWEAR"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Base Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Category (v3)"}]
+}
+{% endschema %}

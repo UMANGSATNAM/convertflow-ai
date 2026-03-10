@@ -1,0 +1,70 @@
+<style>
+.cf-header-12-v7{width:100%;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }};padding:{{ section.settings.padding_y }}px 20px;}
+.cf-header-12-v7-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;border:1px solid {{ section.settings.border_color }};border-radius:50px;padding:10px 30px}
+.cf-header-12-v7-logo{flex:0 0 auto;text-decoration:none;margin-right:40px}
+.cf-header-12-v7-logo img{max-height:{{ section.settings.logo_height }}px;height:auto;display:block}
+.cf-header-12-v7-logo h1{font-size:20px;font-weight:900;margin:0;letter-spacing:0.05em;text-transform:uppercase;color:{{ section.settings.text_color }}}
+.cf-header-12-v7-nav{flex:1;display:flex;gap:30px}
+.cf-header-12-v7-link{font-size:13px;color:{{ section.settings.text_color }};text-decoration:none;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;transition:0.3s}
+.cf-header-12-v7-link:hover{color:{{ section.settings.accent_color }}}
+.cf-header-12-v7-icons{display:flex;align-items:center;gap:20px}
+.cf-header-12-v7-icon{color:{{ section.settings.text_color }};cursor:pointer;transition:0.3s;display:flex;align-items:center}
+.cf-header-12-v7-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-header-12-v7-search{background:{{ section.settings.badge_bg }};border-radius:30px;padding:8px 15px;display:flex;align-items:center;gap:10px}
+.cf-header-12-v7-search span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;opacity:0.8}
+@media(max-width:900px){.cf-header-12-v7-inner{border-radius:15px;padding:15px}.cf-header-12-v7-nav,.cf-header-12-v7-search{display:none}}
+</style>
+
+<div class="cf-header-12-v7">
+  <div class="cf-header-12-v7-inner">
+    <a href="/" class="cf-header-12-v7-logo">
+      {% if section.settings.logo %}
+        <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+      {% else %}
+        <h1>{{ section.settings.logo_text }}</h1>
+      {% endif %}
+    </a>
+    
+    <div class="cf-header-12-v7-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-header-12-v7-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-header-12-v7-link">NEW</a>
+        <a href="#" class="cf-header-12-v7-link">SHOP</a>
+        <a href="#" class="cf-header-12-v7-link">COLLECTIONS</a>
+      {% endfor %}
+    </div>
+    
+    <div class="cf-header-12-v7-icons">
+      <div class="cf-header-12-v7-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>Search</span>
+      </div>
+      <div class="cf-header-12-v7-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <div class="cf-header-12-v7-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Header (v7)",
+  "settings": [
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"LUMINA"},
+    {"type":"range","id":"logo_height","label":"Logo Height","min":20,"max":100,"step":5,"default":25},
+    {"type":"link_list","id":"menu","label":"Main Menu"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FAF8F5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Pill Border","default":"#E2DFDB"},
+    {"type":"color","id":"badge_bg","label":"Search Badge Background","default":"#EFEBDE"},
+    {"type":"color","id":"accent_color","label":"Hover Accent","default":"#B29A84"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"12 · Women's Header (v7)"}]
+}
+{% endschema %}

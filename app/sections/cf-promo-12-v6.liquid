@@ -1,0 +1,50 @@
+<style>
+.cf-promo-12-v6{width:100%;height:{{ section.settings.height }}px;background:{{ section.settings.bg_color }};position:relative;font-family:sans-serif;overflow:hidden;color:{{ section.settings.text_color }}}
+.cf-promo-12-v6-img-split{position:absolute;top:0;right:0;width:55%;height:100%;object-fit:cover}
+.cf-promo-12-v6-inner{position:relative;z-index:2;height:100%;max-width:1400px;margin:0 auto;display:flex;align-items:center;padding:0 20px}
+.cf-promo-12-v6-content{width:45%;padding-right:80px}
+.cf-promo-12-v6-label{display:inline-block;padding:5px 15px;border:1px solid {{ section.settings.text_color }};border-radius:20px;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:30px}
+.cf-promo-12-v6-title{font-size:5vw;max-font-size:80px;line-height:1;margin:0 0 20px 0;font-family:serif;font-weight:300;text-transform:uppercase}
+.cf-promo-12-v6-desc{font-size:15px;line-height:1.6;margin:0 0 40px 0;opacity:0.8}
+.cf-promo-12-v6-btn{padding:15px 35px;background:{{ section.settings.btn_bg }};color:{{ section.settings.btn_text }};text-decoration:none;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;border-radius:4px;transition:0.3s}
+.cf-promo-12-v6-btn:hover{opacity:0.8}
+@media(max-width:900px){.cf-promo-12-v6-img-split{display:none}.cf-promo-12-v6{height:auto;padding:80px 20px;text-align:center}.cf-promo-12-v6-content{width:100%;padding:0}.cf-promo-12-v6-title{font-size:48px}}
+</style>
+
+<div class="cf-promo-12-v6">
+  {% if section.settings.image %}
+    <img src="{{ section.settings.image | image_url: width: 1400 }}" class="cf-promo-12-v6-img-split" alt="Promo">
+  {% else %}
+    <div class="cf-promo-12-v6-img-split" style="background:#e5e5e5;"></div>
+  {% endif %}
+  
+  <div class="cf-promo-12-v6-inner">
+    <div class="cf-promo-12-v6-content">
+      <div class="cf-promo-12-v6-label">{{ section.settings.label }}</div>
+      <h2 class="cf-promo-12-v6-title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="cf-promo-12-v6-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-12-v6-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Promo (v6)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Right Half Image"},
+    {"type":"text","id":"label","label":"Badge Label","default":"NEW ARRIVALS"},
+    {"type":"textarea","id":"title","label":"Title","default":"THE FALL\nCAPSULE"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Transition into the new season seamlessly with our carefully designed essentials."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP NOW"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F4ECE4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"btn_bg","label":"Button Background","default":"#222222"},
+    {"type":"color","id":"btn_text","label":"Button Text","default":"#FFFFFF"},
+    {"type":"range","id":"height","label":"Desktop Height (px)","min":400,"max":1000,"step":20,"default":640}
+  ],
+  "presets": [{"name":"12 · Women's Promo (v6)"}]
+}
+{% endschema %}

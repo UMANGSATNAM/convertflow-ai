@@ -1,0 +1,58 @@
+<style>
+.cf-trust-13-v10{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif}
+.cf-trust-13-v10-inner{max-width:1600px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start}
+.cf-trust-13-v10-header{width:40%;padding-right:60px}
+.cf-trust-13-v10-sub{font-size:12px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:{{ section.settings.accent_color }};margin-bottom:20px;display:block}
+.cf-trust-13-v10-title{font-size:clamp(40px, 6vw, 84px);line-height:1;margin:0;font-weight:900;text-transform:uppercase;letter-spacing:-0.03em}
+.cf-trust-13-v10-grid{width:60%;display:grid;grid-template-columns:1fr 1fr;column-gap:60px;row-gap:80px}
+.cf-trust-13-v10-item{display:flex;flex-direction:column}
+.cf-trust-13-v10-num{font-size:50px;font-weight:900;color:transparent;-webkit-text-stroke:2px {{ section.settings.accent_color }};margin-bottom:15px;line-height:0.8;display:inline-block}
+.cf-trust-13-v10-item-title{font-size:18px;font-weight:800;text-transform:uppercase;margin:0 0 10px 0;letter-spacing:-0.01em}
+.cf-trust-13-v10-desc{font-size:14px;line-height:1.6;opacity:0.8;margin:0}
+@media(max-width:1024px){
+  .cf-trust-13-v10-inner{flex-direction:column;align-items:stretch}
+  .cf-trust-13-v10-header{width:100%;padding-right:0;margin-bottom:80px}
+  .cf-trust-13-v10-grid{width:100%}
+}
+@media(max-width:600px){
+  .cf-trust-13-v10-grid{grid-template-columns:1fr;row-gap:60px}
+}
+</style>
+
+<div class="cf-trust-13-v10">
+  <div class="cf-trust-13-v10-inner">
+    <div class="cf-trust-13-v10-header">
+      <span class="cf-trust-13-v10-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-trust-13-v10-title">{{ section.settings.title | newline_to_br }}</h2>
+    </div>
+    
+    <div class="cf-trust-13-v10-grid">
+      {% for i in (1..4) %}
+        <div class="cf-trust-13-v10-item">
+          <div class="cf-trust-13-v10-num">0{{ i }}</div>
+          <h4 class="cf-trust-13-v10-item-title">
+            {% if i == 1 %}Authenticity Guaranteed{% elsif i == 2 %}Express Shipping{% elsif i == 3 %}Global Returns{% else %}Direct Support{% endif %}
+          </h4>
+          <p class="cf-trust-13-v10-desc">
+            {% if i == 1 %}Every item guarantees original materials and craftsmanship.{% elsif i == 2 %}Next-day air priority available globally.{% elsif i == 3 %}Seamless return process via our integrated courier network.{% else %}Direct line to our in-house advisory board.{% endif %}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Trust (v10)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"THE STANDARD"},
+    {"type":"textarea","id":"title","label":"Header Title (Newlines allowed)","default":"COMMITMENT\nTO\nEXCELLENCE"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Accent & Outline Color","default":"#555555"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":140}
+  ],
+  "presets": [{"name":"13 · Trust (v10)"}]
+}
+{% endschema %}

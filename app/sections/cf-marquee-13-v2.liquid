@@ -1,0 +1,29 @@
+<style>
+.cf-marquee-13-v2{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};overflow:hidden;padding:{{ section.settings.padding_y }}px 0;display:flex;align-items:center}
+.cf-marquee-13-v2-track{display:flex;white-space:nowrap;animation:cf-marquee-scroll-13-v2 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-13-v2-text{font-family:sans-serif;font-weight:900;text-transform:uppercase;font-size:clamp(80px, 15vw, 200px);line-height:0.8;letter-spacing:-0.03em;padding-right:50px;display:inline-block}
+@keyframes cf-marquee-scroll-13-v2{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v2">
+  <div class="cf-marquee-13-v2-track">
+    <div class="cf-marquee-13-v2-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v2-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v2-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v2-text">{{ section.settings.text }}</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v2)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"NEW ARRIVALS / COLLECTION 004 / "},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":20}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v2)"}]
+}
+{% endschema %}

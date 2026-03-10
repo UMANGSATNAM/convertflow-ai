@@ -1,0 +1,77 @@
+<style>
+.cf-header-12-v9{width:100%;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }};padding:{{ section.settings.padding_y }}px 20px;}
+.cf-header-12-v9-inner{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;align-items:center;border:1px solid {{ section.settings.border_color }};padding:25px}
+.cf-header-12-v9-top{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.cf-header-12-v9-icon{color:{{ section.settings.text_color }};cursor:pointer;transition:0.3s}
+.cf-header-12-v9-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-header-12-v9-logo{text-decoration:none;text-align:center}
+.cf-header-12-v9-logo img{max-height:{{ section.settings.logo_height }}px;height:auto}
+.cf-header-12-v9-logo h1{font-size:30px;font-weight:400;margin:0;letter-spacing:0.1em;text-transform:uppercase;color:{{ section.settings.text_color }}}
+.cf-header-12-v9-nav{display:flex;justify-content:center;gap:30px;width:100%;border-top:1px solid {{ section.settings.border_color }};padding-top:20px}
+.cf-header-12-v9-link{font-size:12px;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.15em;font-family:sans-serif;transition:0.3s}
+.cf-header-12-v9-link:hover{color:{{ section.settings.accent_color }}}
+.cf-header-12-v9-right{display:flex;gap:15px}
+@media(max-width:900px){.cf-header-12-v9-nav{display:none}}
+</style>
+
+<div class="cf-header-12-v9">
+  <div class="cf-header-12-v9-inner">
+    <div class="cf-header-12-v9-top">
+      <div class="cf-header-12-v9-icon" style="display:flex;align-items:center;gap:10px;font-size:11px;font-family:sans-serif;text-transform:uppercase;letter-spacing:0.1em">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span class="view-search-text">Search</span>
+      </div>
+      
+      <a href="/" class="cf-header-12-v9-logo">
+        {% if section.settings.logo %}
+          <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+        {% else %}
+          <h1>{{ section.settings.logo_text }}</h1>
+        {% endif %}
+      </a>
+      
+      <div class="cf-header-12-v9-right">
+        <div class="cf-header-12-v9-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <div class="cf-header-12-v9-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cf-header-12-v9-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-header-12-v9-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-header-12-v9-link">New Arrivals</a>
+        <a href="#" class="cf-header-12-v9-link">Ready to Wear</a>
+        <a href="#" class="cf-header-12-v9-link">Shoes</a>
+        <a href="#" class="cf-header-12-v9-link">Handbags</a>
+        <a href="#" class="cf-header-12-v9-link">Jewelry</a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+@media(max-width:768px){.view-search-text{display:none !important}}
+</style>
+
+{% schema %}
+{
+  "name": "12 · Women's Header (v9)",
+  "settings": [
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"ATELIER"},
+    {"type":"range","id":"logo_height","label":"Logo Height","min":20,"max":100,"step":5,"default":30},
+    {"type":"link_list","id":"menu","label":"Main Menu"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Accent","default":"#B29A84"},
+    {"type":"color","id":"border_color","label":"Card Border","default":"#E8E8E8"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"12 · Women's Header (v9)"}]
+}
+{% endschema %}

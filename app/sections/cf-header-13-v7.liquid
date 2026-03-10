@@ -1,0 +1,86 @@
+<style>
+.cf-head-13-v7{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;border-bottom:2px solid {{ section.settings.text_color }};overflow:hidden;height:80px;display:flex;align-items:center}
+.cf-head-13-v7-inner{display:flex;width:100%;align-items:center;padding:0 20px}
+.cf-head-13-v7-logo{font-size:32px;font-weight:900;letter-spacing:0.02em;text-transform:uppercase;color:{{ section.settings.text_color }};text-decoration:none;position:absolute;left:40px;z-index:10;background:{{ section.settings.bg_color }};padding:0 20px}
+.cf-head-13-v7-actions{position:absolute;right:40px;z-index:10;display:flex;gap:30px;background:{{ section.settings.bg_color }};padding:0 20px;align-items:center}
+.cf-head-13-v7-icon{cursor:pointer;transition:transform 0.3s}
+.cf-head-13-v7-icon:hover{transform:scale(1.1)}
+.cf-head-13-v7-ticker-wrap{flex:1;overflow:hidden;display:flex;white-space:nowrap}
+.cf-head-13-v7-ticker{display:flex;animation:cf-head-scroll-13-v7 25s linear infinite}
+.cf-head-13-v7-ticker:hover{animation-play-state:paused}
+@keyframes cf-head-scroll-13-v7{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.cf-head-13-v7-link-group{display:flex;align-items:center}
+.cf-head-13-v7-link{font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:{{ section.settings.text_color }};text-decoration:none;padding:0 40px;transition:0.3s;display:inline-flex;align-items:center}
+.cf-head-13-v7-link:hover{color:{{ section.settings.accent_color }};text-decoration:underline}
+.cf-head-13-v7-separator{font-size:12px;opacity:0.5}
+@media(max-width:1024px){
+  .cf-head-13-v7-logo{position:static;padding:0;flex:1}
+  .cf-head-13-v7-ticker-wrap{display:none}
+  .cf-head-13-v7-actions{position:static;padding:0}
+}
+</style>
+
+<div class="cf-head-13-v7">
+  <div class="cf-head-13-v7-inner">
+    
+    <a href="/" class="cf-head-13-v7-logo">
+      {{ section.settings.logo_text }}
+    </a>
+    
+    <div class="cf-head-13-v7-ticker-wrap">
+      <div class="cf-head-13-v7-ticker">
+        <div class="cf-head-13-v7-link-group">
+          {% for link in linklists[section.settings.menu].links limit:4 %}
+            <a href="{{ link.url }}" class="cf-head-13-v7-link">{{ link.title }}</a>
+            <span class="cf-head-13-v7-separator">/</span>
+          {% else %}
+            <a href="#" class="cf-head-13-v7-link">SHOP ALL</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">NEW RELEASES</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">ARCHIVE</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">COLLABS</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">SOUNDS</a><span class="cf-head-13-v7-separator">/</span>
+          {% endfor %}
+        </div>
+        <div class="cf-head-13-v7-link-group">
+          {% for link in linklists[section.settings.menu].links limit:4 %}
+            <a href="{{ link.url }}" class="cf-head-13-v7-link">{{ link.title }}</a>
+            <span class="cf-head-13-v7-separator">/</span>
+          {% else %}
+            <a href="#" class="cf-head-13-v7-link">SHOP ALL</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">NEW RELEASES</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">ARCHIVE</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">COLLABS</a><span class="cf-head-13-v7-separator">/</span>
+            <a href="#" class="cf-head-13-v7-link">SOUNDS</a><span class="cf-head-13-v7-separator">/</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="cf-head-13-v7-actions">
+      <div class="cf-head-13-v7-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <div class="cf-head-13-v7-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+      <div class="cf-head-13-v7-icon" style="display:none;" id="cf-head-13-v7-hamburger">
+        <svg fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </div>
+    </div>
+    <style>@media(max-width:1024px){#cf-head-13-v7-hamburger{display:block !important}}</style>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Header (v7)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"SYSTEM"},
+    {"type":"link_list","id":"menu","label":"Navigation Menu"},
+    {"type":"color","id":"bg_color","label":"Background Space","default":"#F5F5F5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#1A1A1A"},
+    {"type":"color","id":"accent_color","label":"Hover Link Color","default":"#FF0000"}
+  ],
+  "presets": [{"name":"13 · Brand Header (v7)"}]
+}
+{% endschema %}

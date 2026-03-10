@@ -1,0 +1,69 @@
+<style>
+.cf-promo-12-v7{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:serif;color:{{ section.settings.text_color }};text-align:center}
+.cf-promo-12-v7-inner{max-width:1400px;margin:0 auto}
+.cf-promo-12-v7-top{max-width:800px;margin:0 auto 60px auto}
+.cf-promo-12-v7-sub{font-size:14px;font-style:italic;color:{{ section.settings.accent_color }};margin-bottom:20px;display:block}
+.cf-promo-12-v7-title{font-size:clamp(40px, 5vw, 70px);font-weight:300;margin:0 0 30px 0;line-height:1.1;text-transform:uppercase;letter-spacing:0.02em}
+.cf-promo-12-v7-img-container{display:grid;grid-template-columns:1fr 2fr 1fr;gap:20px;align-items:center;margin-bottom:60px}
+.cf-promo-12-v7-img{width:100%;height:100%;object-fit:cover;border-radius:{{ section.settings.border_radius }}px}
+.cf-promo-12-v7-img-tall{height:600px}
+.cf-promo-12-v7-img-short{height:400px}
+.cf-promo-12-v7-btn{display:inline-block;padding:15px 45px;background:transparent;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};text-decoration:none;font-family:sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:0.15em;transition:0.3s}
+.cf-promo-12-v7-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:900px){.cf-promo-12-v7-img-container{grid-template-columns:1fr}.cf-promo-12-v7-img-tall,.cf-promo-12-v7-img-short{height:400px}}
+</style>
+
+<div class="cf-promo-12-v7">
+  <div class="cf-promo-12-v7-inner">
+    <div class="cf-promo-12-v7-top">
+      <span class="cf-promo-12-v7-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-promo-12-v7-title">{{ section.settings.title | newline_to_br }}</h2>
+    </div>
+    
+    <div class="cf-promo-12-v7-img-container">
+      {% if section.settings.img_left %}
+        <img src="{{ section.settings.img_left | image_url: width: 600 }}" class="cf-promo-12-v7-img cf-promo-12-v7-img-short" alt="Left">
+      {% else %}
+        <div class="cf-promo-12-v7-img cf-promo-12-v7-img-short" style="background:#eee"></div>
+      {% endif %}
+      
+      {% if section.settings.img_center %}
+        <img src="{{ section.settings.img_center | image_url: width: 1000 }}" class="cf-promo-12-v7-img cf-promo-12-v7-img-tall" alt="Center">
+      {% else %}
+        <div class="cf-promo-12-v7-img cf-promo-12-v7-img-tall" style="background:#ddd"></div>
+      {% endif %}
+      
+      {% if section.settings.img_right %}
+        <img src="{{ section.settings.img_right | image_url: width: 600 }}" class="cf-promo-12-v7-img cf-promo-12-v7-img-short" alt="Right">
+      {% else %}
+        <div class="cf-promo-12-v7-img cf-promo-12-v7-img-short" style="background:#eee"></div>
+      {% endif %}
+    </div>
+    
+    <a href="{{ section.settings.btn_link }}" class="cf-promo-12-v7-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Promo (v7)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"Elevated Essentials"},
+    {"type":"textarea","id":"title","label":"Header Title","default":"A STUDY IN\nPROPORTION"},
+    
+    {"type":"image_picker","id":"img_left","label":"Left Image"},
+    {"type":"image_picker","id":"img_center","label":"Center Large Image"},
+    {"type":"image_picker","id":"img_right","label":"Right Image"},
+    
+    {"type":"text","id":"btn_label","label":"Button Label","default":"EXPERIENCE THE COLLECTION"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#A38971"},
+    {"type":"range","id":"border_radius","label":"Image Rounding","min":0,"max":100,"step":4,"default":0},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Promo (v7)"}]
+}
+{% endschema %}

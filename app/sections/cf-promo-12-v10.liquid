@@ -1,0 +1,50 @@
+<style>
+.cf-promo-12-v10{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:serif;color:{{ section.settings.text_color }};text-align:center}
+.cf-promo-12-v10-inner{max-width:1200px;margin:0 auto;position:relative}
+.cf-promo-12-v10-stars{display:flex;justify-content:center;gap:10px;margin-bottom:20px;color:{{ section.settings.accent_color }}}
+.cf-promo-12-v10-title{font-size:clamp(44px, 6vw, 80px);font-weight:400;margin:0 0 20px 0;line-height:1;text-transform:uppercase}
+.cf-promo-12-v10-desc{font-size:16px;max-width:600px;margin:0 auto 40px auto;line-height:1.6;font-family:sans-serif;opacity:0.8}
+.cf-promo-12-v10-image{width:100%;height:500px;object-fit:cover;border-radius:1000px 1000px 0 0;margin-bottom:40px}
+.cf-promo-12-v10-link{font-size:12px;font-family:sans-serif;text-transform:uppercase;letter-spacing:0.2em;color:{{ section.settings.text_color }};text-decoration:none;border-bottom:1px solid {{ section.settings.text_color }};padding-bottom:5px;transition:0.3s;font-weight:600}
+.cf-promo-12-v10-link:hover{color:{{ section.settings.accent_color }};border-color:{{ section.settings.accent_color }}}
+@media(max-width:768px){.cf-promo-12-v10-image{height:350px}}
+</style>
+
+<div class="cf-promo-12-v10">
+  <div class="cf-promo-12-v10-inner">
+    {% if section.settings.image %}
+      <img src="{{ section.settings.image | image_url: width: 1200 }}" class="cf-promo-12-v10-image" alt="Promo Arch">
+    {% else %}
+      <div class="cf-promo-12-v10-image" style="background:#e8e8e8"></div>
+    {% endif %}
+    
+    <div class="cf-promo-12-v10-stars">
+      {% for i in (1..3) %}
+        <svg fill="currentColor" width="16" height="16" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.6-6.3-4.8-6.3 4.8 2.3-7.6-6-4.6h7.6z"/></svg>
+      {% endfor %}
+    </div>
+    
+    <h2 class="cf-promo-12-v10-title">{{ section.settings.title }}</h2>
+    <p class="cf-promo-12-v10-desc">{{ section.settings.desc }}</p>
+    <a href="{{ section.settings.btn_link }}" class="cf-promo-12-v10-link">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Promo (v10)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Archway Image"},
+    {"type":"textarea","id":"title","label":"Title","default":"TIMELESS BEAUTY"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Discover our best-selling pieces that transcend seasons. Hand-crafted, ethically sourced, and designed to last a lifetime."},
+    {"type":"text","id":"btn_label","label":"Button Link Text","default":"DISCOVER CLASSICS"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Star Accent Color","default":"#C5A387"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Promo (v10)"}]
+}
+{% endschema %}

@@ -1,0 +1,36 @@
+<style>
+.cf-snack-12-v6{width:100%;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }};padding:10px 0;position:relative;border-bottom:1px dashed {{ section.settings.border_color }}}
+.cf-snack-12-v6-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:30px}
+.cf-snack-12-v6-text{font-size:11px;text-transform:uppercase;letter-spacing:0.15em;margin:0;font-weight:600}
+.cf-snack-12-v6-star{color:{{ section.settings.accent_color }}}
+.cf-snack-12-v6-copy{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};border:none;padding:6px 20px;border-radius:2px;font-family:sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;transition:0.3s;font-weight:700}
+.cf-snack-12-v6-copy:hover{opacity:0.8}
+@media(max-width:768px){.cf-snack-12-v6-inner{flex-direction:column;gap:10px;text-align:center}}
+</style>
+
+<div class="cf-snack-12-v6" id="cf-snack-12-v6-{{ section.id }}">
+  <div class="cf-snack-12-v6-inner">
+    <p class="cf-snack-12-v6-text">{{ section.settings.text_1 }}</p>
+    <svg class="cf-snack-12-v6-star" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.6-6.3-4.8-6.3 4.8 2.3-7.6-6-4.6h7.6z"/></svg>
+    <p class="cf-snack-12-v6-text">{{ section.settings.text_2 }}</p>
+    <button class="cf-snack-12-v6-copy" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); this.innerText='SAVED!'">
+      CODE: {{ section.settings.code }}
+    </button>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Snack (v6)",
+  "settings": [
+    {"type":"text","id":"text_1","label":"Text Left","default":"FINAL CLEARANCE"},
+    {"type":"text","id":"text_2","label":"Text Right","default":"EXTRA 20% OFF SALE STYLES"},
+    {"type":"text","id":"code","label":"Promo Code","default":"EXTRA20"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F2EDE4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Star Divider Color","default":"#957B5E"},
+    {"type":"color","id":"border_color","label":"Dashed Border Color","default":"#D1C4B5"}
+  ],
+  "presets": [{"name":"12 · Women's Snack (v6)"}]
+}
+{% endschema %}

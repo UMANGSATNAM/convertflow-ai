@@ -1,0 +1,30 @@
+<style>
+.cf-marquee-13-v4{width:100%;overflow:hidden;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};display:flex;align-items:center}
+.cf-marquee-13-v4-track{display:flex;white-space:nowrap;animation:cf-marquee-scroll-13-v4 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-13-v4-text{font-family:sans-serif;font-weight:900;text-transform:uppercase;font-size:clamp(60px, 10vw, 150px);line-height:0.9;letter-spacing:0.02em;padding-right:40px;display:inline-block;color:transparent;-webkit-text-stroke:{{ section.settings.stroke_width }}px {{ section.settings.text_color }}}
+@keyframes cf-marquee-scroll-13-v4{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v4">
+  <div class="cf-marquee-13-v4-track">
+    <div class="cf-marquee-13-v4-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v4-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v4-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v4-text">{{ section.settings.text }}</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v4)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"RESTOCK / DROP NO.9 / LIMITED / "},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Outline Color","default":"#111111"},
+    {"type":"range","id":"stroke_width","label":"Outline Thickness","min":1,"max":5,"step":1,"default":2},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":2,"default":25},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v4)"}]
+}
+{% endschema %}

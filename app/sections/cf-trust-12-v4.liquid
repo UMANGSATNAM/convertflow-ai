@@ -1,0 +1,78 @@
+<style>
+.cf-trust-12-v4{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-trust-12-v4-inner{max-width:1200px;margin:0 auto;display:flex;background:{{ section.settings.card_bg }};border-radius:{{ section.settings.border_radius }}px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,0.04)}
+.cf-trust-12-v4-img-wrap{flex:1;position:relative;background:#f5f5f5}
+.cf-trust-12-v4-img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.cf-trust-12-v4-content{flex:1;padding:80px;display:flex;flex-direction:column;justify-content:center}
+.cf-trust-12-v4-header{margin-bottom:40px}
+.cf-trust-12-v4-title{font-family:serif;font-size:clamp(32px, 4vw, 48px);font-weight:400;margin:0 0 10px 0;line-height:1.2}
+.cf-trust-12-v4-desc{font-size:14px;opacity:0.7;line-height:1.6;margin:0}
+.cf-trust-12-v4-list{display:flex;flex-direction:column;gap:30px}
+.cf-trust-12-v4-item{display:flex;gap:20px;align-items:flex-start}
+.cf-trust-12-v4-icon{width:40px;height:40px;border-radius:50%;background:{{ section.settings.icon_bg }};color:{{ section.settings.icon_col }};display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cf-trust-12-v4-item-info{display:flex;flex-direction:column}
+.cf-trust-12-v4-item-title{font-family:serif;font-size:20px;font-style:italic;margin:0 0 5px 0}
+.cf-trust-12-v4-item-desc{font-size:13px;opacity:0.75;line-height:1.5;margin:0}
+@media(max-width:900px){.cf-trust-12-v4-inner{flex-direction:column}.cf-trust-12-v4-img-wrap{height:300px}.cf-trust-12-v4-content{padding:40px 20px}}
+</style>
+
+<div class="cf-trust-12-v4">
+  <div class="cf-trust-12-v4-inner">
+    <div class="cf-trust-12-v4-img-wrap">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 800 }}" class="cf-trust-12-v4-img" alt="Trust">
+      {% else %}
+        <div class="cf-trust-12-v4-img" style="background:#e8e8e8"></div>
+      {% endif %}
+    </div>
+    <div class="cf-trust-12-v4-content">
+      <div class="cf-trust-12-v4-header">
+        <h2 class="cf-trust-12-v4-title">{{ section.settings.title }}</h2>
+        <p class="cf-trust-12-v4-desc">{{ section.settings.desc }}</p>
+      </div>
+      
+      <div class="cf-trust-12-v4-list">
+        {% for i in (1..3) %}
+          <div class="cf-trust-12-v4-item">
+            <div class="cf-trust-12-v4-icon">
+              {% if i == 1 %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              {% elsif i == 2 %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              {% else %}
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              {% endif %}
+            </div>
+            <div class="cf-trust-12-v4-item-info">
+              <h3 class="cf-trust-12-v4-item-title">
+                {% if i == 1 %}Authenticity Guaranteed{% elsif i == 2 %}Secure Payments{% else %}Top Quality Craftsmanship{% endif %}
+              </h3>
+              <p class="cf-trust-12-v4-item-desc">
+                {% if i == 1 %}Every item is verified by our team of experts.{% elsif i == 2 %}Your data is safe with our encrypted checkout.{% else %}Crafted using time-honored techniques.{% endif %}
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Trust (v4)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Left Visual"},
+    {"type":"text","id":"title","label":"Title","default":"Our Commitment"},
+    {"type":"textarea","id":"desc","label":"Description","default":"We pride ourselves on offering an unparalleled shopping experience."},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"icon_bg","label":"Icon Circle Background","default":"#F4ECE4"},
+    {"type":"color","id":"icon_col","label":"Icon Color","default":"#A38971"},
+    {"type":"range","id":"border_radius","label":"Card Rounding","min":0,"max":40,"step":4,"default":8},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Trust (v4)"}]
+}
+{% endschema %}

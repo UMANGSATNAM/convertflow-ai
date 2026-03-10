@@ -1,0 +1,58 @@
+<style>
+.cf-feat-12-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }}}
+.cf-feat-12-v3-inner{max-width:1400px;margin:0 auto}
+.cf-feat-12-v3-header{text-align:center;margin-bottom:60px}
+.cf-feat-12-v3-sub{font-style:italic;font-size:16px;color:{{ section.settings.accent_color }};margin-bottom:15px;display:block}
+.cf-feat-12-v3-title{font-size:clamp(40px, 5vw, 64px);font-weight:400;margin:0;letter-spacing:0.02em}
+.cf-feat-12-v3-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:2px;background:{{ section.settings.border_color }};border:1px solid {{ section.settings.border_color }}}
+.cf-feat-12-v3-card{background:{{ section.settings.bg_color }};padding:25px;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;transition:0.3s}
+.cf-feat-12-v3-img-wrap{width:100%;aspect-ratio:3/4;overflow:hidden;margin-bottom:20px;background:#f9f9f9}
+.cf-feat-12-v3-img{width:100%;height:100%;object-fit:cover;transition:0.6s}
+.cf-feat-12-v3-card:hover .cf-feat-12-v3-img{transform:scale(1.03)}
+.cf-feat-12-v3-brand{font-family:sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.6;margin-bottom:8px}
+.cf-feat-12-v3-title-product{font-size:18px;color:{{ section.settings.text_color }};margin:0 0 10px 0;font-weight:400}
+.cf-feat-12-v3-price{font-family:sans-serif;font-size:13px;font-weight:600;color:{{ section.settings.text_color }};margin:0}
+.cf-feat-12-v3-btn{margin-top:20px;padding:10px;width:100%;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};font-family:sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;transition:0.3s;font-weight:600}
+.cf-feat-12-v3-card:hover .cf-feat-12-v3-btn{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:1024px){.cf-feat-12-v3-grid{grid-template-columns:repeat(2, 1fr)}}
+@media(max-width:600px){.cf-feat-12-v3-card{padding:15px}.cf-feat-12-v3-btn{opacity:1;pointer-events:all}}
+</style>
+
+<div class="cf-feat-12-v3">
+  <div class="cf-feat-12-v3-inner">
+    <div class="cf-feat-12-v3-header">
+      <span class="cf-feat-12-v3-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-feat-12-v3-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-feat-12-v3-grid">
+      {% for i in (1..4) %}
+        <a href="#" class="cf-feat-12-v3-card">
+          <div class="cf-feat-12-v3-img-wrap">
+            <div class="cf-feat-12-v3-img" style="background:#e5e5e5"></div>
+          </div>
+          <span class="cf-feat-12-v3-brand">Designer Name</span>
+          <h3 class="cf-feat-12-v3-title-product">Wrap Midi Dress</h3>
+          <p class="cf-feat-12-v3-price">$265.00</p>
+          <div class="cf-feat-12-v3-btn">Add to tote</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured (v3)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"Hand-picked for you"},
+    {"type":"text","id":"title","label":"Header Title","default":"The Spring Edit"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Subtitle","default":"#957B5E"},
+    {"type":"color","id":"border_color","label":"Grid Separator Color","default":"#EAE8E4"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Featured (v3)"}]
+}
+{% endschema %}

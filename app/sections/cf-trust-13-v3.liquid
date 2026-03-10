@@ -1,0 +1,39 @@
+<style>
+.cf-trust-13-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif}
+.cf-trust-13-v3-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3, 1fr);gap:60px;text-align:center}
+.cf-trust-13-v3-item{display:flex;flex-direction:column;align-items:center}
+.cf-trust-13-v3-num{font-size:80px;font-weight:900;line-height:1;margin-bottom:20px;color:transparent;-webkit-text-stroke:1px {{ section.settings.text_color }};opacity:0.6}
+.cf-trust-13-v3-title{font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 15px 0}
+.cf-trust-13-v3-desc{font-size:14px;line-height:1.6;opacity:0.8;margin:0;max-width:280px}
+@media(max-width:900px){
+  .cf-trust-13-v3-inner{grid-template-columns:1fr;gap:50px}
+}
+</style>
+
+<div class="cf-trust-13-v3">
+  <div class="cf-trust-13-v3-inner">
+    {% for i in (1..3) %}
+      <div class="cf-trust-13-v3-item">
+        <div class="cf-trust-13-v3-num">0{{ i }}</div>
+        <h4 class="cf-trust-13-v3-title">
+          {% if i == 1 %}Ethical Production{% elsif i == 2 %}Precision Cut{% else %}Lifetime Care{% endif %}
+        </h4>
+        <p class="cf-trust-13-v3-desc">
+          {% if i == 1 %}All garments are manufactured in thoroughly vetted facilities ensuring fair wage compliance.{% elsif i == 2 %}Each silhouette undergoes rigorous toile prototyping to achieve the definitive form.{% else %}We offer complimentary repairs on hardware and structural seams to extend garment life.{% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Trust (v3)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Trust (v3)"}]
+}
+{% endschema %}

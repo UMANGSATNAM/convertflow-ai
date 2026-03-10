@@ -1,0 +1,76 @@
+<style>
+.cf-promo-13-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;display:flex;justify-content:center}
+.cf-promo-13-v6-inner{max-width:1600px;width:100%;display:grid;grid-template-columns:1.5fr 1fr;border:1px solid {{ section.settings.text_color }}}
+.cf-promo-13-v6-img-wrap{border-right:1px solid {{ section.settings.text_color }};position:relative;object-fit:cover;min-height:600px}
+.cf-promo-13-v6-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.cf-promo-13-v6-info{display:flex;flex-direction:column}
+.cf-promo-13-v6-info-top{padding:40px;border-bottom:1px solid {{ section.settings.text_color }};flex:1}
+.cf-promo-13-v6-sub{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.15em;display:block;margin-bottom:20px;color:{{ section.settings.accent_color }}}
+.cf-promo-13-v6-title{font-size:clamp(32px, 4vw, 56px);font-weight:800;line-height:1.1;text-transform:uppercase;letter-spacing:-0.01em;margin:0 0 30px 0}
+.cf-promo-13-v6-desc{font-size:14px;line-height:1.6;margin:0;opacity:0.8}
+.cf-promo-13-v6-grid{display:grid;grid-template-columns:1fr 1fr}
+.cf-promo-13-v6-spec{padding:30px 40px;border-right:1px solid {{ section.settings.text_color }};display:flex;flex-direction:column;justify-content:center}
+.cf-promo-13-v6-spec:last-child{border-right:none}
+.cf-promo-13-v6-spec-n{font-size:32px;font-weight:900;margin-bottom:5px;line-height:1}
+.cf-promo-13-v6-spec-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;opacity:0.6}
+.cf-promo-13-v6-action{padding:30px;text-align:center;border-top:1px solid {{ section.settings.text_color }};font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;color:inherit;transition:0.3s;display:block}
+.cf-promo-13-v6-action:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:1024px){
+  .cf-promo-13-v6-inner{grid-template-columns:1fr}
+  .cf-promo-13-v6-img-wrap{min-height:400px;border-right:none;border-bottom:1px solid {{ section.settings.text_color }}}
+}
+</style>
+
+<div class="cf-promo-13-v6">
+  <div class="cf-promo-13-v6-inner">
+    <div class="cf-promo-13-v6-img-wrap">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="Promo" class="cf-promo-13-v6-img">
+      {% else %}
+        <div class="cf-promo-13-v6-img" style="background:#e0e0e0;"></div>
+      {% endif %}
+    </div>
+    
+    <div class="cf-promo-13-v6-info">
+      <div class="cf-promo-13-v6-info-top">
+        <span class="cf-promo-13-v6-sub">{{ section.settings.subtitle }}</span>
+        <h2 class="cf-promo-13-v6-title">{{ section.settings.title }}</h2>
+        <p class="cf-promo-13-v6-desc">{{ section.settings.desc }}</p>
+      </div>
+      <div class="cf-promo-13-v6-grid">
+        <div class="cf-promo-13-v6-spec">
+          <div class="cf-promo-13-v6-spec-n">{{ section.settings.spec_1_n }}</div>
+          <div class="cf-promo-13-v6-spec-l">{{ section.settings.spec_1_l }}</div>
+        </div>
+        <div class="cf-promo-13-v6-spec">
+          <div class="cf-promo-13-v6-spec-n">{{ section.settings.spec_2_n }}</div>
+          <div class="cf-promo-13-v6-spec-l">{{ section.settings.spec_2_l }}</div>
+        </div>
+      </div>
+       <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v6-action">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v6)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Blueprint Image"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"TECHNICAL DOC 01"},
+    {"type":"text","id":"title","label":"Header Title","default":"Functional Outerwear Specs"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Constructed with Gore-Tex Pro shell membranes and precision seam-taping for uncompromising storm protection."},
+    {"type":"text","id":"spec_1_n","label":"Spec 1 Value","default":"10k"},
+    {"type":"text","id":"spec_1_l","label":"Spec 1 Label","default":"Waterproof"},
+    {"type":"text","id":"spec_2_n","label":"Spec 2 Value","default":"3L"},
+    {"type":"text","id":"spec_2_l","label":"Spec 2 Label","default":"Membrane Layers"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Read Technical Specs"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFDFD"},
+    {"type":"color","id":"text_color","label":"Text & Border Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Subtitle","default":"#D4AF37"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v6)"}]
+}
+{% endschema %}

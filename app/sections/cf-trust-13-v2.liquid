@@ -1,0 +1,44 @@
+<style>
+.cf-trust-13-v2{width:100%;padding:40px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;border-top:1px solid {{ section.settings.text_color }};border-bottom:1px solid {{ section.settings.text_color }}}
+.cf-trust-13-v2-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(4, 1fr)}
+.cf-trust-13-v2-item{padding:30px 40px;border-right:1px solid {{ section.settings.text_color }};display:flex;flex-direction:column;justify-content:center}
+.cf-trust-13-v2-item:last-child{border-right:none}
+.cf-trust-13-v2-title{font-size:18px;font-weight:400;margin:0 0 10px 0;letter-spacing:0.02em}
+.cf-trust-13-v2-desc{font-size:13px;font-family:sans-serif;line-height:1.6;opacity:0.75;margin:0;max-width:250px}
+@media(max-width:1024px){
+  .cf-trust-13-v2-inner{grid-template-columns:repeat(2, 1fr)}
+  .cf-trust-13-v2-item:nth-child(2){border-right:none}
+  .cf-trust-13-v2-item:nth-child(1), .cf-trust-13-v2-item:nth-child(2){border-bottom:1px solid {{ section.settings.text_color }}}
+}
+@media(max-width:600px){
+  .cf-trust-13-v2-inner{grid-template-columns:1fr}
+  .cf-trust-13-v2-item{border-right:none;border-bottom:1px solid {{ section.settings.text_color }};padding:30px 20px}
+  .cf-trust-13-v2-item:last-child{border-bottom:none}
+}
+</style>
+
+<div class="cf-trust-13-v2">
+  <div class="cf-trust-13-v2-inner">
+    {% for i in (1..4) %}
+      <div class="cf-trust-13-v2-item">
+        <h4 class="cf-trust-13-v2-title">
+          {% if i == 1 %}Global Delivery{% elsif i == 2 %}Complimentary Returns{% elsif i == 3 %}Secure Checkout{% else %}Client Advisory{% endif %}
+        </h4>
+        <p class="cf-trust-13-v2-desc">
+          {% if i == 1 %}Express worldwide shipping available on all orders over $300.{% elsif i == 2 %}14-day return window evaluated case-by-case for pristine garments.{% elsif i == 3 %}Encrypted payment processing via secure gateway protocol.{% else %}Speak directly with our studio team regarding sizing and fit.{% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Trust (v2)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text & Border Color","default":"#111111"}
+  ],
+  "presets": [{"name":"13 · Trust (v2)"}]
+}
+{% endschema %}

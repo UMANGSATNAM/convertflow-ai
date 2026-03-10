@@ -1,0 +1,47 @@
+<style>
+.cf-snack-13-v2{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};border-top:1px solid {{ section.settings.text_color }};border-bottom:1px solid {{ section.settings.text_color }};font-family:sans-serif}
+.cf-snack-13-v2-inner{max-width:1600px;margin:0 auto;display:grid;grid-template-columns:repeat(3, 1fr)}
+.cf-snack-13-v2-item{padding:40px 30px;border-right:1px solid {{ section.settings.text_color }};text-align:center;display:flex;flex-direction:column;justify-content:center}
+.cf-snack-13-v2-item:last-child{border-right:none}
+.cf-snack-13-v2-val{font-size:clamp(32px, 4vw, 56px);font-weight:900;line-height:1;margin-bottom:10px;text-transform:uppercase;letter-spacing:-0.02em}
+.cf-snack-13-v2-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7}
+@media(max-width:900px){
+  .cf-snack-13-v2-inner{grid-template-columns:1fr}
+  .cf-snack-13-v2-item{border-right:none;border-bottom:1px solid {{ section.settings.text_color }};padding:30px}
+  .cf-snack-13-v2-item:last-child{border-bottom:none}
+}
+</style>
+
+<div class="cf-snack-13-v2">
+  <div class="cf-snack-13-v2-inner">
+    <div class="cf-snack-13-v2-item">
+      <div class="cf-snack-13-v2-val">{{ section.settings.val_1 }}</div>
+      <div class="cf-snack-13-v2-label">{{ section.settings.label_1 }}</div>
+    </div>
+    <div class="cf-snack-13-v2-item">
+      <div class="cf-snack-13-v2-val">{{ section.settings.val_2 }}</div>
+      <div class="cf-snack-13-v2-label">{{ section.settings.label_2 }}</div>
+    </div>
+    <div class="cf-snack-13-v2-item">
+      <div class="cf-snack-13-v2-val">{{ section.settings.val_3 }}</div>
+      <div class="cf-snack-13-v2-label">{{ section.settings.label_3 }}</div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack (v2)",
+  "settings": [
+    {"type":"text","id":"val_1","label":"Value 1","default":"24HR"},
+    {"type":"text","id":"label_1","label":"Label 1","default":"Processing Time"},
+    {"type":"text","id":"val_2","label":"Value 2","default":"FREE"},
+    {"type":"text","id":"label_2","label":"Label 2","default":"Shipping Over $250"},
+    {"type":"text","id":"val_3","label":"Value 3","default":"14D"},
+    {"type":"text","id":"label_3","label":"Label 3","default":"Returns Allowed"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text & Border Color","default":"#111111"}
+  ],
+  "presets": [{"name":"13 · Brand Snack (v2)"}]
+}
+{% endschema %}

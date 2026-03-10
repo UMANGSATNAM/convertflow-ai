@@ -1,0 +1,58 @@
+<style>
+.cf-trust-13-v6{width:100%;background:{{ section.settings.bg_color }};padding:0;font-family:sans-serif}
+.cf-trust-13-v6-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:1px;background:{{ section.settings.border_color }}}
+.cf-trust-13-v6-item{background:{{ section.settings.card_bg }};color:{{ section.settings.text_color }};padding:60px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;transition:0.4s}
+.cf-trust-13-v6-item:hover{background:{{ section.settings.hover_bg }};color:{{ section.settings.hover_text }}}
+.cf-trust-13-v6-icon{margin-bottom:20px}
+.cf-trust-13-v6-icon svg{width:32px;height:32px;stroke:currentColor}
+.cf-trust-13-v6-title{font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 10px 0}
+.cf-trust-13-v6-desc{font-size:12px;opacity:0.8;margin:0}
+@media(max-width:1024px){
+  .cf-trust-13-v6-grid{grid-template-columns:repeat(2, 1fr)}
+}
+@media(max-width:600px){
+  .cf-trust-13-v6-grid{grid-template-columns:1fr}
+  .cf-trust-13-v6-item{padding:40px 20px}
+}
+</style>
+
+<div class="cf-trust-13-v6">
+  <div class="cf-trust-13-v6-grid">
+    {% for i in (1..4) %}
+      <div class="cf-trust-13-v6-item">
+        <div class="cf-trust-13-v6-icon">
+          {% if i == 1 %}
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          {% elsif i == 2 %}
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          {% elsif i == 3 %}
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          {% else %}
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          {% endif %}
+        </div>
+        <h4 class="cf-trust-13-v6-title">
+          {% if i == 1 %}Authenticity{% elsif i == 2 %}Fast Dispatch{% elsif i == 3 %}Secure Checkout{% else %}Rated 4.9/5{% endif %}
+        </h4>
+        <p class="cf-trust-13-v6-desc">
+          {% if i == 1 %}Guaranteed genuine products.{% elsif i == 2 %}Orders shipped within 24 hours.{% elsif i == 3 %}100% encrypted payment processing.{% else %}Based on 5,000+ verified customer reviews.{% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Trust (v6)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"card_bg","label":"Block Background","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"hover_bg","label":"Hover Background","default":"#111111"},
+    {"type":"color","id":"hover_text","label":"Hover Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"border_color","label":"Grid Separator Color","default":"#DDDDDD"}
+  ],
+  "presets": [{"name":"13 · Trust (v6)"}]
+}
+{% endschema %}

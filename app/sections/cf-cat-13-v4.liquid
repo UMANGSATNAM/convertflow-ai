@@ -1,0 +1,54 @@
+<style>
+.cf-cat-13-v4{width:100%;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }};overflow:hidden}
+.cf-cat-13-v4-header{padding:0 40px;margin-bottom:40px}
+.cf-cat-13-v4-title{font-size:clamp(32px, 5vw, 64px);font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;margin:0}
+.cf-cat-13-v4-scroll{display:flex;gap:40px;padding:0 40px 40px 40px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.cf-cat-13-v4-scroll::-webkit-scrollbar{display:none}
+.cf-cat-13-v4-card{flex:0 0 450px;scroll-snap-align:start;text-decoration:none;display:block;position:relative}
+.cf-cat-13-v4-img-wrap{width:100%;aspect-ratio:4/5;background:#ebebeb;overflow:hidden;position:relative}
+.cf-cat-13-v4-img{width:100%;height:100%;object-fit:cover;transition:0.6s}
+.cf-cat-13-v4-card:hover .cf-cat-13-v4-img{transform:scale(1.05);filter:brightness(0.8)}
+.cf-cat-13-v4-label{font-size:clamp(28px, 4vw, 42px);font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;color:{{ section.settings.text_color }};margin-top:20px;display:flex;justify-content:space-between;align-items:center}
+.cf-cat-13-v4-icon{width:40px;height:40px;border-radius:50%;border:2px solid {{ section.settings.text_color }};display:flex;align-items:center;justify-content:center;transition:0.3s;background:transparent}
+.cf-cat-13-v4-card:hover .cf-cat-13-v4-icon{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:768px){
+  .cf-cat-13-v4-card{flex:0 0 300px}
+  .cf-cat-13-v4-header{padding:0 20px}
+  .cf-cat-13-v4-scroll{padding:0 20px 40px 20px;gap:20px}
+}
+</style>
+
+<div class="cf-cat-13-v4">
+  <div class="cf-cat-13-v4-header">
+    <h2 class="cf-cat-13-v4-title">{{ section.settings.title }}</h2>
+  </div>
+  
+  <div class="cf-cat-13-v4-scroll">
+    {% for i in (1..5) %}
+      <a href="#" class="cf-cat-13-v4-card">
+        <div class="cf-cat-13-v4-img-wrap">
+          <div class="cf-cat-13-v4-img" style="background:#555;"></div>
+        </div>
+        <div class="cf-cat-13-v4-label">
+           {% if i == 1 %}Tops{% elsif i == 2 %}Bottoms{% elsif i == 3 %}Outerwear{% elsif i == 4 %}Accessories{% else %}Headwear{% endif %}
+           <div class="cf-cat-13-v4-icon">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+           </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Category (v4)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"DEPARTMENTS"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F0F0F0"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Category (v4)"}]
+}
+{% endschema %}

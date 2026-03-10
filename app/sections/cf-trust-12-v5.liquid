@@ -1,0 +1,52 @@
+<style>
+.cf-trust-12-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-trust-12-v5-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:center;gap:30px;flex-wrap:wrap}
+.cf-trust-12-v5-card{flex:1;min-width:200px;max-width:320px;background:{{ section.settings.card_bg }};padding:30px 20px;border-radius:100px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 15px 35px rgba(0,0,0,0.03);border:1px solid {{ section.settings.border_color }};transition:0.3s;position:relative;overflow:hidden}
+.cf-trust-12-v5-card:hover{transform:translateY(-10px);box-shadow:0 25px 45px rgba(0,0,0,0.05)}
+.cf-trust-12-v5-icon{width:50px;height:50px;border-radius:50%;background:{{ section.settings.icon_bg }};color:{{ section.settings.icon_col }};display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.cf-trust-12-v5-title{font-family:serif;font-size:20px;font-style:italic;margin:0 0 10px 0;font-weight:400}
+.cf-trust-12-v5-desc{font-size:12px;opacity:0.7;margin:0;line-height:1.5}
+@media(max-width:768px){.cf-trust-12-v5-inner{gap:20px}.cf-trust-12-v5-card{border-radius:20px}}
+</style>
+
+<div class="cf-trust-12-v5">
+  <div class="cf-trust-12-v5-inner">
+    {% for i in (1..4) %}
+      <div class="cf-trust-12-v5-card">
+        <div class="cf-trust-12-v5-icon">
+          {% if i == 1 %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          {% elsif i == 2 %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+          {% elsif i == 3 %}
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>
+          {% else %}
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          {% endif %}
+        </div>
+        <h3 class="cf-trust-12-v5-title">
+          {% if i == 1 %}Premium Packaging{% elsif i == 2 %}Customer Support{% elsif i == 3 %}Curated Selections{% else %}Safe & Secure{% endif %}
+        </h3>
+        <p class="cf-trust-12-v5-desc">
+          {% if i == 1 %}Unboxing designed to feel like a gift.{% elsif i == 2 %}We are here to help, 7 days a week.{% elsif i == 3 %}Hand-selected styles for you.{% else %}Checkout safely with full encryption.{% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Trust (v5)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F4ECE4"},
+    {"type":"color","id":"card_bg","label":"Pill Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"icon_bg","label":"Icon Circle","default":"#FDFBF7"},
+    {"type":"color","id":"icon_col","label":"Icon Color","default":"#957B5E"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"transparent"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Trust (v5)"}]
+}
+{% endschema %}

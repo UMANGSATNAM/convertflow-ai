@@ -1,0 +1,66 @@
+<style>
+.cf-cat-13-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;overflow:hidden}
+.cf-cat-13-v8-inner{max-width:1600px;margin:0 auto}
+.cf-cat-13-v8-list{display:flex;flex-direction:column;border-top:2px solid {{ section.settings.text_color }}}
+.cf-cat-13-v8-item{padding:40px 0;display:flex;align-items:center;border-bottom:2px solid {{ section.settings.text_color }};text-decoration:none;color:inherit;position:relative;transition:padding 0.4s}
+.cf-cat-13-v8-item:hover{padding-left:40px}
+.cf-cat-13-v8-img-wrap{width:120px;height:120px;border-radius:50%;overflow:hidden;background:#ccc;flex-shrink:0;margin-right:60px;transition:0.4s;transform:scale(0.8);opacity:0.5}
+.cf-cat-13-v8-img{width:100%;height:100%;object-fit:cover}
+.cf-cat-13-v8-item:hover .cf-cat-13-v8-img-wrap{transform:scale(1.2);opacity:1}
+.cf-cat-13-v8-title{font-size:clamp(40px, 8vw, 140px);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;line-height:0.8;margin:0;flex:1}
+.cf-cat-13-v8-arrow{font-size:40px;opacity:0;transform:translateX(-20px);transition:0.4s;font-weight:400}
+.cf-cat-13-v8-item:hover .cf-cat-13-v8-arrow{opacity:1;transform:translateX(0)}
+@media(max-width:900px){
+  .cf-cat-13-v8-item{padding:30px 0;flex-wrap:wrap}
+  .cf-cat-13-v8-item:hover{padding-left:0}
+  .cf-cat-13-v8-img-wrap{width:80px;height:80px;margin-right:20px;transform:scale(1);opacity:1}
+  .cf-cat-13-v8-arrow{display:none}
+}
+</style>
+
+<div class="cf-cat-13-v8">
+  <div class="cf-cat-13-v8-inner">
+    <div class="cf-cat-13-v8-list">
+      <a href="#" class="cf-cat-13-v8-item">
+        <div class="cf-cat-13-v8-img-wrap">
+          <div class="cf-cat-13-v8-img" style="background:#222;"></div>
+        </div>
+        <h3 class="cf-cat-13-v8-title">Outerwear</h3>
+        <div class="cf-cat-13-v8-arrow">&rarr;</div>
+      </a>
+      <a href="#" class="cf-cat-13-v8-item">
+        <div class="cf-cat-13-v8-img-wrap">
+          <div class="cf-cat-13-v8-img" style="background:#444;"></div>
+        </div>
+        <h3 class="cf-cat-13-v8-title">Knitwear</h3>
+        <div class="cf-cat-13-v8-arrow">&rarr;</div>
+      </a>
+      <a href="#" class="cf-cat-13-v8-item">
+        <div class="cf-cat-13-v8-img-wrap">
+          <div class="cf-cat-13-v8-img" style="background:#666;"></div>
+        </div>
+        <h3 class="cf-cat-13-v8-title">Trousers</h3>
+        <div class="cf-cat-13-v8-arrow">&rarr;</div>
+      </a>
+      <a href="#" class="cf-cat-13-v8-item">
+        <div class="cf-cat-13-v8-img-wrap">
+          <div class="cf-cat-13-v8-img" style="background:#888;"></div>
+        </div>
+        <h3 class="cf-cat-13-v8-title">Footwear</h3>
+        <div class="cf-cat-13-v8-arrow">&rarr;</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Category (v8)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F4ECE4"},
+    {"type":"color","id":"text_color","label":"Lines & Typography Color","default":"#1A1A1A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Brand Category (v8)"}]
+}
+{% endschema %}

@@ -1,0 +1,45 @@
+<style>
+.cf-marquee-12-v9{width:100%;height:{{ section.settings.height }}px;background:{{ section.settings.bg_color }};position:relative;overflow:hidden;font-family:serif;color:{{ section.settings.text_color }};display:flex;align-items:center}
+.cf-marquee-12-v9-track{display:flex;white-space:nowrap;position:absolute;width:200%;animation:cf-scroll-12-v9 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-12-v9-content{display:flex;align-items:center;width:50%}
+.cf-marquee-12-v9-text{font-size:{{ section.settings.font_size }}px;margin:0;padding:0 30px;letter-spacing:0.02em}
+.cf-marquee-12-v9-icon{width:{{ section.settings.font_size | divided_by: 2 }}px;height:{{ section.settings.font_size | divided_by: 2 }}px;color:{{ section.settings.accent_color }}}
+@keyframes cf-scroll-12-v9{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-12-v9">
+  <div class="cf-marquee-12-v9-track">
+    <div class="cf-marquee-12-v9-content">
+      {% for i in (1..4) %}
+        <span class="cf-marquee-12-v9-text">{{ section.settings.text }}</span>
+        <svg class="cf-marquee-12-v9-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.6-6.3-4.8-6.3 4.8 2.3-7.6-6-4.6h7.6z"/>
+        </svg>
+      {% endfor %}
+    </div>
+    <div class="cf-marquee-12-v9-content">
+      {% for i in (1..4) %}
+        <span class="cf-marquee-12-v9-text">{{ section.settings.text }}</span>
+        <svg class="cf-marquee-12-v9-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.6-6.3-4.8-6.3 4.8 2.3-7.6-6-4.6h7.6z"/>
+        </svg>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Marquee (v9)",
+  "settings": [
+    {"type":"text","id":"text","label":"Marquee Text","default":"DRESSES FOR EVERY OCCASION"},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":40},
+    {"type":"range","id":"font_size","label":"Font Size (px)","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"height","label":"Container Height (px)","min":40,"max":160,"step":10,"default":100},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Star Icon Color","default":"#B59A7A"}
+  ],
+  "presets": [{"name":"12 · Women's Marquee (v9)"}]
+}
+{% endschema %}

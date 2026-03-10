@@ -1,0 +1,90 @@
+<style>
+.cf-feat-13-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;position:relative}
+.cf-feat-13-v6-inner{max-width:1600px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.cf-feat-13-v6-left{position:sticky;top:100px}
+.cf-feat-13-v6-title{font-size:clamp(50px, 8vw, 120px);line-height:0.9;font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;margin:0 0 30px 0}
+.cf-feat-13-v6-desc{font-size:16px;line-height:1.6;opacity:0.8;max-width:400px;margin:0 0 40px 0}
+.cf-feat-13-v6-btn{display:inline-block;padding:15px 40px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none}
+.cf-feat-13-v6-list{display:flex;flex-direction:column;border-top:1px solid {{ section.settings.text_color }}}
+.cf-feat-13-v6-item{display:flex;justify-content:space-between;align-items:center;padding:30px 0;border-bottom:1px solid {{ section.settings.text_color }};text-decoration:none;color:inherit;position:relative;z-index:2;cursor:pointer}
+.cf-feat-13-v6-name{font-size:clamp(24px, 3vw, 42px);font-weight:800;margin:0;text-transform:uppercase;letter-spacing:-0.01em;transition:0.3s}
+.cf-feat-13-v6-price{font-size:16px;font-weight:700}
+.cf-feat-13-v6-item:hover .cf-feat-13-v6-name{transform:translateX(20px)}
+/* Hover Image Canvas */
+.cf-feat-13-v6-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:1}
+.cf-feat-13-v6-float-img{position:absolute;width:400px;aspect-ratio:3/4;object-fit:cover;opacity:0;transition:opacity 0.4s, transform 0.1s ease-out;transform:translate(-50%, -50%)}
+.cf-feat-13-v6-item:hover ~ .cf-feat-13-v6-canvas .cf-feat-13-v6-float-img{opacity:1}
+@media(max-width:1024px){
+  .cf-feat-13-v6-inner{grid-template-columns:1fr}
+  .cf-feat-13-v6-left{position:relative;top:0;margin-bottom:60px}
+  .cf-feat-13-v6-float-img{display:none} /* disable on touch/small screens */
+}
+</style>
+
+<div class="cf-feat-13-v6">
+  <div class="cf-feat-13-v6-inner">
+    <div class="cf-feat-13-v6-left">
+      <h2 class="cf-feat-13-v6-title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="cf-feat-13-v6-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-feat-13-v6-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+    
+    <div style="position:relative;">
+      <div class="cf-feat-13-v6-list" id="cf-feat-13-v6-list-{{ section.id }}">
+        {% for i in (1..6) %}
+          <a href="#" class="cf-feat-13-v6-item" data-index="{{ i }}">
+            <h3 class="cf-feat-13-v6-name">Exclusive Garment 0{{ i }}</h3>
+            <div class="cf-feat-13-v6-price">$320</div>
+          </a>
+        {% endfor %}
+        <div class="cf-feat-13-v6-canvas" id="cf-feat-13-v6-canvas-{{ section.id }}">
+          <img src="" class="cf-feat-13-v6-float-img" id="cf-feat-13-v6-float-img-{{ section.id }}" style="background:#555;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const listItems = document.querySelectorAll('#cf-feat-13-v6-list-{{ section.id }} .cf-feat-13-v6-item');
+    const floatImg = document.getElementById('cf-feat-13-v6-float-img-{{ section.id }}');
+    
+    // In a real scenario, map images array. We use a placeholder rotation here.
+    const images = ['#333', '#444', '#555', '#666', '#777', '#888'];
+
+    document.addEventListener('mousemove', (e) => {
+      floatImg.style.left = e.clientX + 'px';
+      floatImg.style.top = e.clientY + 'px';
+    });
+
+    listItems.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        let idx = parseInt(item.getAttribute('data-index')) - 1;
+        floatImg.style.background = images[idx % images.length];
+        floatImg.style.opacity = '1';
+      });
+      item.addEventListener('mouseleave', () => {
+        floatImg.style.opacity = '0';
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "13 · Featured (v6)",
+  "settings": [
+    {"type":"textarea","id":"title","label":"Header Title","default":"ARCHIVE\nCOLLECTION"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Rare pieces from previous seasons. Limited availability."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Archive"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"13 · Featured (v6)"}]
+}
+{% endschema %}

@@ -1,0 +1,66 @@
+<style>
+.cf-trust-12-v10{width:100%;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }};border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }};overflow:hidden}
+.cf-trust-12-v10-track{display:flex;align-items:center;width:200%;animation:cf-trust-scroll-12-v10 20s linear infinite}
+.cf-trust-12-v10-track:hover{animation-play-state:paused}
+@keyframes cf-trust-scroll-12-v10{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.cf-trust-12-v10-list{flex:1;display:flex;justify-content:space-around;padding:0;margin:0;list-style:none}
+.cf-trust-12-v10-item{display:flex;align-items:center;gap:15px;white-space:nowrap;padding:0 30px}
+.cf-trust-12-v10-icon{width:24px;height:24px;color:{{ section.settings.accent_color }}}
+.cf-trust-12-v10-text{font-size:18px;font-weight:400;font-style:italic}
+@media(max-width:768px){.cf-trust-12-v10-item{padding:0 20px}}
+</style>
+
+<div class="cf-trust-12-v10">
+  <div class="cf-trust-12-v10-track">
+    <ul class="cf-trust-12-v10-list">
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span class="cf-trust-12-v10-text">Highly Crafted Design</span>
+      </li>
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span class="cf-trust-12-v10-text">Shipped Within 24-Hours</span>
+      </li>
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span class="cf-trust-12-v10-text">1-Year Outerwear Warranty</span>
+      </li>
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span class="cf-trust-12-v10-text">Secure Encrypted Payments</span>
+      </li>
+    </ul>
+    <ul class="cf-trust-12-v10-list">
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span class="cf-trust-12-v10-text">Highly Crafted Design</span>
+      </li>
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span class="cf-trust-12-v10-text">Shipped Within 24-Hours</span>
+      </li>
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span class="cf-trust-12-v10-text">1-Year Outerwear Warranty</span>
+      </li>
+      <li class="cf-trust-12-v10-item">
+        <svg class="cf-trust-12-v10-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span class="cf-trust-12-v10-text">Secure Encrypted Payments</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Trust (v10)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Icon Accent Color","default":"#A38971"},
+    {"type":"color","id":"border_color","label":"Top & Bottom Borders","default":"#EAEAEE"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":24}
+  ],
+  "presets": [{"name":"12 · Women's Trust (v10)"}]
+}
+{% endschema %}

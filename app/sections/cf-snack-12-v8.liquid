@@ -1,0 +1,38 @@
+<style>
+.cf-snack-12-v8{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};padding:12px 25px;border-radius:50px;font-family:sans-serif;box-shadow:0 10px 30px rgba(0,0,0,0.1);display:flex;align-items:center;gap:15px;border:1px solid {{ section.settings.border_color }}}
+.cf-snack-12-v8-icon{color:{{ section.settings.accent_color }};display:flex;align-items:center}
+.cf-snack-12-v8-text{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;margin:0}
+.cf-snack-12-v8-copy{background:transparent;border:none;color:{{ section.settings.text_color }};font-size:12px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;font-family:sans-serif;transition:0.3s;margin-left:5px}
+.cf-snack-12-v8-copy:hover{color:{{ section.settings.accent_color }}}
+.cf-snack-12-v8-close{background:none;border:none;color:{{ section.settings.text_color }};cursor:pointer;opacity:0.4;padding:0;display:flex;align-items:center;transition:0.3s;margin-left:5px}
+.cf-snack-12-v8-close:hover{opacity:1}
+@media(max-width:600px){.cf-snack-12-v8{width:90%;justify-content:space-between;padding:12px 20px}}
+</style>
+
+<div class="cf-snack-12-v8" id="cf-snack-12-v8-{{ section.id }}">
+  <div class="cf-snack-12-v8-icon">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+  </div>
+  <p class="cf-snack-12-v8-text">{{ section.settings.text }}</p>
+  <button class="cf-snack-12-v8-copy" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); this.innerText='COPIED!'">
+    {{ section.settings.code }}
+  </button>
+  <button class="cf-snack-12-v8-close" onclick="document.getElementById('cf-snack-12-v8-{{ section.id }}').style.display='none'">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Snack (v8)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"MUSE DISCOUNT:"},
+    {"type":"text","id":"code","label":"Promo Code","default":"MUSE20"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Icon/Hover Color","default":"#B59A7A"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#EAEAEE"}
+  ],
+  "presets": [{"name":"12 · Women's Snack (v8)"}]
+}
+{% endschema %}

@@ -1,0 +1,35 @@
+<style>
+.cf-marquee-13-v6{width:100%;overflow:hidden;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};display:flex;align-items:center}
+.cf-marquee-13-v6-track{display:flex;align-items:center;white-space:nowrap;animation:cf-marquee-scroll-13-v6 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-13-v6-item{display:flex;align-items:center}
+.cf-marquee-13-v6-text{font-family:sans-serif;font-weight:600;text-transform:uppercase;font-size:32px;letter-spacing:0.05em;padding:0 40px}
+.cf-marquee-13-v6-shape{width:32px;height:32px;background:{{ section.settings.accent_color }};border-radius:{{ section.settings.shape_round }}px}
+@keyframes cf-marquee-scroll-13-v6{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v6">
+  <div class="cf-marquee-13-v6-track">
+    {% for i in (1..8) %}
+      <div class="cf-marquee-13-v6-item">
+        <div class="cf-marquee-13-v6-text">{{ section.settings.text }}</div>
+        <div class="cf-marquee-13-v6-shape"></div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v6)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"CORE ESSENTIALS"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Shape Color","default":"#FF3300"},
+    {"type":"range","id":"shape_round","label":"Shape Rounding (0 for square)","min":0,"max":50,"step":5,"default":50},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":30}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v6)"}]
+}
+{% endschema %}

@@ -1,0 +1,35 @@
+<style>
+.cf-marquee-13-v3{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;border-top:1px solid {{ section.settings.text_color }};border-bottom:1px solid {{ section.settings.text_color }}}
+.cf-marquee-13-v3-track-top{display:flex;white-space:nowrap;animation:cf-marquee-scroll-left-13-v3 {{ section.settings.speed }}s linear infinite;padding:15px 0;border-bottom:1px solid {{ section.settings.text_color }}}
+.cf-marquee-13-v3-track-bottom{display:flex;white-space:nowrap;animation:cf-marquee-scroll-right-13-v3 {{ section.settings.speed }}s linear infinite;padding:15px 0}
+.cf-marquee-13-v3-text{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;padding-right:30px;display:inline-block}
+@keyframes cf-marquee-scroll-left-13-v3{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes cf-marquee-scroll-right-13-v3{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+</style>
+
+<div class="cf-marquee-13-v3">
+  <div class="cf-marquee-13-v3-track-top">
+    {% for i in (1..10) %}
+      <span class="cf-marquee-13-v3-text">{{ section.settings.text_1 }}</span>
+    {% endfor %}
+  </div>
+  <div class="cf-marquee-13-v3-track-bottom">
+    {% for i in (1..10) %}
+      <span class="cf-marquee-13-v3-text">{{ section.settings.text_2 }}</span>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v3)",
+  "settings": [
+    {"type":"text","id":"text_1","label":"Top Row Text","default":"STUDIO ARCHIVE SALE // UP TO 50% OFF AUTOMATICALLY APPLIED AT CHECKOUT //"},
+    {"type":"text","id":"text_2","label":"Bottom Row Text","default":"// GLOBAL EXPRESS SHIPPING AVAILABLE ON ALL ORDERS OVER $250 // STUDIO ARCHIVE SALE"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text & Border Color","default":"#000000"},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":2,"default":30}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v3)"}]
+}
+{% endschema %}

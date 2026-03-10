@@ -1,0 +1,61 @@
+<style>
+.cf-cat-12-v10{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-cat-12-v10-inner{max-width:1400px;margin:0 auto}
+.cf-cat-12-v10-header{text-align:center;margin-bottom:70px}
+.cf-cat-12-v10-title{font-size:clamp(36px, 5vw, 70px);font-family:serif;font-weight:400;margin:0 0 15px 0;line-height:1}
+.cf-cat-12-v10-desc{font-size:15px;max-width:500px;margin:0 auto;line-height:1.6;opacity:0.8}
+.cf-cat-12-v10-grid{display:grid;grid-template-columns:1fr;gap:20px}
+.cf-cat-12-v10-card{position:relative;height:300px;text-decoration:none;border-radius:{{ section.settings.border_radius }}px;overflow:hidden;group}
+.cf-cat-12-v10-img{width:100%;height:100%;object-fit:cover;transition:0.8s cubic-bezier(0.16, 1, 0.3, 1)}
+.cf-cat-12-v10-card:hover .cf-cat-12-v10-img{transform:scale(1.05)}
+.cf-cat-12-v10-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;transition:0.3s}
+.cf-cat-12-v10-card:hover .cf-cat-12-v10-overlay{background:rgba(0,0,0,0.3)}
+.cf-cat-12-v10-label{color:#fff;font-family:serif;font-style:italic;font-size:40px;margin:0;text-align:center;transition:transform 0.4s;text-shadow:0 10px 30px rgba(0,0,0,0.2)}
+.cf-cat-12-v10-card:hover .cf-cat-12-v10-label{transform:scale(1.05)}
+@media(min-width:768px){
+  .cf-cat-12-v10-grid{grid-template-columns:1fr 1fr;grid-auto-rows:350px}
+  .cf-cat-12-v10-card:nth-child(1){grid-column:1/-1;height:500px}
+}
+@media(min-width:1024px){
+  .cf-cat-12-v10-grid{grid-template-columns:repeat(4, 1fr);grid-auto-rows:400px}
+  .cf-cat-12-v10-card:nth-child(1){grid-column:1/3;grid-row:1/3;height:auto}
+  .cf-cat-12-v10-card:nth-child(2){grid-column:3/5;height:auto}
+  .cf-cat-12-v10-card:nth-child(3){grid-column:3/4;height:auto}
+  .cf-cat-12-v10-card:nth-child(4){grid-column:4/5;height:auto}
+}
+</style>
+
+<div class="cf-cat-12-v10">
+  <div class="cf-cat-12-v10-inner">
+    <div class="cf-cat-12-v10-header">
+      <h2 class="cf-cat-12-v10-title">{{ section.settings.title }}</h2>
+      <p class="cf-cat-12-v10-desc">{{ section.settings.desc }}</p>
+    </div>
+    
+    <div class="cf-cat-12-v10-grid">
+      {% for i in (1..4) %}
+        <a href="#" class="cf-cat-12-v10-card">
+          <div class="cf-cat-12-v10-img" style="background:#{{ forloop.index | times: 111 }}#ddd;"></div>
+          <div class="cf-cat-12-v10-overlay">
+            <h3 class="cf-cat-12-v10-label">Category {{ i }}</h3>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Category (v10)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Magazine"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Curated editorial selections across our entire range for the modern woman."},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F4ECE4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"border_radius","label":"Card Rounding","min":0,"max":20,"step":2,"default":0},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Category (v10)"}]
+}
+{% endschema %}

@@ -1,0 +1,47 @@
+<style>
+.cf-promo-13-v9{width:100%;background:{{ section.settings.bg_color }};display:flex;justify-content:center;align-items:center;padding:{{ section.settings.padding_y }}px 20px;overflow:hidden;position:relative}
+.cf-promo-13-v9-inner{max-width:1800px;width:100%;text-align:center;position:relative;z-index:2}
+.cf-promo-13-v9-mask-text{font-family:sans-serif;font-weight:900;font-size:clamp(100px, 25vw, 400px);line-height:0.8;text-transform:uppercase;letter-spacing:-0.03em;margin:0;background-image:url({{ section.settings.image | image_url: width: 2000 }});background-size:cover;background-position:center;color:transparent;-webkit-background-clip:text;background-clip:text;display:inline-block}
+.cf-promo-13-v9-noimg{background:#333;color:transparent;-webkit-background-clip:text;background-clip:text}
+.cf-promo-13-v9-content{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cf-promo-13-v9-title{font-family:serif;font-size:24px;color:{{ section.settings.text_color }};margin:0 0 20px 0;font-weight:400;font-style:italic}
+.cf-promo-13-v9-btn{display:inline-block;padding:12px 30px;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};font-family:sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s;background:{{ section.settings.bg_color }}}
+.cf-promo-13-v9-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:768px){
+  .cf-promo-13-v9-content{position:static;transform:none;margin-top:40px}
+}
+</style>
+
+<div class="cf-promo-13-v9">
+  <div class="cf-promo-13-v9-inner">
+    {% if section.settings.image %}
+      <h1 class="cf-promo-13-v9-mask-text">{{ section.settings.mask_word }}</h1>
+    {% else %}
+      <h1 class="cf-promo-13-v9-mask-text cf-promo-13-v9-noimg">{{ section.settings.mask_word }}</h1>
+    {% endif %}
+    
+    <div class="cf-promo-13-v9-content">
+      <h3 class="cf-promo-13-v9-title">{{ section.settings.title }}</h3>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v9-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v9)",
+  "settings": [
+    {"type":"text","id":"mask_word","label":"Giant Typography Word","default":"HYPE"},
+    {"type":"image_picker","id":"image","label":"Image Inside Text Mask"},
+    {"type":"text","id":"title","label":"Overlay Subtitle","default":"The Spring Collection"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Now"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Foreground Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v9)"}]
+}
+{% endschema %}

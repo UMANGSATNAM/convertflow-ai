@@ -1,0 +1,85 @@
+<style>
+.cf-header-12-v10{width:100%;font-family:sans-serif;color:{{ section.settings.text_color }};position:relative;z-index:50}
+.cf-header-12-v10-top{background:{{ section.settings.bg_color }};padding:12px 20px;text-align:center;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-header-12-v10-main{background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-header-12-v10-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.cf-header-12-v10-nav{display:flex;gap:25px}
+.cf-header-12-v10-link{font-size:12px;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;font-weight:600;transition:0.3s}
+.cf-header-12-v10-link:hover{color:{{ section.settings.accent_color }}}
+.cf-header-12-v10-logo{text-decoration:none;text-align:center}
+.cf-header-12-v10-logo img{max-height:{{ section.settings.logo_height }}px;height:auto}
+.cf-header-12-v10-logo h1{font-size:24px;font-family:serif;font-weight:400;margin:0;letter-spacing:0.2em;text-transform:uppercase;color:{{ section.settings.text_color }}}
+.cf-header-12-v10-actions{display:flex;justify-content:flex-end;gap:20px;align-items:center}
+.cf-header-12-v10-icon{color:{{ section.settings.text_color }};cursor:pointer;transition:0.3s;display:flex;align-items:center;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:0.1em}
+.cf-header-12-v10-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-header-12-v10-mobile-btn{display:none;cursor:pointer}
+@media(max-width:900px){
+  .cf-header-12-v10-inner{grid-template-columns:auto 1fr auto}
+  .cf-header-12-v10-nav{display:none}
+  .cf-header-12-v10-mobile-btn{display:block}
+  .cf-header-12-v10-icon span{display:none}
+  .cf-header-12-v10-logo{margin:0 auto}
+}
+</style>
+
+<div class="cf-header-12-v10">
+  {% if section.settings.top_bar_text != blank %}
+    <div class="cf-header-12-v10-top">{{ section.settings.top_bar_text }}</div>
+  {% endif %}
+  
+  <div class="cf-header-12-v10-main">
+    <div class="cf-header-12-v10-inner">
+      <div class="cf-header-12-v10-mobile-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </div>
+      
+      <div class="cf-header-12-v10-nav">
+        {% for link in linklists[section.settings.menu].links %}
+          <a href="{{ link.url }}" class="cf-header-12-v10-link">{{ link.title }}</a>
+        {% else %}
+          <a href="#" class="cf-header-12-v10-link">Shop</a>
+          <a href="#" class="cf-header-12-v10-link">Campaign</a>
+          <a href="#" class="cf-header-12-v10-link">Journal</a>
+        {% endfor %}
+      </div>
+      
+      <a href="/" class="cf-header-12-v10-logo">
+        {% if section.settings.logo %}
+          <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+        {% else %}
+          <h1>{{ section.settings.logo_text }}</h1>
+        {% endif %}
+      </a>
+      
+      <div class="cf-header-12-v10-actions">
+        <div class="cf-header-12-v10-icon">
+          <span>Search</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </div>
+        <div class="cf-header-12-v10-icon">
+          <span>Cart</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Header (v10)",
+  "settings": [
+    {"type":"text","id":"top_bar_text","label":"Top Bar Text","default":"COMPLIMENTARY SHIPPING ON ORDERS OVER $200"},
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"VALERIE"},
+    {"type":"range","id":"logo_height","label":"Logo Height","min":20,"max":100,"step":5,"default":30},
+    {"type":"link_list","id":"menu","label":"Main Menu"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Accent Color","default":"#B59A7A"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#EAEAEE"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"12 · Women's Header (v10)"}]
+}
+{% endschema %}

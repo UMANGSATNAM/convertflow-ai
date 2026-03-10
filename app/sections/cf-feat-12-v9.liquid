@@ -1,0 +1,61 @@
+<style>
+.cf-feat-12-v9{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }}}
+.cf-feat-12-v9-inner{max-width:1400px;margin:0 auto}
+.cf-feat-12-v9-top{max-width:800px;margin:0 auto 60px auto;text-align:center}
+.cf-feat-12-v9-sub{font-size:16px;font-style:italic;color:{{ section.settings.accent_color }};margin-bottom:15px;display:block}
+.cf-feat-12-v9-title{font-size:clamp(40px, 6vw, 70px);font-weight:400;margin:0 0 20px 0;line-height:1;text-transform:uppercase;letter-spacing:0.02em}
+.cf-feat-12-v9-desc{font-family:sans-serif;font-size:15px;line-height:1.6;opacity:0.8;margin:0}
+.cf-feat-12-v9-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:30px}
+.cf-feat-12-v9-card{text-decoration:none;display:block;group;text-align:center}
+.cf-feat-12-v9-img-pane{width:100%;aspect-ratio:4/5;background:#e2e2e2;position:relative;overflow:hidden;border-radius:1000px 1000px 0 0;margin-bottom:25px}
+.cf-feat-12-v9-img{width:100%;height:100%;object-fit:cover;transition:0.8s}
+.cf-feat-12-v9-card:hover .cf-feat-12-v9-img{transform:scale(1.05)}
+.cf-feat-12-v9-badges{position:absolute;bottom:20px;left:0;width:100%;display:flex;justify-content:center;gap:10px}
+.cf-feat-12-v9-badge{background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};padding:5px 12px;font-family:sans-serif;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;border-radius:20px;font-weight:700}
+.cf-feat-12-v9-title-product{font-size:22px;color:{{ section.settings.text_color }};margin:0 0 10px 0;font-weight:400;font-style:italic}
+.cf-feat-12-v9-price{font-family:sans-serif;font-size:13px;letter-spacing:0.1em;color:{{ section.settings.accent_color }};margin:0}
+@media(max-width:900px){.cf-feat-12-v9-grid{grid-template-columns:repeat(2, 1fr)}.cf-feat-12-v9-img-pane{border-radius:200px 200px 0 0}}
+@media(max-width:600px){.cf-feat-12-v9-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-feat-12-v9">
+  <div class="cf-feat-12-v9-inner">
+    <div class="cf-feat-12-v9-top">
+      <span class="cf-feat-12-v9-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-feat-12-v9-title">{{ section.settings.title }}</h2>
+      <p class="cf-feat-12-v9-desc">{{ section.settings.desc }}</p>
+    </div>
+    
+    <div class="cf-feat-12-v9-grid">
+      {% for i in (1..3) %}
+        <a href="#" class="cf-feat-12-v9-card">
+          <div class="cf-feat-12-v9-img-pane">
+            <div class="cf-feat-12-v9-img" style="background:#e8e8e8"></div>
+            <div class="cf-feat-12-v9-badges">
+              <span class="cf-feat-12-v9-badge">NEW</span>
+              <span class="cf-feat-12-v9-badge">100% SILK</span>
+            </div>
+          </div>
+          <h3 class="cf-feat-12-v9-title-product">The Valerie Dress</h3>
+          <p class="cf-feat-12-v9-price">$295.00</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured (v9)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"Focus On"},
+    {"type":"text","id":"title","label":"Header Title","default":"EVENING WEAR"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Discover our newest arrivals designed to carry you seamlessly from day to night in pure elegance."},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F4ECE4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Colors","default":"#A38971"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Featured (v9)"}]
+}
+{% endschema %}

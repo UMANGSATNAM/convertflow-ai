@@ -1,0 +1,81 @@
+<style>
+.cf-header-12-v2{width:100%;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }};padding:{{ section.settings.padding_y }}px 20px;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-header-12-v2-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.cf-header-12-v2-nav{flex:1;display:flex;align-items:center;gap:35px}
+.cf-header-12-v2-nav.right{justify-content:flex-end}
+.cf-header-12-v2-logo{flex:0 0 auto;text-align:center}
+.cf-header-12-v2-logo img{max-height:{{ section.settings.logo_height }}px;height:auto}
+.cf-header-12-v2-logo h1{font-size:32px;font-weight:400;margin:0;letter-spacing:0.05em;text-transform:uppercase}
+.cf-header-12-v2-link{font-size:14px;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;transition:0.3s;position:relative}
+.cf-header-12-v2-link::after{content:'';position:absolute;width:0%;height:1px;background:{{ section.settings.text_color }};bottom:-4px;left:50%;transform:translateX(-50%);transition:0.3s}
+.cf-header-12-v2-link:hover::after{width:100%}
+.cf-header-12-v2-icons{display:flex;gap:20px;align-items:center}
+.cf-header-12-v2-icon{color:{{ section.settings.text_color }};cursor:pointer;transition:0.3s;display:flex;align-items:center}
+.cf-header-12-v2-icon:hover{opacity:0.6}
+.cf-header-12-v2-mobile-menu{display:none}
+@media(max-width:900px){.cf-header-12-v2-nav{display:none}.cf-header-12-v2-mobile-menu{display:block;flex:1}.cf-header-12-v2-icons{flex:1;justify-content:flex-end}}
+</style>
+
+<div class="cf-header-12-v2">
+  <div class="cf-header-12-v2-inner">
+    <div class="cf-header-12-v2-mobile-menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </div>
+    <div class="cf-header-12-v2-nav">
+      {% for link in linklists[section.settings.menu_left].links %}
+        <a href="{{ link.url }}" class="cf-header-12-v2-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-header-12-v2-link">NEW IN</a>
+        <a href="#" class="cf-header-12-v2-link">CLOTHING</a>
+        <a href="#" class="cf-header-12-v2-link">DRESSES</a>
+      {% endfor %}
+    </div>
+    
+    <a href="/" class="cf-header-12-v2-logo">
+      {% if section.settings.logo %}
+        <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+      {% else %}
+        <h1>{{ section.settings.logo_text }}</h1>
+      {% endif %}
+    </a>
+    
+    <div class="cf-header-12-v2-nav right">
+      {% for link in linklists[section.settings.menu_right].links %}
+        <a href="{{ link.url }}" class="cf-header-12-v2-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-header-12-v2-link">ACCESSORIES</a>
+        <a href="#" class="cf-header-12-v2-link">SALE</a>
+      {% endfor %}
+      
+      <div class="cf-header-12-v2-icons">
+        <div class="cf-header-12-v2-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </div>
+        <div class="cf-header-12-v2-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <div class="cf-header-12-v2-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Header (v2)",
+  "settings": [
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"ROSE & LILY"},
+    {"type":"range","id":"logo_height","label":"Logo Height","min":20,"max":100,"step":5,"default":40},
+    {"type":"link_list","id":"menu_left","label":"Left Menu"},
+    {"type":"link_list","id":"menu_right","label":"Right Menu"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FCFAF8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#EFEBE6"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"12 · Women's Header (v2)"}]
+}
+{% endschema %}

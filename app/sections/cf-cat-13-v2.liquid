@@ -1,0 +1,66 @@
+<style>
+.cf-cat-13-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif}
+.cf-cat-13-v2-inner{max-width:1600px;margin:0 auto}
+.cf-cat-13-v2-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;padding-bottom:20px;border-bottom:1px solid {{ section.settings.text_color }}}
+.cf-cat-13-v2-title{font-size:clamp(32px, 5vw, 64px);line-height:1;margin:0;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;color:{{ section.settings.text_color }}}
+.cf-cat-13-v2-btn{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:{{ section.settings.text_color }};display:flex;align-items:center;gap:10px;transition:0.3s}
+.cf-cat-13-v2-btn:hover{gap:15px;color:{{ section.settings.accent_color }}}
+.cf-cat-13-v2-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:20px}
+.cf-cat-13-v2-card{position:relative;aspect-ratio:3/4;overflow:hidden;background:#ebebeb;display:block;text-decoration:none}
+.cf-cat-13-v2-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)}
+.cf-cat-13-v2-card:hover .cf-cat-13-v2-img{transform:scale(1.05)}
+.cf-cat-13-v2-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.2);opacity:0;transition:0.4s;display:flex;align-items:center;justify-content:center}
+.cf-cat-13-v2-card:hover .cf-cat-13-v2-overlay{opacity:1}
+.cf-cat-13-v2-label{background:#fff;color:#000;padding:12px 25px;font-size:11px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)}
+.cf-cat-13-v2-card:hover .cf-cat-13-v2-label{transform:translateY(0)}
+@media(max-width:900px){
+  .cf-cat-13-v2-grid{grid-template-columns:repeat(2, 1fr)}
+}
+@media(max-width:600px){
+  .cf-cat-13-v2-grid{grid-template-columns:1fr;gap:10px}
+  .cf-cat-13-v2-header{flex-direction:column;align-items:flex-start;gap:20px}
+}
+</style>
+
+<div class="cf-cat-13-v2">
+  <div class="cf-cat-13-v2-inner">
+    <div class="cf-cat-13-v2-header">
+      <h2 class="cf-cat-13-v2-title">{{ section.settings.title }}</h2>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-cat-13-v2-btn">
+          {{ section.settings.btn_text }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      {% endif %}
+    </div>
+    
+    <div class="cf-cat-13-v2-grid">
+      {% for i in (1..3) %}
+        <a href="#" class="cf-cat-13-v2-card">
+          <div class="cf-cat-13-v2-img" style="background:#555;"></div>
+          <div class="cf-cat-13-v2-overlay">
+            <div class="cf-cat-13-v2-label">
+              {% if i == 1 %}Tops{% elsif i == 2 %}Bottoms{% else %}Outerwear{% endif %}
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Category (v2)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"INDEX"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"View All Categories"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Hover","default":"#FF3300"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Brand Category (v2)"}]
+}
+{% endschema %}

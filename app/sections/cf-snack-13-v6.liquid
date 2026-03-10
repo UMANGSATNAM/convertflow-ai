@@ -1,0 +1,41 @@
+<style>
+.cf-snack-13-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;border-bottom:1px solid {{ section.settings.text_color }}}
+.cf-snack-13-v6-inner{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start}
+.cf-snack-13-v6-row-top{font-size:clamp(40px, 6vw, 90px);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;line-height:1;margin:0}
+.cf-snack-13-v6-row-bottom{font-size:clamp(40px, 6vw, 90px);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;line-height:1;margin:0;align-self:flex-end;color:transparent;-webkit-text-stroke:2px {{ section.settings.text_color }}}
+.cf-snack-13-v6-btn{position:absolute;left:50%;transform:translateX(-50%);padding:15px 30px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:0.3s;border-radius:50px}
+.cf-snack-13-v6-btn:hover{background:transparent;color:{{ section.settings.text_color }};box-shadow:inset 0 0 0 2px {{ section.settings.text_color }}}
+.cf-snack-13-v6-center{width:100%;position:relative;height:50px;display:flex;align-items:center;justify-content:center}
+@media(max-width:768px){
+  .cf-snack-13-v6-center{height:70px}
+  .cf-snack-13-v6-row-bottom{align-self:flex-start}
+}
+</style>
+
+<div class="cf-snack-13-v6">
+  <div class="cf-snack-13-v6-inner">
+    <h2 class="cf-snack-13-v6-row-top">{{ section.settings.text_1 }}</h2>
+    <div class="cf-snack-13-v6-center">
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-snack-13-v6-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+    <h2 class="cf-snack-13-v6-row-bottom">{{ section.settings.text_2 }}</h2>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack (v6)",
+  "settings": [
+    {"type":"text","id":"text_1","label":"Top Row text","default":"MEMBERS ONLY"},
+    {"type":"text","id":"text_2","label":"Bottom Row (Outline)","default":"EARLY ACCESS"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Unlock Access"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFDFD"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Snack (v6)"}]
+}
+{% endschema %}

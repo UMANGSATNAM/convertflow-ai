@@ -1,0 +1,58 @@
+<style>
+.cf-snack-13-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};display:flex;justify-content:center;font-family:sans-serif}
+.cf-snack-13-v3-ticket{max-width:800px;width:100%;background:#F4F4F4;border:1px solid #CCC;padding:40px;position:relative;color:#111;box-shadow:5px 5px 0px rgba(0,0,0,1)}
+.cf-snack-13-v3-top{display:flex;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:15px;margin-bottom:25px}
+.cf-snack-13-v3-code{font-family:monospace;font-size:14px;font-weight:bold;letter-spacing:0.1em}
+.cf-snack-13-v3-origin{font-size:11px;text-transform:uppercase;font-weight:700}
+.cf-snack-13-v3-title{font-size:clamp(30px, 4vw, 48px);font-weight:900;text-transform:uppercase;line-height:1;margin:0 0 15px 0}
+.cf-snack-13-v3-desc{font-size:14px;line-height:1.6;margin:0 0 30px 0;max-width:500px}
+.cf-snack-13-v3-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.cf-snack-13-v3-btn{padding:12px 25px;background:#000;color:#fff;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s}
+.cf-snack-13-v3-btn:hover{background:#333}
+.cf-snack-13-v3-barcode{width:120px;height:40px;background:repeating-linear-gradient(90deg, #000, #000 2px, transparent 2px, transparent 4px, #000 4px, #000 5px, transparent 5px, transparent 8px, #000 8px, #000 12px, transparent 12px, transparent 14px)}
+@media(max-width:600px){
+  .cf-snack-13-v3-ticket{padding:25px;box-shadow:3px 3px 0px rgba(0,0,0,1)}
+  .cf-snack-13-v3-bottom{flex-direction:column;align-items:flex-start;gap:20px}
+  .cf-snack-13-v3-barcode{width:100%}
+}
+</style>
+
+<div class="cf-snack-13-v3">
+  <div class="cf-snack-13-v3-ticket" style="background:{{ section.settings.ticket_bg }}; color:{{ section.settings.text_color }}; box-shadow:5px 5px 0px {{ section.settings.shadow_color }}">
+    
+    <div class="cf-snack-13-v3-top" style="border-bottom-color:{{ section.settings.text_color }}">
+      <div class="cf-snack-13-v3-code">REF-{{ section.id | slice: 0, 6 | upcase }}</div>
+      <div class="cf-snack-13-v3-origin">{{ section.settings.origin_text }}</div>
+    </div>
+    
+    <h3 class="cf-snack-13-v3-title">{{ section.settings.title }}</h3>
+    <p class="cf-snack-13-v3-desc">{{ section.settings.desc }}</p>
+    
+    <div class="cf-snack-13-v3-bottom">
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-snack-13-v3-btn" style="background:{{ section.settings.text_color }}; color:{{ section.settings.ticket_bg }}">{{ section.settings.btn_text }}</a>
+      {% endif %}
+      <div class="cf-snack-13-v3-barcode"></div>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack (v3)",
+  "settings": [
+    {"type":"text","id":"origin_text","label":"Top Right Tag","default":"LONDON, UK"},
+    {"type":"text","id":"title","label":"Header Title","default":"ARCHIVE SALE NOW LIVE"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Access our previously unreleased garments and past season favorites at up to 50% off. Limited availability."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Enter Archive"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F8F8F8"},
+    {"type":"color","id":"ticket_bg","label":"Ticket Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"shadow_color","label":"Shadow Color","default":"#000000"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Snack (v3)"}]
+}
+{% endschema %}

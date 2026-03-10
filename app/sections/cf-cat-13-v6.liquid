@@ -1,0 +1,48 @@
+<style>
+.cf-cat-13-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;display:flex;justify-content:center}
+.cf-cat-13-v6-inner{max-width:1600px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.cf-cat-13-v6-list{display:flex;flex-direction:column;gap:15px}
+.cf-cat-13-v6-item{font-size:clamp(40px, 6vw, 90px);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;color:transparent;-webkit-text-stroke:2px {{ section.settings.text_color }};text-decoration:none;transition:0.3s;cursor:pointer;line-height:1}
+.cf-cat-13-v6-item:hover{color:{{ section.settings.text_color }}}
+.cf-cat-13-v6-visual{width:100%;aspect-ratio:3/4;background:{{ section.settings.card_bg }};border:1px solid {{ section.settings.text_color }};position:relative;overflow:hidden;border-radius:10px}
+.cf-cat-13-v6-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:0.5s;transform:scale(1.05)}
+.cf-cat-13-v6-img.active{opacity:1;transform:scale(1)}
+@media(max-width:900px){
+  .cf-cat-13-v6-inner{grid-template-columns:1fr;gap:40px}
+  .cf-cat-13-v6-item{font-size:48px;color:{{ section.settings.text_color }};-webkit-text-stroke:0}
+  .cf-cat-13-v6-visual{display:none}
+}
+</style>
+
+<div class="cf-cat-13-v6">
+  <div class="cf-cat-13-v6-inner">
+    <div class="cf-cat-13-v6-list">
+      <a href="#" class="cf-cat-13-v6-item" onmouseover="document.getElementById('img-v6-1').classList.add('active');" onmouseout="document.getElementById('img-v6-1').classList.remove('active');">New Arrivals</a>
+      <a href="#" class="cf-cat-13-v6-item" onmouseover="document.getElementById('img-v6-2').classList.add('active');" onmouseout="document.getElementById('img-v6-2').classList.remove('active');">Footwear</a>
+      <a href="#" class="cf-cat-13-v6-item" onmouseover="document.getElementById('img-v6-3').classList.add('active');" onmouseout="document.getElementById('img-v6-3').classList.remove('active');">Outerwear</a>
+      <a href="#" class="cf-cat-13-v6-item" onmouseover="document.getElementById('img-v6-4').classList.add('active');" onmouseout="document.getElementById('img-v6-4').classList.remove('active');">Accessories</a>
+      <a href="#" class="cf-cat-13-v6-item" onmouseover="document.getElementById('img-v6-5').classList.add('active');" onmouseout="document.getElementById('img-v6-5').classList.remove('active');">Sale Archive</a>
+    </div>
+    
+    <div class="cf-cat-13-v6-visual">
+      <div class="cf-cat-13-v6-img" id="img-v6-1" style="background:#333;"></div>
+      <div class="cf-cat-13-v6-img" id="img-v6-2" style="background:#555;"></div>
+      <div class="cf-cat-13-v6-img" id="img-v6-3" style="background:#777;"></div>
+      <div class="cf-cat-13-v6-img" id="img-v6-4" style="background:#999;"></div>
+      <div class="cf-cat-13-v6-img" id="img-v6-5" style="background:#bbb;"></div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Category (v6)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Empty Image Block Solid Background","default":"#EAEAEE"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Brand Category (v6)"}]
+}
+{% endschema %}

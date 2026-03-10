@@ -1,0 +1,70 @@
+<style>
+.cf-cat-12-v7{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }}}
+.cf-cat-12-v7-inner{max-width:1400px;margin:0 auto}
+.cf-cat-12-v7-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;padding-bottom:20px;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-cat-12-v7-sub{font-family:sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:0.15em;display:block;margin-bottom:15px;color:{{ section.settings.accent_color }}}
+.cf-cat-12-v7-title{font-size:clamp(40px, 5vw, 70px);font-weight:300;margin:0;line-height:1;text-transform:uppercase;letter-spacing:0.02em}
+.cf-cat-12-v7-link{font-family:sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:{{ section.settings.text_color }};text-decoration:none;border-bottom:1px solid transparent;transition:0.3s;padding-bottom:5px}
+.cf-cat-12-v7-link:hover{border-color:{{ section.settings.text_color }}}
+.cf-cat-12-v7-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.cf-cat-12-v7-card{display:flex;align-items:center;gap:30px;text-decoration:none;group;transition:0.3s}
+.cf-cat-12-v7-card:hover{transform:translateY(-5px)}
+.cf-cat-12-v7-img-wrap{width:160px;height:200px;overflow:hidden;border-radius:{{ section.settings.border_radius }}px;flex-shrink:0}
+.cf-cat-12-v7-img{width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-cat-12-v7-card:hover .cf-cat-12-v7-img{transform:scale(1.05)}
+.cf-cat-12-v7-info{display:flex;flex-direction:column}
+.cf-cat-12-v7-label{font-size:32px;font-weight:400;color:{{ section.settings.text_color }};margin:0 0 10px 0;font-style:italic}
+.cf-cat-12-v7-desc{font-family:sans-serif;font-size:13px;color:{{ section.settings.text_color }};opacity:0.7;margin:0 0 20px 0;line-height:1.5}
+.cf-cat-12-v7-arrow{width:30px;height:30px;border:1px solid {{ section.settings.text_color }};border-radius:50%;display:flex;align-items:center;justify-content:center;color:{{ section.settings.text_color }};transition:0.3s}
+.cf-cat-12-v7-card:hover .cf-cat-12-v7-arrow{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:1024px){.cf-cat-12-v7-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.cf-cat-12-v7-top{flex-direction:column;align-items:flex-start;gap:20px}.cf-cat-12-v7-card{align-items:flex-start}.cf-cat-12-v7-img-wrap{width:100px;height:120px}.cf-cat-12-v7-label{font-size:24px}}
+</style>
+
+<div class="cf-cat-12-v7">
+  <div class="cf-cat-12-v7-inner">
+    <div class="cf-cat-12-v7-top">
+      <div>
+        <span class="cf-cat-12-v7-sub">{{ section.settings.subtitle }}</span>
+        <h2 class="cf-cat-12-v7-title">{{ section.settings.title }}</h2>
+      </div>
+      <a href="{{ section.settings.btn_link }}" class="cf-cat-12-v7-link">{{ section.settings.btn_label }}</a>
+    </div>
+    
+    <div class="cf-cat-12-v7-grid">
+      {% for i in (1..4) %}
+        <a href="#" class="cf-cat-12-v7-card">
+          <div class="cf-cat-12-v7-img-wrap">
+            <div class="cf-cat-12-v7-img" style="background:#e5e5e5"></div>
+          </div>
+          <div class="cf-cat-12-v7-info">
+            <h3 class="cf-cat-12-v7-label">Category {{ i }}</h3>
+            <p class="cf-cat-12-v7-desc">Curated essentials tailored just for this season's wardrobe.</p>
+            <div class="cf-cat-12-v7-arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Category (v7)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"COLLECTIONS"},
+    {"type":"text","id":"title","label":"Header Title","default":"SHOP THE SEASONS"},
+    {"type":"text","id":"btn_label","label":"Link Label","default":"DISCOVER ALL"},
+    {"type":"url","id":"btn_link","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Subtitle Color","default":"#A38971"},
+    {"type":"color","id":"border_color","label":"Top Border Color","default":"#EAE8E4"},
+    {"type":"range","id":"border_radius","label":"Image Rounding","min":0,"max":20,"step":2,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Category (v7)"}]
+}
+{% endschema %}

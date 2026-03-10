@@ -1,0 +1,36 @@
+<style>
+.cf-marquee-13-v9{width:100%;overflow:hidden;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};display:flex;align-items:center}
+.cf-marquee-13-v9-track{display:flex;white-space:nowrap;animation:cf-marquee-scroll-13-v9 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-13-v9-item{display:flex;align-items:center;padding-right:40px}
+.cf-marquee-13-v9-text{font-family:serif;font-weight:400;font-style:italic;font-size:clamp(50px, 8vw, 110px);line-height:1;letter-spacing:0.02em}
+.cf-marquee-13-v9-text.solid{color:{{ section.settings.text_color }}}
+.cf-marquee-13-v9-text.hollow{color:transparent;-webkit-text-stroke:1px {{ section.settings.text_color }}}
+@keyframes cf-marquee-scroll-13-v9{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v9">
+  <div class="cf-marquee-13-v9-track">
+    {% for i in (1..6) %}
+      <div class="cf-marquee-13-v9-item">
+        <div class="cf-marquee-13-v9-text solid">{{ section.settings.text }}</div>
+      </div>
+      <div class="cf-marquee-13-v9-item">
+        <div class="cf-marquee-13-v9-text hollow">{{ section.settings.text }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v9)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"The Vanguard"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text & Outline Color","default":"#CCFF00"},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":30}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v9)"}]
+}
+{% endschema %}

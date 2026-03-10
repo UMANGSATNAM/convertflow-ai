@@ -1,0 +1,48 @@
+<style>
+.cf-trust-13-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif}
+.cf-trust-13-v5-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.cf-trust-13-v5-manifesto{font-family:serif;font-style:italic;font-size:clamp(32px, 4vw, 56px);line-height:1.2;margin:0}
+.cf-trust-13-v5-manifesto span{color:{{ section.settings.accent_color }}}
+.cf-trust-13-v5-stack{display:flex;flex-direction:column;gap:40px}
+.cf-trust-13-v5-item{display:flex;flex-direction:column}
+.cf-trust-13-v5-title{font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 10px 0;display:flex;align-items:center;gap:15px}
+.cf-trust-13-v5-title::before{content:"";width:10px;height:10px;background:{{ section.settings.accent_color }}}
+.cf-trust-13-v5-desc{font-size:14px;line-height:1.6;opacity:0.8;margin:0}
+@media(max-width:900px){
+  .cf-trust-13-v5-inner{grid-template-columns:1fr;gap:50px}
+}
+</style>
+
+<div class="cf-trust-13-v5">
+  <div class="cf-trust-13-v5-inner">
+    <h2 class="cf-trust-13-v5-manifesto">
+      We believe in uncompromising quality. Our garments are <span>engineered for longevity</span>, defying seasonal trends.
+    </h2>
+    
+    <div class="cf-trust-13-v5-stack">
+      {% for i in (1..3) %}
+        <div class="cf-trust-13-v5-item">
+          <h4 class="cf-trust-13-v5-title">
+            {% if i == 1 %}Material Sourcing{% elsif i == 2 %}Manufacturing Ethics{% else %}Warranty Program{% endif %}
+          </h4>
+          <p class="cf-trust-13-v5-desc">
+            {% if i == 1 %}We utilize heavy-weight cotton blends and technical membranes sourced from premier Italian mills.{% elsif i == 2 %}Operating exclusively with audited factories that guarantee above-market living wages via transparent supply chains.{% else %}Every product is backed by our repair initiative. We will mend any structural failure free of charge.{% endif %}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Trust (v5)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFDFD"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#D4AF37"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Trust (v5)"}]
+}
+{% endschema %}

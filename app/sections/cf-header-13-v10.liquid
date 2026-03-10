@@ -1,0 +1,69 @@
+<style>
+.cf-head-13-v10{width:100%;height:100px;background:linear-gradient(90deg, {{ section.settings.left_color }} 50%, {{ section.settings.right_color }} 50%);font-family:sans-serif;padding:0 40px;position:relative}
+.cf-head-13-v10-inner{max-width:1600px;margin:0 auto;height:100%;display:flex;justify-content:space-between;align-items:center;mix-blend-mode:difference;color:#fff}
+.cf-head-13-v10-logo{position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);font-size:clamp(36px, 5vw, 60px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;text-decoration:none;color:#fff;mix-blend-mode:difference;z-index:10;white-space:nowrap}
+.cf-head-13-v10-nav{display:flex;gap:40px;align-items:center}
+.cf-head-13-v10-link{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:inherit;text-decoration:none;transition:0.3s;position:relative}
+.cf-head-13-v10-link::after{content:"";position:absolute;bottom:-4px;left:0;width:100%;height:2px;background:#fff;transform:scaleX(0);transform-origin:right;transition:transform 0.3s}
+.cf-head-13-v10-link:hover::after{transform:scaleX(1);transform-origin:left}
+.cf-head-13-v10-actions{display:flex;gap:30px;align-items:center}
+.cf-head-13-v10-icon{cursor:pointer;transition:transform 0.3s}
+.cf-head-13-v10-icon:hover{transform:scale(1.1)}
+.cf-head-13-v10-mobile{display:none}
+@media(max-width:1024px){
+  .cf-head-13-v10-nav{display:none}
+  .cf-head-13-v10-actions{display:none}
+  .cf-head-13-v10-mobile{display:flex;width:100%;justify-content:space-between;align-items:center}
+  .cf-head-13-v10-logo{font-size:28px}
+  .cf-head-13-v10{padding:0 20px;height:80px}
+}
+</style>
+
+<div class="cf-head-13-v10">
+  <a href="/" class="cf-head-13-v10-logo">
+    {{ section.settings.logo_text }}
+  </a>
+  
+  <div class="cf-head-13-v10-inner">
+    <div class="cf-head-13-v10-nav">
+      {% for link in linklists[section.settings.menu].links limit:3 %}
+        <a href="{{ link.url }}" class="cf-head-13-v10-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-head-13-v10-link">Mens</a>
+        <a href="#" class="cf-head-13-v10-link">Womens</a>
+        <a href="#" class="cf-head-13-v10-link">Objects</a>
+      {% endfor %}
+    </div>
+
+    <div class="cf-head-13-v10-actions">
+      <div class="cf-head-13-v10-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <div class="cf-head-13-v10-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+    </div>
+    
+    <div class="cf-head-13-v10-mobile">
+      <div class="cf-head-13-v10-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </div>
+      <div class="cf-head-13-v10-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" width="22" height="22" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Header (v10)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"INVERSION"},
+    {"type":"link_list","id":"menu","label":"Navigation Menu"},
+    {"type":"color","id":"left_color","label":"Left Side Background","default":"#000000"},
+    {"type":"color","id":"right_color","label":"Right Side Background","default":"#FFFFFF"}
+  ],
+  "presets": [{"name":"13 · Brand Header (v10)"}]
+}
+{% endschema %}

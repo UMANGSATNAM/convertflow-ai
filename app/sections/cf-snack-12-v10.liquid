@@ -1,0 +1,49 @@
+<style>
+.cf-snack-12-v10{position:fixed;bottom:30px;right:30px;z-index:99;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};padding:0;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.15);font-family:serif;overflow:hidden;width:320px;border:1px solid {{ section.settings.border_color }}}
+.cf-snack-12-v10-img{width:100%;height:140px;object-fit:cover;display:block}
+.cf-snack-12-v10-content{padding:25px;text-align:center;position:relative}
+.cf-snack-12-v10-close{position:absolute;top:10px;right:10px;background:none;border:none;color:{{ section.settings.text_color }};cursor:pointer;opacity:0.5;transition:0.3s;padding:5px}
+.cf-snack-12-v10-close:hover{opacity:1}
+.cf-snack-12-v10-title{font-size:22px;margin:0 0 10px 0;font-style:italic}
+.cf-snack-12-v10-desc{font-family:sans-serif;font-size:12px;opacity:0.8;margin:0 0 20px 0;line-height:1.5}
+.cf-snack-12-v10-copy{background:{{ section.settings.btn_bg }};color:{{ section.settings.btn_text }};border:none;width:100%;padding:14px;font-family:sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;transition:0.3s;border-radius:4px}
+.cf-snack-12-v10-copy:hover{opacity:0.9;transform:translateY(-2px)}
+@media(max-width:600px){.cf-snack-12-v10{bottom:15px;right:15px;left:15px;width:auto}}
+</style>
+
+<div class="cf-snack-12-v10" id="cf-snack-12-v10-{{ section.id }}">
+  {% if section.settings.image %}
+    <img src="{{ section.settings.image | image_url: width: 400 }}" class="cf-snack-12-v10-img" alt="Promo">
+  {% else %}
+    <div class="cf-snack-12-v10-img" style="background:#e8e8e8"></div>
+  {% endif %}
+  
+  <div class="cf-snack-12-v10-content">
+    <button class="cf-snack-12-v10-close" onclick="document.getElementById('cf-snack-12-v10-{{ section.id }}').style.display='none'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <h3 class="cf-snack-12-v10-title">{{ section.settings.title }}</h3>
+    <p class="cf-snack-12-v10-desc">{{ section.settings.desc }}</p>
+    <button class="cf-snack-12-v10-copy" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); this.innerText='COPIED TO CLIPBOARD!'">
+      COPY CODE: {{ section.settings.code }}
+    </button>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Snack (v10)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Header Image"},
+    {"type":"text","id":"title","label":"Popup Title","default":"Early Access"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Get 30% off selected styles during our exclusive pre-sale event."},
+    {"type":"text","id":"code","label":"Promo Code","default":"EARLY30"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#E5E5E5"},
+    {"type":"color","id":"btn_bg","label":"Button Background","default":"#A38A75"},
+    {"type":"color","id":"btn_text","label":"Button Text Color","default":"#FFFFFF"}
+  ],
+  "presets": [{"name":"12 · Women's Snack (v10)"}]
+}
+{% endschema %}

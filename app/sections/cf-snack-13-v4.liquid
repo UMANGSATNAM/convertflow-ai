@@ -1,0 +1,45 @@
+<style>
+.cf-snack-13-v4{width:100%;min-height:300px;background:{{ section.settings.bg_color }};position:relative;display:flex;align-items:center;justify-content:center;padding:40px 20px;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-snack-13-v4-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0.9}
+.cf-snack-13-v4-pill{position:relative;z-index:2;background:rgba(255,255,255,0.1);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:40px 80px;border-radius:100px;text-align:center;border:1px solid rgba(255,255,255,0.2);max-width:1000px}
+.cf-snack-13-v4-sub{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:15px;opacity:0.8}
+.cf-snack-13-v4-title{font-size:clamp(32px, 4vw, 56px);font-weight:900;margin:0 0 20px 0;text-transform:uppercase;letter-spacing:-0.02em}
+.cf-snack-13-v4-btn{display:inline-block;padding:12px 30px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s;border-radius:30px}
+.cf-snack-13-v4-btn:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.2)}
+@media(max-width:768px){
+  .cf-snack-13-v4-pill{padding:30px;border-radius:40px}
+}
+</style>
+
+<div class="cf-snack-13-v4">
+  {% if section.settings.image %}
+    <img src="{{ section.settings.image | image_url: width: 2000 }}" class="cf-snack-13-v4-bg">
+  {% else %}
+    <div class="cf-snack-13-v4-bg" style="background:linear-gradient(45deg, #111, #444);"></div>
+  {% endif %}
+  
+  <div class="cf-snack-13-v4-pill" style="{% if section.settings.dark_mode %}background:rgba(0,0,0,0.3); border-color:rgba(255,255,255,0.1);{% endif %}">
+    <span class="cf-snack-13-v4-sub">{{ section.settings.subtitle }}</span>
+    <h2 class="cf-snack-13-v4-title">{{ section.settings.title }}</h2>
+    {% if section.settings.btn_text != blank %}
+      <a href="{{ section.settings.btn_link }}" class="cf-snack-13-v4-btn">{{ section.settings.btn_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack (v4)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Background Image"},
+    {"type":"boolean","id":"dark_mode","label":"Darken Glass Pill","default":false},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"SUMMER DROPS"},
+    {"type":"text","id":"title","label":"Header Title","default":"ELEVATED ESSENTIALS"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop The Drop"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Fallback Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"}
+  ],
+  "presets": [{"name":"13 · Brand Snack (v4)"}]
+}
+{% endschema %}

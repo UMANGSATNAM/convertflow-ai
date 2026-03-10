@@ -1,0 +1,54 @@
+<style>
+.cf-promo-12-v4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-promo-12-v4-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center}
+.cf-promo-12-v4-card{flex:0 0 450px;background:{{ section.settings.card_bg }};padding:60px 50px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:2;margin-right:-80px}
+.cf-promo-12-v4-icon{width:40px;margin-bottom:30px;color:{{ section.settings.accent_color }}}
+.cf-promo-12-v4-title{font-size:32px;font-weight:300;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 20px 0}
+.cf-promo-12-v4-desc{font-size:14px;opacity:0.75;line-height:1.6;margin:0 0 40px 0}
+.cf-promo-12-v4-btn{display:inline-block;padding:12px 30px;background:{{ section.settings.text_color }};color:{{ section.settings.card_bg }};text-decoration:none;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.2em;transition:opacity 0.3s}
+.cf-promo-12-v4-btn:hover{opacity:0.8}
+.cf-promo-12-v4-img-wrap{flex:1;height:700px;background:#eee;position:relative;z-index:1}
+.cf-promo-12-v4-img{width:100%;height:100%;object-fit:cover}
+@media(max-width:1024px){.cf-promo-12-v4-inner{flex-direction:column-reverse}.cf-promo-12-v4-card{margin-right:0;margin-top:-80px;max-width:90%;box-shadow:0 10px 40px rgba(0,0,0,0.05)}.cf-promo-12-v4-img-wrap{width:100%;height:500px}}
+</style>
+
+<div class="cf-promo-12-v4">
+  <div class="cf-promo-12-v4-inner">
+    <div class="cf-promo-12-v4-card">
+      <div class="cf-promo-12-v4-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"></path></svg>
+      </div>
+      <h2 class="cf-promo-12-v4-title">{{ section.settings.title }}</h2>
+      <p class="cf-promo-12-v4-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-12-v4-btn">{{ section.settings.btn_label }}</a>
+    </div>
+    
+    <div class="cf-promo-12-v4-img-wrap">
+       {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1400 }}" class="cf-promo-12-v4-img" alt="{{ section.settings.title }}">
+      {% else %}
+        <div style="background:#ddd;width:100%;height:100%"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Promo (v4)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Right Campaign Image"},
+    {"type":"text","id":"title","label":"Title","default":"THE EDIT"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Curated styles hand-picked by our editors for the perfect transition into the new season."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW LOOKBOOK"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F8F3EC"},
+    {"type":"color","id":"card_bg","label":"Overlap Card Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Star Accent","default":"#B59A7A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Promo (v4)"}]
+}
+{% endschema %}

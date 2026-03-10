@@ -1,0 +1,51 @@
+<style>
+.cf-cat-12-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-cat-12-v5-inner{max-width:1000px;margin:0 auto}
+.cf-cat-12-v5-title{font-size:clamp(32px, 5vw, 64px);font-family:serif;font-weight:400;text-align:center;margin:0 0 60px 0;font-style:italic}
+.cf-cat-12-v5-list{display:flex;flex-direction:column}
+.cf-cat-12-v5-item{display:flex;justify-content:space-between;align-items:center;padding:30px 0;border-bottom:1px solid {{ section.settings.border_color }};text-decoration:none;transition:0.3s;position:relative;overflow:hidden}
+.cf-cat-12-v5-item:first-child{border-top:1px solid {{ section.settings.border_color }}}
+.cf-cat-12-v5-idx{font-size:12px;opacity:0.5;transition:0.3s}
+.cf-cat-12-v5-label{font-size:32px;font-family:serif;color:{{ section.settings.text_color }};transition:0.3s;margin:0}
+.cf-cat-12-v5-icon{width:30px;height:30px;border-radius:50%;border:1px solid {{ section.settings.text_color }};display:flex;align-items:center;justify-content:center;transition:0.3s}
+.cf-cat-12-v5-icon svg{width:14px;height:14px;transition:0.3s}
+.cf-cat-12-v5-item:hover{padding:30px 20px;background:{{ section.settings.hover_bg }}}
+.cf-cat-12-v5-item:hover .cf-cat-12-v5-label{transform:translateX(10px)}
+.cf-cat-12-v5-item:hover .cf-cat-12-v5-icon{background:{{ section.settings.text_color }};color:{{ section.settings.hover_bg }}}
+.cf-cat-12-v5-item:hover .cf-cat-12-v5-icon svg{transform:rotate(-45deg)}
+@media(max-width:768px){.cf-cat-12-v5-label{font-size:24px}.cf-cat-12-v5-item:hover{padding:30px 10px}}
+</style>
+
+<div class="cf-cat-12-v5">
+  <div class="cf-cat-12-v5-inner">
+    <h2 class="cf-cat-12-v5-title">{{ section.settings.title }}</h2>
+    <div class="cf-cat-12-v5-list">
+      {% for i in (1..5) %}
+        <a href="#" class="cf-cat-12-v5-item">
+          <div style="display:flex;align-items:center;gap:30px">
+            <span class="cf-cat-12-v5-idx">0{{ i }}</span>
+            <h3 class="cf-cat-12-v5-label">Shop Category {{ i }}</h3>
+          </div>
+          <div class="cf-cat-12-v5-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"></line><line x1="12" y1="5" x2="19" y2="12"></line><line x1="12" y1="19" x2="19" y2="12"></line></svg>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Category (v5)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"Curated Collections"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#EAEAED"},
+    {"type":"color","id":"hover_bg","label":"Hover Background","default":"#F4ECE4"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Category (v5)"}]
+}
+{% endschema %}

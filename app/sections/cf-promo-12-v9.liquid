@@ -1,0 +1,55 @@
+<style>
+.cf-promo-12-v9{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-promo-12-v9-inner{max-width:1400px;margin:0 auto;background:{{ section.settings.card_bg }};border-radius:{{ section.settings.border_radius }}px;overflow:hidden;display:flex;box-shadow:0 20px 50px rgba(0,0,0,0.03)}
+.cf-promo-12-v9-content{flex:1;padding:80px;display:flex;flex-direction:column;justify-content:center}
+.cf-promo-12-v9-tag{align-self:flex-start;padding:6px 14px;background:{{ section.settings.accent_color }};color:#fff;border-radius:30px;font-size:10px;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;margin-bottom:30px}
+.cf-promo-12-v9-title{font-size:clamp(32px, 4vw, 56px);font-weight:400;margin:0 0 20px 0;line-height:1.1;font-family:serif}
+.cf-promo-12-v9-desc{font-size:15px;line-height:1.6;margin:0 0 40px 0;opacity:0.8;max-width:400px}
+.cf-promo-12-v9-btn{display:inline-flex;align-items:center;justify-content:center;padding:15px 35px;background:{{ section.settings.btn_bg }};color:{{ section.settings.btn_text }};text-decoration:none;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;border-radius:{{ section.settings.border_radius }}px;transition:0.3s;max-width:220px}
+.cf-promo-12-v9-btn:hover{opacity:0.8}
+.cf-promo-12-v9-img-wrap{flex:1;position:relative;min-height:500px}
+.cf-promo-12-v9-img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+@media(max-width:900px){.cf-promo-12-v9-inner{flex-direction:column-reverse}.cf-promo-12-v9-content{padding:40px 20px}.cf-promo-12-v9-btn{max-width:100%}.cf-promo-12-v9-img-wrap{min-height:400px}}
+</style>
+
+<div class="cf-promo-12-v9">
+  <div class="cf-promo-12-v9-inner">
+    <div class="cf-promo-12-v9-content">
+      <div class="cf-promo-12-v9-tag">{{ section.settings.tag }}</div>
+      <h2 class="cf-promo-12-v9-title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="cf-promo-12-v9-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-12-v9-btn">{{ section.settings.btn_label }}</a>
+    </div>
+    <div class="cf-promo-12-v9-img-wrap">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1000 }}" class="cf-promo-12-v9-img" alt="Promo">
+      {% else %}
+        <div class="cf-promo-12-v9-img" style="background:#e5e5e5"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Promo (v9)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Side Image"},
+    {"type":"text","id":"tag","label":"Tag Badge","default":"NEW DROPS"},
+    {"type":"textarea","id":"title","label":"Title","default":"Modern\nFemininity."},
+    {"type":"textarea","id":"desc","label":"Description","default":"Explore silhouettes designed to move with you, bringing subtle confidence to every occasion."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP COLLECTION"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Outer Canvas Background","default":"#F4ECE4"},
+    {"type":"color","id":"card_bg","label":"Inner Card Box Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Tag Accent Color","default":"#B59A7A"},
+    {"type":"color","id":"btn_bg","label":"Button Background","default":"#222222"},
+    {"type":"color","id":"btn_text","label":"Button Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"border_radius","label":"Card & Button Rounding","min":0,"max":40,"step":4,"default":0},
+    {"type":"range","id":"padding_y","label":"Vertical Padding Outer","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Promo (v9)"}]
+}
+{% endschema %}

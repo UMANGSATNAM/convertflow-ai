@@ -1,0 +1,59 @@
+<style>
+.cf-promo-13-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.cf-promo-13-v2-inner{max-width:1400px;width:100%;position:relative;display:flex;align-items:center;min-height:70vh}
+.cf-promo-13-v2-bg-text{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);font-family:serif;font-size:clamp(80px, 15vw, 300px);font-weight:400;color:{{ section.settings.text_color }};opacity:0.05;white-space:nowrap;z-index:0;pointer-events:none;letter-spacing:-0.02em}
+.cf-promo-13-v2-content{position:relative;z-index:2;display:flex;width:100%;align-items:center;justify-content:space-between;gap:60px}
+.cf-promo-13-v2-text{flex:0 0 400px;color:{{ section.settings.text_color }}}
+.cf-promo-13-v2-sub{font-family:sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.2em;display:block;margin-bottom:20px}
+.cf-promo-13-v2-title{font-family:serif;font-size:clamp(40px, 6vw, 80px);font-weight:400;line-height:1;margin:0 0 30px 0}
+.cf-promo-13-v2-btn{display:inline-block;padding:15px 40px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};text-transform:uppercase;font-family:sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-decoration:none;transition:0.3s;border:1px solid {{ section.settings.text_color }}}
+.cf-promo-13-v2-btn:hover{background:transparent;color:{{ section.settings.text_color }}}
+.cf-promo-13-v2-image-wrap{flex:1;position:relative;height:700px;max-height:80vh}
+.cf-promo-13-v2-image{width:100%;height:100%;object-fit:cover;{{ section.settings.image_position }}}
+@media(max-width:1024px){
+  .cf-promo-13-v2-content{flex-direction:column-reverse;text-align:center;gap:40px}
+  .cf-promo-13-v2-text{flex:none;max-width:600px}
+  .cf-promo-13-v2-image-wrap{width:100%;height:500px}
+}
+</style>
+
+<div class="cf-promo-13-v2">
+  <div class="cf-promo-13-v2-inner">
+    <div class="cf-promo-13-v2-bg-text">{{ section.settings.bg_text }}</div>
+    <div class="cf-promo-13-v2-content">
+      <div class="cf-promo-13-v2-text">
+        <span class="cf-promo-13-v2-sub">{{ section.settings.subtitle }}</span>
+        <h2 class="cf-promo-13-v2-title">{{ section.settings.title }}</h2>
+        {% if section.settings.btn_text != blank %}
+          <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v2-btn">{{ section.settings.btn_text }}</a>
+        {% endif %}
+      </div>
+      <div class="cf-promo-13-v2-image-wrap">
+        {% if section.settings.image %}
+          <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="Promo" class="cf-promo-13-v2-image">
+        {% else %}
+          <div class="cf-promo-13-v2-image" style="background:#ddd;"></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v2)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Poster Image"},
+    {"type":"select","id":"image_position","label":"Image Position","options":[{"value":"object-position:center;","label":"Center"},{"value":"object-position:top;","label":"Top"},{"value":"object-position:bottom;","label":"Bottom"}],"default":"object-position:center;"},
+    {"type":"text","id":"bg_text","label":"Giant Background Text","default":"ESSENTIALS"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"COLLECTION 004"},
+    {"type":"textarea","id":"title","label":"Title","default":"The Art of Tailoring"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Explore Collection"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F9F9F9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v2)"}]
+}
+{% endschema %}

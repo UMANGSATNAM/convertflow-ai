@@ -1,0 +1,56 @@
+<style>
+.cf-promo-13-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};display:flex;justify-content:center;position:relative}
+.cf-promo-13-v5-inner{max-width:1400px;width:100%;position:relative}
+.cf-promo-13-v5-frame{width:100%;aspect-ratio:3/2;position:relative;box-shadow:0 30px 60px rgba(0,0,0,0.15);overflow:hidden}
+.cf-promo-13-v5-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.cf-promo-13-v5-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,{{ section.settings.overlay_opacity }});z-index:2}
+.cf-promo-13-v5-content{position:absolute;bottom:0;left:0;width:100%;padding:60px;z-index:3;color:{{ section.settings.text_color }};font-family:sans-serif;display:flex;justify-content:space-between;align-items:flex-end}
+.cf-promo-13-v5-title{font-size:clamp(32px, 5vw, 72px);font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;line-height:1;margin:0 0 10px 0}
+.cf-promo-13-v5-sub{font-size:14px;font-weight:500;opacity:0.9;max-width:400px;margin:0}
+.cf-promo-13-v5-btn{display:inline-flex;align-items:center;justify-content:center;width:60px;height:60px;border-radius:50%;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};transition:0.3s}
+.cf-promo-13-v5-btn:hover{transform:scale(1.1)}
+@media(max-width:900px){
+  .cf-promo-13-v5-frame{aspect-ratio:1/1}
+  .cf-promo-13-v5-content{flex-direction:column;align-items:flex-start;padding:30px;gap:30px}
+}
+</style>
+
+<div class="cf-promo-13-v5">
+  <div class="cf-promo-13-v5-inner">
+    <div class="cf-promo-13-v5-frame">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1600 }}" class="cf-promo-13-v5-img">
+      {% else %}
+        <div class="cf-promo-13-v5-img" style="background:#222;"></div>
+      {% endif %}
+      <div class="cf-promo-13-v5-overlay"></div>
+      
+      <div class="cf-promo-13-v5-content">
+        <div>
+          <h2 class="cf-promo-13-v5-title">{{ section.settings.title }}</h2>
+          <p class="cf-promo-13-v5-sub">{{ section.settings.desc }}</p>
+        </div>
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v5-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v5)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Poster Image"},
+    {"type":"range","id":"overlay_opacity","label":"Dark Overlay Opacity","min":0,"max":1,"step":0.1,"default":0.3},
+    {"type":"text","id":"title","label":"Header Title","default":"DISTORTION"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Explore the new arrivals crafted from heavy-weight cotton blends."},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Wall Background","default":"#F5F5F3"},
+    {"type":"color","id":"text_color","label":"Poster Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v5)"}]
+}
+{% endschema %}

@@ -1,0 +1,47 @@
+<style>
+.cf-trust-13-v4{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;padding:30px 0;overflow:hidden;border-top:1px dashed {{ section.settings.text_color }};border-bottom:1px dashed {{ section.settings.text_color }}}
+.cf-trust-13-v4-ticker{display:flex;white-space:nowrap;width:100%}
+.cf-trust-13-v4-track{display:flex;animation:cf-trust-scroll-13-v4 20s linear infinite}
+.cf-trust-13-v4-item{display:inline-flex;align-items:center;padding:0 40px}
+.cf-trust-13-v4-icon{margin-right:15px;display:flex;align-items:center;justify-content:center}
+.cf-trust-13-v4-text{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em}
+@keyframes cf-trust-scroll-13-v4{0%{transform:translateX(0)} 100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-trust-13-v4">
+  <div class="cf-trust-13-v4-ticker">
+    <div class="cf-trust-13-v4-track">
+      {% for j in (1..2) %}
+        {% for i in (1..4) %}
+          <div class="cf-trust-13-v4-item">
+            <div class="cf-trust-13-v4-icon">
+              {% if i == 1 %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              {% elsif i == 2 %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              {% elsif i == 3 %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+              {% else %}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+              {% endif %}
+            </div>
+            <span class="cf-trust-13-v4-text">
+              {% if i == 1 %}Verified Quality{% elsif i == 2 %}24/7 Support{% elsif i == 3 %}Global Logistics{% else %}Secure Gateway{% endif %}
+            </span>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Trust (v4)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text & Icon Color","default":"#F4ECE4"}
+  ],
+  "presets": [{"name":"13 · Trust (v4)"}]
+}
+{% endschema %}

@@ -1,0 +1,59 @@
+<style>
+.cf-header-12-v4{width:100%;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }};padding:{{ section.settings.padding_y }}px 20px;}
+.cf-header-12-v4-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.cf-header-12-v4-left{flex:1;display:flex;align-items:center;gap:20px}
+.cf-header-12-v4-menu-btn{display:flex;align-items:center;gap:10px;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;font-weight:600}
+.cf-header-12-v4-logo{flex:0 0 auto;text-decoration:none;text-align:center}
+.cf-header-12-v4-logo img{max-height:{{ section.settings.logo_height }}px;height:auto}
+.cf-header-12-v4-logo h1{font-size:28px;font-family:serif;font-style:italic;margin:0;color:{{ section.settings.text_color }}}
+.cf-header-12-v4-right{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:20px}
+.cf-header-12-v4-icon{color:{{ section.settings.text_color }};cursor:pointer;transition:0.3s;display:flex;align-items:center}
+.cf-header-12-v4-icon:hover{opacity:0.5}
+@media(max-width:768px){.cf-header-12-v4-menu-btn span{display:none}}
+</style>
+
+<div class="cf-header-12-v4">
+  <div class="cf-header-12-v4-inner">
+    <div class="cf-header-12-v4-left">
+      <div class="cf-header-12-v4-menu-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <span>Menu</span>
+      </div>
+    </div>
+    
+    <a href="/" class="cf-header-12-v4-logo">
+      {% if section.settings.logo %}
+        <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+      {% else %}
+        <h1>{{ section.settings.logo_text }}</h1>
+      {% endif %}
+    </a>
+    
+    <div class="cf-header-12-v4-right">
+      <div class="cf-header-12-v4-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <div class="cf-header-12-v4-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <div class="cf-header-12-v4-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Header (v4)",
+  "settings": [
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"Aura & Co"},
+    {"type":"range","id":"logo_height","label":"Logo Height","min":20,"max":100,"step":5,"default":40},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"12 · Women's Header (v4)"}]
+}
+{% endschema %}

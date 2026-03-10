@@ -1,0 +1,64 @@
+<style>
+.cf-feat-13-v7{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif}
+.cf-feat-13-v7-inner{max-width:1400px;margin:0 auto}
+.cf-feat-13-v7-header{text-align:center;margin-bottom:80px}
+.cf-feat-13-v7-title{font-size:clamp(32px, 5vw, 64px);line-height:1;margin:0 0 20px 0;font-weight:900;text-transform:uppercase;letter-spacing:-0.02em}
+.cf-feat-13-v7-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:2px;background:{{ section.settings.text_color }};border:2px solid {{ section.settings.text_color }}}
+.cf-feat-13-v7-card{background:{{ section.settings.bg_color }};position:relative;aspect-ratio:3/4;overflow:hidden;text-decoration:none;display:block}
+.cf-feat-13-v7-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)}
+.cf-feat-13-v7-card:hover .cf-feat-13-v7-img{transform:scale(1.05)}
+.cf-feat-13-v7-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);opacity:0;transition:0.4s;display:flex;flex-direction:column;justify-content:flex-end;padding:30px;color:#fff}
+.cf-feat-13-v7-card:hover .cf-feat-13-v7-overlay{opacity:1}
+.cf-feat-13-v7-name{font-size:18px;font-weight:900;text-transform:uppercase;margin:0 0 5px 0;transform:translateY(20px);transition:0.4s;letter-spacing:-0.01em}
+.cf-feat-13-v7-price{font-size:14px;transform:translateY(20px);transition:0.5s;opacity:0.8}
+.cf-feat-13-v7-card:hover .cf-feat-13-v7-name, .cf-feat-13-v7-card:hover .cf-feat-13-v7-price{transform:translateY(0)}
+.cf-feat-13-v7-btn{display:inline-block;margin-top:60px;padding:15px 40px;border:2px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:0.3s}
+.cf-feat-13-v7-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:900px){
+  .cf-feat-13-v7-grid{grid-template-columns:repeat(2, 1fr)}
+  .cf-feat-13-v7-header{margin-bottom:40px}
+}
+@media(max-width:600px){
+  .cf-feat-13-v7-grid{grid-template-columns:1fr;gap:0;border:none;border-top:1px solid {{ section.settings.text_color }}}
+  .cf-feat-13-v7-card{border-bottom:1px solid {{ section.settings.text_color }}}
+}
+</style>
+
+<div class="cf-feat-13-v7">
+  <div class="cf-feat-13-v7-inner">
+    <div class="cf-feat-13-v7-header">
+      <h2 class="cf-feat-13-v7-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-feat-13-v7-grid">
+      {% for i in (1..6) %}
+        <a href="#" class="cf-feat-13-v7-card">
+          <img src="https://ui-avatars.com/api/?name={{ i }}&background=E0E0E0&color=999&size=600" class="cf-feat-13-v7-img" alt="Product">
+          <div class="cf-feat-13-v7-overlay">
+            <h3 class="cf-feat-13-v7-name">Minimalist Garment 0{{ i }}</h3>
+            <div class="cf-feat-13-v7-price">$180</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    
+    <div style="text-align:center;">
+      <a href="{{ section.settings.btn_link }}" class="cf-feat-13-v7-btn">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Featured (v7)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"ESSENTIALS"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop The Core Collection"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text & Border Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"13 · Featured (v7)"}]
+}
+{% endschema %}

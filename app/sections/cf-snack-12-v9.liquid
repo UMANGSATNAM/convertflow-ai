@@ -1,0 +1,41 @@
+<style>
+.cf-snack-12-v9{position:fixed;top:50%;right:0;transform:translateY(-50%);z-index:99;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;display:flex;align-items:center;box-shadow:-5px 0 20px rgba(0,0,0,0.05);transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)}
+.cf-snack-12-v9-tab{writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);padding:20px 10px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-family:sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.2em;cursor:pointer;display:flex;align-items:center;gap:10px}
+.cf-snack-12-v9-content{padding:30px;width:300px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.cf-snack-12-v9.is-hidden{transform:translateY(-50%) translateX(300px)}
+.cf-snack-12-v9-title{font-size:24px;margin:0 0 10px 0;font-style:italic}
+.cf-snack-12-v9-desc{font-family:sans-serif;font-size:12px;opacity:0.8;line-height:1.5;margin:0 0 25px 0}
+.cf-snack-12-v9-copy{background:transparent;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};width:100%;padding:12px;font-family:sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;cursor:pointer;transition:0.3s}
+.cf-snack-12-v9-copy:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:600px){.cf-snack-12-v9{display:none}}
+</style>
+
+<div class="cf-snack-12-v9" id="cf-snack-12-v9-{{ section.id }}">
+  <div class="cf-snack-12-v9-tab" onclick="document.getElementById('cf-snack-12-v9-{{ section.id }}').classList.toggle('is-hidden')">
+    <span>{{ section.settings.tab_text }}</span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </div>
+  
+  <div class="cf-snack-12-v9-content">
+    <h3 class="cf-snack-12-v9-title">{{ section.settings.title }}</h3>
+    <p class="cf-snack-12-v9-desc">{{ section.settings.desc }}</p>
+    <button class="cf-snack-12-v9-copy" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); this.innerText='COPIED TO CLIPBOARD'">
+      USE CODE: {{ section.settings.code }}
+    </button>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Snack (v9)",
+  "settings": [
+    {"type":"text","id":"tab_text","label":"Tab Text","default":"OFFERS"},
+    {"type":"text","id":"title","label":"Popup Title","default":"Special Offer"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Unlock exclusive savings on our new collection when you copy the code below."},
+    {"type":"text","id":"code","label":"Promo Code","default":"EXCLUSIVE25"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text/Tab Color","default":"#222222"}
+  ],
+  "presets": [{"name":"12 · Women's Snack (v9)"}]
+}
+{% endschema %}

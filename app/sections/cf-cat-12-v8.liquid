@@ -1,0 +1,52 @@
+<style>
+.cf-cat-12-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-cat-12-v8-inner{max-width:1400px;margin:0 auto}
+.cf-cat-12-v8-title{font-size:clamp(40px, 6vw, 84px);line-height:1;margin:0 0 60px 0;font-family:serif;font-style:italic;font-weight:400;text-align:center}
+.cf-cat-12-v8-grid{display:grid;grid-template-columns:repeat(5, 1fr);gap:15px;position:relative}
+.cf-cat-12-v8-card{position:relative;height:500px;text-decoration:none;border-radius:{{ section.settings.border_radius }}px;overflow:hidden;group}
+.cf-cat-12-v8-img{width:100%;height:100%;object-fit:cover;transition:0.6s}
+.cf-cat-12-v8-card:hover .cf-cat-12-v8-img{transform:scale(1.05)}
+.cf-cat-12-v8-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;transition:0.3s;opacity:0}
+.cf-cat-12-v8-card:hover .cf-cat-12-v8-overlay{opacity:1;background:rgba(0,0,0,0.4)}
+.cf-cat-12-v8-label-hover{color:#fff;font-family:serif;font-size:24px;font-style:italic;transform:translateY(20px);transition:0.4s}
+.cf-cat-12-v8-card:hover .cf-cat-12-v8-label-hover{transform:translateY(0)}
+.cf-cat-12-v8-bottom-label{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:{{ section.settings.badge_bg }};color:{{ section.settings.badge_text }};padding:8px 20px;border-radius:30px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;opacity:1;transition:0.3s}
+.cf-cat-12-v8-card:hover .cf-cat-12-v8-bottom-label{opacity:0;transform:translate(-50%, 10px)}
+@media(max-width:1200px){.cf-cat-12-v8-grid{grid-template-columns:repeat(3, 1fr)}}
+@media(max-width:768px){.cf-cat-12-v8-grid{grid-template-columns:repeat(2, 1fr)}.cf-cat-12-v8-card{height:350px}}
+@media(max-width:500px){.cf-cat-12-v8-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cat-12-v8">
+  <div class="cf-cat-12-v8-inner">
+    <h2 class="cf-cat-12-v8-title">{{ section.settings.title }}</h2>
+    
+    <div class="cf-cat-12-v8-grid">
+      {% for i in (1..5) %}
+        <a href="#" class="cf-cat-12-v8-card">
+          <div class="cf-cat-12-v8-img" style="background:#ddd;"></div>
+          <div class="cf-cat-12-v8-overlay">
+            <h3 class="cf-cat-12-v8-label-hover">Shop Category</h3>
+          </div>
+          <div class="cf-cat-12-v8-bottom-label">Category {{ i }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Category (v8)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Edit"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F8F3EC"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"badge_bg","label":"Bottom Badge Background","default":"#FFFFFF"},
+    {"type":"color","id":"badge_text","label":"Bottom Badge Text","default":"#111111"},
+    {"type":"range","id":"border_radius","label":"Card Rounding","min":0,"max":100,"step":5,"default":50},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Category (v8)"}]
+}
+{% endschema %}

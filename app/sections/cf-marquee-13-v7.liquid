@@ -1,0 +1,51 @@
+<style>
+.cf-marquee-13-v7{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;display:flex;flex-direction:column;gap:10px;padding:{{ section.settings.padding_y }}px 0}
+.cf-marquee-13-v7-track{display:flex;white-space:nowrap}
+.cf-marquee-13-v7-track.fast{animation:cf-marquee-scroll-13-v7-fast {{ section.settings.speed_fast }}s linear infinite}
+.cf-marquee-13-v7-track.slow{animation:cf-marquee-scroll-13-v7-slow {{ section.settings.speed_slow }}s linear infinite reverse}
+.cf-marquee-13-v7-track.med{animation:cf-marquee-scroll-13-v7-med {{ section.settings.speed_med }}s linear infinite}
+.cf-marquee-13-v7-text{font-weight:900;text-transform:uppercase;padding-right:30px}
+.cf-marquee-13-v7-text.large{font-size:clamp(40px, 8vw, 120px);line-height:0.9;letter-spacing:-0.02em}
+.cf-marquee-13-v7-text.small{font-size:14px;letter-spacing:0.1em;opacity:0.6}
+@keyframes cf-marquee-scroll-13-v7-fast{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes cf-marquee-scroll-13-v7-slow{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+@keyframes cf-marquee-scroll-13-v7-med{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v7">
+  <div class="cf-marquee-13-v7-track fast">
+    {% for i in (1..10) %}
+      <div class="cf-marquee-13-v7-text small">{{ section.settings.small_text_1 }}</div>
+    {% endfor %}
+  </div>
+  
+  <div class="cf-marquee-13-v7-track slow">
+    <div class="cf-marquee-13-v7-text large">{{ section.settings.large_text }}</div>
+    <div class="cf-marquee-13-v7-text large">{{ section.settings.large_text }}</div>
+    <div class="cf-marquee-13-v7-text large">{{ section.settings.large_text }}</div>
+  </div>
+
+  <div class="cf-marquee-13-v7-track med">
+    {% for i in (1..10) %}
+      <div class="cf-marquee-13-v7-text small">{{ section.settings.small_text_2 }}</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v7)",
+  "settings": [
+    {"type":"text","id":"large_text","label":"Main Center Text","default":"OUT OF BOUNDS / "},
+    {"type":"text","id":"small_text_1","label":"Top Small Text","default":"FW24 RUNWAY COLLECTION ENTRY 01 /"},
+    {"type":"text","id":"small_text_2","label":"Bottom Small Text","default":"NO RESTOCKS. SECURE YOUR PIECE TODAY /"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F4ECE4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"speed_fast","label":"Top Track Speed","min":5,"max":40,"step":1,"default":15},
+    {"type":"range","id":"speed_slow","label":"Center Track Speed","min":10,"max":60,"step":2,"default":30},
+    {"type":"range","id":"speed_med","label":"Bottom Track Speed","min":5,"max":40,"step":1,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v7)"}]
+}
+{% endschema %}

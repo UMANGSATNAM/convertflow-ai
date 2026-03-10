@@ -1,0 +1,62 @@
+<style>
+.cf-feat-12-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }}}
+.cf-feat-12-v2-inner{max-width:1400px;margin:0 auto;display:flex;gap:60px;align-items:center}
+.cf-feat-12-v2-info{flex:0 0 350px}
+.cf-feat-12-v2-sub{font-family:sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:{{ section.settings.accent_color }};margin-bottom:15px;display:block}
+.cf-feat-12-v2-title{font-size:clamp(36px, 4vw, 56px);font-weight:400;margin:0 0 20px 0;line-height:1.1}
+.cf-feat-12-v2-desc{font-size:15px;font-family:sans-serif;line-height:1.6;margin:0 0 40px 0;opacity:0.8}
+.cf-feat-12-v2-btn{display:inline-block;padding:12px 30px;border:1px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};font-family:sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s}
+.cf-feat-12-v2-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-feat-12-v2-slider{flex:1;display:flex;gap:20px;overflow-x:auto;padding-bottom:20px;scrollbar-width:none}
+.cf-feat-12-v2-slider::-webkit-scrollbar{display:none}
+.cf-feat-12-v2-card{flex:0 0 300px;text-decoration:none;display:flex;flex-direction:column;group}
+.cf-feat-12-v2-img-wrap{position:relative;width:100%;height:400px;overflow:hidden;background:#f5f5f5;margin-bottom:15px}
+.cf-feat-12-v2-img{width:100%;height:100%;object-fit:cover;transition:0.8s}
+.cf-feat-12-v2-card:hover .cf-feat-12-v2-img{transform:scale(1.05)}
+.cf-feat-12-v2-title-product{font-size:16px;color:{{ section.settings.text_color }};margin:0 0 5px 0}
+.cf-feat-12-v2-price{font-family:sans-serif;font-size:13px;color:{{ section.settings.accent_color }};margin:0}
+@media(max-width:1024px){.cf-feat-12-v2-inner{flex-direction:column}.cf-feat-12-v2-info{flex:none;max-width:600px;width:100%;text-align:center}}
+@media(max-width:600px){.cf-feat-12-v2-card{flex:0 0 260px}.cf-feat-12-v2-img-wrap{height:340px}}
+</style>
+
+<div class="cf-feat-12-v2">
+  <div class="cf-feat-12-v2-inner">
+    <div class="cf-feat-12-v2-info">
+      <span class="cf-feat-12-v2-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-feat-12-v2-title">{{ section.settings.title }}</h2>
+      <p class="cf-feat-12-v2-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-feat-12-v2-btn">{{ section.settings.btn_label }}</a>
+    </div>
+    
+    <div class="cf-feat-12-v2-slider">
+      {% for i in (1..6) %}
+        <a href="#" class="cf-feat-12-v2-card">
+          <div class="cf-feat-12-v2-img-wrap">
+            <div class="cf-feat-12-v2-img" style="background:#e8e8e8"></div>
+          </div>
+          <h3 class="cf-feat-12-v2-title-product">Studio Silk Blouse</h3>
+          <p class="cf-feat-12-v2-price">$148.00</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured (v2)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"THE CAPSULE"},
+    {"type":"text","id":"title","label":"Title","default":"New Arrivals"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Build your core wardrobe with our essential styles, carefully crafted to elevate the everyday."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP ALL NEW"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#A38971"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Featured (v2)"}]
+}
+{% endschema %}

@@ -1,0 +1,57 @@
+<style>
+.cf-cat-12-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-cat-12-v6-inner{max-width:1400px;margin:0 auto}
+.cf-cat-12-v6-header{text-align:center;margin-bottom:60px}
+.cf-cat-12-v6-sub{font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:{{ section.settings.accent_color }};display:block;margin-bottom:15px;font-weight:600}
+.cf-cat-12-v6-title{font-size:clamp(36px, 5vw, 64px);font-family:serif;font-weight:300;margin:0;letter-spacing:0.02em}
+.cf-cat-12-v6-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:30px}
+.cf-cat-12-v6-card{position:relative;height:550px;border-radius:{{ section.settings.border_radius }}px;overflow:hidden;text-decoration:none;display:block;group}
+.cf-cat-12-v6-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)}
+.cf-cat-12-v6-card:hover .cf-cat-12-v6-img{transform:scale(1.05)}
+.cf-cat-12-v6-overlay{position:absolute;bottom:0;left:0;width:100%;padding:40px 30px;background:linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);color:#fff;display:flex;flex-direction:column;justify-content:flex-end;box-sizing:border-box}
+.cf-cat-12-v6-label{font-size:24px;font-family:serif;font-style:italic;margin:0 0 10px 0}
+.cf-cat-12-v6-link{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(10px);transition:0.4s}
+.cf-cat-12-v6-card:hover .cf-cat-12-v6-link{opacity:1;transform:translateY(0)}
+@media(max-width:1024px){.cf-cat-12-v6-grid{grid-template-columns:repeat(2, 1fr)}}
+@media(max-width:768px){.cf-cat-12-v6-grid{grid-template-columns:1fr}.cf-cat-12-v6-card{height:400px}.cf-cat-12-v6-link{opacity:1;transform:none}}
+</style>
+
+<div class="cf-cat-12-v6">
+  <div class="cf-cat-12-v6-inner">
+    <div class="cf-cat-12-v6-header">
+      <span class="cf-cat-12-v6-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-cat-12-v6-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-cat-12-v6-grid">
+      {% for i in (1..3) %}
+        <a href="#" class="cf-cat-12-v6-card">
+          <div class="cf-cat-12-v6-img" style="background:#d8d8d8;"></div>
+          <div class="cf-cat-12-v6-overlay">
+            <h3 class="cf-cat-12-v6-label">Category {{ i }}</h3>
+            <div class="cf-cat-12-v6-link">
+              <span>EXPLORE</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Category (v6)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"DISCOVER"},
+    {"type":"text","id":"title","label":"Title","default":"Curated Looks"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Subtitle","default":"#A88A70"},
+    {"type":"range","id":"border_radius","label":"Card Rounding","min":0,"max":20,"step":2,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Category (v6)"}]
+}
+{% endschema %}

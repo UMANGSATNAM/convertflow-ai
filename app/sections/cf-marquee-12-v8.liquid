@@ -1,0 +1,49 @@
+<style>
+.cf-marquee-12-v8{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;overflow:hidden;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-marquee-12-v8-track{display:flex;white-space:nowrap;animation:cf-scroll-12-v8 {{ section.settings.speed }}s linear infinite reverse}
+.cf-marquee-12-v8-content{display:flex;align-items:center;gap:50px;padding-right:50px}
+.cf-marquee-12-v8-group{display:flex;flex-direction:column;align-items:center;gap:5px}
+.cf-marquee-12-v8-text{font-size:{{ section.settings.font_size }}px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin:0}
+.cf-marquee-12-v8-sub{font-size:{{ section.settings.font_size | divided_by: 1.8 }}px;font-weight:400;text-transform:uppercase;letter-spacing:0.2em;margin:0;opacity:0.6}
+.cf-marquee-12-v8-divider{width:1px;height:30px;background:{{ section.settings.text_color }};opacity:0.2}
+@keyframes cf-scroll-12-v8{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+</style>
+
+<div class="cf-marquee-12-v8">
+  <div class="cf-marquee-12-v8-track">
+    <div class="cf-marquee-12-v8-content">
+      {% for i in (1..6) %}
+        <div class="cf-marquee-12-v8-group">
+          <span class="cf-marquee-12-v8-text">{{ section.settings.text }}</span>
+          <span class="cf-marquee-12-v8-sub">{{ section.settings.subtext }}</span>
+        </div>
+        <div class="cf-marquee-12-v8-divider"></div>
+      {% endfor %}
+    </div>
+    <div class="cf-marquee-12-v8-content">
+      {% for i in (1..6) %}
+        <div class="cf-marquee-12-v8-group">
+          <span class="cf-marquee-12-v8-text">{{ section.settings.text }}</span>
+          <span class="cf-marquee-12-v8-sub">{{ section.settings.subtext }}</span>
+        </div>
+        <div class="cf-marquee-12-v8-divider"></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Marquee (v8)",
+  "settings": [
+    {"type":"text","id":"text","label":"Main Text","default":"VALERIE PARIS"},
+    {"type":"text","id":"subtext","label":"Sub Text","default":"EST. 1992"},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":40},
+    {"type":"range","id":"font_size","label":"Main Font Size (px)","min":12,"max":36,"step":1,"default":18},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":20}
+  ],
+  "presets": [{"name":"12 · Women's Marquee (v8)"}]
+}
+{% endschema %}

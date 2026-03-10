@@ -1,0 +1,33 @@
+<style>
+.cf-marquee-13-v10{width:100%;overflow:hidden;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};display:flex;align-items:center;border-top:2px solid {{ section.settings.text_color }};border-bottom:2px solid {{ section.settings.text_color }}}
+.cf-marquee-13-v10-track{display:flex;align-items:center;white-space:nowrap;animation:cf-marquee-scroll-13-v10 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-13-v10-item{display:flex;align-items:center;gap:100px;padding-right:100px}
+.cf-marquee-13-v10-shape{width:60px;height:60px;background:{{ section.settings.text_color }};clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)}
+.cf-marquee-13-v10-text{font-family:sans-serif;font-weight:700;font-size:20px;letter-spacing:0.2em;text-transform:uppercase;color:{{ section.settings.text_color }}}
+@keyframes cf-marquee-scroll-13-v10{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v10">
+  <div class="cf-marquee-13-v10-track">
+    {% for i in (1..6) %}
+      <div class="cf-marquee-13-v10-item">
+        <div class="cf-marquee-13-v10-text">{{ section.settings.text }}</div>
+        <div class="cf-marquee-13-v10-shape"></div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v10)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"ARCHITECTURE"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#E4E4E4"},
+    {"type":"color","id":"text_color","label":"Text & Brand Color","default":"#111111"},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":2,"default":25},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v10)"}]
+}
+{% endschema %}

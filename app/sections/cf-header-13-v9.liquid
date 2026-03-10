@@ -1,0 +1,66 @@
+<style>
+.cf-head-13-v9{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;border:3px solid {{ section.settings.text_color }};padding:0;margin-top:10px;margin-bottom:10px}
+.cf-head-13-v9-inner{display:flex;justify-content:space-between;align-items:stretch;height:70px}
+.cf-head-13-v9-logo{display:flex;align-items:center;padding:0 30px;font-size:24px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:{{ section.settings.text_color }};text-decoration:none;border-right:3px solid {{ section.settings.text_color }};background:{{ section.settings.logo_bg }}}
+.cf-head-13-v9-nav{display:flex;flex:1;background:{{ section.settings.bg_color }}}
+.cf-head-13-v9-link{display:flex;align-items:center;padding:0 20px;font-size:14px;font-weight:800;color:{{ section.settings.text_color }};text-decoration:none;text-transform:uppercase;letter-spacing:0.05em;border-right:3px solid {{ section.settings.text_color }};transition:0.2s}
+.cf-head-13-v9-link:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-head-13-v9-right{display:flex;align-items:stretch;background:{{ section.settings.bg_color }}}
+.cf-head-13-v9-icon{width:70px;display:flex;align-items:center;justify-content:center;border-left:3px solid {{ section.settings.text_color }};cursor:pointer;transition:0.2s}
+.cf-head-13-v9-icon:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-head-13-v9-mobile{display:none}
+@media(max-width:1024px){
+  .cf-head-13-v9-nav{display:none}
+  .cf-head-13-v9-mobile{display:flex;align-items:center;justify-content:center;width:70px;border-right:3px solid {{ section.settings.text_color }}}
+  .cf-head-13-v9-logo{flex:1;justify-content:center;border-right:none}
+}
+</style>
+
+<div class="cf-head-13-v9" style="max-width: {{ section.settings.max_width }}px; margin-left: auto; margin-right: auto;">
+  <div class="cf-head-13-v9-inner">
+    
+    <div class="cf-head-13-v9-mobile">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </div>
+
+    <a href="/" class="cf-head-13-v9-logo">
+      {{ section.settings.logo_text }}
+    </a>
+
+    <div class="cf-head-13-v9-nav">
+      {% for link in linklists[section.settings.menu].links limit:4 %}
+        <a href="{{ link.url }}" class="cf-head-13-v9-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-head-13-v9-link">Jackets</a>
+        <a href="#" class="cf-head-13-v9-link">T-Shirts</a>
+        <a href="#" class="cf-head-13-v9-link">Denim</a>
+        <a href="#" class="cf-head-13-v9-link">Caps</a>
+      {% endfor %}
+    </div>
+
+    <div class="cf-head-13-v9-right">
+      <div class="cf-head-13-v9-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <div class="cf-head-13-v9-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Header (v9)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"HAZARD"},
+    {"type":"link_list","id":"menu","label":"Navigation Menu"},
+    {"type":"color","id":"bg_color","label":"Main Bar Color","default":"#CCFF00"},
+    {"type":"color","id":"logo_bg","label":"Logo Block Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Lines & Text","default":"#000000"},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":2000,"step":50,"default":1800}
+  ],
+  "presets": [{"name":"13 · Brand Header (v9)"}]
+}
+{% endschema %}

@@ -1,0 +1,64 @@
+<style>
+.cf-promo-13-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};display:flex;justify-content:center}
+.cf-promo-13-v8-inner{max-width:1600px;width:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:20px}
+.cf-promo-13-v8-block{background:{{ section.settings.card_bg }};color:{{ section.settings.text_color }};padding:60px;display:flex;flex-direction:column;justify-content:space-between;font-family:sans-serif;border-radius:{{ section.settings.border_radius }}px;overflow:hidden;position:relative}
+.cf-promo-13-v8-img-block{padding:0;min-height:400px}
+.cf-promo-13-v8-img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.cf-promo-13-v8-large{grid-row:1 / span 2}
+.cf-promo-13-v8-sub{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:20px;display:block}
+.cf-promo-13-v8-title{font-family:serif;font-size:clamp(40px, 6vw, 72px);font-weight:400;font-style:italic;line-height:1;margin:0}
+.cf-promo-13-v8-desc{font-size:16px;line-height:1.5;margin:0 0 30px 0;opacity:0.8;max-width:400px}
+.cf-promo-13-v8-btn{align-self:flex-start;display:inline-block;padding:15px 30px;background:{{ section.settings.text_color }};color:{{ section.settings.card_bg }};font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s;border-radius:50px}
+.cf-promo-13-v8-btn:hover{background:transparent;color:{{ section.settings.text_color }};box-shadow:inset 0 0 0 2px {{ section.settings.text_color }}}
+@media(max-width:1024px){
+  .cf-promo-13-v8-inner{grid-template-columns:1fr}
+  .cf-promo-13-v8-large{grid-row:auto;min-height:500px}
+  .cf-promo-13-v8-block{padding:40px}
+}
+</style>
+
+<div class="cf-promo-13-v8">
+  <div class="cf-promo-13-v8-inner">
+    <div class="cf-promo-13-v8-block cf-promo-13-v8-large cf-promo-13-v8-img-block">
+      {% if section.settings.image_large %}
+        <img src="{{ section.settings.image_large | image_url: width: 1200 }}" class="cf-promo-13-v8-img">
+      {% else %}
+        <div class="cf-promo-13-v8-img" style="background:#ddd;"></div>
+      {% endif %}
+    </div>
+    
+    <div class="cf-promo-13-v8-block">
+      <span class="cf-promo-13-v8-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-promo-13-v8-title">{{ section.settings.title }}</h2>
+    </div>
+
+    <div class="cf-promo-13-v8-block" style="background:{{ section.settings.accent_bg }}; color:{{ section.settings.accent_text }}">
+      <p class="cf-promo-13-v8-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v8-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v8)",
+  "settings": [
+    {"type":"image_picker","id":"image_large","label":"Left Large Image"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"STUDIO FOCUS"},
+    {"type":"text","id":"title","label":"Header Title","default":"The Form Identity"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Reimagining the basics. We strip away the unnecessary to reveal the pure architectural form of the garment."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop The Look"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F5F5F5"},
+    {"type":"color","id":"card_bg","label":"Top Right Block Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Top Right Text Color","default":"#111111"},
+    {"type":"color","id":"accent_bg","label":"Bottom Right Block Background","default":"#111111"},
+    {"type":"color","id":"accent_text","label":"Bottom Right Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"border_radius","label":"Corner Rounding","min":0,"max":40,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v8)"}]
+}
+{% endschema %}

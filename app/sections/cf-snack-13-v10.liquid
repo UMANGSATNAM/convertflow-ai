@@ -1,0 +1,34 @@
+<style>
+.cf-snack-13-v10{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};text-align:center;font-family:serif;display:flex;justify-content:center}
+.cf-snack-13-v10-inner{max-width:900px}
+.cf-snack-13-v10-quote{font-size:clamp(32px, 5vw, 64px);line-height:1.2;font-style:italic;margin:0 0 30px 0;position:relative}
+.cf-snack-13-v10-quote span{color:{{ section.settings.accent_color }}}
+.cf-snack-13-v10-author{font-family:sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;display:block}
+.cf-snack-13-v10-author::before{content:"— ";opacity:0.5}
+</style>
+
+<div class="cf-snack-13-v10">
+  <div class="cf-snack-13-v10-inner">
+    <h2 class="cf-snack-13-v10-quote">
+      "{{ section.settings.quote_1 }} <span>{{ section.settings.quote_highlight }}</span> {{ section.settings.quote_2 }}"
+    </h2>
+    <span class="cf-snack-13-v10-author">{{ section.settings.author }}</span>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack (v10)",
+  "settings": [
+    {"type":"text","id":"quote_1","label":"Quote Part 1","default":"Design is the"},
+    {"type":"text","id":"quote_highlight","label":"Quote Highlighted Word","default":"silent"},
+    {"type":"text","id":"quote_2","label":"Quote Part 2","default":"ambassador of your brand."},
+    {"type":"text","id":"author","label":"Author/Source","default":"Paul Rand"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Highlight Color","default":"#A38971"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"13 · Brand Snack (v10)"}]
+}
+{% endschema %}

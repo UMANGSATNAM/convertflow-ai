@@ -1,0 +1,73 @@
+<style>
+.cf-feat-12-v10{width:100%;padding:0;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-feat-12-v10-inner{display:flex;min-height:{{ section.settings.min_height }}vh}
+.cf-feat-12-v10-hero{width:50%;position:relative;background:#ddd;display:flex;align-items:center;justify-content:center}
+.cf-feat-12-v10-hero-img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.cf-feat-12-v10-hero-content{position:relative;z-index:2;text-align:center;color:#fff;padding:40px}
+.cf-feat-12-v10-sub{font-size:14px;text-transform:uppercase;letter-spacing:0.2em;margin-bottom:20px;font-weight:700}
+.cf-feat-12-v10-title{font-family:serif;font-size:clamp(48px, 6vw, 84px);line-height:1;margin:0 0 30px 0;font-style:italic;font-weight:400}
+.cf-feat-12-v10-link{display:inline-block;padding:15px 40px;background:#fff;color:#000;text-decoration:none;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;border-radius:0;transition:0.3s}
+.cf-feat-12-v10-link:hover{background:rgba(255,255,255,0.8)}
+.cf-feat-12-v10-grid{width:50%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.cf-feat-12-v10-card{position:relative;background:#f5f5f5;text-decoration:none;overflow:hidden;group}
+.cf-feat-12-v10-img{width:100%;height:100%;object-fit:cover;transition:0.8s}
+.cf-feat-12-v10-card:hover .cf-feat-12-v10-img{transform:scale(1.05)}
+.cf-feat-12-v10-overlay{position:absolute;bottom:0;left:0;width:100%;padding:30px;background:linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);color:#fff;display:flex;justify-content:space-between;align-items:flex-end;opacity:0;transition:0.3s}
+.cf-feat-12-v10-card:hover .cf-feat-12-v10-overlay{opacity:1}
+.cf-feat-12-v10-title-product{font-family:serif;font-size:20px;margin:0 0 5px 0;font-weight:400;font-style:italic}
+.cf-feat-12-v10-price{font-size:13px;margin:0;letter-spacing:0.05em}
+@media(max-width:1024px){.cf-feat-12-v10-inner{flex-direction:column}.cf-feat-12-v10-hero{width:100%;height:600px;flex:none}.cf-feat-12-v10-grid{width:100%;flex:none}}
+@media(max-width:600px){.cf-feat-12-v10-grid{grid-template-columns:1fr}.cf-feat-12-v10-card{height:400px}.cf-feat-12-v10-overlay{opacity:1;background:linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)}}
+</style>
+
+<div class="cf-feat-12-v10">
+  <div class="cf-feat-12-v10-inner">
+    <div class="cf-feat-12-v10-hero">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1400 }}" class="cf-feat-12-v10-hero-img" alt="Hero">
+      {% else %}
+        <div class="cf-feat-12-v10-hero-img" style="background:#333;"></div>
+      {% endif %}
+      <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.2);"></div>
+      <div class="cf-feat-12-v10-hero-content">
+        <div class="cf-feat-12-v10-sub">{{ section.settings.subtitle }}</div>
+        <h2 class="cf-feat-12-v10-title">{{ section.settings.title | newline_to_br }}</h2>
+        <a href="{{ section.settings.btn_link }}" class="cf-feat-12-v10-link">{{ section.settings.btn_label }}</a>
+      </div>
+    </div>
+    
+    <div class="cf-feat-12-v10-grid">
+      {% for i in (1..4) %}
+        <a href="#" class="cf-feat-12-v10-card">
+          <div class="cf-feat-12-v10-img" style="background:#{{ forloop.index | times: 111 }}#ddd;"></div>
+          <div class="cf-feat-12-v10-overlay">
+            <div>
+              <h3 class="cf-feat-12-v10-title-product">Ribbed Tank Top</h3>
+              <p class="cf-feat-12-v10-price">$45.00</p>
+            </div>
+            <div style="background:#fff;color:#000;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured (v10)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Left Hero Image"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"COLLECTION"},
+    {"type":"textarea","id":"title","label":"Title","default":"Summer\nEssentials"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP ALL"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"min_height","label":"Minimum Height (vh)","min":60,"max":100,"step":5,"default":90}
+  ],
+  "presets": [{"name":"12 · Women's Featured (v10)"}]
+}
+{% endschema %}

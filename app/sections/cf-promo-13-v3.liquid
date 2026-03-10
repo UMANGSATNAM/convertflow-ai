@@ -1,0 +1,77 @@
+<style>
+.cf-promo-13-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};display:flex;justify-content:center}
+.cf-promo-13-v3-inner{max-width:1600px;width:100%;display:grid;grid-template-columns:350px 1fr;gap:60px;align-items:center}
+.cf-promo-13-v3-text{color:{{ section.settings.text_color }};position:relative;z-index:10}
+.cf-promo-13-v3-title{font-family:sans-serif;font-size:clamp(50px, 8vw, 110px);font-weight:900;line-height:0.85;text-transform:uppercase;letter-spacing:-0.04em;margin:0 0 30px 0}
+.cf-promo-13-v3-desc{font-family:sans-serif;font-size:14px;line-height:1.6;font-weight:500;margin:0 0 40px 0;opacity:0.8;max-width:300px}
+.cf-promo-13-v3-btn{display:inline-block;padding-bottom:5px;border-bottom:2px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};font-family:sans-serif;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s}
+.cf-promo-13-v3-btn:hover{color:{{ section.settings.accent_color }};border-color:{{ section.settings.accent_color }}}
+.cf-promo-13-v3-film{display:grid;grid-template-columns:repeat(3, 1fr);gap:20px}
+.cf-promo-13-v3-film-img{width:100%;height:600px;object-fit:cover;object-position:center;transition:0.5s}
+.cf-promo-13-v3-film-item{overflow:hidden}
+.cf-promo-13-v3-film-item:hover .cf-promo-13-v3-film-img{transform:scale(1.05)}
+@media(max-width:1200px){
+  .cf-promo-13-v3-inner{grid-template-columns:1fr;gap:40px}
+  .cf-promo-13-v3-text{max-width:100%;text-align:center}
+  .cf-promo-13-v3-desc{margin:0 auto 30px auto}
+}
+@media(max-width:768px){
+  .cf-promo-13-v3-film{grid-template-columns:1fr;gap:10px}
+  .cf-promo-13-v3-film-img{height:400px}
+}
+</style>
+
+<div class="cf-promo-13-v3">
+  <div class="cf-promo-13-v3-inner">
+    <div class="cf-promo-13-v3-text">
+      <h2 class="cf-promo-13-v3-title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="cf-promo-13-v3-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v3-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+    <div class="cf-promo-13-v3-film">
+      <div class="cf-promo-13-v3-film-item">
+        {% if section.settings.img_1 %}
+          <img src="{{ section.settings.img_1 | image_url: width: 600 }}" class="cf-promo-13-v3-film-img">
+        {% else %}
+          <div class="cf-promo-13-v3-film-img" style="background:#333;"></div>
+        {% endif %}
+      </div>
+      <div class="cf-promo-13-v3-film-item">
+        {% if section.settings.img_2 %}
+          <img src="{{ section.settings.img_2 | image_url: width: 600 }}" class="cf-promo-13-v3-film-img">
+        {% else %}
+          <div class="cf-promo-13-v3-film-img" style="background:#555;"></div>
+        {% endif %}
+      </div>
+      <div class="cf-promo-13-v3-film-item">
+        {% if section.settings.img_3 %}
+          <img src="{{ section.settings.img_3 | image_url: width: 600 }}" class="cf-promo-13-v3-film-img">
+        {% else %}
+          <div class="cf-promo-13-v3-film-img" style="background:#777;"></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v3)",
+  "settings": [
+    {"type":"textarea","id":"title","label":"Giant Title (Use newlines)","default":"THE\nNEW\nSTANDARD."},
+    {"type":"textarea","id":"desc","label":"Description","default":"Refined garments designed for modern life. Constructed carefully with longevity in mind."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"View Campaign"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"img_1","label":"Image 1"},
+    {"type":"image_picker","id":"img_2","label":"Image 2"},
+    {"type":"image_picker","id":"img_3","label":"Image 3"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Hover Line Color","default":"#CCFF00"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":80}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v3)"}]
+}
+{% endschema %}

@@ -1,0 +1,67 @@
+<style>
+.cf-feat-12-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-feat-12-v8-inner{max-width:1400px;margin:0 auto;display:flex;gap:40px;align-items:flex-end}
+.cf-feat-12-v8-featured{flex:1;position:relative;text-decoration:none;display:block;border-radius:{{ section.settings.border_radius }}px;overflow:hidden;group}
+.cf-feat-12-v8-img-feat{width:100%;height:700px;object-fit:cover;transition:transform 0.8s}
+.cf-feat-12-v8-featured:hover .cf-feat-12-v8-img-feat{transform:scale(1.03)}
+.cf-feat-12-v8-feat-overlay{position:absolute;bottom:0;left:0;width:100%;padding:40px;background:linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);color:#fff;display:flex;justify-content:space-between;align-items:flex-end}
+.cf-feat-12-v8-feat-title{font-size:32px;font-family:serif;font-weight:400;margin:0 0 10px 0;font-style:italic}
+.cf-feat-12-v8-feat-price{font-size:16px;margin:0;font-weight:600}
+.cf-feat-12-v8-sidebar{width:400px;display:flex;flex-direction:column;gap:30px}
+.cf-feat-12-v8-side-card{display:flex;gap:20px;align-items:center;text-decoration:none;padding-bottom:30px;border-bottom:1px solid {{ section.settings.border_color }};transition:0.3s;group}
+.cf-feat-12-v8-side-img-wrap{width:100px;height:120px;border-radius:{{ section.settings.border_radius }}px;overflow:hidden;flex-shrink:0}
+.cf-feat-12-v8-side-img{width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-feat-12-v8-side-card:hover .cf-feat-12-v8-side-img{transform:scale(1.08)}
+.cf-feat-12-v8-side-info{flex:1}
+.cf-feat-12-v8-side-title{font-family:serif;font-size:18px;color:{{ section.settings.text_color }};margin:0 0 5px 0;font-weight:400}
+.cf-feat-12-v8-side-price{font-size:14px;color:{{ section.settings.accent_color }};margin:0;font-weight:600}
+@media(max-width:1024px){.cf-feat-12-v8-inner{flex-direction:column}.cf-feat-12-v8-sidebar{width:100%}.cf-feat-12-v8-side-card:last-child{border-bottom:none}}
+</style>
+
+<div class="cf-feat-12-v8">
+  <div class="cf-feat-12-v8-inner">
+    <a href="#" class="cf-feat-12-v8-featured">
+      <div class="cf-feat-12-v8-img-feat" style="background:#ddd"></div>
+      <div class="cf-feat-12-v8-feat-overlay">
+        <div>
+          <h3 class="cf-feat-12-v8-feat-title">{{ section.settings.feat_product }}</h3>
+          <p class="cf-feat-12-v8-feat-price">{{ section.settings.feat_price }}</p>
+        </div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </div>
+    </a>
+    
+    <div class="cf-feat-12-v8-sidebar">
+      <h2 style="font-family:serif;font-size:24px;font-style:italic;margin:0 0 10px 0;font-weight:400">{{ section.settings.title }}</h2>
+      {% for i in (1..4) %}
+        <a href="#" class="cf-feat-12-v8-side-card">
+          <div class="cf-feat-12-v8-side-img-wrap">
+            <div class="cf-feat-12-v8-side-img" style="background:#e8e8e8"></div>
+          </div>
+          <div class="cf-feat-12-v8-side-info">
+            <h4 class="cf-feat-12-v8-side-title">Silk Cami</h4>
+            <p class="cf-feat-12-v8-side-price">$85.00</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured (v8)",
+  "settings": [
+    {"type":"text","id":"title","label":"Sidebar Title","default":"Complete The Look"},
+    {"type":"text","id":"feat_product","label":"Featured Core Product Title","default":"The Oversized Cashmere Wrap"},
+    {"type":"text","id":"feat_price","label":"Featured Price","default":"$320.00"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Price Color","default":"#A38971"},
+    {"type":"color","id":"border_color","label":"List Separator Color","default":"#EAEAEE"},
+    {"type":"range","id":"border_radius","label":"Image Rounding","min":0,"max":20,"step":2,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Featured (v8)"}]
+}
+{% endschema %}

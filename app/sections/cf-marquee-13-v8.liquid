@@ -1,0 +1,29 @@
+<style>
+.cf-marquee-13-v8{width:100%;overflow:hidden;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};display:flex;align-items:center}
+.cf-marquee-13-v8-track{display:flex;white-space:nowrap;animation:cf-marquee-scroll-13-v8 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-13-v8-text{font-family:sans-serif;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(60px, 12vw, 180px);line-height:0.9;letter-spacing:-0.05em;padding-right:60px;display:inline-block;color:{{ section.settings.text_color }};text-shadow:4px 0px 0px rgba(255,0,0,0.8), -4px 0px 0px rgba(0,255,255,0.8)}
+@keyframes cf-marquee-scroll-13-v8{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v8">
+  <div class="cf-marquee-13-v8-track">
+    <div class="cf-marquee-13-v8-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v8-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v8-text">{{ section.settings.text }}</div>
+    <div class="cf-marquee-13-v8-text">{{ section.settings.text }}</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v8)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"SYSTEM FAILURE / "},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Base Color","default":"#FDFBF7"},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":5,"max":40,"step":1,"default":12},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v8)"}]
+}
+{% endschema %}

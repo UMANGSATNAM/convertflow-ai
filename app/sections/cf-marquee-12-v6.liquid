@@ -1,0 +1,50 @@
+<style>
+.cf-marquee-12-v6{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;overflow:hidden;font-family:serif;color:{{ section.settings.text_color }}}
+.cf-marquee-12-v6-track{display:flex;white-space:nowrap;animation:cf-scroll-12-v6 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-12-v6-content{display:flex;align-items:center;padding-right:20px}
+.cf-marquee-12-v6-text{font-size:{{ section.settings.font_size }}px;margin:0;letter-spacing:0.02em}
+.cf-marquee-12-v6-image{width:{{ section.settings.img_size }}px;height:{{ section.settings.img_size }}px;border-radius:50%;object-fit:cover;margin:0 30px}
+@keyframes cf-scroll-12-v6{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-12-v6">
+  <div class="cf-marquee-12-v6-track">
+    <div class="cf-marquee-12-v6-content">
+      {% for i in (1..4) %}
+        <span class="cf-marquee-12-v6-text">{{ section.settings.text }}</span>
+        {% if section.settings.image %}
+          <img src="{{ section.settings.image | image_url: width: 200 }}" class="cf-marquee-12-v6-image">
+        {% else %}
+          <div class="cf-marquee-12-v6-image" style="background:#ddd;"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="cf-marquee-12-v6-content">
+      {% for i in (1..4) %}
+        <span class="cf-marquee-12-v6-text">{{ section.settings.text }}</span>
+        {% if section.settings.image %}
+          <img src="{{ section.settings.image | image_url: width: 200 }}" class="cf-marquee-12-v6-image">
+        {% else %}
+          <div class="cf-marquee-12-v6-image" style="background:#ddd;"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Marquee (v6)",
+  "settings": [
+    {"type":"text","id":"text","label":"Marquee Text","default":"Discover the new Collection"},
+    {"type":"image_picker","id":"image","label":"Separator Image"},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":35},
+    {"type":"range","id":"font_size","label":"Font Size (px)","min":20,"max":80,"step":2,"default":40},
+    {"type":"range","id":"img_size","label":"Image Size (px)","min":20,"max":100,"step":2,"default":50},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":1,"default":20}
+  ],
+  "presets": [{"name":"12 · Women's Marquee (v6)"}]
+}
+{% endschema %}

@@ -1,0 +1,68 @@
+<style>
+.cf-feat-12-v5{width:100%;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};font-family:serif;color:{{ section.settings.text_color }};overflow:hidden}
+.cf-feat-12-v5-top{max-width:800px;margin:0 auto 60px auto;text-align:center;padding:0 20px}
+.cf-feat-12-v5-sub{font-size:14px;font-style:italic;color:{{ section.settings.accent_color }};margin-bottom:15px;display:block}
+.cf-feat-12-v5-title{font-size:clamp(40px, 6vw, 70px);font-weight:300;margin:0 0 20px 0;line-height:1}
+.cf-feat-12-v5-desc{font-family:sans-serif;font-size:15px;opacity:0.8;line-height:1.6;margin:0}
+.cf-feat-12-v5-track{display:flex;align-items:center;width:200%;animation:cf-feat-scroll-12-v5 25s linear infinite}
+.cf-feat-12-v5-track:hover{animation-play-state:paused}
+@keyframes cf-feat-scroll-12-v5{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.cf-feat-12-v5-slider{display:flex;gap:30px;padding:0 15px}
+.cf-feat-12-v5-card{width:350px;flex-shrink:0;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center}
+.cf-feat-12-v5-img-wrap{width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:{{ section.settings.border_radius }}px;margin-bottom:25px}
+.cf-feat-12-v5-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s}
+.cf-feat-12-v5-card:hover .cf-feat-12-v5-img{transform:scale(1.05)}
+.cf-feat-12-v5-title-product{font-size:22px;color:{{ section.settings.text_color }};margin:0 0 8px 0;font-weight:400}
+.cf-feat-12-v5-price{font-family:sans-serif;font-size:13px;letter-spacing:0.1em;color:{{ section.settings.text_color }};opacity:0.7;margin:0}
+@media(max-width:768px){.cf-feat-12-v5-card{width:280px}}
+</style>
+
+<div class="cf-feat-12-v5">
+  <div class="cf-feat-12-v5-top">
+    <span class="cf-feat-12-v5-sub">{{ section.settings.subtitle }}</span>
+    <h2 class="cf-feat-12-v5-title">{{ section.settings.title }}</h2>
+    <p class="cf-feat-12-v5-desc">{{ section.settings.desc }}</p>
+  </div>
+  
+  <div class="cf-feat-12-v5-track">
+    <div class="cf-feat-12-v5-slider">
+      {% for i in (1..5) %}
+        <a href="#" class="cf-feat-12-v5-card">
+          <div class="cf-feat-12-v5-img-wrap">
+            <div class="cf-feat-12-v5-img" style="background:#dfdfdf"></div>
+          </div>
+          <h3 class="cf-feat-12-v5-title-product">Pleated Midi Skirt</h3>
+          <p class="cf-feat-12-v5-price">$185.00</p>
+        </a>
+      {% endfor %}
+    </div>
+    <div class="cf-feat-12-v5-slider">
+      {% for i in (1..5) %}
+        <a href="#" class="cf-feat-12-v5-card">
+          <div class="cf-feat-12-v5-img-wrap">
+             <div class="cf-feat-12-v5-img" style="background:#dfdfdf"></div>
+          </div>
+          <h3 class="cf-feat-12-v5-title-product">Pleated Midi Skirt</h3>
+          <p class="cf-feat-12-v5-price">$185.00</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured (v5)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"LATEST DROPS"},
+    {"type":"text","id":"title","label":"Header Title","default":"The Fall Collection"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Rich textures and warm tones to transition you seamlessly into the cooler months."},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Subtitle Italics","default":"#A38971"},
+    {"type":"range","id":"border_radius","label":"Card Rounding","min":0,"max":60,"step":5,"default":0},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100}
+  ],
+  "presets": [{"name":"12 · Women's Featured (v5)"}]
+}
+{% endschema %}

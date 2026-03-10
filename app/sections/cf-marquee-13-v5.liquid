@@ -1,0 +1,33 @@
+<style>
+.cf-marquee-13-v5{width:100%;overflow:hidden;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};position:relative;margin:40px 0}
+.cf-marquee-13-v5-skew{transform:skewY({{ section.settings.skew_angle }}deg);background:{{ section.settings.tape_color }};color:{{ section.settings.text_color }};padding:25px 0;border-top:2px solid #000;border-bottom:2px solid #000}
+.cf-marquee-13-v5-track{display:flex;white-space:nowrap;animation:cf-marquee-scroll-13-v5 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-13-v5-text{font-family:sans-serif;font-weight:800;text-transform:uppercase;font-size:24px;letter-spacing:0.1em;padding-right:50px;display:inline-block}
+@keyframes cf-marquee-scroll-13-v5{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-13-v5">
+  <div class="cf-marquee-13-v5-skew">
+    <div class="cf-marquee-13-v5-track">
+      {% for i in (1..10) %}
+        <div class="cf-marquee-13-v5-text">{{ section.settings.text }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Marquee (v5)",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"WARNING / HIGH VOLTAGE COLLECTION /"},
+    {"type":"color","id":"bg_color","label":"Section Background Outer","default":"#FFFFFF"},
+    {"type":"color","id":"tape_color","label":"Tape Ribbon Background","default":"#CCFF00"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"skew_angle","label":"Slant Angle (Deg)","min":-10,"max":10,"step":1,"default":-3},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":60,"step":2,"default":15},
+    {"type":"range","id":"padding_y","label":"Vertical Space Outer","min":0,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"13 · Brand Marquee (v5)"}]
+}
+{% endschema %}

@@ -1,0 +1,39 @@
+<style>
+.cf-snack-13-v5{width:100%;background:{{ section.settings.bg_color }};padding:40px 20px;display:flex;align-items:center;justify-content:center;border-top:{{ section.settings.border_width }}px solid {{ section.settings.text_color }};border-bottom:{{ section.settings.border_width }}px solid {{ section.settings.text_color }}}
+.cf-snack-13-v5-inner{display:flex;align-items:center;gap:30px;font-family:sans-serif;text-transform:uppercase;color:{{ section.settings.text_color }}}
+.cf-snack-13-v5-arrow{display:flex;align-items:center;justify-content:center;animation:cf-snack-bounce-13-v5 2s infinite ease-in-out}
+.cf-snack-13-v5-arrow svg{width:clamp(40px, 6vw, 80px);height:auto}
+.cf-snack-13-v5-text{font-size:clamp(32px, 5vw, 64px);font-weight:900;letter-spacing:-0.02em;line-height:1}
+@keyframes cf-snack-bounce-13-v5{0%, 100%{transform:translateX(0)} 50%{transform:translateX(10px)}}
+@media(max-width:768px){.cf-snack-13-v5-inner{flex-direction:column;text-align:center;gap:15px}.cf-snack-13-v5-arrow{transform:rotate(90deg);animation:cf-snack-bounce-down-13-v5 2s infinite ease-in-out}@keyframes cf-snack-bounce-down-13-v5{0%, 100%{transform:rotate(90deg) translateY(0)} 50%{transform:rotate(90deg) translateY(-10px)}}}
+</style>
+
+<div class="cf-snack-13-v5">
+  <a href="{{ section.settings.btn_link }}" style="text-decoration:none; color:inherit;">
+    <div class="cf-snack-13-v5-inner">
+      <div class="cf-snack-13-v5-text">{{ section.settings.text_1 }}</div>
+      <div class="cf-snack-13-v5-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </div>
+      <div class="cf-snack-13-v5-text">{{ section.settings.text_2 }}</div>
+      <div class="cf-snack-13-v5-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </div>
+    </div>
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack (v5)",
+  "settings": [
+    {"type":"text","id":"text_1","label":"Text Part 1","default":"SHOP THE"},
+    {"type":"text","id":"text_2","label":"Text Part 2","default":"WINTER SALE"},
+    {"type":"url","id":"btn_link","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#CCFF00"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"border_width","label":"Border Thickness","min":0,"max":10,"step":1,"default":3}
+  ],
+  "presets": [{"name":"13 · Brand Snack (v5)"}]
+}
+{% endschema %}

@@ -1,0 +1,45 @@
+<style>
+.cf-cat-13-v5{width:100%;height:800px;background:{{ section.settings.bg_color }};display:flex;overflow:hidden;font-family:sans-serif;border-top:1px solid {{ section.settings.text_color }};border-bottom:1px solid {{ section.settings.text_color }}}
+.cf-cat-13-v5-col{flex:1;height:100%;position:relative;border-right:1px solid {{ section.settings.text_color }};transition:flex 0.6s cubic-bezier(0.16, 1, 0.3, 1);overflow:hidden;cursor:pointer;text-decoration:none;background:#222}
+.cf-cat-13-v5-col:last-child{border-right:none}
+.cf-cat-13-v5-col:hover{flex:4}
+.cf-cat-13-v5-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.5;transition:0.6s}
+.cf-cat-13-v5-col:hover .cf-cat-13-v5-img{opacity:1;transform:scale(1.05)}
+.cf-cat-13-v5-content{position:absolute;bottom:0;left:0;width:100%;padding:40px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.cf-cat-13-v5-label{font-size:clamp(30px, 4vw, 60px);font-weight:900;text-transform:uppercase;letter-spacing:0.02em;margin:0;transform:translateY(20px);opacity:0;transition:0.4s;white-space:nowrap}
+.cf-cat-13-v5-col:hover .cf-cat-13-v5-label{transform:translateY(0);opacity:1}
+.cf-cat-13-v5-num{position:absolute;top:40px;left:40px;font-size:14px;font-weight:700;letter-spacing:0.2em;color:#fff;z-index:2;background:rgba(0,0,0,0.5);padding:5px 15px;border-radius:30px}
+@media(max-width:900px){
+  .cf-cat-13-v5{flex-direction:column;height:100vh}
+  .cf-cat-13-v5-col{border-right:none;border-bottom:1px solid {{ section.settings.text_color }}}
+  .cf-cat-13-v5-col:last-child{border-bottom:none}
+  .cf-cat-13-v5-num{top:20px;left:20px}
+  .cf-cat-13-v5-content{padding:20px;justify-content:center;align-items:center;background:rgba(0,0,0,0.3)}
+  .cf-cat-13-v5-label{transform:none;opacity:1;font-size:32px}
+}
+</style>
+
+<div class="cf-cat-13-v5">
+  {% for i in (1..4) %}
+    <a href="#" class="cf-cat-13-v5-col">
+      <div class="cf-cat-13-v5-img" style="background:#444;"></div>
+      <div class="cf-cat-13-v5-num">0{{ i }}</div>
+      <div class="cf-cat-13-v5-content">
+        <h3 class="cf-cat-13-v5-label">
+          {% if i == 1 %}Footwear{% elsif i == 2 %}Outerwear{% elsif i == 3 %}Headwear{% else %}Accessories{% endif %}
+        </h3>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Category (v5)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Border Lines Color","default":"#FDFDFD"}
+  ],
+  "presets": [{"name":"13 · Brand Category (v5)"}]
+}
+{% endschema %}

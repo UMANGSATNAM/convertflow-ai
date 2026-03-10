@@ -1,0 +1,61 @@
+<style>
+.cf-feat-12-v6{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-feat-12-v6-inner{max-width:1400px;margin:0 auto}
+.cf-feat-12-v6-top{text-align:center;margin-bottom:60px}
+.cf-feat-12-v6-tag{font-size:10px;text-transform:uppercase;letter-spacing:0.15em;background:{{ section.settings.accent_color }};color:#fff;padding:6px 14px;border-radius:30px;display:inline-block;margin-bottom:20px;font-weight:700}
+.cf-feat-12-v6-title{font-size:clamp(32px, 5vw, 60px);font-family:serif;font-style:italic;font-weight:400;margin:0}
+.cf-feat-12-v6-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.cf-feat-12-v6-card{display:flex;gap:30px;align-items:center;background:{{ section.settings.card_bg }};padding:25px;border-radius:{{ section.settings.border_radius }}px;text-decoration:none;transition:box-shadow 0.3s;border:1px solid transparent}
+.cf-feat-12-v6-card:hover{box-shadow:0 15px 40px rgba(0,0,0,0.05);border-color:{{ section.settings.border_color }}}
+.cf-feat-12-v6-img-wrap{width:140px;height:180px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#e2e2e2}
+.cf-feat-12-v6-img{width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-feat-12-v6-card:hover .cf-feat-12-v6-img{transform:scale(1.05)}
+.cf-feat-12-v6-info{flex:1;display:flex;flex-direction:column}
+.cf-feat-12-v6-title-product{font-family:serif;font-size:22px;color:{{ section.settings.text_color }};margin:0 0 10px 0;font-weight:400}
+.cf-feat-12-v6-desc{font-size:12px;opacity:0.7;line-height:1.5;margin:0 0 20px 0}
+.cf-feat-12-v6-price{font-size:14px;font-weight:700;color:{{ section.settings.accent_color }};margin:0}
+@media(max-width:1024px){.cf-feat-12-v6-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.cf-feat-12-v6-card{flex-direction:column;text-align:center;padding:20px}.cf-feat-12-v6-img-wrap{width:100%;height:300px}}
+</style>
+
+<div class="cf-feat-12-v6">
+  <div class="cf-feat-12-v6-inner">
+    <div class="cf-feat-12-v6-top">
+      <span class="cf-feat-12-v6-tag">{{ section.settings.tag }}</span>
+      <h2 class="cf-feat-12-v6-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-feat-12-v6-grid">
+      {% for i in (1..4) %}
+        <a href="#" class="cf-feat-12-v6-card">
+          <div class="cf-feat-12-v6-img-wrap">
+            <div class="cf-feat-12-v6-img" style="background:#e8e8e8"></div>
+          </div>
+          <div class="cf-feat-12-v6-info">
+            <h3 class="cf-feat-12-v6-title-product">Cashmere Lounge Set</h3>
+            <p class="cf-feat-12-v6-desc">Ultra-soft matching set crafted for ultimate comfort and effortless style.</p>
+            <p class="cf-feat-12-v6-price">$245.00</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Featured (v6)",
+  "settings": [
+    {"type":"text","id":"tag","label":"Tag","default":"EXCLUSIVES"},
+    {"type":"text","id":"title","label":"Header Title","default":"The Lounge Edit"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#FFFFFF"},
+    {"type":"color","id":"border_color","label":"Hover Border Color","default":"#EAE8E4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Accent/Price Color","default":"#A38971"},
+    {"type":"range","id":"border_radius","label":"Card Rounding","min":0,"max":20,"step":2,"default":8},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Featured (v6)"}]
+}
+{% endschema %}

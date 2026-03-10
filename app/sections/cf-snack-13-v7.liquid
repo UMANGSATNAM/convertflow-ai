@@ -1,0 +1,40 @@
+<style>
+.cf-snack-13-v7{width:100%;display:grid;grid-template-columns:300px 1fr;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;border-bottom:2px solid {{ section.settings.text_color }};border-top:2px solid {{ section.settings.text_color }}}
+.cf-snack-13-v7-left{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};padding:30px;display:flex;align-items:center;justify-content:center;text-transform:uppercase;font-size:14px;font-weight:900;letter-spacing:0.1em;position:relative}
+.cf-snack-13-v7-right{padding:30px 40px;display:flex;align-items:center;justify-content:space-between}
+.cf-snack-13-v7-text{font-size:clamp(20px, 3vw, 32px);font-weight:700;letter-spacing:-0.02em;text-transform:uppercase}
+.cf-snack-13-v7-btn{display:inline-flex;padding:10px 25px;border:2px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:0.3s}
+.cf-snack-13-v7-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:900px){
+  .cf-snack-13-v7{grid-template-columns:1fr}
+  .cf-snack-13-v7-left{padding:20px;border-bottom:2px solid {{ section.settings.text_color }}}
+  .cf-snack-13-v7-right{flex-direction:column;text-align:center;gap:20px;padding:30px 20px}
+}
+</style>
+
+<div class="cf-snack-13-v7">
+  <div class="cf-snack-13-v7-left">
+    {{ section.settings.label }}
+  </div>
+  <div class="cf-snack-13-v7-right">
+    <div class="cf-snack-13-v7-text">{{ section.settings.text }}</div>
+    {% if section.settings.btn_text != blank %}
+      <a href="{{ section.settings.btn_link }}" class="cf-snack-13-v7-btn">{{ section.settings.btn_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Snack (v7)",
+  "settings": [
+    {"type":"text","id":"label","label":"Side Label","default":"DISPATCH 001"},
+    {"type":"text","id":"text","label":"Main Text","default":"ALL INTERNATIONAL ORDERS DISPATCHED WITHIN 48 HOURS"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Read Shipping Policy"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F5F5F5"},
+    {"type":"color","id":"text_color","label":"Text & Inverse Color","default":"#111111"}
+  ],
+  "presets": [{"name":"13 · Brand Snack (v7)"}]
+}
+{% endschema %}

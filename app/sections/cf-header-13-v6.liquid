@@ -1,0 +1,77 @@
+<style>
+.cf-head-13-v6{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;}
+.cf-head-13-v6-top{border-bottom:1px solid {{ section.settings.border_color }};padding:10px 20px;display:flex;justify-content:space-between;align-items:center;font-family:sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:0.15em}
+.cf-head-13-v6-main{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;align-items:center;padding:40px 20px;position:relative}
+.cf-head-13-v6-logo{font-size:clamp(40px, 6vw, 84px);font-weight:400;letter-spacing:0.02em;text-decoration:none;color:inherit;line-height:1;margin-bottom:30px}
+.cf-head-13-v6-nav{display:flex;gap:40px;align-items:center}
+.cf-head-13-v6-link{font-family:sans-serif;font-size:13px;font-weight:500;color:inherit;text-decoration:none;position:relative;padding-bottom:5px}
+.cf-head-13-v6-link::after{content:"";position:absolute;bottom:0;left:0;width:0;height:1px;background:currentColor;transition:0.3s}
+.cf-head-13-v6-link:hover::after{width:100%}
+.cf-head-13-v6-icons{position:absolute;right:20px;top:50%;transform:translateY(-50%);display:flex;gap:20px}
+.cf-head-13-v6-icon{cursor:pointer;opacity:0.8;transition:0.3s}
+.cf-head-13-v6-icon:hover{opacity:1;transform:scale(1.1)}
+.cf-head-13-v6-mobile{display:none}
+@media(max-width:900px){
+  .cf-head-13-v6-top{display:none}
+  .cf-head-13-v6-main{flex-direction:row;justify-content:space-between;padding:20px}
+  .cf-head-13-v6-nav{display:none}
+  .cf-head-13-v6-icons{position:static;transform:none}
+  .cf-head-13-v6-logo{margin-bottom:0;font-size:32px}
+  .cf-head-13-v6-mobile{display:block;cursor:pointer}
+}
+</style>
+
+<div class="cf-head-13-v6">
+  <div class="cf-head-13-v6-top">
+    <span>Free Global Shipping on Orders over $200</span>
+    <span>USD ($)</span>
+  </div>
+  
+  <div class="cf-head-13-v6-main">
+    <div class="cf-head-13-v6-mobile">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </div>
+    
+    <a href="/" class="cf-head-13-v6-logo">
+      {{ section.settings.logo_text }}
+    </a>
+    
+    <div class="cf-head-13-v6-nav">
+      {% for link in linklists[section.settings.menu].links limit:5 %}
+        <a href="{{ link.url }}" class="cf-head-13-v6-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-head-13-v6-link">Designers</a>
+        <a href="#" class="cf-head-13-v6-link">Clothing</a>
+        <a href="#" class="cf-head-13-v6-link">Footwear</a>
+        <a href="#" class="cf-head-13-v6-link">Accessories</a>
+        <a href="#" class="cf-head-13-v6-link">Editorial</a>
+      {% endfor %}
+    </div>
+
+    <div class="cf-head-13-v6-icons">
+      <div class="cf-head-13-v6-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <div class="cf-head-13-v6-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <div class="cf-head-13-v6-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Header (v6)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"Monolith"},
+    {"type":"link_list","id":"menu","label":"Navigation Menu"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FAFAFA"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Top Ribbon Border","default":"#E0E0E0"}
+  ],
+  "presets": [{"name":"13 · Brand Header (v6)"}]
+}
+{% endschema %}

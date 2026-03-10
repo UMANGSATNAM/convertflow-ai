@@ -1,0 +1,71 @@
+<style>
+.cf-promo-13-v10{width:100%;height:100vh;min-height:700px;position:relative;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;overflow:hidden}
+.cf-promo-13-v10-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:{{ section.settings.img_opacity }}}
+.cf-promo-13-v10-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,{{ section.settings.overlay_opacity }});z-index:2}
+.cf-promo-13-v10-inner{position:absolute;top:0;left:0;width:100%;height:100%;z-index:3;padding:40px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto}
+.cf-promo-13-v10-tl{grid-column:1;grid-row:1;align-self:start;justify-self:start;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase}
+.cf-promo-13-v10-tr{grid-column:2;grid-row:1;align-self:start;justify-self:end;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;text-align:right}
+.cf-promo-13-v10-center{grid-column:1 / span 2;grid-row:2;align-self:center;justify-self:center;text-align:center}
+.cf-promo-13-v10-title{font-size:clamp(60px, 12vw, 200px);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;line-height:0.8;margin:0}
+.cf-promo-13-v10-bl{grid-column:1;grid-row:3;align-self:end;justify-self:start;max-width:300px}
+.cf-promo-13-v10-desc{font-size:14px;line-height:1.6;margin:0;opacity:0.9}
+.cf-promo-13-v10-br{grid-column:2;grid-row:3;align-self:end;justify-self:end}
+.cf-promo-13-v10-btn{display:inline-block;padding:15px 40px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s;border:1px solid transparent}
+.cf-promo-13-v10-btn:hover{background:transparent;color:{{ section.settings.text_color }};border-color:{{ section.settings.text_color }}}
+@media(max-width:768px){
+  .cf-promo-13-v10-inner{padding:20px;grid-template-columns:1fr;grid-template-rows:auto auto 1fr auto auto;gap:20px}
+  .cf-promo-13-v10-tl{grid-column:1;grid-row:1}
+  .cf-promo-13-v10-tr{grid-column:1;grid-row:2;justify-self:start;text-align:left}
+  .cf-promo-13-v10-center{grid-column:1;grid-row:3}
+  .cf-promo-13-v10-bl{grid-column:1;grid-row:4}
+  .cf-promo-13-v10-br{grid-column:1;grid-row:5;justify-self:start}
+  .cf-promo-13-v10-btn{width:100%;text-align:center}
+}
+</style>
+
+<div class="cf-promo-13-v10">
+  {% if section.settings.image %}
+    <img src="{{ section.settings.image | image_url: width: 2000 }}" alt="Promo Hero" class="cf-promo-13-v10-img">
+  {% else %}
+    <div class="cf-promo-13-v10-img" style="background:#222;"></div>
+  {% endif %}
+  <div class="cf-promo-13-v10-overlay"></div>
+  
+  <div class="cf-promo-13-v10-inner">
+    <div class="cf-promo-13-v10-tl">{{ section.settings.tl_text | newline_to_br }}</div>
+    <div class="cf-promo-13-v10-tr">{{ section.settings.tr_text | newline_to_br }}</div>
+    
+    <div class="cf-promo-13-v10-center">
+      <h2 class="cf-promo-13-v10-title">{{ section.settings.title }}</h2>
+    </div>
+    
+    <div class="cf-promo-13-v10-bl">
+      <p class="cf-promo-13-v10-desc">{{ section.settings.desc }}</p>
+    </div>
+    <div class="cf-promo-13-v10-br">
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v10-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v10)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Full Screen Background Image"},
+    {"type":"range","id":"img_opacity","label":"Image Opacity","min":0,"max":1,"step":0.1,"default":0.6},
+    {"type":"range","id":"overlay_opacity","label":"Overlay Darkness","min":0,"max":1,"step":0.1,"default":0.5},
+    {"type":"textarea","id":"tl_text","label":"Top Left Text","default":"01.\nLOOKBOOK"},
+    {"type":"textarea","id":"tr_text","label":"Top Right Text","default":"SEASON\nFW25"},
+    {"type":"text","id":"title","label":"Giant Center Title","default":"ASCENSION"},
+    {"type":"textarea","id":"desc","label":"Bottom Left Description","default":"A curated selection of garments pushing the boundaries of construction and aesthetic dominance."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Explore Collection"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Base Canvas Color","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v10)"}]
+}
+{% endschema %}

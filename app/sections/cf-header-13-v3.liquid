@@ -1,0 +1,78 @@
+<style>
+.cf-head-13-v3{width:100%;position:absolute;top:0;left:0;z-index:100;background:transparent;color:{{ section.settings.text_color }};font-family:sans-serif;transition:background 0.4s;padding:20px 40px}
+.cf-head-13-v3:hover{background:{{ section.settings.hover_bg }}}
+.cf-head-13-v3-inner{max-width:1800px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.cf-head-13-v3-left{display:flex;gap:40px;align-items:center}
+.cf-head-13-v3-link{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;color:inherit;position:relative;padding:10px 0}
+.cf-head-13-v3-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:currentColor;transition:width 0.3s ease}
+.cf-head-13-v3-link:hover::after{width:100%}
+.cf-head-13-v3-logo{position:absolute;left:50%;transform:translateX(-50%);font-family:serif;font-size:clamp(28px, 4vw, 42px);font-weight:400;font-style:italic;letter-spacing:0.02em;text-decoration:none;color:inherit;white-space:nowrap}
+.cf-head-13-v3-right{display:flex;gap:30px;align-items:center}
+.cf-head-13-v3-icon{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer;color:inherit}
+.cf-head-13-v3-icon svg{width:18px;height:18px}
+.cf-head-13-v3-mobile-toggle{display:none}
+@media(max-width:1024px){
+  .cf-head-13-v3{padding:15px 20px}
+  .cf-head-13-v3-left{display:none}
+  .cf-head-13-v3-right{display:none}
+  .cf-head-13-v3-mobile-toggle{display:block;cursor:pointer}
+  .cf-head-13-v3-logo{position:static;transform:none}
+  .cf-head-13-v3-inner{justify-content:space-between}
+}
+</style>
+
+<div class="cf-head-13-v3">
+  <div class="cf-head-13-v3-inner">
+    <div class="cf-head-13-v3-mobile-toggle">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </div>
+    
+    <div class="cf-head-13-v3-left">
+      {% for link in linklists[section.settings.menu].links limit:4 %}
+        <a href="{{ link.url }}" class="cf-head-13-v3-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-head-13-v3-link">New Arrivals</a>
+        <a href="#" class="cf-head-13-v3-link">Mens</a>
+        <a href="#" class="cf-head-13-v3-link">Womens</a>
+        <a href="#" class="cf-head-13-v3-link">Accessories</a>
+      {% endfor %}
+    </div>
+
+    <a href="/" class="cf-head-13-v3-logo">
+      {{ section.settings.logo_text }}
+    </a>
+
+    <div class="cf-head-13-v3-right">
+      <div class="cf-head-13-v3-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Search
+      </div>
+      <div class="cf-head-13-v3-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Account
+      </div>
+      <div class="cf-head-13-v3-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        Cart (0)
+      </div>
+    </div>
+    
+    <div class="cf-head-13-v3-mobile-toggle" style="opacity:0;pointer-events:none">
+      <!-- Spacer for mobile flex balance -->
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Header (v3)",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"VANGUARD"},
+    {"type":"link_list","id":"menu","label":"Navigation Menu"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"hover_bg","label":"Hover Background (Solid)","default":"#111111"}
+  ],
+  "presets": [{"name":"13 · Brand Header (v3)"}]
+}
+{% endschema %}

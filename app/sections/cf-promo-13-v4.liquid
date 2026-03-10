@@ -1,0 +1,53 @@
+<style>
+.cf-promo-13-v4{width:100%;display:grid;grid-template-columns:1fr 1fr;min-height:70vh;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif}
+.cf-promo-13-v4-left{padding:80px 10%;display:flex;flex-direction:column;justify-content:center}
+.cf-promo-13-v4-sub{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;margin-bottom:20px;display:flex;align-items:center;gap:15px}
+.cf-promo-13-v4-sub::before{content:"";width:40px;height:2px;background:{{ section.settings.accent_color }}}
+.cf-promo-13-v4-title{font-size:clamp(40px, 5vw, 84px);font-weight:900;text-transform:uppercase;line-height:0.9;letter-spacing:-0.02em;margin:0 0 30px 0}
+.cf-promo-13-v4-desc{font-size:15px;line-height:1.6;font-weight:400;margin:0 0 40px 0;max-width:400px;opacity:0.9}
+.cf-promo-13-v4-btn{display:inline-flex;align-items:center;justify-content:center;padding:18px 45px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s;align-self:flex-start}
+.cf-promo-13-v4-btn:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.1)}
+.cf-promo-13-v4-right{position:relative}
+.cf-promo-13-v4-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+@media(max-width:900px){
+  .cf-promo-13-v4{grid-template-columns:1fr;min-height:auto}
+  .cf-promo-13-v4-right{height:500px}
+  .cf-promo-13-v4-left{padding:60px 20px}
+}
+</style>
+
+<div class="cf-promo-13-v4">
+  <div class="cf-promo-13-v4-left">
+    <div class="cf-promo-13-v4-sub">{{ section.settings.subtitle }}</div>
+    <h2 class="cf-promo-13-v4-title">{{ section.settings.title | newline_to_br }}</h2>
+    <p class="cf-promo-13-v4-desc">{{ section.settings.desc }}</p>
+    {% if section.settings.btn_text != blank %}
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v4-btn">{{ section.settings.btn_text }}</a>
+    {% endif %}
+  </div>
+  <div class="cf-promo-13-v4-right">
+    {% if section.settings.image %}
+      <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="Promo" class="cf-promo-13-v4-img">
+    {% else %}
+      <div class="cf-promo-13-v4-img" style="background:#555;"></div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v4)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle Line","default":"NEW SEASON"},
+    {"type":"textarea","id":"title","label":"Header Title (Newlines allowed)","default":"ENGINEERED\nTO PERFORM"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Discover our latest range of technical outerwear designed to withstand the elements without compromising on aesthetic form."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Outerwear"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"image","label":"Right Side Image"},
+    {"type":"color","id":"bg_color","label":"Left Background","default":"#F0F0F0"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Line Color","default":"#FF3300"}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v4)"}]
+}
+{% endschema %}

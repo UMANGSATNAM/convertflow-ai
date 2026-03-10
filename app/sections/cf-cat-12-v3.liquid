@@ -1,0 +1,54 @@
+<style>
+.cf-cat-12-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-cat-12-v3-inner{max-width:1400px;margin:0 auto}
+.cf-cat-12-v3-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px}
+.cf-cat-12-v3-title{font-size:24px;font-family:serif;font-style:italic;margin:0;font-weight:400}
+.cf-cat-12-v3-link{font-size:12px;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;color:{{ section.settings.accent_color }};font-weight:600;border-bottom:1px solid transparent;transition:0.3s}
+.cf-cat-12-v3-link:hover{border-color:{{ section.settings.accent_color }}}
+.cf-cat-12-v3-grid{display:grid;grid-template-columns:repeat(5, 1fr);gap:15px}
+.cf-cat-12-v3-card{text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:15px}
+.cf-cat-12-v3-img-wrap{width:100%;aspect-ratio:1/1;border-radius:50%;overflow:hidden;background:{{ section.settings.card_bg }};box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+.cf-cat-12-v3-img{width:100%;height:100%;object-fit:cover;transition:0.5s}
+.cf-cat-12-v3-card:hover .cf-cat-12-v3-img{transform:scale(1.08)}
+.cf-cat-12-v3-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:{{ section.settings.text_color }};transition:0.3s;font-weight:600}
+.cf-cat-12-v3-card:hover .cf-cat-12-v3-label{color:{{ section.settings.accent_color }}}
+@media(max-width:1024px){.cf-cat-12-v3-grid{grid-template-columns:repeat(3, 1fr)}}
+@media(max-width:600px){.cf-cat-12-v3-grid{grid-template-columns:repeat(2, 1fr)}.cf-cat-12-v3-header{flex-direction:column;align-items:flex-start;gap:15px}}
+</style>
+
+<div class="cf-cat-12-v3">
+  <div class="cf-cat-12-v3-inner">
+    <div class="cf-cat-12-v3-header">
+      <h2 class="cf-cat-12-v3-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-cat-12-v3-link">{{ section.settings.btn_label }}</a>
+    </div>
+    
+    <div class="cf-cat-12-v3-grid">
+      {% for i in (1..5) %}
+        <a href="#" class="cf-cat-12-v3-card">
+          <div class="cf-cat-12-v3-img-wrap">
+            <div class="cf-cat-12-v3-img" style="background:#f4f4f4;"></div>
+          </div>
+          <span class="cf-cat-12-v3-label">Category {{ i }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Category (v3)",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"The Essentials"},
+    {"type":"text","id":"btn_label","label":"Link Label","default":"VIEW ALL"},
+    {"type":"url","id":"btn_link","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Circle Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#A38971"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Category (v3)"}]
+}
+{% endschema %}

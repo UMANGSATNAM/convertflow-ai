@@ -1,0 +1,52 @@
+<style>
+.cf-promo-12-v8{width:100%;background:{{ section.settings.bg_color }};padding:0;font-family:serif;color:{{ section.settings.text_color }};overflow:hidden}
+.cf-promo-12-v8-inner{display:flex;align-items:stretch;min-height:{{ section.settings.min_height }}vh}
+.cf-promo-12-v8-col-left{flex:1;background:{{ section.settings.col_bg }};padding:60px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.cf-promo-12-v8-col-left::after{content:'';position:absolute;right:0;top:-50%;width:1px;height:200%;background:{{ section.settings.accent_color }};opacity:0.3;transform:rotate(15deg)}
+.cf-promo-12-v8-col-right{flex:1;position:relative}
+.cf-promo-12-v8-img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.cf-promo-12-v8-sub{font-size:24px;font-style:italic;margin-bottom:20px;color:{{ section.settings.accent_color }}}
+.cf-promo-12-v8-title{font-size:clamp(48px, 6vw, 84px);line-height:1;margin:0 0 40px 0;font-weight:400;letter-spacing:-0.02em}
+.cf-promo-12-v8-btn{position:relative;display:inline-flex;align-items:center;gap:15px;font-family:sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.2em;color:{{ section.settings.text_color }};text-decoration:none;transition:0.3s}
+.cf-promo-12-v8-btn::before{content:'';width:40px;height:1px;background:{{ section.settings.text_color }};transition:0.3s}
+.cf-promo-12-v8-btn:hover::before{width:60px;background:{{ section.settings.accent_color }}}
+.cf-promo-12-v8-btn:hover{color:{{ section.settings.accent_color }}}
+@media(max-width:900px){.cf-promo-12-v8-inner{flex-direction:column-reverse}.cf-promo-12-v8-col-right{height:500px}.cf-promo-12-v8-col-left{padding:60px 20px;text-align:center}.cf-promo-12-v8-col-left::after{display:none}.cf-promo-12-v8-btn::before{display:none}}
+</style>
+
+<div class="cf-promo-12-v8">
+  <div class="cf-promo-12-v8-inner">
+    <div class="cf-promo-12-v8-col-left">
+      <span class="cf-promo-12-v8-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-promo-12-v8-title">{{ section.settings.title | newline_to_br }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-12-v8-btn">{{ section.settings.btn_label }}</a>
+    </div>
+    <div class="cf-promo-12-v8-col-right">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1400 }}" class="cf-promo-12-v8-img" alt="{{ section.settings.title }}">
+      {% else %}
+        <div class="cf-promo-12-v8-img" style="background:#e8e8e8"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Promo (v8)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Right Panel Image"},
+    {"type":"text","id":"subtitle","label":"Italic Subtitle","default":"Introducing"},
+    {"type":"textarea","id":"title","label":"Title","default":"THE SILK\nCOLLECTION"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW LOOKBOOK"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#FDFBF7"},
+    {"type":"color","id":"col_bg","label":"Left Column Background","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#181818"},
+    {"type":"color","id":"accent_color","label":"Accent Line / Subtitle","default":"#A38A73"},
+    {"type":"range","id":"min_height","label":"Minimum Height (vh)","min":50,"max":100,"step":5,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Promo (v8)"}]
+}
+{% endschema %}

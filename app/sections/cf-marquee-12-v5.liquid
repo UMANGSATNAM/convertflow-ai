@@ -1,0 +1,50 @@
+<style>
+.cf-marquee-12-v5{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;overflow:hidden;font-family:sans-serif;color:{{ section.settings.text_color }}}
+.cf-marquee-12-v5-track{display:flex;white-space:nowrap;animation:cf-scroll-12-v5 {{ section.settings.speed }}s linear infinite reverse}
+.cf-marquee-12-v5-content{display:flex;align-items:center;gap:30px;padding-right:30px}
+.cf-marquee-12-v5-pill{background:{{ section.settings.pill_bg }};color:{{ section.settings.pill_text }};padding:6px 15px;border-radius:30px;font-size:{{ section.settings.font_size }}px;text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+@keyframes cf-scroll-12-v5{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+</style>
+
+<div class="cf-marquee-12-v5">
+  <div class="cf-marquee-12-v5-track">
+    <div class="cf-marquee-12-v5-content">
+      {% for i in (1..8) %}
+        {% assign pill_mod = i | modulo: 2 %}
+        {% if pill_mod == 0 %}
+          <span class="cf-marquee-12-v5-pill">{{ section.settings.text_pill }}</span>
+        {% else %}
+          <span style="font-size:{{ section.settings.font_size }}px;font-weight:400;text-transform:uppercase;letter-spacing:0.1em">{{ section.settings.text_plain }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="cf-marquee-12-v5-content">
+      {% for i in (1..8) %}
+        {% assign pill_mod = i | modulo: 2 %}
+        {% if pill_mod == 0 %}
+          <span class="cf-marquee-12-v5-pill">{{ section.settings.text_pill }}</span>
+        {% else %}
+           <span style="font-size:{{ section.settings.font_size }}px;font-weight:400;text-transform:uppercase;letter-spacing:0.1em">{{ section.settings.text_plain }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Marquee (v5)",
+  "settings": [
+    {"type":"text","id":"text_plain","label":"Plain Text","default":"SUMMER SALE"},
+    {"type":"text","id":"text_pill","label":"Pill Text","default":"UP TO 50% OFF"},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":25},
+    {"type":"range","id":"font_size","label":"Font Size (px)","min":10,"max":24,"step":1,"default":12},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Plain Text Color","default":"#111111"},
+    {"type":"color","id":"pill_bg","label":"Pill Background","default":"#EFEBDE"},
+    {"type":"color","id":"pill_text","label":"Pill Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":15}
+  ],
+  "presets": [{"name":"12 · Women's Marquee (v5)"}]
+}
+{% endschema %}

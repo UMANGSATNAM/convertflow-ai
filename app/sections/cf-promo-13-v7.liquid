@@ -1,0 +1,59 @@
+<style>
+.cf-promo-13-v7{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};font-family:sans-serif;display:flex;justify-content:center}
+.cf-promo-13-v7-inner{max-width:1400px;width:100%;display:flex;align-items:center;position:relative}
+.cf-promo-13-v7-content{width:60%;background:{{ section.settings.card_bg }};padding:80px 100px 80px 60px;color:{{ section.settings.text_color }};position:relative;z-index:1}
+.cf-promo-13-v7-sub{font-size:12px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:{{ section.settings.accent_color }};display:block;margin-bottom:20px}
+.cf-promo-13-v7-title{font-size:clamp(36px, 5vw, 64px);line-height:1;margin:0 0 30px 0;font-family:serif;font-style:italic}
+.cf-promo-13-v7-desc{font-size:15px;line-height:1.6;margin:0 0 40px 0;opacity:0.8;max-width:400px}
+.cf-promo-13-v7-btn{display:inline-block;padding:15px 40px;background:{{ section.settings.text_color }};color:{{ section.settings.card_bg }};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;transition:0.3s}
+.cf-promo-13-v7-btn:hover{background:{{ section.settings.accent_color }};color:#fff}
+.cf-promo-13-v7-image-wrap{width:45%;height:110%;position:absolute;right:0;top:-5%;z-index:2;box-shadow:-20px 20px 60px rgba(0,0,0,0.2)}
+.cf-promo-13-v7-image{width:100%;height:100%;object-fit:cover}
+@media(max-width:1024px){
+  .cf-promo-13-v7-inner{flex-direction:column}
+  .cf-promo-13-v7-content{width:100%;padding:60px 30px 120px 30px;text-align:center}
+  .cf-promo-13-v7-desc{margin-left:auto;margin-right:auto}
+  .cf-promo-13-v7-image-wrap{width:80%;height:400px;position:relative;top:-80px;right:auto;margin:0 auto}
+}
+</style>
+
+<div class="cf-promo-13-v7">
+  <div class="cf-promo-13-v7-inner">
+    <div class="cf-promo-13-v7-content">
+      <span class="cf-promo-13-v7-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-promo-13-v7-title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="cf-promo-13-v7-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-13-v7-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+    
+    <div class="cf-promo-13-v7-image-wrap">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="Promo" class="cf-promo-13-v7-image">
+      {% else %}
+        <div class="cf-promo-13-v7-image" style="background:#444;"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Brand Promo (v7)",
+  "settings": [
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"ARCHIVE 02"},
+    {"type":"textarea","id":"title","label":"Header Title (Newlines allowed)","default":"Modern\nProportions"},
+    {"type":"textarea","id":"desc","label":"Description","default":"A study in oversized silhouettes and stark contrasts. Built for the urban environment."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Editorial"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"image","label":"Overlap Image"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"card_bg","label":"Text Block Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FDFBF7"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#8A8A8A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"13 · Brand Promo (v7)"}]
+}
+{% endschema %}

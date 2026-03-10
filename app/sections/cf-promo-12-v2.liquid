@@ -1,0 +1,56 @@
+<style>
+.cf-promo-12-v2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:serif;color:{{ section.settings.text_color }}}
+.cf-promo-12-v2-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:60px}
+.cf-promo-12-v2-img-wrap{flex:1;position:relative;height:600px;overflow:hidden}
+.cf-promo-12-v2-img{width:100%;height:100%;object-fit:cover;border-radius:{{ section.settings.border_radius }}px;transition:transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)}
+.cf-promo-12-v2:hover .cf-promo-12-v2-img{transform:scale(1.03)}
+.cf-promo-12-v2-text-wrap{flex:1;max-width:500px;display:flex;flex-direction:column;align-items:flex-start}
+.cf-promo-12-v2-sub{font-family:sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:0.2em;margin-bottom:20px;color:{{ section.settings.accent_color }}}
+.cf-promo-12-v2-title{font-size:clamp(40px, 4vw, 64px);line-height:1.1;margin:0 0 30px 0;font-weight:300}
+.cf-promo-12-v2-desc{font-size:16px;opacity:0.8;line-height:1.6;margin:0 0 40px 0;font-family:sans-serif}
+.cf-promo-12-v2-btn{display:inline-block;padding:16px 36px;background:{{ section.settings.btn_bg }};color:{{ section.settings.btn_text }};text-decoration:none;font-family:sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;border-radius:40px;transition:opacity 0.3s}
+.cf-promo-12-v2-btn:hover{opacity:0.8}
+@media(max-width:900px){.cf-promo-12-v2-inner{flex-direction:column;text-align:center}.cf-promo-12-v2-text-wrap{align-items:center;padding:40px 0}.cf-promo-12-v2-img-wrap{width:100%;height:500px}}
+</style>
+
+<div class="cf-promo-12-v2">
+  <div class="cf-promo-12-v2-inner">
+    <div class="cf-promo-12-v2-img-wrap">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1200 }}" class="cf-promo-12-v2-img" alt="{{ section.settings.title }}">
+      {% else %}
+        <div style="background:#ddd;width:100%;height:100%" class="cf-promo-12-v2-img"></div>
+      {% endif %}
+    </div>
+    
+    <div class="cf-promo-12-v2-text-wrap">
+      <span class="cf-promo-12-v2-sub">{{ section.settings.subtitle }}</span>
+      <h2 class="cf-promo-12-v2-title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="cf-promo-12-v2-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-12-v2-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Promo (v2)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Campaign Image"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"SPRING COLLECTION"},
+    {"type":"textarea","id":"title","label":"Title","default":"Effortless\nElegance."},
+    {"type":"textarea","id":"desc","label":"Description","default":"Discover our newest arrivals designed to carry you seamlessly from day to night in pure comfort."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"Shop The Edit"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Accent Subtitle","default":"#999999"},
+    {"type":"color","id":"btn_bg","label":"Button Background","default":"#222222"},
+    {"type":"color","id":"btn_text","label":"Button Text Color","default":"#FFFFFF"},
+    {"type":"range","id":"border_radius","label":"Image Rounding","min":0,"max":100,"step":5,"default":0},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":80}
+  ],
+  "presets": [{"name":"12 · Women's Promo (v2)"}]
+}
+{% endschema %}

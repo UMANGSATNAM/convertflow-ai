@@ -1,0 +1,41 @@
+<style>
+.cf-marquee-12-v2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;overflow:hidden;font-family:serif;color:{{ section.settings.text_color }};border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-marquee-12-v2-track{display:flex;white-space:nowrap;animation:cf-scroll-12-v2 {{ section.settings.speed }}s linear infinite}
+.cf-marquee-12-v2-content{display:flex;align-items:center;gap:40px;padding-right:40px}
+.cf-marquee-12-v2-text{font-size:{{ section.settings.font_size }}px;font-style:italic;letter-spacing:0.05em;margin:0}
+.cf-marquee-12-v2-divider{font-size:{{ section.settings.font_size | times: 0.6 }}px;opacity:0.5;font-family:sans-serif;font-style:normal}
+@keyframes cf-scroll-12-v2{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-12-v2">
+  <div class="cf-marquee-12-v2-track">
+    <div class="cf-marquee-12-v2-content">
+      {% for i in (1..5) %}
+        <span class="cf-marquee-12-v2-text">{{ section.settings.text }}</span>
+        <span class="cf-marquee-12-v2-divider">✦</span>
+      {% endfor %}
+    </div>
+    <div class="cf-marquee-12-v2-content">
+      {% for i in (1..5) %}
+        <span class="cf-marquee-12-v2-text">{{ section.settings.text }}</span>
+        <span class="cf-marquee-12-v2-divider">✦</span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "12 · Women's Marquee (v2)",
+  "settings": [
+    {"type":"text","id":"text","label":"Marquee Text","default":"The Spring Collection has arrived"},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":30},
+    {"type":"range","id":"font_size","label":"Font Size (px)","min":16,"max":60,"step":2,"default":24},
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#EAEAEE"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":15}
+  ],
+  "presets": [{"name":"12 · Women's Marquee (v2)"}]
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+<style>
+.cf-trust-13-v9{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif}
+.cf-trust-13-v9-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(3, 1fr);gap:60px;text-align:center}
+.cf-trust-13-v9-item{display:flex;flex-direction:column;align-items:center}
+.cf-trust-13-v9-icon{width:100px;height:100px;border-radius:50%;border:2px solid {{ section.settings.text_color }};display:flex;align-items:center;justify-content:center;margin-bottom:30px}
+.cf-trust-13-v9-icon svg{width:40px;height:40px;stroke-width:1.5;stroke:currentColor;fill:none}
+.cf-trust-13-v9-title{font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 15px 0}
+.cf-trust-13-v9-desc{font-size:14px;line-height:1.6;opacity:0.8;margin:0;max-width:300px}
+@media(max-width:900px){
+  .cf-trust-13-v9-inner{grid-template-columns:1fr;gap:50px}
+}
+</style>
+
+<div class="cf-trust-13-v9">
+  <div class="cf-trust-13-v9-inner">
+    {% for i in (1..3) %}
+      <div class="cf-trust-13-v9-item">
+        <div class="cf-trust-13-v9-icon">
+          {% if i == 1 %}
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          {% elsif i == 2 %}
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          {% else %}
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          {% endif %}
+        </div>
+        <h4 class="cf-trust-13-v9-title">
+          {% if i == 1 %}Logistics{% elsif i == 2 %}Security{% else %}Support{% endif %}
+        </h4>
+        <p class="cf-trust-13-v9-desc">
+          {% if i == 1 %}Tracked and insured global shipping via DHL Express.{% elsif i == 2 %}AES-256 encrypted checkout. Privacy strictly enforced.{% else %}Dedicated concierges available 24/7 for order assistance.{% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Trust (v9)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Trust (v9)"}]
+}
+{% endschema %}

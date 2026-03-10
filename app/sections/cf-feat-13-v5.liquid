@@ -1,0 +1,54 @@
+<style>
+.cf-feat-13-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;overflow:hidden;position:relative}
+.cf-feat-13-v5-inner{max-width:1800px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.cf-feat-13-v5-title{font-size:clamp(40px, 8vw, 150px);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;color:transparent;-webkit-text-stroke:2px {{ section.settings.text_color }};line-height:1;margin:0 0 60px 0;text-align:center}
+.cf-feat-13-v5-ticker{width:100%;overflow:hidden;white-space:nowrap;display:flex}
+.cf-feat-13-v5-ticker-inner{display:flex;gap:40px;animation:cf-feat-scroll-13-v5 30s linear infinite}
+.cf-feat-13-v5-ticker:hover .cf-feat-13-v5-ticker-inner{animation-play-state:paused}
+.cf-feat-13-v5-card{width:350px;flex-shrink:0;text-decoration:none;color:inherit;position:relative}
+.cf-feat-13-v5-img-wrap{width:100%;aspect-ratio:3/4;overflow:hidden;background:#ebebeb;margin-bottom:20px}
+.cf-feat-13-v5-img{width:100%;height:100%;object-fit:cover;transition:0.8s;filter:grayscale(100%)}
+.cf-feat-13-v5-card:hover .cf-feat-13-v5-img{transform:scale(1.05);filter:grayscale(0%)}
+.cf-feat-13-v5-info{display:flex;justify-content:space-between;align-items:center}
+.cf-feat-13-v5-name{font-size:16px;font-weight:800;text-transform:uppercase;margin:0;letter-spacing:0.02em}
+.cf-feat-13-v5-price{font-size:16px;opacity:0.8}
+@keyframes cf-feat-scroll-13-v5{0%{transform:translateX(0)} 100%{transform:translateX(-50%)}}
+@media(max-width:900px){
+  .cf-feat-13-v5-card{width:280px}
+}
+</style>
+
+<div class="cf-feat-13-v5">
+  <div class="cf-feat-13-v5-inner">
+    <h2 class="cf-feat-13-v5-title">{{ section.settings.title }}</h2>
+    
+    <div class="cf-feat-13-v5-ticker">
+      <div class="cf-feat-13-v5-ticker-inner">
+        {% for i in (1..10) %}
+          <a href="#" class="cf-feat-13-v5-card">
+            <div class="cf-feat-13-v5-img-wrap">
+              <div class="cf-feat-13-v5-img" style="background:#444;"></div>
+            </div>
+            <div class="cf-feat-13-v5-info">
+              <h3 class="cf-feat-13-v5-name">Product {{ i }}</h3>
+              <div class="cf-feat-13-v5-price">$120</div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "13 · Featured (v5)",
+  "settings": [
+    {"type":"text","id":"title","label":"Giant Title (Outline)","default":"FEATURED"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFDFD"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"13 · Featured (v5)"}]
+}
+{% endschema %}
