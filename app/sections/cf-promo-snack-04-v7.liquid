@@ -1,0 +1,79 @@
+<style>
+.cf-ps-04-v7 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-04-v7-inner {
+  max-width: {{ section.settings.max_width }}px;
+  background: {{ section.settings.card_bg }};
+  color: {{ section.settings.text_color }};
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transform: skewX(-10deg);
+}
+
+.cf-ps-04-v7-icon {
+  color: {{ section.settings.accent_color }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: skewX(10deg);
+}
+
+.cf-ps-04-v7-icon svg {
+  width: 22px; height: 22px; stroke-width: 2.5;
+}
+
+.cf-ps-04-v7-text {
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transform: skewX(10deg);
+}
+
+.cf-ps-04-v7-text strong {
+  color: {{ section.settings.accent_color }};
+}
+
+@media (max-width: 600px) {
+  .cf-ps-04-v7-inner { padding: 10px 15px; gap: 10px; transform: none; border-radius: 4px; }
+  .cf-ps-04-v7-icon { transform: none; }
+  .cf-ps-04-v7-text { transform: none; font-size: 13px; }
+}
+</style>
+
+<div class="cf-ps-04-v7">
+  <div class="cf-ps-04-v7-inner">
+    <div class="cf-ps-04-v7-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+    </div>
+    <p class="cf-ps-04-v7-text">
+      {{ section.settings.text | replace: '[', '<strong>' | replace: ']', '</strong>' }}
+    </p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Active Pulse Drop",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Wrappper","default":"#000000"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#111827"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#f97316"},
+    {"type":"text","id":"text","label":"Text (use [brackets] to colorize)","default":"[FREE PROTEIN SHAKER] WITH ORDERS OVER $100"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":400,"max":1200,"step":50,"default":650}
+  ],
+  "presets": [{"name":"07 · Active Pulse Snack"}]
+}
+{% endschema %}

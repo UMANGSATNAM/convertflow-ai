@@ -1,0 +1,78 @@
+<style>
+.cf-ps-04-v2 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-04-v2-inner {
+  max-width: {{ section.settings.max_width }}px;
+  background: #fff;
+  border: 1px solid {{ section.settings.border_color }};
+  border-radius: 8px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.cf-ps-04-v2-icon {
+  color: {{ section.settings.accent_color }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-ps-04-v2-icon svg {
+  width: 20px; height: 20px; stroke-width: 2.5;
+}
+
+.cf-ps-04-v2-text {
+  color: {{ section.settings.text_color }};
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.cf-ps-04-v2-text strong {
+  font-weight: 700;
+  color: {{ section.settings.accent_color }};
+}
+
+@media (max-width: 600px) {
+  .cf-ps-04-v2-inner { padding: 10px 15px; gap: 10px; }
+  .cf-ps-04-v2-text { font-size: 13px; }
+}
+</style>
+
+<div class="cf-ps-04-v2">
+  <div class="cf-ps-04-v2-inner">
+    <div class="cf-ps-04-v2-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <p class="cf-ps-04-v2-text">
+      {{ section.settings.text | replace: '[', '<strong>' | replace: ']', '</strong>' }}
+    </p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Minimal Wellness",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Wrappper","default":"#f9fafb"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#374151"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Green)","default":"#10b981"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e5e7eb"},
+    {"type":"text","id":"text","label":"Text (use [brackets] to bold)","default":"Get [15% off] your first order of vitamins."},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":400,"max":1200,"step":50,"default":600}
+  ],
+  "presets": [{"name":"02 · Minimal Wellness Snack"}]
+}
+{% endschema %}

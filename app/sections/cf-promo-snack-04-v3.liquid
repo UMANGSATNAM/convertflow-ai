@@ -1,0 +1,71 @@
+<style>
+.cf-ps-04-v3 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: 'Georgia', serif;
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-04-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  background: {{ section.settings.pill_bg }};
+  border-radius: 50px;
+  padding: 8px 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cf-ps-04-v3-icon {
+  color: {{ section.settings.brand_color }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-ps-04-v3-icon svg {
+  width: 18px; height: 18px; stroke-width: 1.5;
+}
+
+.cf-ps-04-v3-text {
+  color: {{ section.settings.text_color }};
+  font-size: 15px;
+  font-style: italic;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 600px) {
+  .cf-ps-04-v3-inner { padding: 8px 20px; gap: 8px; }
+  .cf-ps-04-v3-text { font-size: 14px; }
+}
+</style>
+
+<div class="cf-ps-04-v3">
+  <div class="cf-ps-04-v3-inner">
+    <div class="cf-ps-04-v3-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22c0-8 8-10 8-14a8 8 0 0 0-16 0c0 4 8 6 8 14z"/></svg>
+    </div>
+    <p class="cf-ps-04-v3-text">
+      {{ section.settings.text }}
+    </p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Organic Flow Drop",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Wrappper","default":"#FDFBF7"},
+    {"type":"color","id":"pill_bg","label":"Pill Background","default":"#F3EBE1"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4A4A4A"},
+    {"type":"color","id":"brand_color","label":"Brand Accent Color","default":"#A3B18A"},
+    {"type":"text","id":"text","label":"Text","default":"Complimentary organic tote with orders over $75."},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":400,"max":1200,"step":50,"default":700}
+  ],
+  "presets": [{"name":"03 · Organic Flow Snack"}]
+}
+{% endschema %}

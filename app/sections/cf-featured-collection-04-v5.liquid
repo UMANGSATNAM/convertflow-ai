@@ -1,0 +1,159 @@
+<style>
+.cf-fc-04-v5 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Playfair Display', serif;
+}
+
+.cf-fc-04-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-04-v5-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.cf-fc-04-v5-title {
+  color: {{ section.settings.text_color }};
+  font-size: 38px;
+  font-style: italic;
+  font-weight: 400;
+  margin: 0 0 15px 0;
+}
+
+.cf-fc-04-v5-link {
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid {{ section.settings.accent_color }};
+  padding-bottom: 4px;
+  transition: opacity 0.3s;
+}
+
+.cf-fc-04-v5-link:hover { opacity: 0.6; }
+
+.cf-fc-04-v5-grid {
+  display: flex;
+  gap: 40px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: {{ section.settings.accent_color }} transparent;
+}
+
+.cf-fc-04-v5-grid::-webkit-scrollbar { height: 4px; }
+.cf-fc-04-v5-grid::-webkit-scrollbar-thumb { background: {{ section.settings.accent_color }}; }
+
+.cf-fc-04-v5-card {
+  flex: 0 0 calc( (100% - (40px * ({{ section.settings.cols_desktop }} - 1))) / {{ section.settings.cols_desktop }} );
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-fc-04-v5-image {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: #EBE6DF;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.cf-fc-04-v5-image img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: filter 0.5s, transform 3s ease-out;
+}
+
+.cf-fc-04-v5-card:hover .cf-fc-04-v5-image img {
+  transform: scale(1.05);
+}
+
+.cf-fc-04-v5-name {
+  color: {{ section.settings.text_color }};
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.cf-fc-04-v5-price {
+  color: #666;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .cf-fc-04-v5-card { flex-basis: 40%; }
+}
+@media (max-width: 600px) {
+  .cf-fc-04-v5-card { flex-basis: 75%; }
+  .cf-fc-04-v5-title { font-size: 30px; }
+}
+</style>
+
+<div class="cf-fc-04-v5">
+  <div class="cf-fc-04-v5-inner">
+    <div class="cf-fc-04-v5-header">
+      <h2 class="cf-fc-04-v5-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-fc-04-v5-link">{{ section.settings.btn_text }}</a>
+    </div>
+
+    <div class="cf-fc-04-v5-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.url }}" class="cf-fc-04-v5-card">
+          <div class="cf-fc-04-v5-image">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+            {% else %}
+               <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#999;position:absolute;">Image</div>
+            {% endif %}
+          </div>
+          <h3 class="cf-fc-04-v5-name">{{ block.settings.title }}</h3>
+          <div class="cf-fc-04-v5-price">{{ block.settings.price }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Spa Serenity Products",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F7F4F0"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#8c7c61"},
+    {"type":"text","id":"title","label":"Title","default":"Curated Rituals"},
+    {"type":"text","id":"btn_text","label":"Button Name","default":"Discover More"},
+    {"type":"url","id":"btn_link","label":"Link"},
+    {"type":"range","id":"cols_desktop","label":"Cards Visible (Desktop)","min":2,"max":6,"step":1,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Product Title","default":"Lavender Bath Salt"},
+        {"type":"text","id":"price","label":"Price","default":"$32.00"},
+        {"type":"url","id":"url","label":"Product Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Spa Serenity Products",
+      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]
+    }
+  ]
+}
+{% endschema %}

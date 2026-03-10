@@ -1,0 +1,96 @@
+<style>
+.cf-mq-04-v2 {
+  background-color: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px solid {{ section.settings.border_color }};
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  display: flex;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-mq-04-v2-track {
+  display: inline-flex;
+  animation: cf-mq-04-v2-scroll {{ section.settings.speed }}s linear infinite;
+}
+
+.cf-mq-04-v2-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 30px;
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.cf-mq-04-v2-icon {
+  margin: 0 30px;
+  color: {{ section.settings.accent_color }};
+  opacity: 0.5;
+  font-size: 0.8em;
+}
+
+@keyframes cf-mq-04-v2-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cf-mq-04-v2-link {
+  color: inherit;
+  text-decoration: none;
+}
+.cf-mq-04-v2-link:hover {
+  text-decoration: underline;
+}
+</style>
+
+<div class="cf-mq-04-v2">
+  <div class="cf-mq-04-v2-track">
+    {% for i in (1..2) %}
+      {% for block in section.blocks %}
+        <div class="cf-mq-04-v2-item">
+          {% if block.settings.link != blank %}
+            <a href="{{ block.settings.link }}" class="cf-mq-04-v2-link">{{ block.settings.text }}</a>
+          {% else %}
+            <span>{{ block.settings.text }}</span>
+          {% endif %}
+          <span class="cf-mq-04-v2-icon">+</span>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Minimal Ticker",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#374151"},
+    {"type":"color","id":"accent_color","label":"Divider Color","default":"#9ca3af"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#f3f4f6"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":30,"step":1,"default":12},
+    {"type":"range","id":"font_size","label":"Font Size","min":12,"max":24,"step":1,"default":14},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":2,"default":20}
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "settings": [
+        {"type":"text","id":"text","label":"Text","default":"Daily Wellness Delivered"},
+        {"type":"url","id":"link","label":"Link (Optional)"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "02 · Minimal Ticker",
+      "blocks": [{"type":"text"},{"type":"text"},{"type":"text"},{"type":"text"}]
+    }
+  ]
+}
+{% endschema %}

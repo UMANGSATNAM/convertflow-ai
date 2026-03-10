@@ -1,0 +1,98 @@
+<style>
+.cf-tb-04-v8 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.cf-tb-04-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+.cf-tb-04-v8-grid {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+.cf-tb-04-v8-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+}
+.cf-tb-04-v8-orb {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, {{ section.settings.accent_color }}, transparent 70%);
+  box-shadow: 0 0 30px 5px {{ section.settings.accent_color | color_modify: 'alpha', 0.3 }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: box-shadow 0.5s;
+}
+.cf-tb-04-v8-item:hover .cf-tb-04-v8-orb {
+  box-shadow: 0 0 50px 15px {{ section.settings.accent_color | color_modify: 'alpha', 0.5 }};
+}
+.cf-tb-04-v8-orb svg { width: 30px; height: 30px; stroke: #fff; stroke-width: 1.5; }
+.cf-tb-04-v8-title {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  margin: 0 0 8px 0;
+}
+.cf-tb-04-v8-desc {
+  color: {{ section.settings.text_color }};
+  font-size: 13px;
+  opacity: 0.55;
+  margin: 0;
+  max-width: 200px;
+  line-height: 1.5;
+}
+@media (max-width: 600px) {
+  .cf-tb-04-v8-grid { gap: 30px; }
+  .cf-tb-04-v8-item { min-width: 100%; }
+}
+</style>
+
+<div class="cf-tb-04-v8">
+  <div class="cf-tb-04-v8-inner">
+    <div class="cf-tb-04-v8-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-04-v8-item">
+          <div class="cf-tb-04-v8-orb">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <h4 class="cf-tb-04-v8-title">{{ block.settings.title }}</h4>
+          <p class="cf-tb-04-v8-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Holistic Aura Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F9F9F9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#5B5B5B"},
+    {"type":"color","id":"accent_color","label":"Glow Color","default":"#9DC0B0"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1100}
+  ],
+  "blocks": [
+    {
+      "type": "badge", "name": "Badge", "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Mind & Body"},
+        {"type":"text","id":"desc","label":"Description","default":"Holistic formulations"}
+      ]
+    }
+  ],
+  "presets": [{"name": "08 · Holistic Aura Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]
+}
+{% endschema %}

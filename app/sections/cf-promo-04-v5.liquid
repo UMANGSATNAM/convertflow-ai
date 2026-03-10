@@ -1,0 +1,136 @@
+<style>
+.cf-pr-04-v5 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Playfair Display', serif;
+}
+
+.cf-pr-04-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cf-pr-04-v5-card {
+  background: #ffffff;
+  padding: 80px 60px;
+  width: 50%;
+  margin-left: -10%;
+  z-index: 2;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.cf-pr-04-v5-icon {
+  color: {{ section.settings.accent_color }};
+  margin-bottom: 30px;
+}
+
+.cf-pr-04-v5-icon svg {
+  width: 40px; height: 40px; stroke-width: 1;
+}
+
+.cf-pr-04-v5-title {
+  color: {{ section.settings.text_color }};
+  font-size: 48px;
+  font-weight: 400;
+  font-style: italic;
+  margin: 0 0 20px 0;
+  line-height: 1.2;
+}
+
+.cf-pr-04-v5-desc {
+  color: #666;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0 0 40px 0;
+  max-width: 350px;
+}
+
+.cf-pr-04-v5-btn {
+  display: inline-block;
+  background: transparent;
+  color: {{ section.settings.text_color }};
+  padding: 12px 0;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 1px solid {{ section.settings.accent_color }};
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.cf-pr-04-v5-btn:hover {
+  color: {{ section.settings.accent_color }};
+  border-color: transparent;
+}
+
+.cf-pr-04-v5-image {
+  width: 60%;
+  height: 600px;
+  position: relative;
+  z-index: 1;
+}
+
+.cf-pr-04-v5-image img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .cf-pr-04-v5-inner { flex-direction: column; }
+  .cf-pr-04-v5-image { width: 100%; height: 400px; }
+  .cf-pr-04-v5-card { width: 90%; margin-left: 0; margin-top: -100px; padding: 50px 30px; }
+}
+</style>
+
+<div class="cf-pr-04-v5">
+  <div class="cf-pr-04-v5-inner">
+    <div class="cf-pr-04-v5-image">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.title }}">
+      {% else %}
+        <div style="width:100%;height:100%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;color:#999;">Image</div>
+      {% endif %}
+    </div>
+    
+    <div class="cf-pr-04-v5-card">
+      <div class="cf-pr-04-v5-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      </div>
+      <h2 class="cf-pr-04-v5-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-04-v5-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-pr-04-v5-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Spa Serenity Card",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F7F4F0"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Earth)","default":"#8c7c61"},
+    {"type":"text","id":"title","label":"Title","default":"Unwind & Restore"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Transform your daily routine into a ritual of relaxation with our premium bath ingredients."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Rituals"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":100},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "presets": [{"name":"05 · Spa Serenity Card"}]
+}
+{% endschema %}

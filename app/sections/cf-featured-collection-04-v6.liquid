@@ -1,0 +1,199 @@
+<style>
+.cf-fc-04-v6 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Baskerville', 'Times New Roman', serif;
+}
+
+.cf-fc-04-v6-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-04-v6-header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.cf-fc-04-v6-header::before,
+.cf-fc-04-v6-header::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: {{ section.settings.border_color }};
+}
+
+.cf-fc-04-v6-header::before { left: 0; }
+.cf-fc-04-v6-header::after { right: 0; }
+
+.cf-fc-04-v6-title {
+  color: {{ section.settings.text_color }};
+  font-size: 36px;
+  font-weight: normal;
+  display: inline-block;
+  padding: 0 30px;
+  background: {{ section.settings.bg_color }};
+  margin: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.cf-fc-04-v6-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+  gap: 30px;
+}
+
+.cf-fc-04-v6-card {
+  text-decoration: none;
+  background: {{ section.settings.bg_color }};
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.3s;
+}
+
+.cf-fc-04-v6-card:hover {
+  opacity: 0.9;
+}
+
+.cf-fc-04-v6-image {
+  width: 100%;
+  aspect-ratio: 4/5;
+  border: 1px solid {{ section.settings.border_color }};
+  position: relative;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 20px;
+}
+
+.cf-fc-04-v6-image img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(20%);
+}
+
+.cf-fc-04-v6-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cf-fc-04-v6-name {
+  color: {{ section.settings.text_color }};
+  font-size: 20px;
+  font-weight: normal;
+  margin: 0 0 10px 0;
+}
+
+.cf-fc-04-v6-price {
+  color: {{ section.settings.accent_color }};
+  font-size: 16px;
+  margin-top: auto;
+  font-style: italic;
+}
+
+.cf-fc-04-v6-footer {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.cf-fc-04-v6-btn {
+  display: inline-block;
+  background: transparent;
+  color: {{ section.settings.text_color }};
+  border: 1px solid {{ section.settings.text_color }};
+  padding: 12px 30px;
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  transition: all 0.3s;
+}
+
+.cf-fc-04-v6-btn:hover {
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+@media (max-width: 900px) {
+  .cf-fc-04-v6-grid { grid-template-columns: repeat(2, 1fr); }
+  .cf-fc-04-v6-header::before, .cf-fc-04-v6-header::after { width: 15%; }
+}
+@media (max-width: 600px) {
+  .cf-fc-04-v6-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+  .cf-fc-04-v6-title { font-size: 28px; padding: 0 15px;}
+  .cf-fc-04-v6-header::before, .cf-fc-04-v6-header::after { display: none; }
+}
+</style>
+
+<div class="cf-fc-04-v6">
+  <div class="cf-fc-04-v6-inner">
+    <div class="cf-fc-04-v6-header">
+      <h2 class="cf-fc-04-v6-title">{{ section.settings.title }}</h2>
+    </div>
+
+    <div class="cf-fc-04-v6-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.url }}" class="cf-fc-04-v6-card">
+          <div class="cf-fc-04-v6-image">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+            {% else %}
+               <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#6A7870;position:absolute;">Image</div>
+            {% endif %}
+          </div>
+          <div class="cf-fc-04-v6-info">
+            <h3 class="cf-fc-04-v6-name">{{ block.settings.title }}</h3>
+            <div class="cf-fc-04-v6-price">{{ block.settings.price }}</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    
+    <div class="cf-fc-04-v6-footer">
+      <a href="{{ section.settings.btn_link }}" class="cf-fc-04-v6-btn">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Apothecary Vintage",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#2d3a33"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#f4f1ea"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#4a5c52"},
+    {"type":"color","id":"accent_color","label":"Price Color","default":"#A19C8B"},
+    {"type":"text","id":"title","label":"Title","default":"Signature Tinctures"},
+    {"type":"text","id":"btn_text","label":"Button Name","default":"View Full Apothecary"},
+    {"type":"url","id":"btn_link","label":"Link"},
+    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Product Title","default":"Echinacea Extract"},
+        {"type":"text","id":"price","label":"Price","default":"$24.00"},
+        {"type":"url","id":"url","label":"Product Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "06 · Apothecary Products",
+      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]
+    }
+  ]
+}
+{% endschema %}

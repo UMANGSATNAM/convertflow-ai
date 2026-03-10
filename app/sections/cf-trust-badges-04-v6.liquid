@@ -1,0 +1,120 @@
+<style>
+.cf-tb-04-v6 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Baskerville', 'Times New Roman', serif;
+}
+
+.cf-tb-04-v6-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-04-v6-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.cf-tb-04-v6-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cf-tb-04-v6-seal {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid {{ section.settings.border_color }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.cf-tb-04-v6-seal::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px; right: 4px; bottom: 4px;
+  border: 1px dashed {{ section.settings.border_color }};
+  border-radius: 50%;
+}
+
+.cf-tb-04-v6-seal-icon {
+  color: {{ section.settings.accent_color }};
+  font-size: 30px;
+}
+
+.cf-tb-04-v6-title {
+  color: {{ section.settings.text_color }};
+  font-size: 18px;
+  font-weight: normal;
+  margin: 0 0 10px 0;
+}
+
+.cf-tb-04-v6-desc {
+  color: {{ section.settings.text_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .cf-tb-04-v6-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .cf-tb-04-v6-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="cf-tb-04-v6">
+  <div class="cf-tb-04-v6-inner">
+    <div class="cf-tb-04-v6-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-04-v6-item">
+          <div class="cf-tb-04-v6-seal">
+            <div class="cf-tb-04-v6-seal-icon">*</div>
+          </div>
+          <h4 class="cf-tb-04-v6-title">{{ block.settings.title }}</h4>
+          <p class="cf-tb-04-v6-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Apothecary Seals",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F4F1EA"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#2d3a33"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#4a5c52"},
+    {"type":"color","id":"accent_color","label":"Icon Color","default":"#A19C8B"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Wildcrafted"},
+        {"type":"text","id":"desc","label":"Description","default":"Sustainably foraged"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "06 · Apothecary Badges",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,208 @@
+<style>
+.cf-fc-04-v10 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-fc-04-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-04-v10-header {
+  margin-bottom: 40px;
+  border-bottom: 2px solid {{ section.settings.accent_color }};
+  padding-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cf-fc-04-v10-title {
+  color: {{ section.settings.text_color }};
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cf-fc-04-v10-link {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.cf-fc-04-v10-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+  gap: 30px;
+}
+
+.cf-fc-04-v10-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid {{ section.settings.border_color }};
+  border-radius: 4px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.cf-fc-04-v10-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.cf-fc-04-v10-image-wrap {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #f1f5f9;
+  position: relative;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-04-v10-image-wrap img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+}
+
+.cf-fc-04-v10-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cf-fc-04-v10-sku {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 5px;
+}
+
+.cf-fc-04-v10-name {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 10px 0;
+}
+
+.cf-fc-04-v10-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+.cf-fc-04-v10-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  border-top: 1px dashed {{ section.settings.border_color }};
+  padding-top: 15px;
+}
+
+.cf-fc-04-v10-price {
+  color: {{ section.settings.accent_color }};
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.cf-fc-04-v10-add {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  width: 32px; height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-fc-04-v10-add svg { width: 16px; height: 16px; stroke-width: 2; }
+
+@media (max-width: 900px) {
+  .cf-fc-04-v10-grid { grid-template-columns: repeat(2, 1fr); gap: 20px;}
+}
+@media (max-width: 600px) {
+  .cf-fc-04-v10-grid { grid-template-columns: 1fr; }
+  .cf-fc-04-v10-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+</style>
+
+<div class="cf-fc-04-v10">
+  <div class="cf-fc-04-v10-inner">
+    <div class="cf-fc-04-v10-header">
+      <h2 class="cf-fc-04-v10-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-fc-04-v10-link">{{ section.settings.btn_text }}</a>
+    </div>
+
+    <div class="cf-fc-04-v10-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.url }}" class="cf-fc-04-v10-card">
+          <div class="cf-fc-04-v10-image-wrap">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+            {% else %}
+               <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94a3b8;">Image</div>
+            {% endif %}
+          </div>
+          <div class="cf-fc-04-v10-info">
+            <div class="cf-fc-04-v10-sku">{{ block.settings.sku }}</div>
+            <h3 class="cf-fc-04-v10-name">{{ block.settings.title }}</h3>
+            <p class="cf-fc-04-v10-desc">{{ block.settings.desc }}</p>
+            <div class="cf-fc-04-v10-footer">
+              <span class="cf-fc-04-v10-price">{{ block.settings.price }}</span>
+              <div class="cf-fc-04-v10-add">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </div>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Med-Tech Products",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Blue)","default":"#1d4ed8"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e2e8f0"},
+    {"type":"text","id":"title","label":"Title","default":"FEATURED EQUIPMENT"},
+    {"type":"text","id":"btn_text","label":"Button Name","default":"View Directory"},
+    {"type":"url","id":"btn_link","label":"Link"},
+    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":4,"step":1,"default":3},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"sku","label":"SKU/Model","default":"MD-400X"},
+        {"type":"text","id":"title","label":"Product Title","default":"Diagnostic Monitor Pro"},
+        {"type":"text","id":"desc","label":"Short Description","default":"High precision readout."},
+        {"type":"text","id":"price","label":"Price","default":"$450.00"},
+        {"type":"url","id":"url","label":"Product Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "10 · Med-Tech Products",
+      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"}]
+    }
+  ]
+}
+{% endschema %}

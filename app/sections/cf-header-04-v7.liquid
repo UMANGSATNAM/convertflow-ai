@@ -1,0 +1,172 @@
+<style>
+.cf-h-04-v7 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  position: {{ section.settings.position }};
+  top: 0;
+  z-index: 50;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-h-04-v7-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cf-h-04-v7-logo {
+  font-size: 28px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cf-h-04-v7-logo span {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-h-04-v7-nav {
+  display: flex;
+  gap: 30px;
+}
+
+.cf-h-04-v7-link {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.cf-h-04-v7-link:hover {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-h-04-v7-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cf-h-04-v7-btn {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cf-h-04-v7-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px {{ section.settings.accent_color }}80;
+}
+
+.cf-h-04-v7-icon {
+  color: {{ section.settings.text_color }};
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  transition: 0.2s;
+}
+
+.cf-h-04-v7-icon:hover {
+  background: rgba(255,255,255,0.2);
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-h-04-v7-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.cf-h-04-v7-mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .cf-h-04-v7-nav { display: none; }
+  .cf-h-04-v7-inner { padding: 0 20px; }
+  .cf-h-04-v7-mobile-toggle { display: flex; }
+  .cf-h-04-v7-btn { display: none; }
+}
+</style>
+
+<div class="cf-h-04-v7">
+  <div class="cf-h-04-v7-inner">
+    <a href="/" class="cf-h-04-v7-logo">
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" style="height: auto;">
+      {% else %}
+        RECOVER<span>X</span>
+      {% endif %}
+    </a>
+    
+    <nav class="cf-h-04-v7-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-h-04-v7-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-h-04-v7-link">Hydration</a>
+        <a href="#" class="cf-h-04-v7-link">Muscle Recovery</a>
+        <a href="#" class="cf-h-04-v7-link">Energy</a>
+      {% endfor %}
+    </nav>
+    
+    <div class="cf-h-04-v7-actions">
+      <button class="cf-h-04-v7-icon" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+      <a href="/cart" class="cf-h-04-v7-icon" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      </a>
+      <a href="/collections/all" class="cf-h-04-v7-btn">Shop Now</a>
+      
+      <button class="cf-h-04-v7-icon cf-h-04-v7-mobile-toggle" aria-label="Menu" style="background:transparent;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Active Recovery",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#111827"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Neon/Vibrant)","default":"#f97316"},
+    {"type":"link_list","id":"menu","label":"Menu"},
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"range","id":"logo_width","label":"Logo Width","min":50,"max":250,"step":5,"default":150},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":50,"default":1400},
+    {"type":"select","id":"position","label":"Header Position","options":[{"value":"relative","label":"Static"},{"value":"sticky","label":"Sticky"}],"default":"sticky"}
+  ],
+  "presets": [{"name":"07 · Active Recovery Header"}]
+}
+{% endschema %}

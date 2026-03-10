@@ -1,0 +1,138 @@
+<style>
+.cf-pr-04-v3 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Georgia', serif;
+}
+
+.cf-pr-04-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cf-pr-04-v3-content {
+  width: 50%;
+  padding-right: 50px;
+  position: relative;
+  z-index: 2;
+}
+
+.cf-pr-04-v3-title {
+  color: {{ section.settings.text_color }};
+  font-size: 56px;
+  line-height: 1.1;
+  margin: 0 0 20px 0;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.cf-pr-04-v3-desc {
+  color: {{ section.settings.text_color }};
+  opacity: 0.8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 40px 0;
+  max-width: 400px;
+}
+
+.cf-pr-04-v3-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: {{ section.settings.brand_color }};
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: gap 0.3s;
+}
+
+.cf-pr-04-v3-btn:hover {
+  gap: 15px;
+}
+
+.cf-pr-04-v3-image-wrap {
+  width: 45%;
+  position: relative;
+}
+
+.cf-pr-04-v3-image {
+  width: 100%;
+  padding-bottom: 120%; /* tall aspect ratio */
+  border-radius: 200px 200px 0 0; /* Arch shape */
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.cf-pr-04-v3-image img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+}
+
+.cf-pr-04-v3-shape {
+  position: absolute;
+  bottom: -30px; left: -30px;
+  width: 150px; height: 150px;
+  background-color: {{ section.settings.brand_color }};
+  border-radius: 50%;
+  z-index: -1;
+}
+
+@media (max-width: 900px) {
+  .cf-pr-04-v3-inner { flex-direction: column; text-align: center; }
+  .cf-pr-04-v3-content { width: 100%; padding-right: 0; margin-bottom: 50px; align-items: center; display: flex; flex-direction: column; }
+  .cf-pr-04-v3-image-wrap { width: 80%; }
+}
+</style>
+
+<div class="cf-pr-04-v3">
+  <div class="cf-pr-04-v3-inner">
+    <div class="cf-pr-04-v3-content">
+      <h2 class="cf-pr-04-v3-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-04-v3-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-pr-04-v3-btn">
+          {{ section.settings.btn_text }}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      {% endif %}
+    </div>
+    
+    <div class="cf-pr-04-v3-image-wrap">
+      <div class="cf-pr-04-v3-shape"></div>
+      <div class="cf-pr-04-v3-image">
+        {% if section.settings.image != blank %}
+          <img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">
+        {% else %}
+          <div style="width:100%;height:100%;background:#e5e5e5;position:absolute;display:flex;align-items:center;justify-content:center;color:#999;">Image</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Organic Flow Poster",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4A4A4A"},
+    {"type":"color","id":"brand_color","label":"Brand Accent Color","default":"#D4AF37"},
+    {"type":"text","id":"title","label":"Title","default":"Return to your roots."},
+    {"type":"textarea","id":"desc","label":"Description","default":"Clean, ethically sourced botanicals designed to restore balance to your daily routine."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Discover More"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"image","label":"Arch Image"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":100},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1100}
+  ],
+  "presets": [{"name":"03 · Organic Flow Poster"}]
+}
+{% endschema %}

@@ -1,0 +1,183 @@
+<style>
+.cf-h-04-v5 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  position: {{ section.settings.position }};
+  top: 0;
+  z-index: 50;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 1px 10px rgba(0,0,0,0.03);
+}
+
+.cf-h-04-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.cf-h-04-v5-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cf-h-04-v5-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: {{ section.settings.text_color }};
+}
+
+.cf-h-04-v5-search svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+}
+
+.cf-h-04-v5-search span {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cf-h-04-v5-logo {
+  font-size: 32px;
+  font-style: italic;
+  font-weight: 500;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  letter-spacing: 2px;
+  flex: 1;
+  text-align: center;
+}
+
+.cf-h-04-v5-icons {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.cf-h-04-v5-icon {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.3s ease;
+}
+
+.cf-h-04-v5-icon:hover {
+  opacity: 0.6;
+}
+
+.cf-h-04-v5-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+}
+
+.cf-h-04-v5-nav {
+  display: flex;
+  gap: 50px;
+}
+
+.cf-h-04-v5-link {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: color 0.3s ease;
+  padding-bottom: 5px;
+  border-bottom: 1px solid transparent;
+}
+
+.cf-h-04-v5-link:hover {
+  color: {{ section.settings.accent_color }};
+  border-bottom-color: {{ section.settings.accent_color }};
+}
+
+.cf-h-04-v5-mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .cf-h-04-v5-nav {
+    display: none;
+  }
+  .cf-h-04-v5-search span {
+    display: none;
+  }
+  .cf-h-04-v5-inner {
+    padding: 0 20px;
+    gap: 0;
+  }
+}
+</style>
+
+<div class="cf-h-04-v5">
+  <div class="cf-h-04-v5-inner">
+    <div class="cf-h-04-v5-top">
+      <div class="cf-h-04-v5-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>Search</span>
+      </div>
+      
+      <a href="/" class="cf-h-04-v5-logo">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" style="height: auto;">
+        {% else %}
+          {{ shop.name | default: 'OASIS.' }}
+        {% endif %}
+      </a>
+      
+      <div class="cf-h-04-v5-icons">
+        <a href="/account" class="cf-h-04-v5-icon" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+        <a href="/cart" class="cf-h-04-v5-icon cart" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        </a>
+      </div>
+    </div>
+    
+    <nav class="cf-h-04-v5-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-h-04-v5-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-h-04-v5-link">Skin care</a>
+        <a href="#" class="cf-h-04-v5-link">Body</a>
+        <a href="#" class="cf-h-04-v5-link">Fragrance</a>
+        <a href="#" class="cf-h-04-v5-link">Gifts</a>
+      {% endfor %}
+    </nav>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Spa Navigation",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F7F4F0"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Earthy)","default":"#8c7c61"},
+    {"type":"link_list","id":"menu","label":"Menu"},
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"range","id":"logo_width","label":"Logo Width","min":50,"max":250,"step":5,"default":150},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":50,"default":1400},
+    {"type":"select","id":"position","label":"Header Position","options":[{"value":"relative","label":"Static"},{"value":"sticky","label":"Sticky"}],"default":"sticky"}
+  ],
+  "presets": [{"name":"05 · Spa Navigation Header"}]
+}
+{% endschema %}

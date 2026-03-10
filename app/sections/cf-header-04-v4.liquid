@@ -1,0 +1,193 @@
+<style>
+.cf-h-04-v4 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  position: {{ section.settings.position }};
+  top: 0;
+  z-index: 50;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-h-04-v4-topbar {
+  background-color: {{ section.settings.accent_color }};
+  color: #fff;
+  text-align: center;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cf-h-04-v4-main {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: {{ section.settings.padding_y }}px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.cf-h-04-v4-nav {
+  display: flex;
+  gap: 25px;
+}
+
+.cf-h-04-v4-link {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.cf-h-04-v4-link:hover {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-h-04-v4-logo {
+  font-size: 26px;
+  font-weight: 800;
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: -0.5px;
+}
+
+.cf-h-04-v4-logo svg {
+  width: 28px;
+  height: 28px;
+}
+
+.cf-h-04-v4-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  align-items: center;
+}
+
+.cf-h-04-v4-btn {
+  background: transparent;
+  border: 2px solid {{ section.settings.border_color }};
+  color: {{ section.settings.text_color }};
+  padding: 8px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cf-h-04-v4-btn:hover {
+  border-color: {{ section.settings.accent_color }};
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-h-04-v4-btn--solid {
+  background: {{ section.settings.accent_color }};
+  border-color: {{ section.settings.accent_color }};
+  color: #fff;
+}
+
+.cf-h-04-v4-btn--solid:hover {
+  background: {{ section.settings.text_color }};
+  border-color: {{ section.settings.text_color }};
+  color: #fff;
+}
+
+.cf-h-04-v4-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: {{ section.settings.text_color }};
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .cf-h-04-v4-main {
+    grid-template-columns: auto 1fr auto;
+  }
+  .cf-h-04-v4-nav {
+    display: none;
+  }
+  .cf-h-04-v4-mobile-toggle {
+    display: block;
+  }
+  .cf-h-04-v4-btn:not(.cf-h-04-v4-btn--solid) {
+    display: none;
+  }
+}
+</style>
+
+<div class="cf-h-04-v4">
+  {% if section.settings.topbar_text != blank %}
+    <div class="cf-h-04-v4-topbar">
+      {{ section.settings.topbar_text }}
+    </div>
+  {% endif %}
+  <div class="cf-h-04-v4-main">
+    <button class="cf-h-04-v4-mobile-toggle" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    
+    <nav class="cf-h-04-v4-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-h-04-v4-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-h-04-v4-link">Treatments</a>
+        <a href="#" class="cf-h-04-v4-link">Diagnostics</a>
+        <a href="#" class="cf-h-04-v4-link">Care Team</a>
+      {% endfor %}
+    </nav>
+    
+    <a href="/" class="cf-h-04-v4-logo">
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" style="height: auto;">
+      {% else %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        {{ shop.name | default: 'CLINICA' }}
+      {% endif %}
+    </a>
+    
+    <div class="cf-h-04-v4-actions">
+      <a href="/account" class="cf-h-04-v4-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        Login
+      </a>
+      <a href="/cart" class="cf-h-04-v4-btn cf-h-04-v4-btn--solid">
+        Cart (0)
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Clinical Trust Header",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#1f2937"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Blue)","default":"#2563eb"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e5e7eb"},
+    {"type":"text","id":"topbar_text","label":"Top Bar Text","default":"Clinically proven results. Free shipping over $50."},
+    {"type":"link_list","id":"menu","label":"Menu"},
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"range","id":"logo_width","label":"Logo Width","min":50,"max":250,"step":5,"default":150},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":50,"default":1400},
+    {"type":"select","id":"position","label":"Header Position","options":[{"value":"relative","label":"Static"},{"value":"sticky","label":"Sticky"}],"default":"sticky"}
+  ],
+  "presets": [{"name":"04 · Clinical Trust Header"}]
+}
+{% endschema %}

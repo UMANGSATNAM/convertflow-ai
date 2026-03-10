@@ -1,0 +1,191 @@
+<style>
+.cf-fc-04-v9 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-fc-04-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-04-v9-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.cf-fc-04-v9-title {
+  color: {{ section.settings.text_color }};
+  font-size: 38px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.02em;
+}
+
+.cf-fc-04-v9-subtitle {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+.cf-fc-04-v9-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+  gap: 20px;
+}
+
+.cf-fc-04-v9-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid {{ section.settings.border_color }};
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.cf-fc-04-v9-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+}
+
+.cf-fc-04-v9-image-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f4f4f5;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.cf-fc-04-v9-image-wrap img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+}
+
+.cf-fc-04-v9-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.cf-fc-04-v9-name {
+  color: {{ section.settings.text_color }};
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+  line-height: 1.3;
+}
+
+.cf-fc-04-v9-price {
+  color: #52525b;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.cf-fc-04-v9-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  background: #f4f4f5;
+  color: {{ section.settings.text_color }};
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+  margin-top: auto;
+}
+
+.cf-fc-04-v9-card:hover .cf-fc-04-v9-add {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .cf-fc-04-v9-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .cf-fc-04-v9-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+  .cf-fc-04-v9-card { padding: 15px; }
+  .cf-fc-04-v9-title { font-size: 28px; }
+  .cf-fc-04-v9-name { font-size: 15px; }
+}
+</style>
+
+<div class="cf-fc-04-v9">
+  <div class="cf-fc-04-v9-inner">
+    <div class="cf-fc-04-v9-header">
+      <h2 class="cf-fc-04-v9-title">{{ section.settings.title }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <div class="cf-fc-04-v9-subtitle">{{ section.settings.subtitle }}</div>
+      {% endif %}
+    </div>
+
+    <div class="cf-fc-04-v9-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.url }}" class="cf-fc-04-v9-card">
+          <div class="cf-fc-04-v9-image-wrap">
+            {% if block.settings.badge != blank %}
+              <div class="cf-fc-04-v9-badge">{{ block.settings.badge }}</div>
+            {% endif %}
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+            {% else %}
+               <div style="width:100%;height:100%;background:#f4f4f5;color:#9ca3af;display:flex;align-items:center;justify-content:center;font-size:12px;">Img</div>
+            {% endif %}
+          </div>
+          <h3 class="cf-fc-04-v9-name">{{ block.settings.title }}</h3>
+          <div class="cf-fc-04-v9-price">{{ block.settings.price }}</div>
+          <div class="cf-fc-04-v9-add">Quick Add</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Supplements Products",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e4e4e7"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Red)","default":"#ef4444"},
+    {"type":"text","id":"title","label":"Title","default":"Advanced Formulas"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"Scientifically proven to support you."},
+    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":5,"step":1,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Product Title","default":"Core Multi"},
+        {"type":"text","id":"price","label":"Price","default":"$25.00"},
+        {"type":"text","id":"badge","label":"Badge","default":""},
+        {"type":"url","id":"url","label":"Product Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "09 · Supplements Collection",
+      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]
+    }
+  ]
+}
+{% endschema %}

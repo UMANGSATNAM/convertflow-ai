@@ -1,0 +1,160 @@
+<style>
+.cf-h-04-v3 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  position: {{ section.settings.position }};
+  top: 0;
+  z-index: 50;
+  font-family: 'Georgia', serif; /* Or a soft serif */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.cf-h-04-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cf-h-04-v3-logo {
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 500;
+  color: {{ section.settings.brand_color }};
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.cf-h-04-v3-nav {
+  display: flex;
+  gap: 40px;
+  background: {{ section.settings.pill_bg }};
+  padding: 8px 30px;
+  border-radius: 50px;
+}
+
+.cf-h-04-v3-link {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  padding: 5px 0;
+}
+
+.cf-h-04-v3-link:hover {
+  color: {{ section.settings.brand_color }};
+}
+
+.cf-h-04-v3-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.cf-h-04-v3-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: {{ section.settings.pill_bg }};
+  color: {{ section.settings.text_color }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.cf-h-04-v3-icon:hover {
+  background: {{ section.settings.brand_color }};
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.cf-h-04-v3-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.cf-h-04-v3-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: {{ section.settings.text_color }};
+  padding: 10px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .cf-h-04-v3-nav {
+    display: none;
+  }
+  .cf-h-04-v3-mobile-toggle {
+    display: block;
+  }
+  .cf-h-04-v3-icons .cf-h-04-v3-icon:not(.cart) {
+    display: none;
+  }
+}
+</style>
+
+<div class="cf-h-04-v3">
+  <div class="cf-h-04-v3-inner">
+    <button class="cf-h-04-v3-mobile-toggle" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+    </button>
+    
+    <a href="/" class="cf-h-04-v3-logo">
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" style="height: auto;">
+      {% else %}
+        {{ shop.name | default: 'Flora Health' }}
+      {% endif %}
+    </a>
+    
+    <nav class="cf-h-04-v3-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-h-04-v3-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-h-04-v3-link">Shop All</a>
+        <a href="#" class="cf-h-04-v3-link">Ingredients</a>
+        <a href="#" class="cf-h-04-v3-link">Journal</a>
+        <a href="#" class="cf-h-04-v3-link">Our Story</a>
+      {% endfor %}
+    </nav>
+    
+    <div class="cf-h-04-v3-icons">
+      <button class="cf-h-04-v3-icon" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+      <a href="/cart" class="cf-h-04-v3-icon cart" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Organic Curves",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"pill_bg","label":"Nav Pill Background","default":"#F3EBE1"},
+    {"type":"color","id":"brand_color","label":"Brand Color (Warm)","default":"#D4AF37"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4A4A4A"},
+    {"type":"link_list","id":"menu","label":"Menu"},
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"range","id":"logo_width","label":"Logo Width","min":50,"max":250,"step":5,"default":150},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":16},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":50,"default":1400},
+    {"type":"select","id":"position","label":"Header Position","options":[{"value":"relative","label":"Static"},{"value":"sticky","label":"Sticky"}],"default":"sticky"}
+  ],
+  "presets": [{"name":"03 · Organic Curves Header"}]
+}
+{% endschema %}

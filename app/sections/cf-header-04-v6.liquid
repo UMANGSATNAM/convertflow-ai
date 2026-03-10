@@ -1,0 +1,166 @@
+<style>
+.cf-h-04-v6 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  position: {{ section.settings.position }};
+  top: 0;
+  z-index: 50;
+  font-family: 'Baskerville', 'Times New Roman', serif;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-h-04-v6-topbar {
+  text-align: center;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: {{ section.settings.text_color }};
+  opacity: 0.7;
+  padding-bottom: 15px;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  margin-bottom: 20px;
+}
+
+.cf-h-04-v6-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cf-h-04-v6-nav {
+  display: flex;
+  gap: 35px;
+  flex: 1;
+}
+
+.cf-h-04-v6-link {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: opacity 0.3s ease;
+}
+
+.cf-h-04-v6-link:hover {
+  opacity: 0.6;
+}
+
+.cf-h-04-v6-logo {
+  font-size: 32px;
+  font-weight: normal;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  text-align: center;
+  flex: 1;
+  letter-spacing: 0.05em;
+}
+
+.cf-h-04-v6-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 25px;
+  flex: 1;
+}
+
+.cf-h-04-v6-icon {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.cf-h-04-v6-icon:hover {
+  opacity: 0.6;
+}
+
+.cf-h-04-v6-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+}
+
+.cf-h-04-v6-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: {{ section.settings.text_color }};
+  cursor: pointer;
+  padding: 0;
+}
+
+@media (max-width: 900px) {
+  .cf-h-04-v6-nav { display: none; }
+  .cf-h-04-v6-inner { padding: 0 20px; }
+  .cf-h-04-v6-mobile-toggle { display: block; flex: 1; text-align: left; }
+  .cf-h-04-v6-icons .cf-h-04-v6-icon:not(.cart) { display: none; }
+  .cf-h-04-v6-logo { font-size: 24px; }
+}
+</style>
+
+<div class="cf-h-04-v6">
+  {% if section.settings.topbar_text != blank %}
+    <div class="cf-h-04-v6-topbar">
+      {{ section.settings.topbar_text }}
+    </div>
+  {% endif %}
+  <div class="cf-h-04-v6-inner">
+    <button class="cf-h-04-v6-mobile-toggle" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    
+    <nav class="cf-h-04-v6-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-h-04-v6-link">{{ link.title }}</a>
+      {% else %}
+        <a href="#" class="cf-h-04-v6-link">Remedies</a>
+        <a href="#" class="cf-h-04-v6-link">Tinctures</a>
+        <a href="#" class="cf-h-04-v6-link">Apothecary</a>
+      {% endfor %}
+    </nav>
+    
+    <a href="/" class="cf-h-04-v6-logo">
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" style="height: auto;">
+      {% else %}
+        {{ shop.name | default: 'BOTANICA' }}
+      {% endif %}
+    </a>
+    
+    <div class="cf-h-04-v6-icons">
+      <button class="cf-h-04-v6-icon" aria-label="Search" style="background:none; border:none; padding:0; cursor:pointer;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+      <a href="/account" class="cf-h-04-v6-icon" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+      <a href="/cart" class="cf-h-04-v6-icon cart" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Apothecary Classic",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#f4f1ea"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#2d3a33"},
+    {"type":"color","id":"border_color","label":"Border Line","default":"#dad4c8"},
+    {"type":"text","id":"topbar_text","label":"Top Bar Text","default":"Est. 1992 ✨ Pure & Natural Remedies"},
+    {"type":"link_list","id":"menu","label":"Menu"},
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"range","id":"logo_width","label":"Logo Width","min":50,"max":250,"step":5,"default":150},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":50,"default":1200},
+    {"type":"select","id":"position","label":"Header Position","options":[{"value":"relative","label":"Static"},{"value":"sticky","label":"Sticky"}],"default":"relative"}
+  ],
+  "presets": [{"name":"06 · Apothecary Classic"}]
+}
+{% endschema %}

@@ -1,0 +1,91 @@
+<style>
+.cf-tb-04-v7 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-tb-04-v7-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+.cf-tb-04-v7-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols }}, 1fr);
+  gap: 20px;
+}
+.cf-tb-04-v7-item {
+  background: {{ section.settings.card_bg }};
+  border-left: 4px solid {{ section.settings.accent_color }};
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  clip-path: polygon(0 0, 97% 0, 100% 100%, 0 100%);
+  transition: background 0.3s;
+}
+.cf-tb-04-v7-item:hover {
+  background: #1f2937;
+}
+.cf-tb-04-v7-icon {
+  color: {{ section.settings.accent_color }};
+}
+.cf-tb-04-v7-icon svg { width: 28px; height: 28px; stroke-width: 2.5; }
+.cf-tb-04-v7-title {
+  color: {{ section.settings.text_color }};
+  font-size: 15px;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+.cf-tb-04-v7-desc {
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  margin: 0;
+  font-weight: 500;
+}
+@media (max-width: 900px) { .cf-tb-04-v7-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 500px) { .cf-tb-04-v7-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="cf-tb-04-v7">
+  <div class="cf-tb-04-v7-inner">
+    <div class="cf-tb-04-v7-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-04-v7-item">
+          <div class="cf-tb-04-v7-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          </div>
+          <h4 class="cf-tb-04-v7-title">{{ block.settings.title }}</h4>
+          <p class="cf-tb-04-v7-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Active Pulse Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#000000"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#111827"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#f97316"},
+    {"type":"range","id":"cols","label":"Columns","min":2,"max":5,"step":1,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge", "name": "Badge", "limit": 5,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"No Fillers"},
+        {"type":"text","id":"desc","label":"Description","default":"Pure performance ingredients"}
+      ]
+    }
+  ],
+  "presets": [{"name": "07 · Active Pulse Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]
+}
+{% endschema %}

@@ -1,0 +1,164 @@
+<style>
+.cf-h-04-v8 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  position: {{ section.settings.position }};
+  top: 0;
+  z-index: 50;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.cf-h-04-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.cf-h-04-v8-nav {
+  display: flex;
+  gap: 30px;
+}
+
+.cf-h-04-v8-nav--right {
+  justify-content: flex-end;
+}
+
+.cf-h-04-v8-link {
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.cf-h-04-v8-link::after {
+  content: '';
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: {{ section.settings.accent_color }};
+  bottom: -10px; left: 50%;
+  transform: translateX(-50%) scale(0);
+  transition: transform 0.3s ease;
+}
+
+.cf-h-04-v8-link:hover::after {
+  transform: translateX(-50%) scale(1);
+}
+
+.cf-h-04-v8-logo {
+  font-size: 26px;
+  font-weight: 300;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.cf-h-04-v8-icon {
+  color: {{ section.settings.text_color }};
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.cf-h-04-v8-icon:hover {
+  opacity: 0.5;
+}
+
+.cf-h-04-v8-icon svg {
+  width: 22px; height: 22px;
+  stroke-width: 1.2;
+}
+
+.cf-h-04-v8-mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .cf-h-04-v8-inner {
+    grid-template-columns: auto 1fr auto;
+    padding: 0 20px;
+  }
+  .cf-h-04-v8-nav { display: none; }
+  .cf-h-04-v8-mobile-toggle { display: block; }
+}
+</style>
+
+<div class="cf-h-04-v8">
+  <div class="cf-h-04-v8-inner">
+    
+    <button class="cf-h-04-v8-icon cf-h-04-v8-mobile-toggle" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    
+    <nav class="cf-h-04-v8-nav">
+      <a href="#" class="cf-h-04-v8-link">Shop</a>
+      <a href="#" class="cf-h-04-v8-link">About</a>
+      <a href="#" class="cf-h-04-v8-link">Learn</a>
+    </nav>
+    
+    <a href="/" class="cf-h-04-v8-logo">
+      {% if section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" width="{{ section.settings.logo_width }}" style="height: auto;">
+      {% else %}
+        {{ shop.name | default: 'ZENITH' }}
+      {% endif %}
+    </a>
+    
+    <nav class="cf-h-04-v8-nav cf-h-04-v8-nav--right">
+      <button class="cf-h-04-v8-icon" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+      <a href="/account" class="cf-h-04-v8-icon" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+      <a href="/cart" class="cf-h-04-v8-icon" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </a>
+    </nav>
+    
+    <!-- Mobile Icons (Hidden on Desktop) -->
+    <div style="display:none;" class="cf-h-04-v8-mobile-icons">
+      <a href="/cart" class="cf-h-04-v8-icon" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </a>
+    </div>
+    
+  </div>
+</div>
+
+<style>
+@media (max-width: 900px) {
+  .cf-h-04-v8-mobile-icons { display: flex !important; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "08 · Holistic Zen",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F9F9F9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#5B5B5B"},
+    {"type":"color","id":"accent_color","label":"Accent Custom Color","default":"#A4C3B2"},
+    {"type":"link_list","id":"menu","label":"Left Menu (Ignored via defaults here)"},
+    {"type":"image_picker","id":"logo","label":"Logo Image"},
+    {"type":"range","id":"logo_width","label":"Logo Width","min":50,"max":250,"step":5,"default":150},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":50,"step":2,"default":25},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":50,"default":1400},
+    {"type":"select","id":"position","label":"Header Position","options":[{"value":"relative","label":"Static"},{"value":"sticky","label":"Sticky"}],"default":"relative"}
+  ],
+  "presets": [{"name":"08 · Holistic Zen Header"}]
+}
+{% endschema %}

@@ -1,0 +1,73 @@
+<style>
+.cf-ps-04-v10 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-04-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  background: {{ section.settings.pill_bg }};
+  color: #fff;
+  border-radius: 50px;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cf-ps-04-v10-icon {
+  background: #fff;
+  color: {{ section.settings.pill_bg }};
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-ps-04-v10-icon svg {
+  width: 14px; height: 14px; stroke-width: 3;
+}
+
+.cf-ps-04-v10-text {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .cf-ps-04-v10-inner { padding: 10px 20px; }
+  .cf-ps-04-v10-text { font-size: 12px; }
+}
+</style>
+
+<div class="cf-ps-04-v10">
+  <div class="cf-ps-04-v10-inner">
+    <div class="cf-ps-04-v10-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </div>
+    <p class="cf-ps-04-v10-text">
+      {{ section.settings.text }}
+    </p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Med-Tech Verified",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Wrappper","default":"#ffffff"},
+    {"type":"color","id":"pill_bg","label":"Pill Background (Blue)","default":"#1d4ed8"},
+    {"type":"text","id":"text","label":"Text","default":"CLINICALLY VERIFIED EQUIPMENT"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":400,"max":1200,"step":50,"default":650}
+  ],
+  "presets": [{"name":"10 · Med-Tech Snack"}]
+}
+{% endschema %}

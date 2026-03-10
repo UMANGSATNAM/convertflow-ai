@@ -1,0 +1,103 @@
+<style>
+.cf-tb-04-v3 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Georgia', serif;
+}
+
+.cf-tb-04-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-04-v3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  text-align: center;
+}
+
+.cf-tb-04-v3-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cf-tb-04-v3-icon {
+  color: {{ section.settings.brand_color }};
+  margin-bottom: 20px;
+}
+
+.cf-tb-04-v3-icon svg {
+  width: 40px; height: 40px; stroke-width: 1.5;
+}
+
+.cf-tb-04-v3-title {
+  color: {{ section.settings.text_color }};
+  font-size: 20px;
+  font-style: italic;
+  font-weight: normal;
+  margin: 0 0 10px 0;
+}
+
+.cf-tb-04-v3-desc {
+  color: {{ section.settings.text_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  opacity: 0.7;
+  margin: 0;
+  max-width: 250px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .cf-tb-04-v3-grid { grid-template-columns: 1fr; gap: 40px; }
+  .cf-tb-04-v3-desc { max-width: 100%; }
+}
+</style>
+
+<div class="cf-tb-04-v3">
+  <div class="cf-tb-04-v3-inner">
+    <div class="cf-tb-04-v3-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-04-v3-item">
+          <div class="cf-tb-04-v3-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22c0-8 8-10 8-14a8 8 0 0 0-16 0c0 4 8 6 8 14z"/></svg>
+          </div>
+          <h4 class="cf-tb-04-v3-title">{{ block.settings.title }}</h4>
+          <p class="cf-tb-04-v3-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Organic Flow Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4A4A4A"},
+    {"type":"color","id":"brand_color","label":"Brand Accent Color","default":"#A3B18A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1000}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 3,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Ethically Sourced"},
+        {"type":"text","id":"desc","label":"Description","default":"Direct from farms."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "03 · Organic Flow Badges",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

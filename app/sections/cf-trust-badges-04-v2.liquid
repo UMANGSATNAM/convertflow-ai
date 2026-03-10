@@ -1,0 +1,119 @@
+<style>
+.cf-tb-04-v2 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-tb-04-v2-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-04-v2-grid {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 30px;
+  border-top: 1px solid {{ section.settings.border_color }};
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  padding: 40px 0;
+}
+
+.cf-tb-04-v2-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.cf-tb-04-v2-icon {
+  width: 48px; height: 48px;
+  background: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
+  color: {{ section.settings.accent_color }};
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.cf-tb-04-v2-icon svg {
+  width: 24px; height: 24px; stroke-width: 2;
+}
+
+.cf-tb-04-v2-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-tb-04-v2-title {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.cf-tb-04-v2-desc {
+  color: #6b7280;
+  font-size: 13px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .cf-tb-04-v2-grid { justify-content: flex-start; }
+  .cf-tb-04-v2-item { min-width: 40%; }
+}
+@media (max-width: 600px) {
+  .cf-tb-04-v2-grid { flex-direction: column; padding: 30px 0; gap: 25px; }
+  .cf-tb-04-v2-item { min-width: 100%; }
+}
+</style>
+
+<div class="cf-tb-04-v2">
+  <div class="cf-tb-04-v2-inner">
+    <div class="cf-tb-04-v2-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-04-v2-item">
+          <div class="cf-tb-04-v2-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div class="cf-tb-04-v2-info">
+            <h4 class="cf-tb-04-v2-title">{{ block.settings.title }}</h4>
+            <p class="cf-tb-04-v2-desc">{{ block.settings.desc }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Minimal Wellness",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111827"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Green)","default":"#10b981"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#f3f4f6"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"text","id":"title","label":"Title","default":"Clean Ingredients"},
+        {"type":"text","id":"desc","label":"Description","default":"Sourced from nature"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "02 · Minimal Wellness Badges",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

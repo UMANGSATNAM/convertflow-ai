@@ -1,0 +1,167 @@
+<style>
+.cf-pr-04-v9 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-pr-04-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex;
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.cf-pr-04-v9-image {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+}
+
+.cf-pr-04-v9-image img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+}
+
+.cf-pr-04-v9-content {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cf-pr-04-v9-tag {
+  color: {{ section.settings.accent_color }};
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 15px;
+}
+
+.cf-pr-04-v9-title {
+  color: {{ section.settings.text_color }};
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0 0 30px 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.cf-pr-04-v9-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 35px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cf-pr-04-v9-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #4b5563;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.cf-pr-04-v9-list-icon {
+  width: 24px; height: 24px;
+  background: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
+  color: {{ section.settings.accent_color }};
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.cf-pr-04-v9-list-icon svg { width: 14px; height: 14px; stroke-width: 3;}
+
+.cf-pr-04-v9-btn {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.2s;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.cf-pr-04-v9-btn:hover { opacity: 0.9; }
+
+@media (max-width: 900px) {
+  .cf-pr-04-v9-inner { flex-direction: column; }
+  .cf-pr-04-v9-image { min-height: 300px; }
+  .cf-pr-04-v9-content { padding: 40px 20px; }
+}
+</style>
+
+<div class="cf-pr-04-v9">
+  <div class="cf-pr-04-v9-inner">
+    <div class="cf-pr-04-v9-image">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.title }}">
+      {% else %}
+        <div style="width:100%;height:100%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;color:#9ca3af;">Image</div>
+      {% endif %}
+    </div>
+    <div class="cf-pr-04-v9-content">
+      <div class="cf-pr-04-v9-tag">{{ section.settings.tag }}</div>
+      <h2 class="cf-pr-04-v9-title">{{ section.settings.title }}</h2>
+      
+      <ul class="cf-pr-04-v9-list">
+        {% for block in section.blocks %}
+          <li>
+            <div class="cf-pr-04-v9-list-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            {{ block.settings.text }}
+          </li>
+        {% endfor %}
+      </ul>
+      
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-pr-04-v9-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Supplements Fact",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Red)","default":"#ef4444"},
+    {"type":"text","id":"tag","label":"Tag","default":"FORMULA UPGRADE"},
+    {"type":"text","id":"title","label":"Title","default":"Meet the ultimate daily multivitamin."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Multivitamin"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "limit": 5,
+      "settings": [
+        {"type":"text","id":"text","label":"Text","default":"100% Bioavailable ingredients"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "09 · Supplements Fact Sheet",
+      "blocks": [{"type":"feature"},{"type":"feature"},{"type":"feature"},{"type":"feature"}]
+    }
+  ]
+}
+{% endschema %}

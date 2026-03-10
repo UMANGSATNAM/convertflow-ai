@@ -1,0 +1,187 @@
+<style>
+.cf-fc-04-v4 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-fc-04-v4-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-04-v4-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  padding-bottom: 15px;
+}
+
+.cf-fc-04-v4-title {
+  color: {{ section.settings.text_color }};
+  font-size: 28px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.cf-fc-04-v4-link {
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.cf-fc-04-v4-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+  gap: 20px;
+}
+
+.cf-fc-04-v4-card {
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid {{ section.settings.border_color }};
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s;
+}
+
+.cf-fc-04-v4-card:hover {
+  border-color: {{ section.settings.accent_color }};
+}
+
+.cf-fc-04-v4-image {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f1f5f9;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-04-v4-image img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.cf-fc-04-v4-card:hover .cf-fc-04-v4-image img {
+  transform: scale(1.05);
+}
+
+.cf-fc-04-v4-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cf-fc-04-v4-rating {
+  color: #fbbf24;
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cf-fc-04-v4-rating span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.cf-fc-04-v4-name {
+  color: {{ section.settings.text_color }};
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.cf-fc-04-v4-price {
+  color: {{ section.settings.accent_color }};
+  font-size: 18px;
+  font-weight: 800;
+  margin-top: auto;
+}
+
+@media (max-width: 900px) {
+  .cf-fc-04-v4-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .cf-fc-04-v4-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .cf-fc-04-v4-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .cf-fc-04-v4-title { font-size: 20px; }
+  .cf-fc-04-v4-info { padding: 15px; }
+  .cf-fc-04-v4-name { font-size: 15px; }
+}
+</style>
+
+<div class="cf-fc-04-v4">
+  <div class="cf-fc-04-v4-inner">
+    <div class="cf-fc-04-v4-header">
+      <h2 class="cf-fc-04-v4-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-fc-04-v4-link">{{ section.settings.btn_text }}</a>
+    </div>
+
+    <div class="cf-fc-04-v4-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.url }}" class="cf-fc-04-v4-card">
+          <div class="cf-fc-04-v4-image">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">
+            {% else %}
+               <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#94a3b8;position:absolute;">Image</div>
+            {% endif %}
+          </div>
+          <div class="cf-fc-04-v4-info">
+            <div class="cf-fc-04-v4-rating">
+              ★★★★★ <span>{{ block.settings.rating }}</span>
+            </div>
+            <h3 class="cf-fc-04-v4-name">{{ block.settings.title }}</h3>
+            <div class="cf-fc-04-v4-price">{{ block.settings.price }}</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Clinical Products",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#f8fafc"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Blue)","default":"#2563eb"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e2e8f0"},
+    {"type":"text","id":"title","label":"Title","default":"CLINICALLY FORMULATED"},
+    {"type":"text","id":"btn_text","label":"View All Link","default":"View All →"},
+    {"type":"url","id":"btn_link","label":"Link"},
+    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Product Title","default":"Advanced Omega-3"},
+        {"type":"text","id":"price","label":"Price","default":"$45.00"},
+        {"type":"text","id":"rating","label":"Rating Text","default":"(124)"},
+        {"type":"url","id":"url","label":"Product Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Clinical Proof Products",
+      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]
+    }
+  ]
+}
+{% endschema %}

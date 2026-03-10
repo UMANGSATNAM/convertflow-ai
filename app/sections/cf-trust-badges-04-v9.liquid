@@ -1,0 +1,90 @@
+<style>
+.cf-tb-04-v9 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-tb-04-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+.cf-tb-04-v9-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols }}, 1fr);
+  gap: 1px;
+  background: {{ section.settings.border_color }};
+  border: 1px solid {{ section.settings.border_color }};
+  border-radius: 12px;
+  overflow: hidden;
+}
+.cf-tb-04-v9-item {
+  background: #fff;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.cf-tb-04-v9-stat {
+  font-size: 42px;
+  font-weight: 900;
+  color: {{ section.settings.accent_color }};
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.cf-tb-04-v9-label {
+  color: {{ section.settings.text_color }};
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+.cf-tb-04-v9-desc {
+  color: #6b7280;
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.5;
+}
+@media (max-width: 900px) { .cf-tb-04-v9-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 500px) { .cf-tb-04-v9-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="cf-tb-04-v9">
+  <div class="cf-tb-04-v9-inner">
+    <div class="cf-tb-04-v9-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-04-v9-item">
+          <div class="cf-tb-04-v9-stat">{{ block.settings.stat }}</div>
+          <h4 class="cf-tb-04-v9-label">{{ block.settings.title }}</h4>
+          <p class="cf-tb-04-v9-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Supplements Stats",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},
+    {"type":"color","id":"accent_color","label":"Stat Color","default":"#ef4444"},
+    {"type":"color","id":"border_color","label":"Grid Border","default":"#e4e4e7"},
+    {"type":"range","id":"cols","label":"Columns","min":2,"max":5,"step":1,"default":4},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge", "name": "Stat Badge", "limit": 5,
+      "settings": [
+        {"type":"text","id":"stat","label":"Statistic","default":"30+"},
+        {"type":"text","id":"title","label":"Title","default":"Vitamins & Minerals"},
+        {"type":"text","id":"desc","label":"Description","default":"In every serving"}
+      ]
+    }
+  ],
+  "presets": [{"name": "09 · Supplements Stats","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]
+}
+{% endschema %}

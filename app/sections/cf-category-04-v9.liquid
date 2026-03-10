@@ -1,0 +1,153 @@
+<style>
+.cf-cat-04-v9 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cf-cat-04-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-cat-04-v9-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.cf-cat-04-v9-title {
+  color: {{ section.settings.text_color }};
+  font-size: 34px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.02em;
+}
+
+.cf-cat-04-v9-subtitle {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+.cf-cat-04-v9-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+  gap: 20px;
+}
+
+.cf-cat-04-v9-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid {{ section.settings.border_color }};
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.cf-cat-04-v9-item:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+}
+
+.cf-cat-04-v9-image-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50px; /* pill shape */
+  background: {{ section.settings.bg_color }};
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cf-cat-04-v9-image-wrap img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+}
+
+.cf-cat-04-v9-name {
+  color: {{ section.settings.text_color }};
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+}
+
+.cf-cat-04-v9-linktext {
+  color: {{ section.settings.accent_color }};
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+  .cf-cat-04-v9-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .cf-cat-04-v9-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="cf-cat-04-v9">
+  <div class="cf-cat-04-v9-inner">
+    <div class="cf-cat-04-v9-header">
+      <h2 class="cf-cat-04-v9-title">{{ section.settings.title }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <div class="cf-cat-04-v9-subtitle">{{ section.settings.subtitle }}</div>
+      {% endif %}
+    </div>
+
+    <div class="cf-cat-04-v9-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-04-v9-item">
+          <div class="cf-cat-04-v9-image-wrap">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 200 }}" alt="{{ block.settings.title }}">
+            {% else %}
+               <div style="width:100%;height:100%;background:#f3f4f6;color:#9ca3af;display:flex;align-items:center;justify-content:center;font-size:10px;">Img</div>
+            {% endif %}
+          </div>
+          <div>
+            <h3 class="cf-cat-04-v9-name">{{ block.settings.title }}</h3>
+            <div class="cf-cat-04-v9-linktext">Shop Now</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Supplements Categories",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#f4f4f5"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Red)","default":"#ef4444"},
+    {"type":"text","id":"title","label":"Title","default":"Find Your Formula"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"Browse our scientifically backed categories."},
+    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":4,"step":1,"default":3},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {"type":"text","id":"title","label":"Category Name","default":"Energy"},
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "09 · Supplements Grid",
+      "blocks": [{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"}]
+    }
+  ]
+}
+{% endschema %}

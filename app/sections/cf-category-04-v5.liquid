@@ -1,0 +1,139 @@
+<style>
+.cf-cat-04-v5 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background-color: {{ section.settings.bg_color }};
+  font-family: 'Playfair Display', serif;
+}
+
+.cf-cat-04-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-cat-04-v5-title {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 400;
+  font-style: italic;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 60px 0;
+}
+
+.cf-cat-04-v5-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+  gap: 40px;
+}
+
+.cf-cat-04-v5-item {
+  text-decoration: none;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 500px;
+}
+
+.cf-cat-04-v5-image {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 1s ease;
+}
+
+.cf-cat-04-v5-item:hover .cf-cat-04-v5-image {
+  transform: scale(1.05);
+}
+
+.cf-cat-04-v5-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+}
+
+.cf-cat-04-v5-name {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 0 10px 0;
+}
+
+.cf-cat-04-v5-btn {
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.cf-cat-04-v5-item:hover .cf-cat-04-v5-btn {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .cf-cat-04-v5-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .cf-cat-04-v5-item { height: 400px; }
+}
+@media (max-width: 600px) {
+  .cf-cat-04-v5-grid { grid-template-columns: 1fr; }
+  .cf-cat-04-v5-item { height: 350px; }
+}
+</style>
+
+<div class="cf-cat-04-v5">
+  <div class="cf-cat-04-v5-inner">
+    <h2 class="cf-cat-04-v5-title">{{ section.settings.title }}</h2>
+
+    <div class="cf-cat-04-v5-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cat-04-v5-item">
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title }}" class="cf-cat-04-v5-image">
+          {% else %}
+            <div class="cf-cat-04-v5-image" style="background:#e5e5e5;display:flex;align-items:center;justify-content:center;color:#999;">Image</div>
+          {% endif %}
+          <div class="cf-cat-04-v5-overlay">
+            <h3 class="cf-cat-04-v5-name">{{ block.settings.title }}</h3>
+            <span class="cf-cat-04-v5-btn">Explore</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Spa Serenity Grid",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#F7F4F0"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+    {"type":"text","id":"title","label":"Title","default":"Curated Rituals"},
+    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":4,"step":1,"default":3},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {"type":"text","id":"title","label":"Category Name","default":"Bath Oils"},
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Spa Serenity Grid",
+      "blocks": [{"type":"category"},{"type":"category"},{"type":"category"}]
+    }
+  ]
+}
+{% endschema %}
