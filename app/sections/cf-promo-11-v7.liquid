@@ -1,0 +1,69 @@
+<style>
+.cf-pr-11-v7{width:100%;height:{{ section.settings.height }}vh;display:flex;background:{{ section.settings.bg_color }};font-family:sans-serif;overflow:hidden}
+.cf-pr-11-v7-half{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px;position:relative}
+.cf-pr-11-v7-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:1;filter:grayscale(100%) contrast(1.2);transition:0.8s}
+.cf-pr-11-v7-half:hover .cf-pr-11-v7-img{filter:grayscale(0) contrast(1);transform:scale(1.05)}
+.cf-pr-11-v7-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }});z-index:2;transition:0.4s}
+.cf-pr-11-v7-half:hover .cf-pr-11-v7-overlay{background:rgba(0,0,0,0.2)}
+.cf-pr-11-v7-content{position:relative;z-index:3;color:{{ section.settings.text_color }};pointer-events:none}
+.cf-pr-11-v7-sub{font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:15px;display:block}
+.cf-pr-11-v7-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);font-weight:900;text-transform:uppercase;margin:0 0 25px 0;line-height:1}
+.cf-pr-11-v7-btn{display:inline-block;padding:12px 30px;border:2px solid {{ section.settings.text_color }};color:{{ section.settings.text_color }};text-decoration:none;font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;pointer-events:auto;transition:0.3s;background:transparent}
+.cf-pr-11-v7-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.accent_color }}}
+@media(max-width:768px){.cf-pr-11-v7{flex-direction:column}.cf-pr-11-v7-half{padding:30px 20px}}
+</style>
+
+<div class="cf-pr-11-v7">
+  <div class="cf-pr-11-v7-half">
+    {% if section.settings.img_1 %}
+      <img src="{{ section.settings.img_1 | image_url: width: 1000 }}" class="cf-pr-11-v7-img">
+    {% else %}
+      <div style="background:#333;" class="cf-pr-11-v7-img"></div>
+    {% endif %}
+    <div class="cf-pr-11-v7-overlay"></div>
+    <div class="cf-pr-11-v7-content">
+      <span class="cf-pr-11-v7-sub">{{ section.settings.sub_1 }}</span>
+      <h2 class="cf-pr-11-v7-title">{{ section.settings.title_1 }}</h2>
+      <a href="{{ section.settings.btn_link_1 }}" class="cf-pr-11-v7-btn">{{ section.settings.btn_1 }}</a>
+    </div>
+  </div>
+
+  <div class="cf-pr-11-v7-half">
+    {% if section.settings.img_2 %}
+      <img src="{{ section.settings.img_2 | image_url: width: 1000 }}" class="cf-pr-11-v7-img">
+    {% else %}
+      <div style="background:#555;" class="cf-pr-11-v7-img"></div>
+    {% endif %}
+    <div class="cf-pr-11-v7-overlay"></div>
+    <div class="cf-pr-11-v7-content">
+      <span class="cf-pr-11-v7-sub">{{ section.settings.sub_2 }}</span>
+      <h2 class="cf-pr-11-v7-title">{{ section.settings.title_2 }}</h2>
+      <a href="{{ section.settings.btn_link_2 }}" class="cf-pr-11-v7-btn">{{ section.settings.btn_2 }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Promo (v7)",
+  "settings": [
+    {"type":"image_picker","id":"img_1","label":"Left Image"},
+    {"type":"text","id":"sub_1","label":"Left Subtitle","default":"TOP RATED"},
+    {"type":"text","id":"title_1","label":"Left Title","default":"CHELSEA BOOTS"},
+    {"type":"text","id":"btn_1","label":"Left Button","default":"SHOP BOOTS"},
+    {"type":"url","id":"btn_link_1","label":"Left Link"},
+    {"type":"image_picker","id":"img_2","label":"Right Image"},
+    {"type":"text","id":"sub_2","label":"Right Subtitle","default":"ESSENTIALS"},
+    {"type":"text","id":"title_2","label":"Right Title","default":"LEATHER JACKETS"},
+    {"type":"text","id":"btn_2","label":"Right Button","default":"SHOP JACKETS"},
+    {"type":"url","id":"btn_link_2","label":"Right Link"},
+    {"type":"range","id":"overlay_opacity","label":"Dark Overlay Opacity","min":20,"max":90,"step":5,"default":60},
+    {"type":"color","id":"bg_color","label":"Background fallback","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Button Text Hover","default":"#000000"},
+    {"type":"range","id":"title_size","label":"Title Size","min":30,"max":80,"step":2,"default":48},
+    {"type":"range","id":"height","label":"Height (vh)","min":40,"max":100,"step":5,"default":75}
+  ],
+  "presets": [{"name":"11 · Men's Promo (v7)"}]
+}
+{% endschema %}

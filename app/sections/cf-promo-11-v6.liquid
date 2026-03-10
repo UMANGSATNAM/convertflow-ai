@@ -1,0 +1,57 @@
+<style>
+.cf-pr-11-v6{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-pr-11-v6-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;border:2px solid {{ section.settings.border_color }};background:{{ section.settings.inner_bg }}}
+.cf-pr-11-v6-text{flex:1;padding:60px;display:flex;flex-direction:column;justify-content:center}
+.cf-pr-11-v6-img-wrap{flex:1;height:{{ section.settings.height }}px;border-left:2px solid {{ section.settings.border_color }}}
+.cf-pr-11-v6-img{width:100%;height:100%;object-fit:cover}
+.cf-pr-11-v6-sub{font-size:13px;font-weight:700;color:{{ section.settings.accent_color }};text-transform:uppercase;letter-spacing:0.1em;margin-bottom:15px}
+.cf-pr-11-v6-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);font-weight:900;color:{{ section.settings.text_color }};text-transform:uppercase;line-height:1.1;margin:0 0 20px 0;letter-spacing:-0.02em}
+.cf-pr-11-v6-desc{font-size:16px;color:{{ section.settings.text_color }};opacity:0.8;line-height:1.5;margin-bottom:30px;max-width:450px}
+.cf-pr-11-v6-btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;background:{{ section.settings.text_color }};color:{{ section.settings.inner_bg }};text-decoration:none;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;align-self:flex-start;transition:0.3s}
+.cf-pr-11-v6-btn:hover{background:{{ section.settings.accent_color }}}
+@media(max-width:900px){.cf-pr-11-v6-inner{flex-direction:column-reverse}.cf-pr-11-v6-img-wrap{width:100%;border-left:none;border-bottom:2px solid {{ section.settings.border_color }}}.cf-pr-11-v6-text{padding:40px 20px}}
+</style>
+
+<div class="cf-pr-11-v6">
+  <div class="cf-pr-11-v6-inner">
+    <div class="cf-pr-11-v6-text">
+      <div class="cf-pr-11-v6-sub">{{ section.settings.subtitle }}</div>
+      <h2 class="cf-pr-11-v6-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-11-v6-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-11-v6-btn">
+        {{ section.settings.btn_label }}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+      </a>
+    </div>
+    <div class="cf-pr-11-v6-img-wrap">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1000 }}" class="cf-pr-11-v6-img">
+      {% else %}
+        <div style="width:100%;height:100%;background:#e5e5e5"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Promo (v6)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"EXCLUSIVE DROP"},
+    {"type":"text","id":"title","label":"Title","default":"DENIM ON DENIM"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Raw selvedge denim crafted in Japan. Rigid structure that shapes to your lifestyle over time."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"DISCOVER DENIM"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#FFFFFF"},
+    {"type":"color","id":"inner_bg","label":"Inner Box Background","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#666666"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#111111"},
+    {"type":"range","id":"title_size","label":"Title Size","min":30,"max":80,"step":2,"default":56},
+    {"type":"range","id":"height","label":"Image Height (px)","min":400,"max":900,"step":20,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"11 · Men's Promo (v6)"}]
+}
+{% endschema %}

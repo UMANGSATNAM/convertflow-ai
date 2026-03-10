@@ -1,0 +1,55 @@
+<style>
+.cf-pr-11-v9{width:100%;background:{{ section.settings.bg_color }};font-family:sans-serif;overflow:hidden;border-top:2px solid {{ section.settings.border_color }};border-bottom:2px solid {{ section.settings.border_color }}}
+.cf-pr-11-v9-inner{display:flex;width:100%}
+.cf-pr-11-v9-col{flex:1;min-height:{{ section.settings.height }}vh;display:flex;flex-direction:column;justify-content:center;padding:60px 40px;border-right:2px solid {{ section.settings.border_color }}}
+.cf-pr-11-v9-col:last-child{border-right:none}
+.cf-pr-11-v9-num{font-size:120px;font-weight:900;color:transparent;-webkit-text-stroke:2px {{ section.settings.accent_color }};line-height:0.8;margin-bottom:20px;opacity:0.3;transition:0.4s}
+.cf-pr-11-v9-col:hover .cf-pr-11-v9-num{color:{{ section.settings.accent_color }};opacity:1;-webkit-text-stroke:0}
+.cf-pr-11-v9-title{font-size:28px;color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;margin:0 0 15px 0;letter-spacing:-0.02em}
+.cf-pr-11-v9-desc{font-size:15px;color:{{ section.settings.text_color }};opacity:0.8;line-height:1.5;margin-bottom:30px}
+.cf-pr-11-v9-btn{display:inline-flex;align-items:center;gap:10px;color:{{ section.settings.text_color }};text-decoration:none;font-size:13px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.3s}
+.cf-pr-11-v9-btn:hover{color:{{ section.settings.accent_color }}}
+@media(max-width:900px){.cf-pr-11-v9-inner{flex-direction:column}.cf-pr-11-v9-col{min-height:auto;border-right:none;border-bottom:2px solid {{ section.settings.border_color }}}.cf-pr-11-v9-col:last-child{border-bottom:none}}
+</style>
+
+<div class="cf-pr-11-v9">
+  <div class="cf-pr-11-v9-inner">
+    {% for i in (1..3) %}
+      {% capture title_key %}title_{{ i }}{% endcapture %}
+      {% capture desc_key %}desc_{{ i }}{% endcapture %}
+      {% capture link_key %}btn_link_{{ i }}{% endcapture %}
+      <div class="cf-pr-11-v9-col">
+        <div class="cf-pr-11-v9-num">0{{ i }}</div>
+        <h3 class="cf-pr-11-v9-title">{{ section.settings[title_key] }}</h3>
+        <p class="cf-pr-11-v9-desc">{{ section.settings[desc_key] }}</p>
+        <a href="{{ section.settings[link_key] }}" class="cf-pr-11-v9-btn">EXPLORE &rarr;</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Promo (v9)",
+  "settings": [
+    {"type":"text","id":"title_1","label":"Column 1 Title","default":"NEW ARRIVALS"},
+    {"type":"textarea","id":"desc_1","label":"Column 1 Desc","default":"The freshest drops of the week. Outerwear, tees, and bottoms tailored for you."},
+    {"type":"url","id":"btn_link_1","label":"Column 1 Link"},
+    
+    {"type":"text","id":"title_2","label":"Column 2 Title","default":"BEST SELLERS"},
+    {"type":"textarea","id":"desc_2","label":"Column 2 Desc","default":"The pieces that literally walk off the shelves. Claim them before they are gone."},
+    {"type":"url","id":"btn_link_2","label":"Column 2 Link"},
+    
+    {"type":"text","id":"title_3","label":"Column 3 Title","default":"LAST CHANCE"},
+    {"type":"textarea","id":"desc_3","label":"Column 3 Desc","default":"Final markdowns on past season staples. Premium quality, unbeatable value."},
+    {"type":"url","id":"btn_link_3","label":"Column 3 Link"},
+
+    {"type":"color","id":"bg_color","label":"Background","default":"#FAFAFA"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Arrow / Numbers","default":"#222222"},
+    {"type":"color","id":"border_color","label":"Border Dividers","default":"#E0E0E0"},
+    {"type":"range","id":"height","label":"Min Height (vh)","min":40,"max":100,"step":5,"default":65}
+  ],
+  "presets": [{"name":"11 · Men's Promo (v9)"}]
+}
+{% endschema %}

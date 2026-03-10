@@ -1,0 +1,66 @@
+<style>
+.cf-pr-11-v4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 20px;font-family:sans-serif}
+.cf-pr-11-v4-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(4, 1fr);gap:15px;height:{{ section.settings.height }}vh;min-height:500px}
+.cf-pr-11-v4-col{position:relative;overflow:hidden;background:#111;display:flex;flex-direction:column}
+.cf-pr-11-v4-img{width:100%;height:100%;object-fit:cover;transition:0.6s}
+.cf-pr-11-v4-col:hover .cf-pr-11-v4-img{transform:scale(1.05)}
+.cf-pr-11-v4-text-col{background:{{ section.settings.text_bg }};padding:40px;display:flex;flex-direction:column;justify-content:center;border:1px solid {{ section.settings.border_color }}}
+.cf-pr-11-v4-title{font-size:32px;color:{{ section.settings.text_color }};font-weight:900;text-transform:uppercase;line-height:1.1;margin:0 0 15px 0}
+.cf-pr-11-v4-desc{font-size:15px;color:{{ section.settings.text_color }};line-height:1.5;margin-bottom:30px;opacity:0.8}
+.cf-pr-11-v4-btn{display:inline-flex;padding:12px 24px;background:{{ section.settings.text_color }};color:{{ section.settings.text_bg }};text-decoration:none;font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;align-self:flex-start}
+@media(max-width:900px){.cf-pr-11-v4-inner{grid-template-columns:1fr 1fr;grid-template-rows:2fr 1fr;height:auto}.cf-pr-11-v4-text-col{grid-column:1/3}}
+@media(max-width:500px){.cf-pr-11-v4-inner{grid-template-columns:1fr;grid-template-rows:auto 40vh 40vh 40vh}.cf-pr-11-v4-text-col{grid-column:1/2}}
+</style>
+
+<div class="cf-pr-11-v4">
+  <div class="cf-pr-11-v4-inner">
+    <div class="cf-pr-11-v4-text-col">
+      <h2 class="cf-pr-11-v4-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-11-v4-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-11-v4-btn">{{ section.settings.btn_label }}</a>
+    </div>
+    <div class="cf-pr-11-v4-col">
+      {% if section.settings.img_1 %}
+        <img src="{{ section.settings.img_1 | image_url: width: 800 }}" class="cf-pr-11-v4-img">
+      {% else %}
+        <div style="background:#ddd;width:100%;height:100%"></div>
+      {% endif %}
+    </div>
+    <div class="cf-pr-11-v4-col">
+      {% if section.settings.img_2 %}
+        <img src="{{ section.settings.img_2 | image_url: width: 800 }}" class="cf-pr-11-v4-img">
+      {% else %}
+        <div style="background:#eee;width:100%;height:100%"></div>
+      {% endif %}
+    </div>
+    <div class="cf-pr-11-v4-col">
+      {% if section.settings.img_3 %}
+        <img src="{{ section.settings.img_3 | image_url: width: 800 }}" class="cf-pr-11-v4-img">
+      {% else %}
+        <div style="background:#ccc;width:100%;height:100%"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11 · Men's Promo (v4)",
+  "settings": [
+    {"type":"image_picker","id":"img_1","label":"Image 1"},
+    {"type":"image_picker","id":"img_2","label":"Image 2"},
+    {"type":"image_picker","id":"img_3","label":"Image 3"},
+    {"type":"text","id":"title","label":"Title","default":"EVERYDAY UNIFORM"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Curated essentials for the season. Build your core wardrobe with pieces designed to last."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"DISCOVER MORE"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Outside Background","default":"#F7F7F7"},
+    {"type":"color","id":"text_bg","label":"Text Box Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#E2E2E2"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":40},
+    {"type":"range","id":"height","label":"Grid Height (vh)","min":40,"max":100,"step":5,"default":70}
+  ],
+  "presets": [{"name":"11 · Men's Promo (v4)"}]
+}
+{% endschema %}
