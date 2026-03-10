@@ -1,0 +1,100 @@
+<style>
+.cf-mq-03-v5 {
+  width: 100%;
+  background: {{ section.settings.bg_color | color_modify: 'alpha', 0.5 }};
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: {{ section.settings.padding_y }}px 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+}
+
+.cf-mq-03-v5-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-03-v5-scroll {{ section.settings.speed }}s linear infinite;
+}
+
+@keyframes cf-mq-03-v5-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cf-mq-03-v5-item {
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  font-size: {{ section.settings.text_size }}px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+
+.cf-mq-03-v5-icon {
+  margin-left: 60px; /* Separator replacement */
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-mq-03-v5-icon svg {
+  width: 20px; height: 20px;
+}
+</style>
+
+<div class="cf-mq-03-v5">
+  <div class="cf-mq-03-v5-track">
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v5-item">
+        {{ block.settings.text }}
+        <div class="cf-mq-03-v5-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+      </div>
+    {% endfor %}
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v5-item">
+        {{ block.settings.text }}
+        <div class="cf-mq-03-v5-icon">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Glassmorphism Marquee",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base (Alpha Applied Built-in)","default":"#222222"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Icon/Separator Color","default":"#0066cc"},
+    {"type":"range","id":"text_size","label":"Text Size","min":16,"max":64,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":15},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":25}
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "limit": 6,
+      "settings": [
+        {"type":"text","id":"text","label":"Text","default":"NEW INNOVATION DROP"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Glassmorphism Marquee",
+      "blocks": [
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"}
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,173 @@
+<style>
+.cf-cat-02-v9 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-cat-02-v9-container {
+  max-width: 1400px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.cf-cat-02-v9-item {
+  position: relative;
+  text-decoration: none;
+  min-height: 400px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+}
+
+.cf-cat-02-v9-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  filter: contrast(1.1) brightness(0.7);
+  z-index: 1;
+}
+
+.cf-cat-02-v9-item:hover .cf-cat-02-v9-img {
+  transform: scale(1.05);
+}
+
+.cf-cat-02-v9-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: {{ section.settings.hover_color }};
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 2;
+}
+
+.cf-cat-02-v9-item:hover .cf-cat-02-v9-overlay {
+  opacity: 1;
+}
+
+.cf-cat-02-v9-label {
+  position: relative;
+  z-index: 10;
+  font-family: inherit;
+  font-size: clamp(24px, 5vw, {{ section.settings.label_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  transition: opacity 0.3s;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.cf-cat-02-v9-item:hover .cf-cat-02-v9-label {
+  opacity: 0;
+}
+
+/* Hover Ticker */
+.cf-cat-02-v9-ticker-wrap {
+  position: absolute;
+  top: 50%; left: 0; width: 100%;
+  transform: translateY(-50%) rotate(-5deg);
+  overflow: hidden;
+  background: {{ section.settings.text_color }};
+  z-index: 15;
+  padding: 10px 0;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.cf-cat-02-v9-item:hover .cf-cat-02-v9-ticker-wrap {
+  opacity: 1;
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.cf-cat-02-v9-ticker {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-cat-02-v9-scroll 4s linear infinite;
+  color: #000;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+}
+
+@keyframes cf-cat-02-v9-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (min-width: 768px) {
+  .cf-cat-02-v9-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>
+
+<div class="cf-cat-02-v9">
+  <div class="cf-cat-02-v9-container">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-02-v9-item">
+        {% if block.settings.image != blank %}
+          <img class="cf-cat-02-v9-img" src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.label | strip_html | escape }}">
+        {% else %}
+          <div class="cf-cat-02-v9-img" style="background:#222;"></div>
+        {% endif %}
+        
+        <div class="cf-cat-02-v9-overlay"></div>
+        
+        <h3 class="cf-cat-02-v9-label">{{ block.settings.label }}</h3>
+        
+        <div class="cf-cat-02-v9-ticker-wrap">
+          <div class="cf-cat-02-v9-ticker">
+            {% assign items = (1..6) %}
+            {% for i in items %}<span>EXPLORE {{ block.settings.label }} // </span>{% endfor %}
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Ticker Overlay Grid",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Label/Ticker Text Base","default":"#ffffff"},
+    {"type":"color","id":"hover_color","label":"Hover Tint Color","default":"#ff003c"},
+    {"type":"range","id":"label_size","label":"Label Size","min":20,"max":80,"step":2,"default":40},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 4,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"label","label":"Label","default":"Category"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "09 · Ticker Overlay Grid",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

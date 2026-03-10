@@ -1,0 +1,96 @@
+<style>
+.cf-ps-02-v3 {
+  width: 100%;
+  background: {{ section.settings.text_color }};
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-ps-02-v3-half {
+  padding: {{ section.settings.padding_y }}px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.cf-ps-02-v3-left {
+  background: {{ section.settings.bg_color }};
+}
+
+.cf-ps-02-v3-right {
+  background: {{ section.settings.text_color }};
+  border-top: 4px solid {{ section.settings.bg_color }};
+}
+
+.cf-ps-02-v3-title {
+  font-size: clamp(28px, 6vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 20px;
+  max-width: 400px;
+}
+
+.cf-ps-02-v3-btn {
+  display: inline-block;
+  background: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 20px;
+  padding: 16px 40px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.cf-ps-02-v3-btn:hover {
+  transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+  .cf-ps-02-v3 {
+    flex-direction: row;
+  }
+  .cf-ps-02-v3-half {
+    flex: 1;
+    padding: {{ section.settings.padding_y }}px 60px;
+  }
+  .cf-ps-02-v3-left {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .cf-ps-02-v3-right {
+    border-top: none;
+    align-items: flex-start;
+  }
+}
+</style>
+
+<div class="cf-ps-02-v3">
+  <div class="cf-ps-02-v3-half cf-ps-02-v3-left">
+    <h3 class="cf-ps-02-v3-title">{{ section.settings.title | newline_to_br }}</h3>
+  </div>
+  <div class="cf-ps-02-v3-half cf-ps-02-v3-right">
+    <a href="{{ section.settings.btn_link }}" class="cf-ps-02-v3-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Split Monoblock",
+  "settings": [
+    {"type":"textarea","id":"title","label":"Title","default":"50% OFF\nOUTERWEAR"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":100,"step":2,"default":48},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP NOW"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/outerwear"},
+    {"type":"color","id":"bg_color","label":"Primary Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Secondary Background/Text","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":50}
+  ],
+  "presets": [{"name":"03 · Split Monoblock Snack"}]
+}
+{% endschema %}

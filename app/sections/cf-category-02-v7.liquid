@@ -1,0 +1,153 @@
+<style>
+.cf-cat-02-v7 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 0;
+  background: {{ section.settings.bg_color }};
+}
+
+.cf-cat-02-v7-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-cat-02-v7-item {
+  position: relative;
+  text-decoration: none;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  border-top: 2px solid {{ section.settings.border_color }};
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  margin-top: -2px; /* Overlap borders */
+  background: #111;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.cf-cat-02-v7-bg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex;
+  z-index: 1;
+}
+
+.cf-cat-02-v7-half-bg {
+  flex: 1;
+  background: {{ section.settings.light_bg }};
+  transition: 0.4s;
+}
+
+.cf-cat-02-v7-half-img {
+  flex: 1;
+  background: {{ section.settings.dark_bg }};
+  position: relative;
+  overflow: hidden;
+}
+
+.cf-cat-02-v7-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  filter: grayscale(100%);
+  transition: opacity 0.4s, filter 0.4s;
+}
+
+.cf-cat-02-v7-item:hover .cf-cat-02-v7-img {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+.cf-cat-02-v7-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.cf-cat-02-v7-label {
+  font-family: inherit;
+  font-size: clamp(32px, 8vw, {{ section.settings.label_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  letter-spacing: -0.04em;
+  /* Make text visible across both light and dark backgrounds */
+  mix-blend-mode: difference;
+  display: inline-block;
+}
+
+/* Reverse alternating layout */
+.cf-cat-02-v7-item:nth-child(even) .cf-cat-02-v7-half-bg {
+  order: 2;
+}
+.cf-cat-02-v7-item:nth-child(even) .cf-cat-02-v7-half-img {
+  order: 1;
+}
+
+@media (min-width: 768px) {
+  .cf-cat-02-v7-item {
+    min-height: 250px;
+  }
+}
+</style>
+
+<div class="cf-cat-02-v7">
+  <div class="cf-cat-02-v7-container">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-02-v7-item">
+        <div class="cf-cat-02-v7-bg">
+          <div class="cf-cat-02-v7-half-bg"></div>
+          <div class="cf-cat-02-v7-half-img">
+            {% if block.settings.image != blank %}
+              <img class="cf-cat-02-v7-img" src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.label | strip_html | escape }}">
+            {% else %}
+              <div class="cf-cat-02-v7-img" style="background:#222;"></div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="cf-cat-02-v7-content">
+          <h3 class="cf-cat-02-v7-label">{{ block.settings.label }}</h3>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Split Monochrome Strip",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Global Background","default":"#F1F1F1"},
+    {"type":"color","id":"light_bg","label":"Stripe Light BG","default":"#ffffff"},
+    {"type":"color","id":"dark_bg","label":"Stripe Dark BG","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Border Dividers","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Blend Text Color (Use white)","default":"#ffffff"},
+    {"type":"range","id":"label_size","label":"Label Size","min":30,"max":150,"step":2,"default":100},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":0}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"label","label":"Label","default":"Footwear"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "07 · Split Monochrome Strip",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

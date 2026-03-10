@@ -1,0 +1,155 @@
+<style>
+.cf-tb-02-v3 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-tb-02-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-02-v3-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.cf-tb-02-v3-item {
+  background: {{ section.settings.tag_color }};
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  /* Angled tag look */
+  clip-path: polygon(20px 0, 100% 0, 100% 100%, 20px 100%, 0 50%);
+  padding-left: 30px; /* Space for the "hole" */
+}
+
+/* The tag hole */
+.cf-tb-02-v3-item::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 12px;
+  height: 12px;
+  background: {{ section.settings.bg_color }};
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.cf-tb-02-v3-icon {
+  background: #000;
+  color: {{ section.settings.tag_color }};
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-tb-02-v3-icon svg {
+  width: 32px; height: 32px;
+  fill: currentColor;
+}
+
+.cf-tb-02-v3-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cf-tb-02-v3-title {
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #000;
+  margin: 0 0 5px 0;
+  letter-spacing: 0.05em;
+}
+
+.cf-tb-02-v3-desc {
+  font-size: 13px;
+  font-weight: bold;
+  color: #222;
+  margin: 0;
+}
+
+/* Tape piece top right */
+.cf-tb-02-v3-top-tape {
+  position: absolute;
+  top: 0; right: 20px;
+  width: 40px; height: 10px;
+  background: repeating-linear-gradient(45deg, #000, #000 5px, transparent 5px, transparent 10px);
+  opacity: 0.2;
+}
+
+@media (min-width: 768px) {
+  .cf-tb-02-v3-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .cf-tb-02-v3-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+
+<div class="cf-tb-02-v3">
+  <div class="cf-tb-02-v3-inner">
+    <div class="cf-tb-02-v3-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-v3-item">
+          <div class="cf-tb-02-v3-top-tape"></div>
+          <div class="cf-tb-02-v3-icon">
+            {% if block.settings.icon_svg != blank %}
+              {{ block.settings.icon_svg }}
+            {% else %}
+               <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            {% endif %}
+          </div>
+          <div class="cf-tb-02-v3-info">
+            <h3 class="cf-tb-02-v3-title">{{ block.settings.title }}</h3>
+            <p class="cf-tb-02-v3-desc">{{ block.settings.desc }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Caution Tags",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#111111"},
+    {"type":"color","id":"tag_color","label":"Tag Color (Yellow default)","default":"#eab308"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 6,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"FAST DISPATCH"},
+        {"type":"text","id":"desc","label":"Description","default":"Orders ship in 24 hrs"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "03 · Caution Tags",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

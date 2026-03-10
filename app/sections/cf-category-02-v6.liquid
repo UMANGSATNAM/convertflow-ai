@@ -1,0 +1,153 @@
+<style>
+.cf-cat-02-v6 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-cat-02-v6-container {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  position: relative;
+}
+
+.cf-cat-02-v6-item {
+  position: relative;
+  overflow: visible;
+  text-decoration: none;
+  background: {{ section.settings.paper_color }};
+  padding: 10px;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 10px 10px 0 {{ section.settings.shadow_color }};
+  transition: all 0.3s;
+}
+
+/* Torn paper top */
+.cf-cat-02-v6-item::before {
+  content: '';
+  position: absolute;
+  top: -10px; left: 0; width: 100%; height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpolygon points='100,0 100,10 0,10 0,0 5,6 10,2 15,8 20,1 25,9 30,3 35,7 40,2 45,8 50,4 55,9 60,3 65,8 70,2 75,7 80,1 85,8 90,3 95,9' fill='{{ section.settings.paper_color | url_encode }}'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  z-index: 5;
+}
+
+/* Torn paper bottom */
+.cf-cat-02-v6-item::after {
+  content: '';
+  position: absolute;
+  bottom: -10px; left: 0; width: 100%; height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpolygon points='100,10 100,0 0,0 0,10 5,4 10,8 15,2 20,9 25,1 30,7 35,3 40,8 45,2 50,6 55,1 60,7 65,2 70,8 75,3 80,9 85,2 90,7 95,1' fill='{{ section.settings.paper_color | url_encode }}'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  z-index: 5;
+}
+
+.cf-cat-02-v6-item:hover {
+  transform: translate(-4px, -4px) rotate({{ section.settings.hover_rotation }}deg);
+  box-shadow: 14px 14px 0 {{ section.settings.shadow_color }};
+  z-index: 10;
+}
+
+.cf-cat-02-v6-img {
+  position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
+  object-fit: cover;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  filter: contrast(1.2) grayscale(0.2);
+  z-index: 1;
+}
+
+.cf-cat-02-v6-label-wrap {
+  position: relative;
+  z-index: 10;
+  background: {{ section.settings.label_bg }};
+  padding: 10px 20px;
+  border: 4px solid #111;
+  transform: rotate(-4deg);
+  transition: transform 0.3s;
+}
+
+.cf-cat-02-v6-item:hover .cf-cat-02-v6-label-wrap {
+  transform: rotate(2deg) scale(1.1);
+}
+
+.cf-cat-02-v6-label {
+  font-family: inherit;
+  font-size: clamp(24px, 5vw, {{ section.settings.label_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .cf-cat-02-v6-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+
+<div class="cf-cat-02-v6">
+  <div class="cf-cat-02-v6-container">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-02-v6-item">
+        {% if block.settings.image != blank %}
+          <img class="cf-cat-02-v6-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.label | strip_html | escape }}">
+        {% else %}
+          <div class="cf-cat-02-v6-img" style="background: #222;"></div>
+        {% endif %}
+        <div class="cf-cat-02-v6-label-wrap">
+          <h3 class="cf-cat-02-v6-label">{{ block.settings.label }}</h3>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Torn Poster Grid",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F1F1F1"},
+    {"type":"color","id":"paper_color","label":"Paper Base Color","default":"#ffffff"},
+    {"type":"color","id":"label_bg","label":"Label Background","default":"#ef4444"},
+    {"type":"color","id":"text_color","label":"Label Text Color","default":"#ffffff"},
+    {"type":"color","id":"shadow_color","label":"Block Shadow Color","default":"#111111"},
+    {"type":"range","id":"label_size","label":"Label Size","min":16,"max":64,"step":2,"default":32},
+    {"type":"range","id":"hover_rotation","label":"Hover Rotation Deg","min":-10,"max":10,"step":1,"default":-2},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"label","label":"Label","default":"Street Lore"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "06 · Torn Poster Grid",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

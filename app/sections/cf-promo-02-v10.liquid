@@ -1,0 +1,142 @@
+<style>
+.cf-pr-02-v10 {
+  width: 100%;
+  position: relative;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: {{ section.settings.height }}px;
+  overflow: hidden;
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+/* Torn paper edge top */
+.cf-pr-02-v10::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpolygon points='100,0 100,10 0,10 0,0 5,6 10,2 15,8 20,1 25,9 30,3 35,7 40,2 45,8 50,4 55,9 60,3 65,8 70,2 75,7 80,1 85,8 90,3 95,9' fill='{{ section.settings.torn_color | url_encode }}'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  z-index: 5;
+}
+
+/* Torn paper edge bottom */
+.cf-pr-02-v10::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; width: 100%; height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpolygon points='100,10 100,0 0,0 0,10 5,4 10,8 15,2 20,9 25,1 30,7 35,3 40,8 45,2 50,6 55,1 60,7 65,2 70,8 75,3 80,9 85,2 90,7 95,1' fill='{{ section.settings.torn_color | url_encode }}'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  z-index: 5;
+}
+
+.cf-pr-02-v10-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: contrast(1.1);
+}
+
+.cf-pr-02-v10-content {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  text-align: center;
+  background: {{ section.settings.text_bg }};
+  padding: 40px clamp(20px, 5vw, 60px);
+  box-shadow: 20px 20px 0 {{ section.settings.accent_color }};
+  transform: rotate(-2deg);
+}
+
+.cf-pr-02-v10-badge {
+  display: inline-block;
+  background: #111;
+  color: #fff;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transform: rotate(4deg);
+}
+
+.cf-pr-02-v10-title {
+  font-size: clamp(40px, 8vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.title_color }};
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.cf-pr-02-v10-desc {
+  font-size: 16px;
+  font-weight: 600;
+  color: {{ section.settings.text_color }};
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+.cf-pr-02-v10-btn {
+  display: inline-block;
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.text_bg }};
+  padding: 16px 40px;
+  font-weight: 900;
+  font-size: 16px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 4px solid {{ section.settings.accent_color }};
+  transition: all 0.2s;
+}
+
+.cf-pr-02-v10-btn:hover {
+  background: transparent;
+  color: {{ section.settings.accent_color }};
+  transform: translateY(-4px);
+  box-shadow: 0 4px 0 {{ section.settings.accent_color }};
+}
+</style>
+
+<div class="cf-pr-02-v10">
+  {% if section.settings.image != blank %}
+    <img class="cf-pr-02-v10-img" src="{{ section.settings.image | image_url: width: 1600 }}" alt="{{ section.settings.title | strip_html | escape }}">
+  {% else %}
+    <div class="cf-pr-02-v10-img" style="background: #222;"></div>
+  {% endif %}
+
+  <div class="cf-pr-02-v10-content">
+    <div class="cf-pr-02-v10-badge">{{ section.settings.badge }}</div>
+    <h2 class="cf-pr-02-v10-title">{{ section.settings.title }}</h2>
+    <p class="cf-pr-02-v10-desc">{{ section.settings.desc }}</p>
+    <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v10-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Torn Billboard",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Background Image"},
+    {"type":"text","id":"badge","label":"Badge Text","default":"STREET POSTER"},
+    {"type":"text","id":"title","label":"Title","default":"WILD STYLE"},
+    {"type":"range","id":"title_size","label":"Title Size","min":40,"max":120,"step":2,"default":80},
+    {"type":"textarea","id":"desc","label":"Description","default":"Raw graphics and chaotic energy. The new graphics drop is available worldwide right now."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP GRAPHICS"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/graphics"},
+    {"type":"color","id":"bg_color","label":"Background base","default":"#000000"},
+    {"type":"color","id":"torn_color","label":"Torn Paper Edge Color (Match above/below blocks)","default":"#ffffff"},
+    {"type":"color","id":"text_bg","label":"Text Box Background","default":"#ffffff"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Description Color","default":"#444444"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Shadow & Btn)","default":"#ff003c"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":1000,"step":20,"default":800},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":80}
+  ],
+  "presets": [{"name":"10 · Torn Billboard Promo"}]
+}
+{% endschema %}

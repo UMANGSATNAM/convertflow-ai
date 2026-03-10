@@ -1,0 +1,179 @@
+<style>
+.cf-head-02-v3 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-head-02-v3-drop {
+  background: {{ section.settings.drop_bg }};
+  color: {{ section.settings.drop_text }};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cf-head-02-v3-drop span {
+  display: inline-block;
+}
+
+.cf-head-02-v3-timer {
+  background: {{ section.settings.drop_text }};
+  color: {{ section.settings.drop_bg }};
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
+  font-weight: 900;
+  animation: cf-h03-blink 1s step-end infinite;
+}
+
+@keyframes cf-h03-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.cf-head-02-v3-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-head-02-v3-logo {
+  font-size: clamp(20px, 5vw, {{ section.settings.logo_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.logo_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  font-style: italic;
+  text-shadow: 2px 2px 0 {{ section.settings.drop_bg }};
+}
+
+.cf-head-02-v3-nav {
+  display: none;
+  gap: 28px;
+}
+
+.cf-head-02-v3-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.2s;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.cf-head-02-v3-link:hover {
+  color: {{ section.settings.drop_bg }};
+  border-bottom-color: {{ section.settings.drop_bg }};
+  transform: skewX(-10deg);
+}
+
+.cf-head-02-v3-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cf-head-02-v3-btn {
+  background: transparent;
+  color: {{ section.settings.logo_color }};
+  border: 2px solid {{ section.settings.logo_color }};
+  padding: 8px 16px;
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: 0.2s;
+}
+
+.cf-head-02-v3-btn:hover {
+  background: {{ section.settings.logo_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+@media (min-width: 1024px) {
+  .cf-head-02-v3-nav { display: flex; align-items: center; }
+  .cf-head-02-v3-main { padding: {{ section.settings.padding_y }}px 40px; }
+}
+</style>
+
+<header class="cf-head-02-v3">
+  {% if section.settings.show_drop %}
+  <div class="cf-head-02-v3-drop">
+    <span>{{ section.settings.drop_label }}</span>
+    <div class="cf-head-02-v3-timer" id="cf-drop-timer-{{ section.id }}">23:59:59</div>
+  </div>
+  {% endif %}
+  <div class="cf-head-02-v3-main">
+    <a href="/" class="cf-head-02-v3-logo">{{ section.settings.logo_text }}</a>
+    <nav class="cf-head-02-v3-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-02-v3-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-02-v3-link">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-02-v3-link">{{ section.settings.link_3 }}</a>
+    </nav>
+    <div class="cf-head-02-v3-actions">
+      <a href="/cart" class="cf-head-02-v3-btn">Cart [0]</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Simple fake timer for visual drop effect
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('cf-drop-timer-{{ section.id }}');
+    if (!el) return;
+    let h = 23, m = 59, s = 59;
+    setInterval(() => {
+      s--;
+      if (s < 0) { s = 59; m--; }
+      if (m < 0) { m = 59; h--; }
+      if (h < 0) h = 23;
+      el.textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }, 1000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "03 · The Drop Header",
+  "settings": [
+    {"type":"checkbox","id":"show_drop","label":"Show Drop Timer","default":true},
+    {"type":"text","id":"drop_label","label":"Drop Label text","default":"NEXT DROP CLOSES IN:"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"HYPED"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":80,"step":2,"default":44},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Drop 01"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/drop-01"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Archive"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/archive"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Lookbook"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/pages/lookbook"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Border lines","default":"#222222"},
+    {"type":"color","id":"logo_color","label":"Logo Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Link Color","default":"#aaaaaa"},
+    {"type":"color","id":"drop_bg","label":"Drop Bar BG","default":"#6366f1"},
+    {"type":"color","id":"drop_text","label":"Drop Bar Text","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":30,"step":2,"default":16}
+  ],
+  "presets": [{"name":"03 · The Drop Header"}]
+}
+{% endschema %}

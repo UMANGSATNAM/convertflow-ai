@@ -1,0 +1,181 @@
+<style>
+.cf-tb-02-v9 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-tb-02-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  border: 1px solid {{ section.settings.border_color }};
+  background: {{ section.settings.bg_color }};
+}
+
+.cf-tb-02-v9-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  background: {{ section.settings.header_bg }};
+  color: {{ section.settings.header_text }};
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cf-tb-02-v9-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.cf-tb-02-v9-item {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  background: {{ section.settings.bg_color }};
+  transition: 0.2s;
+}
+
+.cf-tb-02-v9-item:last-child {
+  border-bottom: none;
+}
+
+.cf-tb-02-v9-item:hover {
+  background: {{ section.settings.hover_bg }};
+}
+
+.cf-tb-02-v9-icon {
+  width: 32px; height: 32px;
+  color: {{ section.settings.accent_color }};
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+.cf-tb-02-v9-icon svg {
+  width: 100%; height: 100%;
+  fill: currentColor;
+}
+
+.cf-tb-02-v9-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-tb-02-v9-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0 0 5px 0;
+}
+
+.cf-tb-02-v9-desc {
+  font-size: 12px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.6;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .cf-tb-02-v9-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cf-tb-02-v9-item:nth-child(odd) {
+    border-right: 1px solid {{ section.settings.border_color }};
+  }
+  .cf-tb-02-v9-item:nth-last-child(-n+2) {
+    border-bottom: none; /* Last row removes bottom border */
+  }
+  /* Edge case fix if odd number of items */
+  .cf-tb-02-v9-item:last-child:nth-child(odd) {
+    border-bottom: none;
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+}
+@media (min-width: 1024px) {
+  .cf-tb-02-v9-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .cf-tb-02-v9-item {
+    border-bottom: none !important;
+    border-right: 1px solid {{ section.settings.border_color }};
+  }
+  .cf-tb-02-v9-item:last-child {
+    border-right: none !important;
+  }
+}
+</style>
+
+<div class="cf-tb-02-v9">
+  <div class="cf-tb-02-v9-inner">
+    
+    <div class="cf-tb-02-v9-header">
+      <span>SYS.GUARANTEES</span>
+      <span>STATUS: ACTIVE</span>
+    </div>
+
+    <div class="cf-tb-02-v9-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-v9-item">
+          <div class="cf-tb-02-v9-icon">
+            {% if block.settings.icon_svg != blank %}
+              {{ block.settings.icon_svg }}
+            {% else %}
+               <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.8l7 14.2H5l7-14.2zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/></svg>
+            {% endif %}
+          </div>
+          <div class="cf-tb-02-v9-info">
+            <h3 class="cf-tb-02-v9-title">{{ block.settings.title }}</h3>
+            <p class="cf-tb-02-v9-desc">{{ block.settings.desc }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Monospace Data Grid",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Grid Lines Color","default":"#333333"},
+    {"type":"color","id":"header_bg","label":"Header Background","default":"#111111"},
+    {"type":"color","id":"header_text","label":"Header Text","default":"#888888"},
+    {"type":"color","id":"hover_bg","label":"Hover Background","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Icon Content Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"ENCRYPTED_DATA"},
+        {"type":"text","id":"desc","label":"Description","default":"SECURE_CHECKOUT_PROCESS"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "09 · Monospace Data Grid",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

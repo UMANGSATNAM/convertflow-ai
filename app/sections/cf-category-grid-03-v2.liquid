@@ -1,0 +1,162 @@
+<style>
+.cf-cg-03-v2 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-cg-03-v2-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-cg-03-v2-heading {
+  font-size: clamp(24px, 4vw, 36px);
+  color: {{ section.settings.accent_color }};
+  margin: 0 0 40px 0;
+  text-transform: uppercase;
+}
+.cf-cg-03-v2-heading::before {
+  content: 'root@sys:~ ls -l ./';
+  color: {{ section.settings.text_color }};
+  opacity: 0.7;
+  display: block;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.cf-cg-03-v2-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.cf-cg-03-v2-card {
+  background: #000;
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  position: relative;
+  transition: 0.3s;
+}
+
+.cf-cg-03-v2-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; height: 100%; width: 4px;
+  background: {{ section.settings.border_color }};
+  transition: 0.3s;
+}
+
+.cf-cg-03-v2-card:hover {
+  border-color: {{ section.settings.accent_color }};
+  box-shadow: 0 0 15px {{ section.settings.accent_color }}40;
+}
+
+.cf-cg-03-v2-card:hover::before {
+  background: {{ section.settings.accent_color }};
+}
+
+.cf-cg-03-v2-icon {
+  width: 100%;
+  height: 120px;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border: 1px dashed {{ section.settings.border_color }};
+  overflow: hidden;
+  position: relative;
+}
+
+.cf-cg-03-v2-icon img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0.5; filter: grayscale(1) contrast(1.5);
+  transition: 0.3s;
+}
+
+.cf-cg-03-v2-card:hover .cf-cg-03-v2-icon img {
+  opacity: 1;
+  filter: grayscale(0) contrast(1.2);
+}
+
+.cf-cg-03-v2-title {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cf-cg-03-v2-title::before {
+  content: 'drwxr-xr-x';
+  color: {{ section.settings.accent_color }};
+  font-size: 10px;
+}
+</style>
+
+<div class="cf-cg-03-v2">
+  <div class="cf-cg-03-v2-inner">
+    <h2 class="cf-cg-03-v2-heading">{{ section.settings.heading }}</h2>
+    
+    <div class="cf-cg-03-v2-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cg-03-v2-card">
+          <div class="cf-cg-03-v2-icon">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.title }}">
+            {% else %}
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.border_color }}" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            {% endif %}
+          </div>
+          <h3 class="cf-cg-03-v2-title">{{ block.settings.title }}</h3>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Hacker Terminal Grid",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"DIRECTORIES"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#080808"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#d4d4d4"},
+    {"type":"color","id":"accent_color","label":"Terminal Accent","default":"#4af626"},
+    {"type":"color","id":"border_color","label":"Border/Icon Color","default":"#333333"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 12,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"sys_components"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "02 · Hacker Terminal Grid",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

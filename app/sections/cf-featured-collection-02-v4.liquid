@@ -1,0 +1,221 @@
+<style>
+.cf-fc-02-v4 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+}
+
+.cf-fc-02-v4-container {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-fc-02-v4-left {
+  position: relative;
+  background: {{ section.settings.accent_color }};
+  padding: {{ section.settings.padding_y }}px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cf-fc-02-v4-left-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: {{ section.settings.image_opacity }}%;
+  filter: grayscale(100%) contrast(1.2);
+  z-index: 1;
+}
+
+.cf-fc-02-v4-title {
+  position: relative;
+  z-index: 10;
+  font-size: clamp(40px, 10vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.title_color }};
+  margin: 0;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-shadow: 4px 4px 0 {{ section.settings.bg_color }};
+}
+
+.cf-fc-02-v4-link {
+  position: relative;
+  z-index: 10;
+  display: inline-block;
+  margin-top: 30px;
+  font-weight: 900;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: {{ section.settings.bg_color }};
+  background: {{ section.settings.title_color }};
+  padding: 16px 32px;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: 0.2s;
+  border: 4px solid transparent;
+}
+
+.cf-fc-02-v4-link:hover {
+  background: transparent;
+  color: {{ section.settings.title_color }};
+  border-color: {{ section.settings.title_color }};
+}
+
+.cf-fc-02-v4-right {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+}
+
+.cf-fc-02-v4-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.cf-fc-02-v4-item {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  background: {{ section.settings.card_bg }};
+  border: 2px solid {{ section.settings.border_color }};
+  transition: transform 0.2s;
+}
+
+.cf-fc-02-v4-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 6px 6px 0 {{ section.settings.border_color }};
+}
+
+.cf-fc-02-v4-img-wrap {
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: #f1f1f1;
+  overflow: hidden;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-02-v4-img-box {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+.cf-fc-02-v4-item:hover .cf-fc-02-v4-img-box {
+  transform: scale(1.05);
+}
+
+.cf-fc-02-v4-info {
+  padding: 15px;
+  text-align: center;
+}
+
+.cf-fc-02-v4-prod-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cf-fc-02-v4-prod-price {
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  font-weight: 600;
+}
+
+@media (min-width: 1024px) {
+  .cf-fc-02-v4-container {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .cf-fc-02-v4-left {
+    flex: 1;
+  }
+  .cf-fc-02-v4-right {
+    flex: 1.5;
+    padding: {{ section.settings.padding_y }}px 40px;
+  }
+}
+@media (min-width: 1200px) {
+  .cf-fc-02-v4-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+
+<div class="cf-fc-02-v4">
+  <div class="cf-fc-02-v4-container">
+    
+    <div class="cf-fc-02-v4-left">
+      {% if section.settings.image != blank %}
+        <img class="cf-fc-02-v4-left-img" src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.title | escape }}">
+      {% endif %}
+      <h2 class="cf-fc-02-v4-title">{{ section.settings.title | newline_to_br }}</h2>
+      <a href="{{ section.settings.link }}" class="cf-fc-02-v4-link">{{ section.settings.link_text }}</a>
+    </div>
+
+    <div class="cf-fc-02-v4-right">
+      <div class="cf-fc-02-v4-grid">
+        {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+          {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+            <a href="{{ product.url }}" class="cf-fc-02-v4-item">
+              <div class="cf-fc-02-v4-img-wrap">
+                <img class="cf-fc-02-v4-img-box" src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title | escape }}">
+              </div>
+              <div class="cf-fc-02-v4-info">
+                <h3 class="cf-fc-02-v4-prod-title">{{ product.title }}</h3>
+                <div class="cf-fc-02-v4-prod-price">{{ product.price | money }}</div>
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+          {% for i in (1..section.settings.limit) %}
+            <a href="#" class="cf-fc-02-v4-item">
+              <div class="cf-fc-02-v4-img-wrap">
+                <div class="cf-fc-02-v4-img-box" style="background:#ddd;"></div>
+              </div>
+              <div class="cf-fc-02-v4-info">
+                <h3 class="cf-fc-02-v4-prod-title">Product {{ i }}</h3>
+                <div class="cf-fc-02-v4-prod-price">$65.00</div>
+              </div>
+            </a>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Split View Slider",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Left Column Graphic"},
+    {"type":"textarea","id":"title","label":"Section Title","default":"ESSENTIAL\nGEAR"},
+    {"type":"range","id":"title_size","label":"Title Size","min":40,"max":120,"step":4,"default":80},
+    {"type":"text","id":"link_text","label":"Link Text","default":"VIEW COLLECTION"},
+    {"type":"url","id":"link","label":"Link URL"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":4,"max":12,"step":2,"default":6},
+    {"type":"range","id":"image_opacity","label":"Left Image Opacity %","min":10,"max":100,"step":10,"default":50},
+    {"type":"color","id":"bg_color","label":"Right Background","default":"#F8F8F8"},
+    {"type":"color","id":"accent_color","label":"Left Background","default":"#ff003c"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"card_bg","label":"Product Card BG","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Borders/Shadows","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Product Text","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1400}
+  ],
+  "presets": [{"name":"04 · Split View Slider Collection"}]
+}
+{% endschema %}

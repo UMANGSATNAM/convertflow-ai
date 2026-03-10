@@ -1,0 +1,176 @@
+<style>
+.cf-fc-03-v2 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-fc-03-v2-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-03-v2-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  padding-bottom: 10px;
+}
+
+.cf-fc-03-v2-heading {
+  font-size: clamp(24px, 4vw, 36px);
+  color: {{ section.settings.accent_color }};
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.cf-fc-03-v2-heading::before {
+  content: 'ls -la ./';
+  color: {{ section.settings.text_color }};
+  opacity: 0.5;
+  display: block;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.cf-fc-03-v2-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cf-fc-03-v2-item {
+  display: grid;
+  grid-template-columns: 80px 1fr 100px 120px;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  border: 1px solid transparent;
+  transition: 0.2s;
+  background: rgba(255,255,255,0.02);
+}
+
+.cf-fc-03-v2-item:hover {
+  background: rgba(0,255,0,0.05); /* Slight green tint */
+  border-color: {{ section.settings.accent_color }};
+}
+
+.cf-fc-03-v2-perms {
+  font-size: 12px;
+  color: {{ section.settings.border_color }};
+}
+.cf-fc-03-v2-item:hover .cf-fc-03-v2-perms {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-fc-03-v2-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cf-fc-03-v2-title img {
+  width: 40px; height: 40px; object-fit: cover;
+  border: 1px solid {{ section.settings.border_color }};
+  opacity: 0.5;
+  transition: 0.2s;
+}
+
+.cf-fc-03-v2-item:hover .cf-fc-03-v2-title img {
+  opacity: 1;
+  border-color: {{ section.settings.accent_color }};
+}
+
+.cf-fc-03-v2-price {
+  font-size: 16px;
+  color: {{ section.settings.text_color }};
+  text-align: right;
+}
+
+.cf-fc-03-v2-btn {
+  background: transparent;
+  color: {{ section.settings.accent_color }};
+  border: 1px solid {{ section.settings.accent_color }};
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.cf-fc-03-v2-item:hover .cf-fc-03-v2-btn {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .cf-fc-03-v2-item {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .cf-fc-03-v2-perms { display: none; }
+  .cf-fc-03-v2-price { text-align: left; }
+}
+</style>
+
+<div class="cf-fc-03-v2">
+  <div class="cf-fc-03-v2-inner">
+    <div class="cf-fc-03-v2-header">
+      <h2 class="cf-fc-03-v2-heading">{{ section.settings.heading }}</h2>
+    </div>
+    
+    <div class="cf-fc-03-v2-list">
+      {% assign collection = collections[section.settings.collection] %}
+      {% if collection != blank %}
+        {% for product in collection.products limit: section.settings.limit %}
+          <a href="{{ product.url }}" class="cf-fc-03-v2-item">
+            <div class="cf-fc-03-v2-perms">-rw-r--r--</div>
+            <div class="cf-fc-03-v2-title">
+              <img src="{{ product.featured_image | image_url: width: 100 }}" alt="{{ product.title }}">
+              {{ product.title }}
+            </div>
+            <div class="cf-fc-03-v2-price">{{ product.price | money }}</div>
+            <div class="cf-fc-03-v2-btn">INSTALL</div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..4) %}
+          <a href="#" class="cf-fc-03-v2-item">
+            <div class="cf-fc-03-v2-perms">-rw-r--r--</div>
+            <div class="cf-fc-03-v2-title">
+              <div style="width:40px; height:40px; background:#333;"></div>
+              Hardware_Module_0{{ i }}.pkg
+            </div>
+            <div class="cf-fc-03-v2-price">$199.99</div>
+            <div class="cf-fc-03-v2-btn">INSTALL</div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Hacker Terminal List",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"NEW_RELEASES"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Products to show","min":2,"max":12,"step":1,"default":4},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0a0a0a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#d4d4d4"},
+    {"type":"color","id":"accent_color","label":"Terminal Green Focus","default":"#00ff41"},
+    {"type":"color","id":"border_color","label":"Borders","default":"#333333"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"02 · Hacker Terminal List"}]
+}
+{% endschema %}

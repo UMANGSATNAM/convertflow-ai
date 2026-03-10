@@ -1,0 +1,68 @@
+<style>
+.cf-mq-02-v8 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 0;
+}
+
+.cf-mq-02-v8-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v8-scroll {{ section.settings.speed }}s linear infinite;
+  align-items: center;
+  transform: skewX(-15deg);
+}
+
+.cf-mq-02-v8-item {
+  display: flex;
+  align-items: center;
+}
+
+.cf-mq-02-v8-text {
+  font-family: inherit;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  color: {{ section.settings.text_color }};
+  letter-spacing: -0.05em;
+  padding: 0 40px;
+  line-height: 1;
+  text-shadow: 4px 0 0 {{ section.settings.blur_color }};
+}
+
+@keyframes cf-mq-02-v8-scroll {
+  from { transform: translateX(0) skewX(-15deg); }
+  to { transform: translateX(-50%) skewX(-15deg); }
+}
+</style>
+
+<div class="cf-mq-02-v8">
+  <div class="cf-mq-02-v8-track">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v8-item">
+        <span class="cf-mq-02-v8-text">{{ section.settings.text }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Overdrive Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"OVERDRIVE"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Fill","default":"#ffffff"},
+    {"type":"color","id":"blur_color","label":"Motion Blur Shadow","default":"#ff003c"},
+    {"type":"range","id":"speed","label":"Speed (Faster is better)","min":2,"max":20,"step":1,"default":8},
+    {"type":"range","id":"text_size","label":"Text Size","min":30,"max":150,"step":2,"default":80},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":1,"default":20}
+  ],
+  "presets": [{"name":"08 · Overdrive Marquee"}]
+}
+{% endschema %}

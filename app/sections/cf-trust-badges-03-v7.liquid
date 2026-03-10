@@ -1,0 +1,154 @@
+<style>
+.cf-tb-03-v7 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  overflow: hidden;
+}
+
+.cf-tb-03-v7-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  background: {{ section.settings.panel_bg }};
+  /* Cyber Slant on entire pane */
+  clip-path: polygon(40px 0, 100% 0, calc(100% - 40px) 100%, 0 100%);
+  padding: 30px 60px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  gap: 30px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+/* Accent strip on the left */
+.cf-tb-03-v7-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0; width: 5px;
+  background: {{ section.settings.accent_color }};
+}
+
+.cf-tb-03-v7-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cf-tb-03-v7-icon {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Slanted icon box */
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+.cf-tb-03-v7-icon svg {
+  width: 20px; height: 20px;
+  transform: skewX(15deg); /* counteract the slant to keep icon upright, roughly */
+}
+
+.cf-tb-03-v7-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-tb-03-v7-title {
+  color: {{ section.settings.text_color }};
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.05em;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.cf-tb-03-v7-desc {
+  color: #aaa;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12px;
+  margin: 2px 0 0 0;
+}
+
+@media (max-width: 768px) {
+  .cf-tb-03-v7-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    clip-path: none; /* disable slant on mobile for space */
+    padding: 30px;
+  }
+}
+</style>
+
+<div class="cf-tb-03-v7">
+  <div class="cf-tb-03-v7-inner">
+    {% for block in section.blocks %}
+      <div class="cf-tb-03-v7-item">
+        <div class="cf-tb-03-v7-icon">
+          {% if block.settings.icon == 'shield' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          {% elsif block.settings.icon == 'zap' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          {% elsif block.settings.icon == 'globe' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          {% else %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          {% endif %}
+        </div>
+        <div class="cf-tb-03-v7-content">
+          <h3 class="cf-tb-03-v7-title">{{ block.settings.title }}</h3>
+          {% if block.settings.desc != blank %}
+            <p class="cf-tb-03-v7-desc">{{ block.settings.desc }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Cyber Slanted Pane",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#08080c"},
+    {"type":"color","id":"panel_bg","label":"Pane Background","default":"#16161c"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Cyber Accent","default":"#fde047"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {"value": "shield", "label": "Shield"},
+            {"value": "zap", "label": "Lightning"},
+            {"value": "globe", "label": "Globe"},
+            {"value": "clock", "label": "Clock"}
+          ],
+          "default": "globe"
+        },
+        {"type":"text","id":"title","label":"Title","default":"GLOBAL SHIPPING"},
+        {"type":"text","id":"desc","label":"Description","default":"Worldwide reach"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "07 · Cyber Slanted Pane",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

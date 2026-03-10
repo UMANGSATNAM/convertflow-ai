@@ -1,0 +1,107 @@
+<style>
+.cf-tb-03-v5 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-tb-03-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  background: #111;
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 15px;
+}
+
+.cf-tb-03-v5-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cf-tb-03-v5-led {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: {{ section.settings.accent_color }};
+  box-shadow: 0 0 8px {{ section.settings.accent_color }};
+  animation: cf-tb-03-v5-blink 4s infinite;
+}
+
+.cf-tb-03-v5-item:nth-child(even) .cf-tb-03-v5-led {
+  animation-delay: 2s;
+}
+
+@keyframes cf-tb-03-v5-blink {
+  0%, 95%, 100% { opacity: 1; }
+  98% { opacity: 0; }
+}
+
+.cf-tb-03-v5-text {
+  color: {{ section.settings.text_color }};
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.cf-tb-03-v5-separator {
+  color: {{ section.settings.border_color }};
+}
+
+@media (max-width: 600px) {
+  .cf-tb-03-v5-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cf-tb-03-v5-separator { display: none; }
+}
+</style>
+
+<div class="cf-tb-03-v5">
+  <div class="cf-tb-03-v5-inner">
+    {% for block in section.blocks %}
+      <div class="cf-tb-03-v5-item">
+        <div class="cf-tb-03-v5-led"></div>
+        <div class="cf-tb-03-v5-text">{{ block.settings.title }}</div>
+      </div>
+      {% unless forloop.last %}
+        <div class="cf-tb-03-v5-separator">|</div>
+      {% endunless %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Server Status Lights",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0a0a0a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#b3b3b3"},
+    {"type":"color","id":"accent_color","label":"LED Color (On)","default":"#3b82f6"},
+    {"type":"color","id":"border_color","label":"Border/Separator","default":"#333333"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":80,"step":5,"default":30},
+    {"type":"range","id":"max_width","label":"Max Width","min":600,"max":1200,"step":100,"default":1000}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 5,
+      "settings": [
+        {"type":"text","id":"title","label":"Text","default":"SYS_SECURE"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Server Status Lights",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

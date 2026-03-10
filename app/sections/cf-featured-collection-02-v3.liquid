@@ -1,0 +1,161 @@
+<style>
+.cf-fc-02-v3 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-fc-02-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-02-v3-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.cf-fc-02-v3-title {
+  font-size: clamp(32px, 8vw, {{ section.settings.title_size }}px);
+  font-family: 'Gloria Hallelujah', cursive, sans-serif;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.cf-fc-02-v3-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.cf-fc-02-v3-item {
+  flex: 0 0 100%;
+  max-width: 320px;
+  background: #ffffff;
+  padding: 16px 16px 60px 16px; /* Polaroid frame */
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Random slight rotation logic implemented via nth-child below */
+}
+
+.cf-fc-02-v3-item:nth-child(4n+1) { transform: rotate(-2deg); }
+.cf-fc-02-v3-item:nth-child(4n+2) { transform: rotate(3deg); }
+.cf-fc-02-v3-item:nth-child(4n+3) { transform: rotate(-4deg); }
+.cf-fc-02-v3-item:nth-child(4n+4) { transform: rotate(1deg); }
+
+.cf-fc-02-v3-item:hover {
+  transform: scale(1.05) rotate(0deg) !important;
+  z-index: 10;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.cf-fc-02-v3-img-wrap {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #222;
+  overflow: hidden;
+}
+
+.cf-fc-02-v3-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.3) contrast(1.1);
+  transition: 0.3s;
+}
+
+.cf-fc-02-v3-item:hover .cf-fc-02-v3-img {
+  filter: sepia(0) contrast(1.1);
+}
+
+.cf-fc-02-v3-info {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.cf-fc-02-v3-title-main {
+  font-family: 'Gloria Hallelujah', cursive, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: #111;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.cf-fc-02-v3-price {
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 14px;
+  color: #c53030;
+  margin-top: 4px;
+}
+
+@media (min-width: 768px) {
+  .cf-fc-02-v3-item {
+    flex: 0 0 calc(33.333% - 20px);
+  }
+}
+</style>
+
+<div class="cf-fc-02-v3">
+  <div class="cf-fc-02-v3-inner">
+    <div class="cf-fc-02-v3-header">
+      <h2 class="cf-fc-02-v3-title">{{ section.settings.title }}</h2>
+    </div>
+
+    <div class="cf-fc-02-v3-grid">
+      {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+        {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+          <a href="{{ product.url }}" class="cf-fc-02-v3-item">
+            <div class="cf-fc-02-v3-img-wrap">
+              <img class="cf-fc-02-v3-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+            </div>
+            <div class="cf-fc-02-v3-info">
+              <h3 class="cf-fc-02-v3-title-main">{{ product.title | truncate: 30 }}</h3>
+              <div class="cf-fc-02-v3-price">{{ product.price | money }}</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.limit) %}
+          <a href="#" class="cf-fc-02-v3-item">
+            <div class="cf-fc-02-v3-img-wrap">
+              <div class="cf-fc-02-v3-img" style="background:#444; display:flex; align-items:center; justify-content:center; color:#777;">PRODUCT</div>
+            </div>
+            <div class="cf-fc-02-v3-info">
+              <h3 class="cf-fc-02-v3-title-main">Skater Graphic Tee</h3>
+              <div class="cf-fc-02-v3-price">$35.00</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Polaroid Scatter",
+  "settings": [
+    {"type":"text","id":"title","label":"Section Title","default":"FRESH POLAROIDS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":80,"step":2,"default":56},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":3,"max":12,"step":3,"default":6},
+    {"type":"color","id":"bg_color","label":"Background Base (Cork/Wall)","default":"#FDE68A"},
+    {"type":"color","id":"text_color","label":"Title Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"03 · Polaroid Scatter Collection"}]
+}
+{% endschema %}

@@ -1,0 +1,166 @@
+<style>
+.cf-pr-02-v3 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-pr-02-v3-inner {
+  max-width: 1200px;
+  width: 100%;
+  border: 1px solid {{ section.settings.border_color }};
+  display: flex;
+  flex-direction: column;
+  background: {{ section.settings.bg_color }};
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  min-height: {{ section.settings.height }}px;
+}
+
+.cf-pr-02-v3-header {
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.cf-pr-02-v3-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cf-pr-02-v3-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-pr-02-v3-title {
+  font-size: clamp(24px, 4vw, {{ section.settings.title_size }}px);
+  font-weight: 800;
+  color: {{ section.settings.title_color }};
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cf-pr-02-v3-desc {
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  line-height: 1.6;
+  margin-bottom: 30px;
+  max-width: 400px;
+}
+
+.cf-pr-02-v3-btn {
+  align-self: flex-start;
+  background: transparent;
+  color: {{ section.settings.accent_color }};
+  border: 1px solid {{ section.settings.accent_color }};
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+
+.cf-pr-02-v3-btn:hover {
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-pr-02-v3-image-wrap {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-pr-02-v3-image {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  object-fit: cover;
+  border: 1px solid {{ section.settings.border_color }};
+}
+
+@media (min-width: 768px) {
+  .cf-pr-02-v3-body {
+    flex-direction: row;
+  }
+  .cf-pr-02-v3-content {
+    flex: 1;
+    border-bottom: none;
+    border-right: 1px solid {{ section.settings.border_color }};
+    padding: 60px;
+  }
+  .cf-pr-02-v3-image-wrap {
+    flex: 1;
+    padding: 40px;
+  }
+}
+</style>
+
+<div class="cf-pr-02-v3">
+  <div class="cf-pr-02-v3-inner">
+    <div class="cf-pr-02-v3-header">
+      <span>SYS_ID: {{ section.id | slice: 0, 8 }}</span>
+      <span style="color: {{ section.settings.accent_color }}">{{ section.settings.badge }}</span>
+    </div>
+    <div class="cf-pr-02-v3-body">
+      <div class="cf-pr-02-v3-content">
+        <h2 class="cf-pr-02-v3-title">{{ section.settings.title }}</h2>
+        <p class="cf-pr-02-v3-desc">{{ section.settings.desc }}</p>
+        <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v3-btn">{{ section.settings.btn_label }}</a>
+      </div>
+      <div class="cf-pr-02-v3-image-wrap">
+        {% if section.settings.image != blank %}
+          <img class="cf-pr-02-v3-image" src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">
+        {% else %}
+          <div class="cf-pr-02-v3-image" style="background:#222; display:flex; align-items:center; justify-content:center; color:#555;">NO SIGNAL</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Tech-Wear Grid",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"badge","label":"Header Status Text","default":"STATUS: ONLINE"},
+    {"type":"text","id":"title","label":"Title","default":"SYSTEM_CRITICAL // FW26"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":64,"step":2,"default":40},
+    {"type":"textarea","id":"desc","label":"Description","default":"Engineered for urban survival. Technical fabrics, utility pockets, and modular design systems. Deploying now."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"ACCESS TERMINAL"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#09090b"},
+    {"type":"color","id":"border_color","label":"Borders/Grid","default":"#27272a"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Description Color","default":"#a1a1aa"},
+    {"type":"color","id":"accent_color","label":"Accent (Neon Green)","default":"#22c55e"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":20,"default":500},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"03 · Tech-Wear Grid Promo"}]
+}
+{% endschema %}

@@ -1,0 +1,96 @@
+<style>
+.cf-mq-03-v7 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  overflow: hidden;
+  border-top: 4px solid {{ section.settings.accent_color }};
+  border-bottom: 4px solid {{ section.settings.accent_color }};
+  display: flex;
+}
+
+.cf-mq-03-v7-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-03-v7-scroll {{ section.settings.speed }}s linear infinite;
+}
+
+@keyframes cf-mq-03-v7-scroll {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.cf-mq-03-v7-item {
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  /* Cyberpunk offset shadow */
+  text-shadow: 4px 4px 0 {{ section.settings.accent_color }};
+  transition: padding 0.3s;
+}
+
+.cf-mq-03-v7-item:hover {
+  color: {{ section.settings.accent_color }};
+  text-shadow: 4px 4px 0 {{ section.settings.text_color }};
+}
+
+.cf-mq-03-v7-separator {
+  font-size: {{ section.settings.text_size | times: 1.5 }}px;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 2px {{ section.settings.text_color }};
+}
+</style>
+
+<div class="cf-mq-03-v7">
+  <div class="cf-mq-03-v7-track">
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v7-item">{{ block.settings.text }}</div>
+      <div class="cf-mq-03-v7-separator">X</div>
+    {% endfor %}
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v7-item">{{ block.settings.text }}</div>
+      <div class="cf-mq-03-v7-separator">X</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Cyber Offset",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#fde047"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"Offset/Border Color","default":"#06b6d4"},
+    {"type":"range","id":"text_size","label":"Text Size","min":24,"max":120,"step":2,"default":48},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":20},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":30}
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "limit": 6,
+      "settings": [
+        {"type":"text","id":"text","label":"Text","default":"WAKE UP SAMURAI"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "07 · Cyber Offset Marquee",
+      "blocks": [
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"}
+      ]
+    }
+  ]
+}
+{% endschema %}

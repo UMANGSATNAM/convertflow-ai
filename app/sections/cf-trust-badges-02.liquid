@@ -1,0 +1,141 @@
+<style>
+.cf-tb-02 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-tb-02-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-02-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.cf-tb-02-item {
+  background: {{ section.settings.box_bg }};
+  border: 4px solid {{ section.settings.border_color }};
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 8px 8px 0 {{ section.settings.border_color }};
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cf-tb-02-item:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0 {{ section.settings.border_color }};
+}
+
+.cf-tb-02-icon {
+  width: 60px;
+  height: 60px;
+  background: {{ section.settings.icon_bg }};
+  color: {{ section.settings.box_bg }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border: 2px solid {{ section.settings.border_color }};
+  transform: rotate(-4deg);
+}
+
+.cf-tb-02-icon svg {
+  width: 30px;
+  height: 30px;
+  fill: currentColor;
+}
+
+.cf-tb-02-title {
+  font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.title_color }};
+  margin: 0 0 10px 0;
+  letter-spacing: 0.05em;
+}
+
+.cf-tb-02-desc {
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+@media (min-width: 768px) {
+  .cf-tb-02-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .cf-tb-02-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>
+
+<div class="cf-tb-02">
+  <div class="cf-tb-02-inner">
+    <div class="cf-tb-02-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-item">
+          <div class="cf-tb-02-icon">
+            {% if block.settings.icon_svg != blank %}
+              {{ block.settings.icon_svg }}
+            {% else %}
+              <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.8l7 14.2H5l7-14.2zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z"/></svg>
+            {% endif %}
+          </div>
+          <h3 class="cf-tb-02-title">{{ block.settings.title }}</h3>
+          <p class="cf-tb-02-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Brutalist Box Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F8F8F8"},
+    {"type":"color","id":"box_bg","label":"Box Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Borders & Shadows","default":"#111111"},
+    {"type":"color","id":"icon_bg","label":"Icon Background","default":"#ff003c"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#444444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"AUTHENTIC GUARANTEE"},
+        {"type":"text","id":"desc","label":"Description","default":"Legit checked by our team. 100% authentic gear."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "01 · Brutalist Box Badges",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

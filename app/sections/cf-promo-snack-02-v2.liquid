@@ -1,0 +1,125 @@
+<style>
+.cf-ps-02-v2 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-ps-02-v2-inner {
+  max-width: 900px;
+  width: 100%;
+  background: #000;
+  border: 1px solid {{ section.settings.neon_color }};
+  box-shadow: 0 0 15px {{ section.settings.neon_color }}40 inset, 0 0 20px {{ section.settings.neon_color }}40;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cf-ps-02-v2-glitch-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: {{ section.settings.neon_color }};
+  opacity: 0.5;
+  animation: cf-ps-02-v2-scan 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes cf-ps-02-v2-scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(200px); } /* Approximate height */
+}
+
+.cf-ps-02-v2-title {
+  font-size: clamp(20px, 4vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.neon_color }};
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  text-shadow: 0 0 8px {{ section.settings.neon_color }};
+  letter-spacing: 0.1em;
+}
+
+.cf-ps-02-v2-desc {
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  margin-bottom: 24px;
+}
+
+.cf-ps-02-v2-btn {
+  background: transparent;
+  color: {{ section.settings.neon_color }};
+  border: 1px solid {{ section.settings.neon_color }};
+  padding: 12px 30px;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: 0.2s;
+  box-shadow: 0 0 10px {{ section.settings.neon_color }}40 inset;
+}
+
+.cf-ps-02-v2-btn:hover {
+  background: {{ section.settings.neon_color }};
+  color: #000;
+  box-shadow: 0 0 20px {{ section.settings.neon_color }};
+}
+
+@media (min-width: 768px) {
+  .cf-ps-02-v2-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 30px 40px;
+  }
+  .cf-ps-02-text-wrap {
+    flex: 1;
+    margin-right: 40px;
+  }
+  .cf-ps-02-v2-desc {
+    margin-bottom: 0;
+  }
+  .cf-ps-02-v2-btn {
+    align-self: center;
+    white-space: nowrap;
+  }
+}
+</style>
+
+<div class="cf-ps-02-v2">
+  <div class="cf-ps-02-v2-inner">
+    <div class="cf-ps-02-v2-glitch-line"></div>
+    <div class="cf-ps-02-text-wrap">
+      <h3 class="cf-ps-02-v2-title">{{ section.settings.title }}</h3>
+      <p class="cf-ps-02-v2-desc">{{ section.settings.desc }}</p>
+    </div>
+    <a href="{{ section.settings.btn_link }}" class="cf-ps-02-v2-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Tech Neon Glow",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"SYSTEM PROTOCOL: FREE SHIPPING"},
+    {"type":"range","id":"title_size","label":"Title Size","min":16,"max":48,"step":1,"default":22},
+    {"type":"text","id":"desc","label":"Description","default":"All domestic orders over $150 automatically upgrade to 2-day express handling."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"INITIATE"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Description Color","default":"#aaaaaa"},
+    {"type":"color","id":"neon_color","label":"Neon Glow Color","default":"#00ff41"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"02 · Tech Neon Glow Snack"}]
+}
+{% endschema %}

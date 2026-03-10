@@ -1,0 +1,79 @@
+<style>
+.cf-mq-02-v10 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 0;
+  /* Simple CSS camo pattern effect */
+  background-image: radial-gradient(circle at 0% 0%, {{ section.settings.camo_1 }} 0%, transparent 40%),
+                    radial-gradient(circle at 100% 0%, {{ section.settings.camo_2 }} 0%, transparent 40%),
+                    radial-gradient(circle at 100% 100%, {{ section.settings.camo_1 }} 0%, transparent 40%),
+                    radial-gradient(circle at 0% 100%, {{ section.settings.camo_2 }} 0%, transparent 40%),
+                    radial-gradient(circle at 50% 50%, {{ section.settings.camo_3 }} 0%, transparent 60%);
+  background-color: {{ section.settings.camo_base }};
+  border-top: 4px solid {{ section.settings.bg_color }};
+  border-bottom: 4px solid {{ section.settings.bg_color }};
+}
+
+.cf-mq-02-v10-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v10-scroll {{ section.settings.speed }}s linear infinite;
+  align-items: center;
+}
+
+.cf-mq-02-v10-item {
+  display: flex;
+  align-items: center;
+}
+
+.cf-mq-02-v10-text {
+  font-family: inherit;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  color: transparent;
+  -webkit-text-stroke: {{ section.settings.stroke_width }}px {{ section.settings.text_color }};
+  letter-spacing: -0.04em;
+  padding: 0 30px;
+  line-height: 0.9;
+}
+
+@keyframes cf-mq-02-v10-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+</style>
+
+<div class="cf-mq-02-v10">
+  <div class="cf-mq-02-v10-track">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v10-item">
+        <span class="cf-mq-02-v10-text">{{ section.settings.text }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Camo Outline Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"MILITARY SPEC"},
+    {"type":"color","id":"bg_color","label":"Main Background (Border out)","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Stroke Color","default":"#ffffff"},
+    {"type":"range","id":"stroke_width","label":"Stroke Width","min":1,"max":10,"step":1,"default":2},
+    {"type":"color","id":"camo_base","label":"Camo Base","default":"#4b5320"},
+    {"type":"color","id":"camo_1","label":"Camo Spot 1","default":"#293014"},
+    {"type":"color","id":"camo_2","label":"Camo Spot 2","default":"#111111"},
+    {"type":"color","id":"camo_3","label":"Camo Spot 3","default":"#737b42"},
+    {"type":"range","id":"speed","label":"Speed","min":10,"max":60,"step":1,"default":20},
+    {"type":"range","id":"text_size","label":"Text Size","min":40,"max":200,"step":4,"default":120},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":80,"step":4,"default":0}
+  ],
+  "presets": [{"name":"10 · Camo Outline Marquee"}]
+}
+{% endschema %}

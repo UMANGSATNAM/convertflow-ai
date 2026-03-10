@@ -1,0 +1,139 @@
+<style>
+.cf-ps-02 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-02-inner {
+  max-width: 1000px;
+  width: 100%;
+  background: {{ section.settings.box_bg }};
+  border: 4px solid {{ section.settings.border_color }};
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  box-shadow: 8px 8px 0 {{ section.settings.border_color }};
+}
+
+.cf-ps-02-badge {
+  position: absolute;
+  top: -15px;
+  left: 30px;
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.box_bg }};
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  border: 2px solid {{ section.settings.border_color }};
+  transform: rotate(-3deg);
+  box-shadow: 2px 2px 0 {{ section.settings.border_color }};
+}
+
+.cf-ps-02-title {
+  font-size: clamp(24px, 4vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin-top: 10px;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.cf-ps-02-desc {
+  font-size: 15px;
+  color: {{ section.settings.text_color }};
+  margin-bottom: 24px;
+  max-width: 600px;
+  opacity: 0.9;
+}
+
+.cf-ps-02-btn {
+  background: {{ section.settings.border_color }};
+  color: {{ section.settings.box_bg }};
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 15px;
+  padding: 14px 32px;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+  border: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-ps-02-btn:hover {
+  background: transparent;
+  color: {{ section.settings.border_color }};
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .cf-ps-02-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 40px;
+  }
+  .cf-ps-02-text-wrap {
+    flex: 1;
+    margin-right: 40px;
+  }
+  .cf-ps-02-title {
+    margin-top: 0;
+  }
+  .cf-ps-02-desc {
+    margin-bottom: 0;
+  }
+  .cf-ps-02-btn {
+    align-self: center;
+    white-space: nowrap;
+  }
+  .cf-ps-02-badge {
+    top: -15px;
+    left: 40px;
+  }
+}
+</style>
+
+<div class="cf-ps-02">
+  <div class="cf-ps-02-inner">
+    {% if section.settings.badge != blank %}
+      <div class="cf-ps-02-badge">{{ section.settings.badge }}</div>
+    {% endif %}
+    
+    <div class="cf-ps-02-text-wrap">
+      <h3 class="cf-ps-02-title">{{ section.settings.title }}</h3>
+      <p class="cf-ps-02-desc">{{ section.settings.desc }}</p>
+    </div>
+    
+    <a href="{{ section.settings.btn_link }}" class="cf-ps-02-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · The Brutalist Block",
+  "settings": [
+    {"type":"text","id":"badge","label":"Badge Text","default":"FLASH DROP"},
+    {"type":"text","id":"title","label":"Title","default":"EXCLUSIVE EARLY ACCESS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":64,"step":2,"default":32},
+    {"type":"text","id":"desc","label":"Description","default":"Sign up to get the passcode for the secret archive sale before anyone else."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"GET PASSCODE"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/pages/signup"},
+    {"type":"color","id":"bg_color","label":"Background base","default":"#ffffff"},
+    {"type":"color","id":"box_bg","label":"Box Background","default":"#f8f8f8"},
+    {"type":"color","id":"border_color","label":"Borders & Button","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Badge Color","default":"#22c55e"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"01 · Brutalist Block Snack"}]
+}
+{% endschema %}

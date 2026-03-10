@@ -1,0 +1,106 @@
+<style>
+.cf-mq-03-v6 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  background-image: 
+    linear-gradient({{ section.settings.grid_color }} 1px, transparent 1px),
+    linear-gradient(90deg, {{ section.settings.grid_color }} 1px, transparent 1px);
+  background-size: 20px 20px;
+  padding: {{ section.settings.padding_y }}px 0;
+  overflow: hidden;
+  border-top: 2px solid {{ section.settings.border_color }};
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  display: flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-mq-03-v6-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-03-v6-scroll {{ section.settings.speed }}s linear infinite;
+}
+
+.cf-mq-03-v6-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes cf-mq-03-v6-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cf-mq-03-v6-item {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: {{ section.settings.bg_color }}; /* Mask background behind text */
+  box-shadow: 0 0 10px {{ section.settings.bg_color }};
+}
+
+.cf-mq-03-v6-separator {
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-mq-03-v6-separator::before {
+  content: '///';
+  letter-spacing: 2px;
+}
+</style>
+
+<div class="cf-mq-03-v6">
+  <div class="cf-mq-03-v6-track">
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v6-item">{{ block.settings.text }}</div>
+      <div class="cf-mq-03-v6-separator"></div>
+    {% endfor %}
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v6-item">{{ block.settings.text }}</div>
+      <div class="cf-mq-03-v6-separator"></div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Dark Grid Slider",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#16161c"},
+    {"type":"color","id":"grid_color","label":"Grid Line Color","default":"#2d2d38"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Separator Accent","default":"#3b82f6"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#3b82f6"},
+    {"type":"range","id":"text_size","label":"Text Size","min":16,"max":64,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":20},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":25}
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "limit": 6,
+      "settings": [
+        {"type":"text","id":"text","label":"Text","default":"ARCHITECTURE UPGRADE"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "06 · Dark Grid Slider",
+      "blocks": [
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"}
+      ]
+    }
+  ]
+}
+{% endschema %}

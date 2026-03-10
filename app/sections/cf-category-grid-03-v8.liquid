@@ -1,0 +1,217 @@
+<style>
+.cf-cg-03-v8 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-cg-03-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Central Node Line */
+.cf-cg-03-v8-line {
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 2px;
+  background: {{ section.settings.border_color }};
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.cf-cg-03-v8-heading {
+  font-size: clamp(28px, 4vw, 40px);
+  color: {{ section.settings.accent_color }};
+  text-align: center;
+  margin: 0 0 60px 0;
+  position: relative;
+  z-index: 2;
+  background: {{ section.settings.bg_color }};
+  display: inline-block;
+  padding: 0 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.cf-cg-03-v8-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.cf-cg-03-v8-card {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  background: {{ section.settings.bg_color }};
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 15px 30px;
+  transition: 0.3s;
+  position: relative;
+  /* Center offset */
+  width: 90%;
+  max-width: 400px;
+}
+
+.cf-cg-03-v8-card::before {
+  content: '';
+  position: absolute;
+  top: 50%; width: 20px; height: 2px;
+  background: {{ section.settings.border_color }};
+  transition: 0.3s;
+}
+
+/* Alternating nodes */
+@media (min-width: 768px) {
+  .cf-cg-03-v8-card:nth-child(odd) {
+    transform: translateX(50%);
+  }
+  .cf-cg-03-v8-card:nth-child(even) {
+    transform: translateX(-50%);
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+  .cf-cg-03-v8-card:nth-child(odd)::before {
+    left: -20px;
+  }
+  .cf-cg-03-v8-card:nth-child(even)::before {
+    right: -20px;
+  }
+}
+
+.cf-cg-03-v8-card:hover {
+  border-color: {{ section.settings.accent_color }};
+  box-shadow: 0 0 15px {{ section.settings.accent_color }}40 inset;
+}
+.cf-cg-03-v8-card:hover::before {
+  background: {{ section.settings.accent_color }};
+}
+
+.cf-cg-03-v8-node {
+  position: absolute;
+  top: 50%; width: 10px; height: 10px;
+  background: {{ section.settings.bg_color }};
+  border: 2px solid {{ section.settings.accent_color }};
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: 0.3s;
+}
+.cf-cg-03-v8-card:hover .cf-cg-03-v8-node {
+  background: {{ section.settings.accent_color }};
+  box-shadow: 0 0 10px {{ section.settings.accent_color }};
+}
+
+@media (min-width: 768px) {
+  .cf-cg-03-v8-card:nth-child(odd) .cf-cg-03-v8-node {
+    left: -26px; /* 20px line + 1/2 node width + 1 */
+  }
+  .cf-cg-03-v8-card:nth-child(even) .cf-cg-03-v8-node {
+    right: -26px;
+  }
+}
+
+.cf-cg-03-v8-img {
+  width: 60px; height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 20px;
+  opacity: 0.7;
+  transition: 0.3s;
+  border: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-cg-03-v8-card:nth-child(even) .cf-cg-03-v8-img {
+  margin-right: 0;
+  margin-left: 20px;
+}
+
+.cf-cg-03-v8-card:hover .cf-cg-03-v8-img {
+  opacity: 1;
+  border-color: {{ section.settings.accent_color }};
+}
+
+.cf-cg-03-v8-title {
+  color: {{ section.settings.text_color }};
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.cf-cg-03-v8-subtitle {
+  color: {{ section.settings.border_color }};
+  font-size: 12px;
+  margin: 5px 0 0 0;
+}
+.cf-cg-03-v8-card:hover .cf-cg-03-v8-subtitle {
+  color: {{ section.settings.accent_color }};
+}
+</style>
+
+<div class="cf-cg-03-v8">
+  <div class="cf-cg-03-v8-inner">
+    <div class="cf-cg-03-v8-line"></div>
+    <h2 class="cf-cg-03-v8-heading">{{ section.settings.heading }}</h2>
+    
+    <div class="cf-cg-03-v8-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cg-03-v8-card">
+          <div class="cf-cg-03-v8-node"></div>
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 120 }}" alt="{{ block.settings.title }}" class="cf-cg-03-v8-img">
+          {% else %}
+            <div class="cf-cg-03-v8-img" style="background:#222;"></div>
+          {% endif %}
+          <div>
+            <h3 class="cf-cg-03-v8-title">{{ block.settings.title }}</h3>
+            <p class="cf-cg-03-v8-subtitle">NODE_ID: {{ forloop.index | prepend: '0' | slice: -2, 2 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Data Node Network",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"TOPOLOGY"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Lines/Borders","default":"#333333"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Node Color","default":"#4af626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":600,"max":1200,"step":100,"default":800}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Node",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Core Memory"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "08 · Data Node Network Grid",
+      "blocks": [
+        {"type": "category"},{"type": "category"},{"type": "category"},{"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

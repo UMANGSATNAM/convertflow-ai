@@ -1,0 +1,153 @@
+<style>
+.cf-header-03-v4 {
+  width: 100%;
+  background: {{ section.settings.bg_color | color_modify: 'alpha', 0.8 }};
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  font-family: 'Inter', sans-serif;
+}
+
+.cf-header-03-v4-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 30px;
+  padding: {{ section.settings.padding_y }}px 20px;
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-header-03-v4-logo {
+  font-size: {{ section.settings.logo_size }}px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cf-header-03-v4-logo svg {
+  width: 24px; height: 24px;
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-header-03-v4-nav {
+  display: none;
+  justify-content: center;
+  gap: 24px;
+}
+
+.cf-header-03-v4-nav a {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.8;
+  position: relative;
+  transition: 0.3s;
+}
+
+.cf-header-03-v4-nav a:hover {
+  opacity: 1;
+}
+
+.cf-header-03-v4-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0%; height: 2px;
+  background: {{ section.settings.accent_color }};
+  transition: 0.3s;
+}
+
+.cf-header-03-v4-nav a:hover::after {
+  width: 100%;
+}
+
+.cf-header-03-v4-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cf-header-03-v4-icon {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  width: 36px; height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: {{ section.settings.text_color }};
+  transition: 0.2s;
+  text-decoration: none;
+}
+
+.cf-header-03-v4-icon:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.cf-header-03-v4-icon svg {
+  width: 16px; height: 16px;
+}
+
+@media (min-width: 768px) {
+  .cf-header-03-v4-inner { padding: {{ section.settings.padding_y }}px 40px; }
+}
+@media (min-width: 1024px) {
+  .cf-header-03-v4-nav { display: flex; }
+}
+</style>
+
+<div class="cf-header-03-v4">
+  <div class="cf-header-03-v4-inner">
+    
+    <a href="/" class="cf-header-03-v4-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      {{ section.settings.logo_text }}
+    </a>
+
+    <nav class="cf-header-03-v4-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+
+    <div class="cf-header-03-v4-actions">
+      <a href="/search" class="cf-header-03-v4-icon" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </a>
+      <a href="/account" class="cf-header-03-v4-icon" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a href="/cart" class="cf-header-03-v4-icon" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M7 7h10"/><path d="M7 11h10"/><path d="M7 15h6"/></svg>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Glassmorphism Console",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"SYNTHETIC"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":16,"max":40,"step":2,"default":22},
+    {"type":"link_list","id":"menu","label":"Menu","default":"main-menu"},
+    {"type":"color","id":"bg_color","label":"Background (Alpha Applied)","default":"#121212"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#3b82f6"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1800,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"04 · Glass Console Header"}]
+}
+{% endschema %}

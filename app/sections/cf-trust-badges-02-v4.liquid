@@ -1,0 +1,146 @@
+<style>
+.cf-tb-02-v4 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  overflow: hidden;
+  border-top: 4px solid {{ section.settings.border_color }};
+  border-bottom: 4px solid {{ section.settings.border_color }};
+  display: flex;
+}
+
+.cf-tb-02-v4-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-tb-02-v4-scroll 25s linear infinite;
+}
+
+.cf-tb-02-v4-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes cf-tb-02-v4-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cf-tb-02-v4-item {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  gap: 15px;
+}
+
+.cf-tb-02-v4-icon {
+  width: 40px;
+  height: 40px;
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.bg_color }};
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cf-tb-02-v4-icon svg {
+  width: 20px; height: 20px;
+  fill: currentColor;
+}
+
+.cf-tb-02-v4-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-tb-02-v4-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.cf-tb-02-v4-desc {
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Duplicating exact items directly in markup to ensure seamless scroll */
+</style>
+
+<div class="cf-tb-02-v4">
+  <div class="cf-tb-02-v4-track">
+    <!-- Render blocks -->
+    {% for block in section.blocks %}
+      <div class="cf-tb-02-v4-item">
+        <div class="cf-tb-02-v4-icon">
+          {% if block.settings.icon_svg != blank %}
+            {{ block.settings.icon_svg }}
+          {% else %}
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          {% endif %}
+        </div>
+        <div class="cf-tb-02-v4-info">
+          <div class="cf-tb-02-v4-title">{{ block.settings.title }}</div>
+          <div class="cf-tb-02-v4-desc">{{ block.settings.desc }}</div>
+        </div>
+      </div>
+    {% endfor %}
+    <!-- Duplicate for scrolling -->
+    {% for block in section.blocks %}
+      <div class="cf-tb-02-v4-item">
+        <div class="cf-tb-02-v4-icon">
+          {% if block.settings.icon_svg != blank %}
+            {{ block.settings.icon_svg }}
+          {% else %}
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          {% endif %}
+        </div>
+        <div class="cf-tb-02-v4-info">
+          <div class="cf-tb-02-v4-title">{{ block.settings.title }}</div>
+          <div class="cf-tb-02-v4-desc">{{ block.settings.desc }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Scrolling Monolith",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Icon BG Color","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":20}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 6,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"FREE RETURNS"},
+        {"type":"text","id":"desc","label":"Description","default":"30 Day Policy"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Scrolling Monolith Badges",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

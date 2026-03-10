@@ -1,0 +1,129 @@
+<style>
+.cf-cat-02-v5 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-cat-02-v5-container {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.cf-cat-02-v5-item {
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Angled cutouts */
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+  background: #111;
+  transition: all 0.3s;
+}
+
+.cf-cat-02-v5-item:hover {
+  clip-path: polygon(0% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.cf-cat-02-v5-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) opacity(0.6);
+  transition: filter 0.3s, transform 3s;
+  z-index: 1;
+}
+
+.cf-cat-02-v5-item:hover .cf-cat-02-v5-img {
+  filter: grayscale(0%) opacity(0.8);
+  transform: scale(1.1);
+}
+
+.cf-cat-02-v5-label-wrap {
+  position: relative;
+  z-index: 10;
+  background: {{ section.settings.accent_color }};
+  padding: 10px 30px;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0% 100%);
+  transition: 0.3s;
+}
+
+.cf-cat-02-v5-item:hover .cf-cat-02-v5-label-wrap {
+  background: #fff;
+}
+
+.cf-cat-02-v5-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: {{ section.settings.label_size }}px;
+  font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.1em;
+}
+
+@media (min-width: 768px) {
+  .cf-cat-02-v5-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+
+<div class="cf-cat-02-v5">
+  <div class="cf-cat-02-v5-container">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-02-v5-item">
+        {% if block.settings.image != blank %}
+          <img class="cf-cat-02-v5-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.label | strip_html | escape }}">
+        {% else %}
+          <div class="cf-cat-02-v5-img" style="background: #333;"></div>
+        {% endif %}
+        <div class="cf-cat-02-v5-label-wrap">
+          <h3 class="cf-cat-02-v5-label">{{ block.settings.label }}</h3>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Tech Angular Grid",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"Accent Label Base","default":"#eab308"},
+    {"type":"range","id":"label_size","label":"Label Size","min":12,"max":40,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"label","label":"Label","default":"Equipment"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Tech Angular Grid",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

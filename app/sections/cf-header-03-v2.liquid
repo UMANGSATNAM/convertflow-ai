@@ -1,0 +1,156 @@
+<style>
+.cf-header-03-v2 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-header-03-v2-top {
+  background: {{ section.settings.top_bg }};
+  color: {{ section.settings.top_text }};
+  font-size: 11px;
+  text-align: center;
+  padding: 6px 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cf-header-03-v2-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-header-03-v2-logo {
+  font-size: {{ section.settings.logo_size }}px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  letter-spacing: -0.05em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cf-header-03-v2-logo::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: {{ section.settings.accent_color }};
+  border-radius: 2px;
+}
+
+.cf-header-03-v2-nav {
+  display: none;
+  align-items: center;
+  gap: 30px;
+}
+
+.cf-header-03-v2-nav a {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: 0.7;
+  transition: 0.2s;
+  position: relative;
+}
+
+.cf-header-03-v2-nav a:hover {
+  opacity: 1;
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-header-03-v2-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cf-header-03-v2-icon {
+  background: transparent;
+  border: 1px solid {{ section.settings.border_color }};
+  color: {{ section.settings.text_color }};
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: 0.2s;
+  text-decoration: none;
+}
+
+.cf-header-03-v2-icon:hover {
+  background: {{ section.settings.accent_color }};
+  border-color: {{ section.settings.accent_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-header-03-v2-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (min-width: 768px) {
+  .cf-header-03-v2-nav { display: flex; }
+  .cf-header-03-v2-inner { padding: {{ section.settings.padding_y }}px 40px; }
+}
+</style>
+
+<div class="cf-header-03-v2">
+  {% if section.settings.show_top_bar %}
+    <div class="cf-header-03-v2-top">
+      {{ section.settings.top_bar_text }}
+    </div>
+  {% endif %}
+  <div class="cf-header-03-v2-inner">
+    <a href="/" class="cf-header-03-v2-logo">{{ section.settings.logo_text }}</a>
+    
+    <nav class="cf-header-03-v2-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+    
+    <div class="cf-header-03-v2-icons">
+      <a href="/search" class="cf-header-03-v2-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </a>
+      <a href="/account" class="cf-header-03-v2-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a href="/cart" class="cf-header-03-v2-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Minimal Tech Strip",
+  "settings": [
+    {"type":"checkbox","id":"show_top_bar","label":"Show Top Bar","default":true},
+    {"type":"text","id":"top_bar_text","label":"Top Bar Text","default":"SYS.UPDATE // FREE SHIPPING ON ALL ORDERS OVER $100"},
+    {"type":"color","id":"top_bg","label":"Top Bar BG","default":"#000000"},
+    {"type":"color","id":"top_text","label":"Top Bar Text","default":"#00ff41"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"HARDWARE"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":16,"max":40,"step":2,"default":24},
+    {"type":"link_list","id":"menu","label":"Menu","default":"main-menu"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#0a0a0a"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#333333"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#e5e5e5"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#00ff41"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":16},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1800,"step":100,"default":1400}
+  ],
+  "presets": [{"name":"02 · Minimal Tech Strip"}]
+}
+{% endschema %}

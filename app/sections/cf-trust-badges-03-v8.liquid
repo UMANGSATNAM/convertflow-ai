@@ -1,0 +1,158 @@
+<style>
+.cf-tb-03-v8 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-tb-03-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.cf-tb-03-v8-item {
+  flex: 1;
+  min-width: 250px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+/* Data vertical scanning line */
+.cf-tb-03-v8-item::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: -20px;
+  width: 2px;
+  background: {{ section.settings.accent_color }};
+  opacity: 0.5;
+  box-shadow: 0 0 10px {{ section.settings.accent_color }};
+  transition: 0.5s;
+}
+
+.cf-tb-03-v8-item:hover::before {
+  left: 100%;
+}
+
+.cf-tb-03-v8-item:hover {
+  border-color: {{ section.settings.accent_color }};
+  background: rgba(0,0,0,0.5);
+}
+
+.cf-tb-03-v8-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed {{ section.settings.border_color }};
+  padding-bottom: 10px;
+}
+
+.cf-tb-03-v8-id {
+  font-size: 10px;
+  color: {{ section.settings.border_color }};
+}
+.cf-tb-03-v8-item:hover .cf-tb-03-v8-id {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-tb-03-v8-icon {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-tb-03-v8-icon svg {
+  width: 20px; height: 20px;
+}
+
+.cf-tb-03-v8-title {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0 0 5px 0;
+}
+
+.cf-tb-03-v8-desc {
+  color: #888;
+  font-size: 12px;
+  margin: 0;
+}
+</style>
+
+<div class="cf-tb-03-v8">
+  <div class="cf-tb-03-v8-inner">
+    {% for block in section.blocks %}
+      <div class="cf-tb-03-v8-item">
+        <div class="cf-tb-03-v8-header">
+          <span class="cf-tb-03-v8-id">PACKET_{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <div class="cf-tb-03-v8-icon">
+             {% if block.settings.icon == 'shield' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            {% elsif block.settings.icon == 'server' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            {% elsif block.settings.icon == 'box' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            {% else %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            {% endif %}
+          </div>
+        </div>
+        <h3 class="cf-tb-03-v8-title">{{ block.settings.title }}</h3>
+        {% if block.settings.desc != blank %}
+          <p class="cf-tb-03-v8-desc">{{ block.settings.desc }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Data Stream Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Terminal Focus","default":"#4af626"},
+    {"type":"color","id":"border_color","label":"Borders Base","default":"#333333"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {"value": "shield", "label": "Shield"},
+            {"value": "server", "label": "Server"},
+            {"value": "box", "label": "Box/Package"},
+            {"value": "activity", "label": "Activity"}
+          ],
+          "default": "server"
+        },
+        {"type":"text","id":"title","label":"Title","default":"DATA UPTIME"},
+        {"type":"text","id":"desc","label":"Description","default":"99.9% guaranteed"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "08 · Data Stream Badges",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

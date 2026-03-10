@@ -1,0 +1,159 @@
+<style>
+.cf-cg-03-v4 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Abstract glowing orbs behind cards */
+.cf-cg-03-v4::before, .cf-cg-03-v4::after {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cf-cg-03-v4::before {
+  top: -100px; left: -100px;
+  background: rgba(37, 99, 235, 0.4); /* Blue */
+}
+
+.cf-cg-03-v4::after {
+  bottom: -100px; right: -100px;
+  background: rgba(147, 51, 234, 0.4); /* Purple */
+}
+
+.cf-cg-03-v4-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.cf-cg-03-v4-heading {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 40px 0;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.cf-cg-03-v4-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.cf-cg-03-v4-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  transition: 0.4s;
+}
+
+.cf-cg-03-v4-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.cf-cg-03-v4-img-wrap {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: rgba(0,0,0,0.2);
+}
+
+.cf-cg-03-v4-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: 0.4s;
+}
+
+.cf-cg-03-v4-card:hover .cf-cg-03-v4-img {
+  transform: scale(1.05);
+}
+
+.cf-cg-03-v4-title {
+  color: {{ section.settings.text_color }};
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+</style>
+
+<div class="cf-cg-03-v4">
+  <div class="cf-cg-03-v4-inner">
+    <h2 class="cf-cg-03-v4-heading">{{ section.settings.heading }}</h2>
+    
+    <div class="cf-cg-03-v4-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cg-03-v4-card">
+          <div class="cf-cg-03-v4-img-wrap">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}" class="cf-cg-03-v4-img">
+            {% else %}
+               <!-- Icon placeholder -->
+               <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_color }}" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+               </div>
+            {% endif %}
+          </div>
+          <h3 class="cf-cg-03-v4-title">{{ block.settings.title }}</h3>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Glassmorphism Catalog",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Ecosystem Arrays"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0f172a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#f8fafc"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 12,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"title","label":"Title","default":"Audio Components"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Glassmorphism Catalog",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

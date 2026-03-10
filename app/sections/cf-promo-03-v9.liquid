@@ -1,0 +1,158 @@
+<style>
+.cf-pr-03-v9 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.cf-pr-03-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: {{ section.settings.panel_bg }};
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.cf-pr-03-v9-content {
+  padding: 60px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cf-pr-03-v9-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: {{ section.settings.accent_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+}
+
+.cf-pr-03-v9-heading {
+  font-size: clamp(32px, 5vw, {{ section.settings.title_size }}px);
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cf-pr-03-v9-desc {
+  font-size: 18px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.7;
+  max-width: 600px;
+  margin: 0 0 30px 0;
+  line-height: 1.5;
+}
+
+.cf-pr-03-v9-btn {
+  display: inline-block;
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 14px 28px;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+
+.cf-pr-03-v9-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px {{ section.settings.accent_color }}40;
+}
+
+.cf-pr-03-v9-img-col {
+  width: 100%;
+  aspect-ratio: 21/9;
+  position: relative;
+}
+
+.cf-pr-03-v9-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 900px) {
+  .cf-pr-03-v9-inner {
+    flex-direction: row;
+    align-items: center;
+    background: linear-gradient(to right, {{ section.settings.panel_bg }} 40%, transparent 100%);
+  }
+  .cf-pr-03-v9-content {
+    flex: 1;
+    text-align: left;
+    align-items: flex-start;
+    padding: 80px;
+    z-index: 2;
+  }
+  .cf-pr-03-v9-img-col {
+    position: absolute;
+    top: 0; right: 0;
+    width: 60%;
+    height: 100%;
+    z-index: 1;
+    border-radius: 0 20px 20px 0;
+    overflow: hidden;
+  }
+  /* Fade mask over image */
+  .cf-pr-03-v9-img-col::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 30%; height: 100%;
+    background: linear-gradient(to right, {{ section.settings.panel_bg }}, transparent);
+    z-index: 2;
+  }
+}
+</style>
+
+<div class="cf-pr-03-v9">
+  <div class="cf-pr-03-v9-inner">
+    <div class="cf-pr-03-v9-content">
+      <div class="cf-pr-03-v9-label">{{ section.settings.label }}</div>
+      <h2 class="cf-pr-03-v9-heading">{{ section.settings.heading | newline_to_br }}</h2>
+      <p class="cf-pr-03-v9-desc">{{ section.settings.subheading }}</p>
+      {% if section.settings.link_text != blank %}
+        <a href="{{ section.settings.link_url }}" class="cf-pr-03-v9-btn">{{ section.settings.link_text }}</a>
+      {% endif %}
+    </div>
+    <div class="cf-pr-03-v9-img-col">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="Promo Image" class="cf-pr-03-v9-img">
+      {% else %}
+        <div class="cf-pr-03-v9-img" style="background:#ddd;"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Clean Matte Banner",
+  "settings": [
+    {"type":"text","id":"label","label":"Small Label","default":"NEW PRO SERIES"},
+    {"type":"textarea","id":"heading","label":"Heading","default":"Power. Perfected."},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":80,"step":2,"default":56},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"The most advanced ultra-thin laptop we've ever created. Now with the M-Class 2 chip."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"Pre-order now"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#ffffff"},
+    {"type":"color","id":"panel_bg","label":"Panel Background","default":"#f4f4f5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111827"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#2563eb"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"09 · Clean Matte Banner"}]
+}
+{% endschema %}

@@ -1,0 +1,127 @@
+<style>
+.cf-ps-02-v8 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cf-ps-02-v8-inner {
+  max-width: 1000px;
+  width: 100%;
+  background: {{ section.settings.box_bg }};
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* Slanted look */
+  transform: skewX(-5deg);
+}
+
+.cf-ps-02-v8-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transform: skewX(5deg); /* Counter skew for text */
+}
+
+.cf-ps-02-v8-eyebrow {
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.box_bg }};
+  padding: 4px 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+
+.cf-ps-02-v8-title {
+  font-size: clamp(28px, 6vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.cf-ps-02-v8-btn {
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.box_bg }};
+  padding: 16px 40px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  transition: 0.2s;
+  transform: skewX(-5deg);
+}
+
+.cf-ps-02-v8-btn span {
+  display: inline-block;
+  transform: skewX(5deg);
+}
+
+.cf-ps-02-v8-btn:hover {
+  background: {{ section.settings.accent_color }};
+}
+
+@media (min-width: 768px) {
+  .cf-ps-02-v8-content {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 40px 60px;
+    align-items: center;
+  }
+  .cf-ps-02-v8-text-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cf-ps-02-v8-title {
+    margin-bottom: 0;
+  }
+  .cf-ps-02-v8-btn {
+    align-self: center;
+    margin-left: 40px;
+  }
+}
+</style>
+
+<div class="cf-ps-02-v8">
+  <div class="cf-ps-02-v8-inner">
+    <div class="cf-ps-02-v8-content">
+      <div class="cf-ps-02-v8-text-wrap">
+        <div class="cf-ps-02-v8-eyebrow">{{ section.settings.eyebrow }}</div>
+        <h3 class="cf-ps-02-v8-title">{{ section.settings.title }}</h3>
+      </div>
+      <a href="{{ section.settings.btn_link }}" class="cf-ps-02-v8-btn"><span>{{ section.settings.btn_label }}</span></a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Diagonal Slash",
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Eyebrow Tag","default":"MEMBER EXCLUSIVE"},
+    {"type":"text","id":"title","label":"Title","default":"THE HOLIDAY DROP IS LIVE"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":64,"step":2,"default":40},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SECURE YOURS"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/holiday"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"box_bg","label":"Slanted Box Background","default":"#ef4444"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"08 · Diagonal Slash Snack"}]
+}
+{% endschema %}

@@ -1,0 +1,153 @@
+<style>
+.cf-pr-02-v8 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.cf-pr-02-v8-container {
+  max-width: 1400px;
+  width: 100%;
+  position: relative;
+  min-height: {{ section.settings.height }}px;
+}
+
+.cf-pr-02-v8-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: clamp(60px, 15vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px {{ section.settings.title_color }};
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  z-index: 1;
+  pointer-events: none;
+  width: 100%;
+  word-break: break-all;
+}
+
+.cf-pr-02-v8-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  position: relative;
+  z-index: 5;
+  padding-top: clamp(80px, 10vw, 150px);
+}
+
+.cf-pr-02-v8-img-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cf-pr-02-v8-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 700px;
+  object-fit: cover;
+  filter: contrast(1.1);
+}
+
+.cf-pr-02-v8-text-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.cf-pr-02-v8-text-small {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  color: {{ section.settings.text_color }};
+  border-bottom: 1px solid {{ section.settings.text_color }};
+  padding-bottom: 10px;
+}
+
+.cf-pr-02-v8-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: {{ section.settings.text_color }};
+  max-width: 300px;
+}
+
+.cf-pr-02-v8-btn {
+  display: inline-block;
+  align-self: flex-start;
+  background: {{ section.settings.btn_color }};
+  color: {{ section.settings.bg_color }};
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: 0.2s;
+  margin-top: 20px;
+}
+
+.cf-pr-02-v8-btn:hover {
+  background: transparent;
+  color: {{ section.settings.btn_color }};
+  border: 1px solid {{ section.settings.btn_color }};
+}
+
+@media (min-width: 1024px) {
+  .cf-pr-02-v8-grid {
+    grid-template-columns: 2fr 1fr;
+    align-items: end;
+  }
+}
+</style>
+
+<div class="cf-pr-02-v8">
+  <div class="cf-pr-02-v8-container">
+    <h2 class="cf-pr-02-v8-title">{{ section.settings.title }}</h2>
+    
+    <div class="cf-pr-02-v8-grid">
+      <div class="cf-pr-02-v8-img-wrap">
+        {% if section.settings.image != blank %}
+          <img class="cf-pr-02-v8-image" src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.title | strip_html | escape }}">
+        {% else %}
+          <div class="cf-pr-02-v8-image" style="background:#222; width:100%; height:500px;"></div>
+        {% endif %}
+      </div>
+
+      <div class="cf-pr-02-v8-text-column">
+        <div class="cf-pr-02-v8-text-small">{{ section.settings.eyebrow }}</div>
+        <p class="cf-pr-02-v8-desc">{{ section.settings.desc }}</p>
+        <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v8-btn">{{ section.settings.btn_label }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Editorial Spread",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Editorial Image"},
+    {"type":"text","id":"eyebrow","label":"Small Eyebrow Text","default":"ISSUE NO. 04 — SUMMER EDIT"},
+    {"type":"textarea","id":"title","label":"Background Title (Very Large)","default":"EDITORIAL SPREAD"},
+    {"type":"range","id":"title_size","label":"Title Size","min":100,"max":300,"step":5,"default":200},
+    {"type":"textarea","id":"desc","label":"Description","default":"Curated looks from our latest editorial shoot in Tokyo. Bleeding edge silhouettes and disruptive prints."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"READ EDITORIAL"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/pages/editorial"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ececec"},
+    {"type":"color","id":"title_color","label":"Title Stroke Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
+    {"type":"color","id":"btn_color","label":"Button Color","default":"#111111"},
+    {"type":"range","id":"height","label":"Min Height","min":500,"max":1000,"step":50,"default":700},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":150,"step":5,"default":80}
+  ],
+  "presets": [{"name":"08 · Editorial Spread Promo"}]
+}
+{% endschema %}

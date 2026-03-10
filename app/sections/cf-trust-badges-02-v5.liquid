@@ -1,0 +1,138 @@
+<style>
+.cf-tb-02-v5 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-tb-02-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-02-v5-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.cf-tb-02-v5-item {
+  background: #000;
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.cf-tb-02-v5-item:hover {
+  border-color: {{ section.settings.accent_color }};
+  box-shadow: 0 0 15px {{ section.settings.accent_color }}40 inset;
+}
+
+.cf-tb-02-v5-glitch-line {
+  position: absolute;
+  top: 0; left: -100%; width: 50%; height: 2px;
+  background: {{ section.settings.accent_color }};
+  opacity: 0.5;
+  transition: 0.4s;
+}
+
+.cf-tb-02-v5-item:hover .cf-tb-02-v5-glitch-line {
+  left: 200%;
+}
+
+.cf-tb-02-v5-icon {
+  width: 40px;
+  height: 40px;
+  color: {{ section.settings.accent_color }};
+  margin-bottom: 20px;
+  text-shadow: 2px 0 red, -2px 0 blue; /* Glitch effect */
+}
+
+.cf-tb-02-v5-icon svg {
+  width: 100%; height: 100%;
+  fill: currentColor;
+}
+
+.cf-tb-02-v5-title {
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 10px 0;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.cf-tb-02-v5-desc {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .cf-tb-02-v5-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+
+<div class="cf-tb-02-v5">
+  <div class="cf-tb-02-v5-inner">
+    <div class="cf-tb-02-v5-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-v5-item">
+          <div class="cf-tb-02-v5-glitch-line"></div>
+          <div class="cf-tb-02-v5-icon">
+            {% if block.settings.icon_svg != blank %}
+              {{ block.settings.icon_svg }}
+            {% else %}
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM11 19.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.22.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            {% endif %}
+          </div>
+          <h3 class="cf-tb-02-v5-title">{{ block.settings.title }}</h3>
+          <p class="cf-tb-02-v5-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Glitch Blocks",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Borders","default":"#333333"},
+    {"type":"color","id":"accent_color","label":"Neon Glitch Color","default":"#00ff41"},
+    {"type":"color","id":"text_color","label":"Title Text Color","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 3,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"WORLDWIDE SHIPPING"},
+        {"type":"text","id":"desc","label":"Description","default":"Global distribution centers ensuring fast delivery anywhere."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Glitch Blocks Badges",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

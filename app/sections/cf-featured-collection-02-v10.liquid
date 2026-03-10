@@ -1,0 +1,225 @@
+<style>
+.cf-fc-02-v10 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  position: relative;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Static noise overlay */
+.cf-fc-02-v10::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opactiy='0.5'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+  animation: cf-fc-02-v10-noise 0.2s infinite alternate;
+}
+
+@keyframes cf-fc-02-v10-noise {
+  0% { transform: scale(1.01) translate(-1px, 1px); }
+  100% { transform: scale(1) translate(1px, -1px); }
+}
+
+/* Scanlines */
+.cf-fc-02-v10::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.cf-fc-02-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 5;
+}
+
+.cf-fc-02-v10-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+}
+
+.cf-fc-02-v10-title {
+  font-size: clamp(24px, 5vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  text-shadow: 2px 0 0 red, -2px 0 0 cyan;
+}
+
+.cf-fc-02-v10-link {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: {{ section.settings.accent_color }};
+  border: 1px solid {{ section.settings.accent_color }};
+  padding: 8px 16px;
+  transition: 0.2s;
+  box-shadow: 0 0 10px {{ section.settings.accent_color }}40 inset;
+}
+
+.cf-fc-02-v10-link:hover {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+}
+
+.cf-fc-02-v10-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.cf-fc-02-v10-item {
+  position: relative;
+  text-decoration: none;
+  background: #000;
+  border: 1px solid #333;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-fc-02-v10-item:hover {
+  border-color: {{ section.settings.accent_color }};
+}
+
+.cf-fc-02-v10-img-wrap {
+  width: 100%;
+  aspect-ratio: 1/1;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.cf-fc-02-v10-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.5) saturate(1.2);
+  transition: 0.2s;
+}
+
+.cf-fc-02-v10-item:hover .cf-fc-02-v10-img {
+  filter: contrast(2) saturate(2) hue-rotate(180deg); /* Glitch color inversion */
+}
+
+/* TV Frame corner markers */
+.cf-fc-02-v10-img-wrap::before, .cf-fc-02-v10-img-wrap::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border: 2px solid {{ section.settings.text_color }};
+  z-index: 2;
+  pointer-events: none;
+}
+.cf-fc-02-v10-img-wrap::before {
+  top: 5px; left: 5px;
+  border-right: none; border-bottom: none;
+}
+.cf-fc-02-v10-img-wrap::after {
+  bottom: 5px; right: 5px;
+  border-left: none; border-top: none;
+}
+
+.cf-fc-02-v10-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cf-fc-02-v10-prod-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+}
+
+.cf-fc-02-v10-prod-price {
+  font-size: 14px;
+  color: {{ section.settings.accent_color }};
+}
+
+@media (min-width: 768px) {
+  .cf-fc-02-v10-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .cf-fc-02-v10-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}
+</style>
+
+<div class="cf-fc-02-v10">
+  <div class="cf-fc-02-v10-inner">
+    <div class="cf-fc-02-v10-header">
+      <h2 class="cf-fc-02-v10-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.link }}" class="cf-fc-02-v10-link">{{ section.settings.link_text }}</a>
+    </div>
+
+    <div class="cf-fc-02-v10-grid">
+      {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+        {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+          <a href="{{ product.url }}" class="cf-fc-02-v10-item">
+            <div class="cf-fc-02-v10-img-wrap">
+              <img class="cf-fc-02-v10-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+            </div>
+            <div class="cf-fc-02-v10-info">
+              <h3 class="cf-fc-02-v10-prod-title">{{ product.title }}</h3>
+              <div class="cf-fc-02-v10-prod-price">{{ product.price | money }}</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.limit) %}
+          <a href="#" class="cf-fc-02-v10-item">
+            <div class="cf-fc-02-v10-img-wrap">
+              <div class="cf-fc-02-v10-img" style="background:#222; display:flex; align-items:center; justify-content:center; color:#555;">NO SIGNAL</div>
+            </div>
+            <div class="cf-fc-02-v10-info">
+              <h3 class="cf-fc-02-v10-prod-title">CH {{ i }} BROADCAST</h3>
+              <div class="cf-fc-02-v10-prod-price">$65.00</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Static Noise CRT",
+  "settings": [
+    {"type":"text","id":"title","label":"Section Title","default":"CH.02 BROADCAST"},
+    {"type":"range","id":"title_size","label":"Title Size","min":16,"max":64,"step":2,"default":36},
+    {"type":"text","id":"link_text","label":"Link Text","default":"TUNE IN"},
+    {"type":"url","id":"link","label":"Link URL"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":2,"max":8,"step":2,"default":4},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#e5e5e5"},
+    {"type":"color","id":"accent_color","label":"CRT Glow/Accent","default":"#0ff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"10 · Static Noise CRT Collection"}]
+}
+{% endschema %}

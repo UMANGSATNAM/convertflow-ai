@@ -1,0 +1,140 @@
+<style>
+.cf-pr-03-v4 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.cf-pr-03-v4-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.cf-pr-03-v4-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+}
+
+.cf-pr-03-v4-card {
+  position: absolute;
+  top: 10%; bottom: 10%; left: 5%;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.cf-pr-03-v4-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: {{ section.settings.accent_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 15px;
+}
+
+.cf-pr-03-v4-heading {
+  font-size: clamp(28px, 4vw, {{ section.settings.title_size }}px);
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cf-pr-03-v4-desc {
+  font-size: 16px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.9;
+  line-height: 1.5;
+  margin: 0 0 30px 0;
+  max-width: 400px;
+}
+
+.cf-pr-03-v4-btn {
+  display: inline-block;
+  background: {{ section.settings.text_color }};
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 14px 28px;
+  border-radius: 30px;
+  transition: 0.3s;
+  align-self: flex-start;
+}
+
+.cf-pr-03-v4-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+@media (min-width: 768px) {
+  .cf-pr-03-v4-card {
+    width: 400px;
+    left: 10%;
+  }
+}
+@media (max-width: 600px) {
+  .cf-pr-03-v4-img {
+    aspect-ratio: 4/5;
+  }
+  .cf-pr-03-v4-card {
+    padding: 30px 20px;
+  }
+}
+</style>
+
+<div class="cf-pr-03-v4">
+  <div class="cf-pr-03-v4-inner">
+    {% if section.settings.image != blank %}
+      <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="Promo Image" class="cf-pr-03-v4-img">
+    {% else %}
+      <div class="cf-pr-03-v4-img" style="background: linear-gradient(135deg, #1e3a8a, #9333ea);"></div>
+    {% endif %}
+
+    <div class="cf-pr-03-v4-card">
+      <div class="cf-pr-03-v4-label">{{ section.settings.label }}</div>
+      <h2 class="cf-pr-03-v4-heading">{{ section.settings.heading | newline_to_br }}</h2>
+      <p class="cf-pr-03-v4-desc">{{ section.settings.subheading }}</p>
+      {% if section.settings.link_text != blank %}
+        <a href="{{ section.settings.link_url }}" class="cf-pr-03-v4-btn">{{ section.settings.link_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Glassmorphism Poster",
+  "settings": [
+    {"type":"text","id":"label","label":"Small Label","default":"NEW ARRIVALS"},
+    {"type":"image_picker","id":"image","label":"Background Image"},
+    {"type":"textarea","id":"heading","label":"Heading","default":"The Future\nof Sound."},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":72,"step":2,"default":48},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"Experience spatial audio with our latest over-ear headphones. Engineered for perfection."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"Shop Now"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#f9fafb"},
+    {"type":"color","id":"text_color","label":"Glass Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Glass Label Color","default":"#60a5fa"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"04 · Glassmorphism Poster"}]
+}
+{% endschema %}

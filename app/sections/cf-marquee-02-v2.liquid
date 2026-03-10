@@ -1,0 +1,73 @@
+<style>
+.cf-mq-02-v2 {
+  width: 100%;
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    -45deg,
+    {{ section.settings.bg_color1 }},
+    {{ section.settings.bg_color1 }} 40px,
+    {{ section.settings.bg_color2 }} 40px,
+    {{ section.settings.bg_color2 }} 80px
+  );
+  color: {{ section.settings.text_color }};
+  font-family: inherit;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  display: flex;
+  padding: {{ section.settings.padding_y }}px 0;
+  border-top: 4px solid #111;
+  border-bottom: 4px solid #111;
+}
+
+.cf-mq-02-v2-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v2-scroll {{ section.settings.speed }}s linear infinite;
+  align-items: center;
+}
+
+.cf-mq-02-v2-item {
+  padding: 0 40px;
+  line-height: 1;
+  background: {{ section.settings.bg_color1 }}; /* Behind the text to make it readable */
+  color: {{ section.settings.text_color }};
+  -webkit-text-stroke: 2px {{ section.settings.text_outline }};
+  margin: 0 20px;
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 {{ section.settings.bg_color2 }};
+  display: inline-block;
+  transform: skewX(-5deg);
+}
+
+@keyframes cf-mq-02-v2-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+</style>
+
+<div class="cf-mq-02-v2">
+  <div class="cf-mq-02-v2-track">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v2-item">{{ section.settings.text }}</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Hazard Tape Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"WARNING: NEXT DROP APPROACHING"},
+    {"type":"color","id":"bg_color1","label":"Tape Background 1","default":"#eab308"},
+    {"type":"color","id":"bg_color2","label":"Tape Background 2","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Fill","default":"#111111"},
+    {"type":"color","id":"text_outline","label":"Text Stroke","default":"#111111"},
+    {"type":"range","id":"speed","label":"Speed","min":5,"max":40,"step":1,"default":15},
+    {"type":"range","id":"text_size","label":"Text Size","min":20,"max":100,"step":4,"default":48},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":80,"step":2,"default":40}
+  ],
+  "presets": [{"name":"02 · Hazard Tape Marquee"}]
+}
+{% endschema %}

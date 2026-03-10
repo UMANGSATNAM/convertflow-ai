@@ -1,0 +1,87 @@
+<style>
+.cf-ps-03-v8 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: {{ section.settings.padding_y }}px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Loading Bar Effect */
+.cf-ps-03-v8::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 50%;
+  background: {{ section.settings.accent_color }}20;
+  animation: cf-ps-03-v8-load 4s ease-in-out infinite alternate;
+  pointer-events: none;
+  border-right: 2px solid {{ section.settings.accent_color }};
+}
+
+@keyframes cf-ps-03-v8-load {
+  0% { width: 10%; }
+  100% { width: 90%; }
+}
+
+.cf-ps-03-v8-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.cf-ps-03-v8-prefix {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-ps-03-v8-link {
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+  border: 1px solid {{ section.settings.accent_color }};
+  padding: 2px 10px;
+  margin-left: 10px;
+  transition: 0.2s;
+  background: rgba(0,0,0,0.5);
+}
+
+.cf-ps-03-v8-link:hover {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+}
+</style>
+
+<div class="cf-ps-03-v8">
+  <div class="cf-ps-03-v8-inner">
+    <span class="cf-ps-03-v8-prefix">[DATA]</span>
+    <span>{{ section.settings.text }}</span>
+    {% if section.settings.link_text != blank %}
+      <a href="{{ section.settings.link_url }}" class="cf-ps-03-v8-link">{{ section.settings.link_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Data Load Bar",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#050505"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#aaaaaa"},
+    {"type":"color","id":"accent_color","label":"Terminal Accent","default":"#4af626"},
+    {"type":"text","id":"text","label":"Text","default":"Compiling new inventory... 100% complete."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"EXECUTE"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":13},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":30,"step":1,"default":12}
+  ],
+  "presets": [{"name":"08 · Data Load Bar Snack"}]
+}
+{% endschema %}

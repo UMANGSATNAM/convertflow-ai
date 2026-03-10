@@ -1,0 +1,207 @@
+<style>
+.cf-fc-02-v7 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-fc-02-v7-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-02-v7-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  border-bottom: 1px solid {{ section.settings.glitch_color }};
+  padding-bottom: 15px;
+}
+
+.cf-fc-02-v7-title {
+  font-size: clamp(20px, 5vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.glitch_color }};
+  margin: 0;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 10px {{ section.settings.glitch_color }};
+}
+
+.cf-fc-02-v7-link {
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  transition: 0.2s;
+  padding: 8px 16px;
+  border: 1px solid {{ section.settings.text_color }};
+}
+
+.cf-fc-02-v7-link:hover {
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-fc-02-v7-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.cf-fc-02-v7-item {
+  position: relative;
+  text-decoration: none;
+  background: #000;
+  border: 1px solid #333;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s;
+}
+
+.cf-fc-02-v7-item:hover {
+  border-color: {{ section.settings.glitch_color }};
+}
+
+.cf-fc-02-v7-img-wrap {
+  width: 100%;
+  aspect-ratio: 1/1;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #0a0a0a;
+}
+
+.cf-fc-02-v7-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.2) sepia(100%) hue-rotate(80deg) saturate(300%) brightness(0.6); /* Greenish tech filter */
+  transition: 0.3s;
+}
+
+.cf-fc-02-v7-item:hover .cf-fc-02-v7-img {
+  filter: contrast(1.1) sepia(0%) hue-rotate(0deg) saturate(100%) brightness(1);
+  transform: scale(1.05);
+}
+
+/* Glitch box overlay on hover */
+.cf-fc-02-v7-glitch-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.1) 2px,
+    rgba(0, 255, 65, 0.1) 4px
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.cf-fc-02-v7-item:hover .cf-fc-02-v7-glitch-overlay {
+  opacity: 1;
+}
+
+.cf-fc-02-v7-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.cf-fc-02-v7-prod-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.cf-fc-02-v7-prod-price {
+  font-size: 14px;
+  color: {{ section.settings.glitch_color }};
+}
+
+.cf-fc-02-v7-sys {
+  font-size: 10px;
+  color: #666;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@media (min-width: 768px) {
+  .cf-fc-02-v7-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>
+
+<div class="cf-fc-02-v7">
+  <div class="cf-fc-02-v7-inner">
+    <div class="cf-fc-02-v7-header">
+      <h2 class="cf-fc-02-v7-title">_ {{ section.settings.title }} _</h2>
+      <a href="{{ section.settings.link }}" class="cf-fc-02-v7-link">[{{ section.settings.link_text }}]</a>
+    </div>
+
+    <div class="cf-fc-02-v7-grid">
+      {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+        {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+          <a href="{{ product.url }}" class="cf-fc-02-v7-item">
+            <div class="cf-fc-02-v7-img-wrap">
+              <img class="cf-fc-02-v7-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+              <div class="cf-fc-02-v7-glitch-overlay"></div>
+            </div>
+            <div class="cf-fc-02-v7-info">
+              <h3 class="cf-fc-02-v7-prod-title">{{ product.title }}</h3>
+              <div class="cf-fc-02-v7-prod-price">{{ product.price | money }}</div>
+              <div class="cf-fc-02-v7-sys">SYS.STATUS: OK</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.limit) %}
+          <a href="#" class="cf-fc-02-v7-item">
+            <div class="cf-fc-02-v7-img-wrap">
+              <div class="cf-fc-02-v7-img" style="background:#222; display:flex; align-items:center; justify-content:center; color:#444;">DATA_{{ i }}</div>
+              <div class="cf-fc-02-v7-glitch-overlay"></div>
+            </div>
+            <div class="cf-fc-02-v7-info">
+              <h3 class="cf-fc-02-v7-prod-title">TERMINAL JACKET {{ i }}</h3>
+              <div class="cf-fc-02-v7-prod-price">$120.00</div>
+              <div class="cf-fc-02-v7-sys">SYS.STATUS: OK</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Glitch Matrix Grid",
+  "settings": [
+    {"type":"text","id":"title","label":"Section Title","default":"DATABASE.QUERY(ALL)"},
+    {"type":"range","id":"title_size","label":"Title Size","min":16,"max":48,"step":2,"default":28},
+    {"type":"text","id":"link_text","label":"Link Text","default":"EXECUTE"},
+    {"type":"url","id":"link","label":"Link URL"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":4,"max":12,"step":4,"default":4},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#050505"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#e5e5e5"},
+    {"type":"color","id":"glitch_color","label":"Glitch/Matrix Color","default":"#00ff41"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"07 · Glitch Matrix Grid Collection"}]
+}
+{% endschema %}

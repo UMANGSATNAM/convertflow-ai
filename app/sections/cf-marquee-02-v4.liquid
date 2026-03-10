@@ -1,0 +1,88 @@
+<style>
+.cf-mq-02-v4 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 0;
+  border-top: 1px solid {{ section.settings.border_color }};
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-mq-02-v4-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v4-scroll {{ section.settings.speed }}s linear infinite;
+  align-items: center;
+}
+
+.cf-mq-02-v4-item {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 0 15px;
+}
+
+.cf-mq-02-v4-text {
+  font-family: inherit;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  color: {{ section.settings.text_color }};
+  letter-spacing: 0.1em;
+}
+
+.cf-mq-02-v4-icon {
+  width: {{ section.settings.icon_size }}px;
+  height: {{ section.settings.icon_size }}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cf-mq-02-v4-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: {{ section.settings.text_color }};
+  stroke-width: 2;
+  fill: none;
+}
+
+@keyframes cf-mq-02-v4-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+</style>
+
+<div class="cf-mq-02-v4">
+  <div class="cf-mq-02-v4-track">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v4-item">
+        <span class="cf-mq-02-v4-text">{{ section.settings.text }}</span>
+        <div class="cf-mq-02-v4-icon">
+          <!-- Star / Asterisk icon commonly used in streetwear -->
+          <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.929 4.929l14.142 14.142M4.929 19.071L19.071 4.929"/></svg>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Icon Scroll",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"FREE SHIPPING WORLDWIDE"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text & Icon Fill","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#e5e7eb"},
+    {"type":"range","id":"speed","label":"Speed","min":10,"max":50,"step":1,"default":25},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":48,"step":1,"default":16},
+    {"type":"range","id":"icon_size","label":"Icon Size","min":10,"max":40,"step":1,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":4,"max":40,"step":2,"default":12}
+  ],
+  "presets": [{"name":"04 · Icon Scroll Marquee"}]
+}
+{% endschema %}

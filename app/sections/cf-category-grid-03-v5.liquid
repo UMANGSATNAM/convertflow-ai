@@ -1,0 +1,159 @@
+<style>
+.cf-cg-03-v5 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  background-image: linear-gradient({{ section.settings.grid_color }} 1px, transparent 1px),
+                    linear-gradient(90deg, {{ section.settings.grid_color }} 1px, transparent 1px);
+  background-size: 20px 20px;
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-cg-03-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-cg-03-v5-heading {
+  font-size: clamp(24px, 4vw, 36px);
+  color: {{ section.settings.text_color }};
+  margin: 0 0 30px 0;
+  text-transform: uppercase;
+  background: {{ section.settings.bg_color }};
+  display: inline-block;
+  padding: 0 10px;
+  border-left: 4px solid {{ section.settings.accent_color }};
+}
+
+.cf-cg-03-v5-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cf-cg-03-v5-card {
+  display: flex;
+  align-items: center;
+  background: {{ section.settings.bg_color }};
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 15px 20px;
+  text-decoration: none;
+  transition: 0.3s;
+  position: relative;
+}
+
+.cf-cg-03-v5-card:hover {
+  background: #111;
+  border-color: {{ section.settings.accent_color }};
+  box-shadow: inset 5px 0 0 {{ section.settings.accent_color }};
+}
+
+.cf-cg-03-v5-status {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: {{ section.settings.accent_color }};
+  box-shadow: 0 0 8px {{ section.settings.accent_color }};
+  margin-right: 20px;
+  animation: cf-cg-03-v5-blink 3s infinite;
+}
+
+@keyframes cf-cg-03-v5-blink {
+  0%, 90%, 100% { opacity: 1; }
+  95% { opacity: 0; }
+}
+
+.cf-cg-03-v5-card:nth-child(even) .cf-cg-03-v5-status {
+  animation-delay: 1.5s;
+}
+
+.cf-cg-03-v5-title {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+  flex: 1;
+}
+
+.cf-cg-03-v5-img {
+  width: 60px; height: 30px;
+  object-fit: cover;
+  opacity: 0.5;
+  filter: grayscale(1);
+  margin-left: 20px;
+}
+
+.cf-cg-03-v5-id {
+  color: {{ section.settings.border_color }};
+  font-size: 12px;
+  padding-left: 20px;
+}
+
+@media (min-width: 768px) {
+  .cf-cg-03-v5-card {
+    padding: 20px 30px;
+  }
+  .cf-cg-03-v5-title {
+    font-size: 20px;
+  }
+}
+</style>
+
+<div class="cf-cg-03-v5">
+  <div class="cf-cg-03-v5-inner">
+    <h2 class="cf-cg-03-v5-heading">{{ section.settings.heading }}</h2>
+    
+    <div class="cf-cg-03-v5-grid">
+      {% for block in section.blocks %}
+        <a href="{{ block.settings.link }}" class="cf-cg-03-v5-card">
+          <div class="cf-cg-03-v5-status"></div>
+          <h3 class="cf-cg-03-v5-title">{{ block.settings.title }}</h3>
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 150 }}" alt="{{ block.settings.title }}" class="cf-cg-03-v5-img">
+          {% endif %}
+          <div class="cf-cg-03-v5-id">UNIT_0{{ forloop.index }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Server Rack View",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"DATA_BANKS"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0a0a0a"},
+    {"type":"color","id":"grid_color","label":"Grid Pattern","default":"#1a1a1a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#e5e5e5"},
+    {"type":"color","id":"border_color","label":"Borders/ID Color","default":"#444444"},
+    {"type":"color","id":"accent_color","label":"Status LED Color","default":"#3b82f6"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":600,"max":1200,"step":100,"default":900}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 10,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Small Indication Image (Optional)"},
+        {"type":"text","id":"title","label":"Title","default":"Mainboards"},
+        {"type":"url","id":"link","label":"Link"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "05 · Server Rack View",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

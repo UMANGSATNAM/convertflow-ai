@@ -1,0 +1,73 @@
+<style>
+.cf-ps-03-v10 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  border-bottom: 2px solid #222;
+}
+
+.cf-ps-03-v10-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-style: italic;
+  
+  /* RGB TEXT */
+  background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: cf-ps-03-v10-rgb 4s linear infinite;
+}
+
+@keyframes cf-ps-03-v10-rgb {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.cf-ps-03-v10-link {
+  color: #fff;
+  -webkit-text-fill-color: initial; /* Override gradient for link */
+  text-decoration: none;
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
+  transition: 0.2s;
+  margin-left: 10px;
+}
+
+.cf-ps-03-v10-link:hover {
+  background: #fff;
+  color: #000;
+}
+</style>
+
+<div class="cf-ps-03-v10">
+  <div class="cf-ps-03-v10-inner">
+    <span>{{ section.settings.text }}</span>
+    {% if section.settings.link_text != blank %}
+      <a href="{{ section.settings.link_url }}" class="cf-ps-03-v10-link">{{ section.settings.link_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · RGB Gaming Strip",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0b0b0f"},
+    {"type":"text","id":"text","label":"Text","default":"NEW DROPS: RGB KEYBOARDS & MICE"},
+    {"type":"text","id":"link_text","label":"Link Text","default":"UPGRADE NOW"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":14},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":30,"step":1,"default":12}
+  ],
+  "presets": [{"name":"10 · RGB Gaming Strip"}]
+}
+{% endschema %}

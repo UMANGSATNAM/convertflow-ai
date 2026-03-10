@@ -1,0 +1,124 @@
+<style>
+.cf-tb-02-v8 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-tb-02-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-02-v8-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.cf-tb-02-v8-item {
+  width: 100%;
+  max-width: 250px;
+  background: #fff;
+  padding: 15px 15px 40px 15px; /* Polaroid bottom padding */
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.cf-tb-02-v8-item:nth-child(even) { transform: rotate(4deg); }
+.cf-tb-02-v8-item:nth-child(odd) { transform: rotate(-3deg); }
+
+.cf-tb-02-v8-item:hover {
+  transform: scale(1.05) rotate(0deg);
+  z-index: 10;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.cf-tb-02-v8-icon-wrap {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border: 4px solid #111;
+}
+
+.cf-tb-02-v8-icon {
+  width: 80px; height: 80px;
+  color: #111;
+}
+
+.cf-tb-02-v8-icon svg {
+  width: 100%; height: 100%;
+  fill: currentColor;
+}
+
+.cf-tb-02-v8-headline {
+  font-family: 'Gloria Hallelujah', cursive, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #111;
+  margin: 0;
+}
+
+/* Include handwritten font from Google */
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
+</style>
+
+<div class="cf-tb-02-v8">
+  <div class="cf-tb-02-v8-inner">
+    <div class="cf-tb-02-v8-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-v8-item">
+          <div class="cf-tb-02-v8-icon-wrap">
+            <div class="cf-tb-02-v8-icon">
+              {% if block.settings.icon_svg != blank %}
+                {{ block.settings.icon_svg }}
+              {% else %}
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+              {% endif %}
+            </div>
+          </div>
+          <h3 class="cf-tb-02-v8-headline">{{ block.settings.title }}</h3>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Polaroid Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base (Corkboard)","default":"#FDE68A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"No Fake Shit."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "08 · Polaroid Trust Badges",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

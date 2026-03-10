@@ -1,0 +1,118 @@
+<style>
+.cf-pr-02-v7 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: {{ section.settings.height }}px;
+  position: relative;
+}
+
+.cf-pr-02-v7-half {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: {{ section.settings.padding_y }}px 40px;
+}
+
+.cf-pr-02-v7-left {
+  background: {{ section.settings.left_bg }};
+  align-items: flex-end;
+  text-align: right;
+}
+
+.cf-pr-02-v7-right {
+  background: {{ section.settings.right_bg }};
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cf-pr-02-v7-title-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.cf-pr-02-v7-title {
+  font-size: clamp(40px, 10vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  mix-blend-mode: difference;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.cf-pr-02-v7-desc {
+  font-size: 16px;
+  font-weight: 600;
+  color: {{ section.settings.right_bg }};
+  max-width: 300px;
+  margin-top: auto;
+}
+
+.cf-pr-02-v7-btn {
+  display: inline-block;
+  background: transparent;
+  color: {{ section.settings.left_bg }};
+  border: 2px solid {{ section.settings.left_bg }};
+  padding: 14px 30px;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.3s;
+  margin-top: auto;
+}
+
+.cf-pr-02-v7-btn:hover {
+  background: {{ section.settings.left_bg }};
+  color: {{ section.settings.right_bg }};
+}
+
+@media (min-width: 768px) {
+  .cf-pr-02-v7 {
+    flex-direction: row;
+  }
+}
+</style>
+
+<div class="cf-pr-02-v7">
+  <div class="cf-pr-02-v7-half cf-pr-02-v7-left">
+    <p class="cf-pr-02-v7-desc">{{ section.settings.desc }}</p>
+  </div>
+  
+  <div class="cf-pr-02-v7-title-wrap">
+    <h2 class="cf-pr-02-v7-title">{{ section.settings.title }}</h2>
+  </div>
+
+  <div class="cf-pr-02-v7-half cf-pr-02-v7-right">
+    <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v7-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Split Monochromatic",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"DIFFERENCE"},
+    {"type":"range","id":"title_size","label":"Title Size","min":60,"max":200,"step":4,"default":140},
+    {"type":"textarea","id":"desc","label":"Description","default":"Two sides of the same coin. The monochrome collection features stark contrasts and bold silhouettes."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP MONOCHROME"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/monochrome"},
+    {"type":"color","id":"left_bg","label":"Left Background","default":"#111111"},
+    {"type":"color","id":"right_bg","label":"Right Background","default":"#f8f8f8"},
+    {"type":"color","id":"text_color","label":"Blend Text Color (Use White)","default":"#ffffff"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":20,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60}
+  ],
+  "presets": [{"name":"07 · Split Monochromatic Promo"}]
+}
+{% endschema %}

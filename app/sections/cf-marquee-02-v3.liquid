@@ -1,0 +1,83 @@
+<style>
+.cf-mq-02-v3 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  position: relative;
+  padding: {{ section.settings.padding_y }}px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-mq-02-v3-track {
+  display: flex;
+  white-space: nowrap;
+  font-family: 'Arial Black', Impact, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+}
+
+.cf-mq-02-v3-solid {
+  color: {{ section.settings.text_color }};
+  animation: cf-mq-02-v3-scroll {{ section.settings.speed }}s linear infinite;
+  z-index: 2;
+}
+
+.cf-mq-02-v3-hollow {
+  color: {{ section.settings.bg_color }};
+  -webkit-text-stroke: 1px {{ section.settings.stroke_color }};
+  animation: cf-mq-02-v3-scroll-rev {{ section.settings.speed }}s linear infinite reverse;
+  margin-top: {{ section.settings.overlap }}px;
+  z-index: 1;
+}
+
+.cf-mq-02-v3-item {
+  padding: 0 20px;
+  display: inline-block;
+}
+
+@keyframes cf-mq-02-v3-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes cf-mq-02-v3-scroll-rev {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+</style>
+
+<div class="cf-mq-02-v3">
+  <div class="cf-mq-02-v3-track cf-mq-02-v3-solid">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v3-item">{{ section.settings.text }}</div>
+    {% endfor %}
+  </div>
+  <div class="cf-mq-02-v3-track cf-mq-02-v3-hollow">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v3-item">{{ section.settings.text }}</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Split Stroke Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"NEW ARRIVALS"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Solid Text","default":"#ffffff"},
+    {"type":"color","id":"stroke_color","label":"Hollow Stroke","default":"#6b7280"},
+    {"type":"range","id":"speed","label":"Speed","min":5,"max":40,"step":1,"default":20},
+    {"type":"range","id":"text_size","label":"Text Size","min":40,"max":160,"step":4,"default":80},
+    {"type":"range","id":"overlap","label":"Vertical Overlap","min":-40,"max":10,"step":1,"default":-10},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":80,"step":4,"default":40}
+  ],
+  "presets": [{"name":"03 · Split Stroke Marquee"}]
+}
+{% endschema %}

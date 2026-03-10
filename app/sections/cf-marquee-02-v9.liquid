@@ -1,0 +1,113 @@
+<style>
+.cf-mq-02-v9 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  flex-direction: column;
+  padding: {{ section.settings.padding_y }}px 0;
+  position: relative;
+}
+
+.cf-mq-02-v9-wrapper {
+  transform: rotate({{ section.settings.rotation }}deg) scale(1.05);
+  display: flex;
+  flex-direction: column;
+  gap: {{ section.settings.gap }}px;
+}
+
+.cf-mq-02-v9-track-1 {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v9-scroll-1 {{ section.settings.speed_1 }}s linear infinite;
+  align-items: center;
+  background: {{ section.settings.line_bg_1 }};
+  color: {{ section.settings.text_color_1 }};
+  border-top: 2px solid {{ section.settings.border_color }};
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-mq-02-v9-track-2 {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v9-scroll-2 {{ section.settings.speed_2 }}s linear infinite reverse;
+  align-items: center;
+  background: {{ section.settings.line_bg_2 }};
+  color: {{ section.settings.text_color_2 }};
+  border-top: 2px solid {{ section.settings.border_color }};
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-mq-02-v9-item {
+  font-family: inherit;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  letter-spacing: -0.02em;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.cf-mq-02-v9-icon {
+  font-size: {{ section.settings.text_size | times: 0.8 }}px;
+}
+
+@keyframes cf-mq-02-v9-scroll-1 {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes cf-mq-02-v9-scroll-2 {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+</style>
+
+<div class="cf-mq-02-v9">
+  <div class="cf-mq-02-v9-wrapper">
+    <div class="cf-mq-02-v9-track-1">
+      {% assign reps = (1..10) %}
+      {% for i in reps %}
+        <div class="cf-mq-02-v9-item">
+          <span>{{ section.settings.text_1 }}</span>
+          <span class="cf-mq-02-v9-icon">✚</span>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <div class="cf-mq-02-v9-track-2">
+      {% assign reps = (1..10) %}
+      {% for i in reps %}
+        <div class="cf-mq-02-v9-item">
+          <span>{{ section.settings.text_2 }}</span>
+          <span class="cf-mq-02-v9-icon">✚</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Off-Axis Marquee",
+  "settings": [
+    {"type":"text","id":"text_1","label":"Text Line 1","default":"STREET CULTURE DEFINED"},
+    {"type":"text","id":"text_2","label":"Text Line 2","default":"NO RULES ZERO LIMITS"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#000000"},
+    {"type":"color","id":"line_bg_1","label":"Line 1 Background","default":"#ffffff"},
+    {"type":"color","id":"text_color_1","label":"Line 1 Text","default":"#000000"},
+    {"type":"color","id":"line_bg_2","label":"Line 2 Background","default":"#ff4500"},
+    {"type":"color","id":"text_color_2","label":"Line 2 Text","default":"#000000"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#000000"},
+    {"type":"range","id":"speed_1","label":"Speed Line 1","min":10,"max":60,"step":1,"default":20},
+    {"type":"range","id":"speed_2","label":"Speed Line 2","min":10,"max":60,"step":1,"default":15},
+    {"type":"range","id":"text_size","label":"Text Size","min":20,"max":100,"step":2,"default":48},
+    {"type":"range","id":"rotation","label":"Rotation Degrees","min":-15,"max":15,"step":1,"default":-3},
+    {"type":"range","id":"gap","label":"Gap Between Lines","min":-10,"max":40,"step":1,"default":0},
+    {"type":"range","id":"padding_y","label":"Vertical Padding (Container overflow)","min":10,"max":80,"step":2,"default":40}
+  ],
+  "presets": [{"name":"09 · Off-Axis Marquee"}]
+}
+{% endschema %}

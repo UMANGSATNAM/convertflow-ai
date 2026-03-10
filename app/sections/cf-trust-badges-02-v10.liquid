@@ -1,0 +1,156 @@
+<style>
+.cf-tb-02-v10 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-tb-02-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-02-v10-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+.cf-tb-02-v10-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Stencil Spray Paint Effect background shape */
+.cf-tb-02-v10-icon-bg {
+  width: 80px; height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+.cf-tb-02-v10-icon-bg::before {
+  content: '';
+  position: absolute;
+  top: -10px; left: -10px; right: -10px; bottom: -10px;
+  background: radial-gradient(circle at center, {{ section.settings.spray_color }} 0%, transparent 70%);
+  opacity: 0.8;
+  filter: blur(4px);
+  z-index: 0;
+  /* Random deformations for spray look */
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  animation: cf-tb-02-v10-wobble 4s ease-in-out infinite alternate;
+}
+
+@keyframes cf-tb-02-v10-wobble {
+  0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+  100% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
+}
+
+.cf-tb-02-v10-icon {
+  width: 40px; height: 40px;
+  color: {{ section.settings.icon_color }};
+  z-index: 2;
+  position: relative;
+}
+
+.cf-tb-02-v10-icon svg {
+  width: 100%; height: 100%;
+  fill: currentColor;
+}
+
+.cf-tb-02-v10-title {
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 10px 0;
+  letter-spacing: -0.02em;
+  /* Stencil font lookup fallback */
+  font-family: 'Impact', 'Arial Black', sans-serif;
+}
+
+.cf-tb-02-v10-desc {
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.8;
+  margin: 0;
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .cf-tb-02-v10-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .cf-tb-02-v10-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>
+
+<div class="cf-tb-02-v10">
+  <div class="cf-tb-02-v10-inner">
+    <div class="cf-tb-02-v10-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-v10-item">
+          <div class="cf-tb-02-v10-icon-bg">
+             <div class="cf-tb-02-v10-icon">
+                {% if block.settings.icon_svg != blank %}
+                  {{ block.settings.icon_svg }}
+                {% else %}
+                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM11 19.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.22.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                {% endif %}
+             </div>
+          </div>
+          <h3 class="cf-tb-02-v10-title">{{ block.settings.title }}</h3>
+          <p class="cf-tb-02-v10-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Stencil Spray Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base (Wall)","default":"#1a1a1a"},
+    {"type":"color","id":"spray_color","label":"Spray Paint Color","default":"#ff003c"},
+    {"type":"color","id":"icon_color","label":"Icon SVG Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"STREET CRED"},
+        {"type":"text","id":"desc","label":"Description","default":"Highly rated streetwear."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "10 · Stencil Spray Badges",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

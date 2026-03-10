@@ -1,0 +1,151 @@
+<style>
+.cf-pr-02-v2 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-pr-02-v2-container {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  position: relative;
+  min-height: {{ section.settings.height }}px;
+}
+
+.cf-pr-02-v2-image {
+  width: 100%;
+  height: 100%;
+  min-height: {{ section.settings.height }}px;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.2);
+  border: 4px solid var(--border);
+  box-sizing: border-box;
+}
+
+.cf-pr-02-v2-content {
+  background: {{ section.settings.text_box_bg }};
+  padding: 40px;
+  border: 4px solid {{ section.settings.border_color }};
+  position: relative;
+  z-index: 10;
+  margin-top: -60px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-shadow: 8px 8px 0 {{ section.settings.accent_color }};
+}
+
+.cf-pr-02-v2-badge {
+  display: inline-block;
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.text_box_bg }};
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 6px 12px;
+  margin-bottom: 24px;
+  transform: rotate(-3deg);
+}
+
+.cf-pr-02-v2-title {
+  font-size: clamp(32px, 6vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: {{ section.settings.title_color }};
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 0 {{ section.settings.border_color }};
+}
+
+.cf-pr-02-v2-desc {
+  font-size: 16px;
+  font-weight: 600;
+  color: {{ section.settings.text_color }};
+  line-height: 1.6;
+  margin-bottom: 30px;
+  max-width: 400px;
+}
+
+.cf-pr-02-v2-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: {{ section.settings.border_color }};
+  color: {{ section.settings.bg_color }};
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 32px;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  border: 4px solid {{ section.settings.border_color }};
+}
+
+.cf-pr-02-v2-btn:hover {
+  background: transparent;
+  color: {{ section.settings.border_color }};
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+@media (min-width: 768px) {
+  .cf-pr-02-v2-container {
+    grid-template-columns: 3fr 4fr;
+    align-items: center;
+  }
+  .cf-pr-02-v2-content {
+    margin-top: 0;
+    margin-left: -80px;
+    margin-right: 0;
+    padding: 60px;
+  }
+}
+</style>
+
+<div class="cf-pr-02-v2">
+  <div class="cf-pr-02-v2-container">
+    {% if section.settings.image != blank %}
+      <img class="cf-pr-02-v2-image" src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ section.settings.title }}">
+    {% else %}
+      <div class="cf-pr-02-v2-image" style="background:#ddd;"></div>
+    {% endif %}
+
+    <div class="cf-pr-02-v2-content">
+      <div class="cf-pr-02-v2-badge">{{ section.settings.badge }}</div>
+      <h2 class="cf-pr-02-v2-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-02-v2-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v2-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · The Offset Block",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"badge","label":"Badge Text","default":"STREET EXCLUSIVE"},
+    {"type":"text","id":"title","label":"Title","default":"THE HEAVY\nDUTY DROP"},
+    {"type":"range","id":"title_size","label":"Title Size","min":30,"max":100,"step":2,"default":64},
+    {"type":"textarea","id":"desc","label":"Description","default":"Built for the elements. Engineered for the streets. Discover the new heavy-duty collection dropping this weekend."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW LOOKBOOK"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f8f8"},
+    {"type":"color","id":"text_box_bg","label":"Text Box BG","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Borders & Button","default":"#111111"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Description Color","default":"#444444"},
+    {"type":"color","id":"accent_color","label":"Accent (Badge & Shadow)","default":"#ef4444"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":20,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"02 · The Offset Block Promo"}]
+}
+{% endschema %}

@@ -1,0 +1,94 @@
+<style>
+.cf-mq-03-v4 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 0;
+  overflow: hidden;
+  border-top: 2px dashed {{ section.settings.accent_color }};
+  border-bottom: 2px dashed {{ section.settings.accent_color }};
+  display: flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-mq-03-v4-track {
+  display: flex;
+  white-space: nowrap;
+  /* Faster scroll for data stream */
+  animation: cf-mq-03-v4-scroll {{ section.settings.speed }}s linear infinite;
+}
+
+@keyframes cf-mq-03-v4-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cf-mq-03-v4-item {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  font-size: {{ section.settings.text_size }}px;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  gap: 15px;
+}
+
+.cf-mq-03-v4-data {
+  color: {{ section.settings.accent_color }};
+  font-weight: bold;
+}
+</style>
+
+<div class="cf-mq-03-v4">
+  <div class="cf-mq-03-v4-track">
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v4-item">
+        <span class="cf-mq-03-v4-data">[0x00{{ forloop.index }}]</span>
+        <span>{{ block.settings.text }}</span>
+        <span class="cf-mq-03-v4-data">10110</span>
+      </div>
+    {% endfor %}
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v4-item">
+        <span class="cf-mq-03-v4-data">[0x00{{ forloop.index }}]</span>
+        <span>{{ block.settings.text }}</span>
+        <span class="cf-mq-03-v4-data">10110</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Data Stream",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#16161c"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#d4d4d4"},
+    {"type":"color","id":"accent_color","label":"Data/Binary Accent","default":"#3b82f6"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":36,"step":1,"default":14},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":5,"max":40,"step":1,"default":15}
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "limit": 8,
+      "settings": [
+        {"type":"text","id":"text","label":"Text","default":"PACKET_RECEIVED"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Data Stream Marquee",
+      "blocks": [
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"}
+      ]
+    }
+  ]
+}
+{% endschema %}

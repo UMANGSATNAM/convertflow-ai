@@ -1,0 +1,176 @@
+<style>
+.cf-pr-03-v10 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.cf-pr-03-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  background: #0b0b0f;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* RGB Border Wrapper */
+.cf-pr-03-v10-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 16px;
+  padding: 4px; /* Border thickness */
+  background: linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+  background-size: 400% 400%;
+  animation: cf-pr-03-v10-rgb 6s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes cf-pr-03-v10-rgb {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.cf-pr-03-v10-content {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 2;
+  position: relative;
+}
+
+.cf-pr-03-v10-label {
+  font-style: italic;
+  font-weight: 800;
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  background: rgba(255,255,255,0.1);
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.cf-pr-03-v10-heading {
+  font-size: clamp(32px, 5vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+.cf-pr-03-v10-desc {
+  font-size: 16px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.8;
+  max-width: 450px;
+  line-height: 1.6;
+  margin: 0 0 40px 0;
+}
+
+.cf-pr-03-v10-btn {
+  display: inline-block;
+  background: {{ section.settings.text_color }};
+  color: #0b0b0f;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+  text-decoration: none;
+  padding: 16px 32px;
+  border-radius: 4px;
+  transition: 0.3s;
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.cf-pr-03-v10-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255,255,255,0.4);
+}
+
+.cf-pr-03-v10-img-col {
+  width: 100%;
+  aspect-ratio: 16/9;
+  position: relative;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent);
+}
+
+.cf-pr-03-v10-img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 20px;
+  animation: cf-pr-03-v10-float 6s ease-in-out infinite;
+}
+
+@keyframes cf-pr-03-v10-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+@media (min-width: 768px) {
+  .cf-pr-03-v10-inner {
+    flex-direction: row;
+    align-items: center;
+  }
+  .cf-pr-03-v10-content {
+    flex: 1;
+    padding: 80px 60px;
+  }
+  .cf-pr-03-v10-img-col {
+    flex: 1;
+    aspect-ratio: 1/1;
+  }
+}
+</style>
+
+<div class="cf-pr-03-v10">
+  <div class="cf-pr-03-v10-inner">
+    <div class="cf-pr-03-v10-content">
+      <div class="cf-pr-03-v10-label">{{ section.settings.label }}</div>
+      <h2 class="cf-pr-03-v10-heading">{{ section.settings.heading | newline_to_br }}</h2>
+      <p class="cf-pr-03-v10-desc">{{ section.settings.subheading }}</p>
+      {% if section.settings.link_text != blank %}
+        <a href="{{ section.settings.link_url }}" class="cf-pr-03-v10-btn">{{ section.settings.link_text }}</a>
+      {% endif %}
+    </div>
+    <div class="cf-pr-03-v10-img-col">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 800 }}" alt="Promo Image" class="cf-pr-03-v10-img">
+      {% else %}
+        <!-- Placeholder glowing cube or similar -->
+        <div class="cf-pr-03-v10-img" style="background:#222; border-radius:10px; border:2px solid #555; width:60%; height:60%; margin: 20% auto; box-shadow: 0 0 40px rgba(0,255,255,0.2);"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Gaming RGB Monitor",
+  "settings": [
+    {"type":"text","id":"label","label":"Small Label","default":"CHROMA SYNC"},
+    {"type":"textarea","id":"heading","label":"Heading","default":"UNLEASH\nTHE BEAST"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":80,"step":2,"default":64},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"The new 240Hz OLED monitor destroys ghosting. Play like the pros with 0.1ms response times."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"PRE-ORDER"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#050505"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"image_picker","id":"image","label":"Floating Image (Transparent PNG ideal)"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"10 · RGB Monitor Promo"}]
+}
+{% endschema %}

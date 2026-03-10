@@ -1,0 +1,147 @@
+<style>
+.cf-ps-02-v5 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+  font-family: inherit;
+}
+
+.cf-ps-02-v5-inner {
+  max-width: 1000px;
+  width: 100%;
+  border: 2px dashed {{ section.settings.dashed_color }};
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.cf-ps-02-v5-corners {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+.cf-ps-02-v5-corners::before, .cf-ps-02-v5-corners::after {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  background: {{ section.settings.dashed_color }};
+}
+.cf-ps-02-v5-corners::before { top: -6px; left: -6px; }
+.cf-ps-02-v5-corners::after { top: -6px; right: -6px; }
+
+.cf-ps-02-v5-bottom-corners {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  pointer-events: none;
+}
+.cf-ps-02-v5-bottom-corners::before, .cf-ps-02-v5-bottom-corners::after {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  background: {{ section.settings.dashed_color }};
+}
+.cf-ps-02-v5-bottom-corners::before { bottom: -6px; left: -6px; }
+.cf-ps-02-v5-bottom-corners::after { bottom: -6px; right: -6px; }
+
+.cf-ps-02-v5-title {
+  font-size: clamp(28px, 6vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+
+.cf-ps-02-v5-desc {
+  font-size: 16px;
+  color: {{ section.settings.desc_color }};
+  margin-bottom: 30px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-ps-02-v5-btn {
+  display: inline-block;
+  background: transparent;
+  color: {{ section.settings.text_color }};
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 14px 40px;
+  border: 2px solid {{ section.settings.text_color }};
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.cf-ps-02-v5-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: {{ section.settings.text_color }};
+  transition: all 0.3s;
+  z-index: -1;
+}
+
+.cf-ps-02-v5-btn:hover {
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-ps-02-v5-btn:hover::before {
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .cf-ps-02-v5-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 50px 60px;
+  }
+  .cf-ps-02-text-wrap {
+    flex: 1;
+    margin-right: 40px;
+  }
+  .cf-ps-02-v5-desc {
+    margin-bottom: 0;
+  }
+}
+</style>
+
+<div class="cf-ps-02-v5">
+  <div class="cf-ps-02-v5-inner">
+    <div class="cf-ps-02-v5-corners"></div>
+    <div class="cf-ps-02-v5-bottom-corners"></div>
+    
+    <div class="cf-ps-02-text-wrap">
+      <h3 class="cf-ps-02-v5-title">{{ section.settings.title }}</h3>
+      <p class="cf-ps-02-v5-desc">{{ section.settings.desc }}</p>
+    </div>
+    
+    <a href="{{ section.settings.btn_link }}" class="cf-ps-02-v5-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Wireframe Box",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"DASHBOARD ALERT"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":64,"step":2,"default":36},
+    {"type":"text","id":"desc","label":"Description","default":"Stock levels critical on 12 key items."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"VIEW INVENTORY"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background base","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Title & Button Color","default":"#ffffff"},
+    {"type":"color","id":"desc_color","label":"Description Color","default":"#888888"},
+    {"type":"color","id":"dashed_color","label":"Dashed Border Color","default":"#444444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":50}
+  ],
+  "presets": [{"name":"05 · Wireframe Box Snack"}]
+}
+{% endschema %}

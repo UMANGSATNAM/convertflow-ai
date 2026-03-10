@@ -1,0 +1,126 @@
+<style>
+.cf-pr-02-v4 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: {{ section.settings.bg_color }};
+}
+
+.cf-pr-02-v4-content {
+  padding: {{ section.settings.padding_y }}px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.cf-pr-02-v4-title {
+  font-size: clamp(40px, 12vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.title_color }};
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+  word-break: break-word;
+}
+
+.cf-pr-02-v4-desc {
+  font-size: 16px;
+  font-weight: 600;
+  color: {{ section.settings.text_color }};
+  max-width: 400px;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+.cf-pr-02-v4-btn {
+  display: inline-flex;
+  background: {{ section.settings.btn_color }};
+  color: {{ section.settings.bg_color }};
+  padding: 18px 40px;
+  font-size: 15px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s;
+}
+
+.cf-pr-02-v4-btn:hover {
+  opacity: 0.8;
+}
+
+.cf-pr-02-v4-image-wrap {
+  width: 100%;
+  min-height: 400px;
+  position: relative;
+}
+
+.cf-pr-02-v4-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: contrast(1.1) brightness({{ section.settings.img_brightness }}%);
+}
+
+@media (min-width: 768px) {
+  .cf-pr-02-v4 {
+    flex-direction: row;
+    min-height: {{ section.settings.height }}px;
+  }
+  .cf-pr-02-v4-content {
+    flex: 1;
+    padding: 60px 40px;
+  }
+  .cf-pr-02-v4-image-wrap {
+    flex: 1;
+    min-height: auto;
+  }
+}
+@media (min-width: 1024px) {
+  .cf-pr-02-v4-content { padding: 80px; }
+}
+</style>
+
+<div class="cf-pr-02-v4">
+  <div class="cf-pr-02-v4-content">
+    <h2 class="cf-pr-02-v4-title">{{ section.settings.title | newline_to_br }}</h2>
+    {% if section.settings.desc != blank %}
+      <p class="cf-pr-02-v4-desc">{{ section.settings.desc }}</p>
+    {% endif %}
+    <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v4-btn">{{ section.settings.btn_label }}</a>
+  </div>
+  <div class="cf-pr-02-v4-image-wrap">
+    {% if section.settings.image != blank %}
+      <img class="cf-pr-02-v4-image" src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ section.settings.title | strip_html | escape }}">
+    {% else %}
+      <div class="cf-pr-02-v4-image" style="background: #222;"></div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Big Block Typography",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"textarea","id":"title","label":"Title (Use Enter for new line)","default":"NEW\nRULES\nAPPLY."},
+    {"type":"range","id":"title_size","label":"Title Size","min":60,"max":160,"step":4,"default":120},
+    {"type":"textarea","id":"desc","label":"Description","default":"Reinventing the silhouette. Bold oversized cuts meeting meticulous tailoring."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP THE COLLECTION"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Description Color","default":"#aaaaaa"},
+    {"type":"color","id":"btn_color","label":"Button Color","default":"#ffffff"},
+    {"type":"range","id":"img_brightness","label":"Image Brightness %","min":50,"max":150,"step":5,"default":90},
+    {"type":"range","id":"height","label":"Min Height (Desktop)","min":500,"max":1000,"step":50,"default":700},
+    {"type":"range","id":"padding_y","label":"Vertical Padding (Mobile)","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"04 · Big Block Typography"}]
+}
+{% endschema %}

@@ -1,0 +1,149 @@
+<style>
+.cf-cat-02-v10 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-cat-02-v10-container {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.cf-cat-02-v10-item {
+  position: relative;
+  text-decoration: none;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    -45deg,
+    {{ section.settings.tape_1 }},
+    {{ section.settings.tape_1 }} 20px,
+    {{ section.settings.tape_2 }} 20px,
+    {{ section.settings.tape_2 }} 40px
+  );
+  padding: 10px;
+  transition: transform 0.2s;
+}
+
+.cf-cat-02-v10-item:hover {
+  transform: translateY(-5px);
+}
+
+.cf-cat-02-v10-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+  border: 4px solid #111;
+}
+
+.cf-cat-02-v10-item:nth-child(even) .cf-cat-02-v10-inner {
+  clip-path: polygon(0 0, 95% 0, 100% 100%, 5% 100%);
+}
+
+.cf-cat-02-v10-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  filter: contrast(1.1) grayscale(0.5);
+  transition: 0.3s;
+  z-index: 1;
+}
+
+.cf-cat-02-v10-item:hover .cf-cat-02-v10-img {
+  filter: contrast(1.1) grayscale(0);
+  transform: scale(1.05);
+}
+
+.cf-cat-02-v10-label-wrap {
+  position: relative;
+  z-index: 10;
+  background: rgba(0,0,0,0.8);
+  padding: 12px 24px;
+  backdrop-filter: blur(4px);
+  border: 1px dashed rgba(255,255,255,0.4);
+}
+
+.cf-cat-02-v10-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: {{ section.settings.label_size }}px;
+  font-weight: bold;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.1em;
+}
+
+@media (min-width: 768px) {
+  .cf-cat-02-v10-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+</style>
+
+<div class="cf-cat-02-v10">
+  <div class="cf-cat-02-v10-container">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-02-v10-item">
+        <div class="cf-cat-02-v10-inner">
+          {% if block.settings.image != blank %}
+            <img class="cf-cat-02-v10-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.label | strip_html | escape }}">
+          {% else %}
+            <div class="cf-cat-02-v10-img" style="background:#222;"></div>
+          {% endif %}
+          <div class="cf-cat-02-v10-label-wrap">
+            <h3 class="cf-cat-02-v10-label">{{ block.settings.label }}</h3>
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Hazard Box Grid",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F8F8F8"},
+    {"type":"color","id":"tape_1","label":"Tape Color 1","default":"#eab308"},
+    {"type":"color","id":"tape_2","label":"Tape Color 2","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Label Text Color","default":"#eab308"},
+    {"type":"range","id":"label_size","label":"Label Size","min":12,"max":40,"step":2,"default":20},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 6,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"label","label":"Label","default":"Tactical"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "10 · Hazard Box Grid",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

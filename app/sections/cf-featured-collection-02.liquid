@@ -1,0 +1,213 @@
+<style>
+.cf-fc-02 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-fc-02-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-02-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  border-bottom: 4px solid {{ section.settings.border_color }};
+  padding-bottom: 20px;
+}
+
+.cf-fc-02-title {
+  font-size: clamp(32px, 6vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.cf-fc-02-link {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: {{ section.settings.text_color }};
+  background: {{ section.settings.border_color }};
+  color: {{ section.settings.bg_color }};
+  padding: 10px 24px;
+  transition: 0.2s;
+}
+
+.cf-fc-02-link:hover {
+  background: transparent;
+  color: {{ section.settings.text_color }};
+  box-shadow: 4px 4px 0 {{ section.settings.border_color }};
+}
+
+.cf-fc-02-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0; /* Brutalist: no gap, borders overlapping */
+  border: 4px solid {{ section.settings.border_color }};
+  background: {{ section.settings.border_color }};
+}
+
+.cf-fc-02-item {
+  background: {{ section.settings.item_bg }};
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  outline: 2px solid {{ section.settings.border_color }};
+  transition: 0.2s;
+  z-index: 1;
+}
+
+.cf-fc-02-item:hover {
+  z-index: 10;
+  transform: scale(1.02);
+  box-shadow: 10px 10px 0 rgba(0,0,0,0.5);
+}
+
+.cf-fc-02-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  background: #f1f1f1;
+  overflow: hidden;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-02-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.1);
+  transition: transform 0.3s;
+}
+
+.cf-fc-02-item:hover .cf-fc-02-img {
+  transform: scale(1.05);
+}
+
+.cf-fc-02-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.item_bg }};
+  padding: 4px 8px;
+  font-weight: 900;
+  font-size: 12px;
+  text-transform: uppercase;
+  z-index: 2;
+  border: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-02-info {
+  padding: 20px;
+  text-align: left;
+}
+
+.cf-fc-02-title-main {
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+
+.cf-fc-02-price {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  font-weight: bold;
+  color: {{ section.settings.text_color }};
+}
+
+.cf-fc-02-price-compare {
+  text-decoration: line-through;
+  color: #888;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .cf-fc-02-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}
+</style>
+
+<div class="cf-fc-02">
+  <div class="cf-fc-02-inner">
+    <div class="cf-fc-02-header">
+      <h2 class="cf-fc-02-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.link }}" class="cf-fc-02-link">{{ section.settings.link_text }}</a>
+    </div>
+
+    <div class="cf-fc-02-grid">
+      {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+        {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+          <a href="{{ product.url }}" class="cf-fc-02-item">
+            <div class="cf-fc-02-img-wrap">
+              {% if product.compare_at_price > product.price %}
+                <div class="cf-fc-02-badge">SALE</div>
+              {% endif %}
+              <img class="cf-fc-02-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+            </div>
+            <div class="cf-fc-02-info">
+              <h3 class="cf-fc-02-title-main">{{ product.title }}</h3>
+              <div class="cf-fc-02-price">
+                {% if product.compare_at_price > product.price %}
+                  <span class="cf-fc-02-price-compare">{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                <span>{{ product.price | money }}</span>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.limit) %}
+          <a href="#" class="cf-fc-02-item">
+            <div class="cf-fc-02-img-wrap">
+              <div class="cf-fc-02-badge">NEW</div>
+              <div class="cf-fc-02-img" style="background:#555; display:flex; align-items:center; justify-content:center; color:#888;">PRODUCT</div>
+            </div>
+            <div class="cf-fc-02-info">
+              <h3 class="cf-fc-02-title-main">STREETWEAR PRODUCT {{ i }}</h3>
+              <div class="cf-fc-02-price"><span>$120.00</span></div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Brutalist Grid",
+  "settings": [
+    {"type":"text","id":"title","label":"Section Title","default":"LATEST DROPS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":80,"step":2,"default":48},
+    {"type":"text","id":"link_text","label":"Link Text","default":"VIEW ALL"},
+    {"type":"url","id":"link","label":"Link URL"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":4,"max":12,"step":4,"default":4},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F8F8F8"},
+    {"type":"color","id":"item_bg","label":"Product Card Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Grid & Borders","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Badge Color","default":"#ff003c"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"01 · Brutalist Grid Collection"}]
+}
+{% endschema %}

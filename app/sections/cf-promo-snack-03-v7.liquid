@@ -1,0 +1,77 @@
+<style>
+.cf-ps-03-v7 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: {{ section.settings.text_size }}px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: {{ section.settings.padding_y }}px 20px;
+  text-align: center;
+  /* Cyber Hex Background */
+  background-image: radial-gradient({{ section.settings.hex_color }} 1px, transparent 1px);
+  background-size: 10px 10px;
+  position: relative;
+  overflow: hidden;
+  border-top: 4px solid {{ section.settings.accent_color }};
+  border-bottom: 4px solid {{ section.settings.accent_color }};
+  box-shadow: inset 0 0 20px {{ section.settings.bg_color }};
+}
+
+.cf-ps-03-v7-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+  text-shadow: 2px 2px 0 {{ section.settings.bg_color }}; /* Ensure text readability over pattern */
+}
+
+.cf-ps-03-v7-link {
+  display: inline-block;
+  background: {{ section.settings.accent_color }};
+  color: #000;
+  text-decoration: none;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.7em;
+  font-weight: 900;
+  padding: 6px 12px;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: 0.3s;
+  text-shadow: none;
+}
+
+.cf-ps-03-v7-link:hover {
+  background: {{ section.settings.text_color }};
+  color: #000;
+}
+</style>
+
+<div class="cf-ps-03-v7">
+  <div class="cf-ps-03-v7-inner">
+    <span>{{ section.settings.text }}</span>
+    {% if section.settings.link_text != blank %}
+      <a href="{{ section.settings.link_url }}" class="cf-ps-03-v7-link">{{ section.settings.link_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Cyber Hex Ribbon",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#111111"},
+    {"type":"color","id":"hex_color","label":"Hex Dot Color","default":"#333333"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Yellow/Cyan Accent","default":"#fde047"},
+    {"type":"text","id":"text","label":"Text","default":"NEW DROPS ARE LIVE"},
+    {"type":"text","id":"link_text","label":"Link Text","default":"ENTER STORE"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":18},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":30,"step":1,"default":15}
+  ],
+  "presets": [{"name":"07 · Cyber Hex Ribbon"}]
+}
+{% endschema %}

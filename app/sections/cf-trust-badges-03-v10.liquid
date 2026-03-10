@@ -1,0 +1,130 @@
+<style>
+.cf-tb-03-v10 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: 'Inter', sans-serif;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+}
+
+.cf-tb-03-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.cf-tb-03-v10-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.cf-tb-03-v10-icon {
+  color: #fff;
+  /* RGB TEXT EFFECT on ICON */
+  background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: cf-tb-03-v10-rgb 4s linear infinite;
+}
+
+@keyframes cf-tb-03-v10-rgb {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.cf-tb-03-v10-icon svg {
+  width: 48px; height: 48px;
+}
+
+.cf-tb-03-v10-title {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-style: italic;
+  margin: 0;
+}
+
+.cf-tb-03-v10-desc {
+  color: #888;
+  font-size: 14px;
+  margin: 0;
+}
+</style>
+
+<div class="cf-tb-03-v10">
+  <div class="cf-tb-03-v10-inner">
+    {% for block in section.blocks %}
+      <div class="cf-tb-03-v10-item">
+        <div class="cf-tb-03-v10-icon">
+          {% if block.settings.icon == 'shield' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          {% elsif block.settings.icon == 'zap' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          {% elsif block.settings.icon == 'truck' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          {% else %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          {% endif %}
+        </div>
+        <div>
+          <h3 class="cf-tb-03-v10-title">{{ block.settings.title }}</h3>
+          {% if block.settings.desc != blank %}
+            <p class="cf-tb-03-v10-desc">{{ block.settings.desc }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · RGB Animated Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0b0b0f"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {"value": "shield", "label": "Shield"},
+            {"value": "zap", "label": "Lightning"},
+            {"value": "truck", "label": "Truck"},
+            {"value": "box", "label": "Hardware Box"}
+          ],
+          "default": "shield"
+        },
+        {"type":"text","id":"title","label":"Title","default":"GUARANTEE"},
+        {"type":"text","id":"desc","label":"Description","default":"100% Quality"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "10 · RGB Animated Badges",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

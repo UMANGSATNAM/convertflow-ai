@@ -1,0 +1,188 @@
+<style>
+.cf-pr-02-v9 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-pr-02-v9-container {
+  max-width: 1200px;
+  width: 100%;
+  min-height: {{ section.settings.height }}px;
+  position: relative;
+  border: 2px solid {{ section.settings.accent_color }};
+  box-shadow: 0 0 20px {{ section.settings.accent_color }}40 inset, 0 0 20px {{ section.settings.accent_color }}40;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-pr-02-v9-scanlines {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.cf-pr-02-v9-image {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) sepia(100%) hue-rotate(100deg) brightness(0.8) contrast(1.5);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.cf-pr-02-v9-content {
+  position: relative;
+  z-index: 10;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.cf-pr-02-v9-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: {{ section.settings.accent_color }};
+  text-shadow: 0 0 5px {{ section.settings.accent_color }};
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.cf-pr-02-v9-body {
+  margin-top: auto;
+}
+
+.cf-pr-02-v9-title {
+  font-size: clamp(32px, 8vw, {{ section.settings.title_size }}px);
+  color: {{ section.settings.accent_color }};
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 2px 0 0 red, -2px 0 0 blue;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+
+.cf-pr-02-v9-desc {
+  font-size: 16px;
+  color: {{ section.settings.text_color }};
+  max-width: 500px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+  text-shadow: 0 0 2px {{ section.settings.text_color }};
+}
+
+.cf-pr-02-v9-btn {
+  display: inline-block;
+  background: transparent;
+  color: {{ section.settings.accent_color }};
+  border: 1px solid {{ section.settings.accent_color }};
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-shadow: 0 0 5px {{ section.settings.accent_color }};
+  box-shadow: 0 0 10px {{ section.settings.accent_color }} inset;
+  transition: all 0.2s;
+}
+
+.cf-pr-02-v9-btn:hover {
+  background: {{ section.settings.accent_color }};
+  color: {{ section.settings.bg_color }};
+  text-shadow: none;
+}
+
+@keyframes cf-pr-02-v9-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100vh); }
+}
+
+.cf-pr-02-v9-bar {
+  position: absolute;
+  top: -100px; left: 0; width: 100%; height: 50px;
+  background: rgba(255,255,255,0.05);
+  z-index: 6;
+  pointer-events: none;
+  animation: cf-pr-02-v9-scroll 8s linear infinite;
+}
+
+@media (min-width: 768px) {
+  .cf-pr-02-v9-content { padding: 60px; }
+}
+</style>
+
+<div class="cf-pr-02-v9">
+  <div class="cf-pr-02-v9-container">
+    {% if section.settings.image != blank %}
+      <img class="cf-pr-02-v9-image" src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ section.settings.title | strip_html | escape }}">
+    {% else %}
+      <div class="cf-pr-02-v9-image" style="background:#111;"></div>
+    {% endif %}
+    
+    <div class="cf-pr-02-v9-scanlines"></div>
+    <div class="cf-pr-02-v9-bar"></div>
+
+    <div class="cf-pr-02-v9-content">
+      <div class="cf-pr-02-v9-header">
+        <span>REC ⏺</span>
+        <span id="cf-pr-02-v9-timer-{{ section.id }}">00:00:00</span>
+      </div>
+      
+      <div class="cf-pr-02-v9-body">
+        <h2 class="cf-pr-02-v9-title">{{ section.settings.title }}</h2>
+        <p class="cf-pr-02-v9-desc">{{ section.settings.desc }}</p>
+        <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v9-btn">{{ section.settings.btn_label }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let s = 0;
+    const el = document.getElementById('cf-pr-02-v9-timer-{{ section.id }}');
+    if(el) {
+      setInterval(() => {
+        s++;
+        const hh = String(Math.floor(s/3600)).padStart(2,'0');
+        const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
+        const ss = String(s%60).padStart(2,'0');
+        el.textContent = `${hh}:${mm}:${ss}`;
+      }, 1000);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "09 · CRT Monitor Promo",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"title","label":"Title","default":"SYSTEM OVERRIDE"},
+    {"type":"range","id":"title_size","label":"Title Size","min":30,"max":100,"step":2,"default":64},
+    {"type":"textarea","id":"desc","label":"Description","default":"Bypass the mainframe. Access the underground collection before the server wipe."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"EXECUTE COMMAND"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Outer Background","default":"#000000"},
+    {"type":"color","id":"accent_color","label":"CRT Phosphor Color","default":"#00ff41"},
+    {"type":"color","id":"text_color","label":"Description Text Color","default":"#e0e0e0"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":20,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40}
+  ],
+  "presets": [{"name":"09 · CRT Monitor Promo"}]
+}
+{% endschema %}

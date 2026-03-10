@@ -1,0 +1,127 @@
+<style>
+.cf-head-02-v6 {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.3s ease;
+}
+
+.cf-head-02-v6:hover {
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+}
+
+.cf-head-02-v6-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-head-02-v6-logo {
+  font-size: clamp(22px, 4vw, {{ section.settings.logo_size }}px);
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  position: relative;
+}
+
+.cf-head-02-v6-logo::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: {{ section.settings.accent_color }};
+  bottom: 4px;
+  right: -12px;
+  border-radius: 50%;
+}
+
+.cf-head-02-v6-nav {
+  display: none;
+  gap: 32px;
+}
+
+.cf-head-02-v6-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.cf-head-02-v6-link:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-head-02-v6-btn {
+  background: transparent;
+  color: {{ section.settings.text_color }};
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cf-head-02-v6-btn:hover {
+  background: {{ section.settings.text_color }};
+  color: #000;
+  border-color: {{ section.settings.text_color }};
+}
+
+@media (min-width: 1024px) {
+  .cf-head-02-v6-nav { display: flex; align-items: center; }
+  .cf-head-02-v6-main { padding: {{ section.settings.padding_y }}px 50px; }
+}
+</style>
+
+<header class="cf-head-02-v6">
+  <div class="cf-head-02-v6-main">
+    <nav class="cf-head-02-v6-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-02-v6-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-02-v6-link">{{ section.settings.link_2 }}</a>
+    </nav>
+    <a href="/" class="cf-head-02-v6-logo">{{ section.settings.logo_text }}</a>
+    <div style="display: flex; gap: 24px; align-items: center;">
+      <nav class="cf-head-02-v6-nav">
+        <a href="{{ section.settings.link_3_url }}" class="cf-head-02-v6-link">{{ section.settings.link_3 }}</a>
+      </nav>
+      <a href="/cart" class="cf-head-02-v6-btn">Bag (0)</a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "06 · Transparent Urban",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"GHOST"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":64,"step":2,"default":32},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Shop"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/all"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Editorials"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/pages/editorials"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Stores"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/pages/stores"},
+    {"type":"color","id":"text_color","label":"Text Color (Light preferable)","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Dot Accent Color","default":"#ef4444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":24}
+  ],
+  "presets": [{"name":"06 · Transparent Urban"}]
+}
+{% endschema %}

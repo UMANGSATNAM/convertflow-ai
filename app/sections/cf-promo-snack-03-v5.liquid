@@ -1,0 +1,80 @@
+<style>
+.cf-ps-03-v5 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  background-image: linear-gradient({{ section.settings.grid_color }} 1px, transparent 1px),
+                    linear-gradient(90deg, {{ section.settings.grid_color }} 1px, transparent 1px);
+  background-size: 15px 15px;
+  color: {{ section.settings.text_color }};
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: {{ section.settings.text_size }}px;
+  padding: {{ section.settings.padding_y }}px 20px;
+  text-align: center;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-ps-03-v5-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: {{ section.settings.bg_color }}; /* Opaque background behind text */
+  padding: 4px 15px;
+  border: 1px solid {{ section.settings.border_color }};
+  display: inline-flex;
+}
+
+.cf-ps-03-v5-icon {
+  display: flex;
+  align-items: center;
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-ps-03-v5-icon svg {
+  width: 16px; height: 16px;
+}
+
+.cf-ps-03-v5-link {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  border-bottom: 1px solid {{ section.settings.text_color }};
+  transition: 0.2s;
+  font-weight: bold;
+}
+
+.cf-ps-03-v5-link:hover {
+  color: {{ section.settings.accent_color }};
+  border-color: {{ section.settings.accent_color }};
+}
+</style>
+
+<div class="cf-ps-03-v5">
+  <div class="cf-ps-03-v5-inner">
+    <div class="cf-ps-03-v5-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+    </div>
+    <span>{{ section.settings.text }}</span>
+    {% if section.settings.link_text != blank %}
+      <a href="{{ section.settings.link_url }}" class="cf-ps-03-v5-link">> {{ section.settings.link_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Grid System Alert",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#f4f4f5"},
+    {"type":"color","id":"grid_color","label":"Grid Color","default":"#e5e7eb"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#d1d5db"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111827"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#2563eb"},
+    {"type":"text","id":"text","label":"Text","default":"NEW INVENTORY RECEIVED."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"ACCESS CATALOG"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":12},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":30,"step":1,"default":15}
+  ],
+  "presets": [{"name":"05 · Grid System Alert"}]
+}
+{% endschema %}

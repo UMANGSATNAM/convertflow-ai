@@ -1,0 +1,127 @@
+<style>
+.cf-cat-02-v2 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+}
+
+.cf-cat-02-v2-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.cf-cat-02-v2-item {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  border: 2px solid {{ section.settings.border_color }};
+  display: flex;
+  align-items: flex-end;
+  text-decoration: none;
+  min-height: 300px;
+  transition: all 0.3s;
+}
+
+.cf-cat-02-v2-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 8px 8px 0 {{ section.settings.border_color }};
+}
+
+.cf-cat-02-v2-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  filter: contrast(1.1) brightness(0.85);
+  z-index: 1;
+}
+
+.cf-cat-02-v2-item:hover .cf-cat-02-v2-img {
+  transform: scale(1.05);
+}
+
+.cf-cat-02-v2-content {
+  position: relative;
+  z-index: 10;
+  padding: 30px;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+.cf-cat-02-v2-label {
+  font-family: inherit;
+  font-size: clamp(24px, 4vw, {{ section.settings.label_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-shadow: 2px 2px 0 #000;
+}
+
+@media (min-width: 768px) {
+  .cf-cat-02-v2-container {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: repeat(2, 300px);
+  }
+  .cf-cat-02-v2-item:nth-child(1) {
+    grid-row: 1 / span 2;
+    min-height: 100%;
+  }
+}
+</style>
+
+<div class="cf-cat-02-v2">
+  <div class="cf-cat-02-v2-container">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-02-v2-item">
+        {% if block.settings.image != blank %}
+          <img class="cf-cat-02-v2-img" src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.label | strip_html | escape }}">
+        {% else %}
+          <div class="cf-cat-02-v2-img" style="background: #222;"></div>
+        {% endif %}
+        <div class="cf-cat-02-v2-content">
+          <h3 class="cf-cat-02-v2-label">{{ block.settings.label }}</h3>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Asymmetrical Grid",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Borders & Shadows","default":"#ef4444"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"range","id":"label_size","label":"Label Size","min":20,"max":60,"step":2,"default":40},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 3,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"label","label":"Label","default":"Outerwear"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "02 · Asymmetrical Grid",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}

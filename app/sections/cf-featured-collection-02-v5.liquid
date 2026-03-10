@@ -1,0 +1,219 @@
+<style>
+.cf-fc-02-v5 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-fc-02-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  border: 4px solid {{ section.settings.border_color }};
+  background: #ffffff;
+  padding: 16px;
+  position: relative;
+}
+
+.cf-fc-02-v5-tape-border {
+  position: absolute;
+  top: -12px; left: -12px; right: -12px; bottom: -12px;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    {{ section.settings.tape_1 }},
+    {{ section.settings.tape_1 }} 20px,
+    {{ section.settings.tape_2 }} 20px,
+    {{ section.settings.tape_2 }} 40px
+  );
+}
+
+.cf-fc-02-v5-content {
+  position: relative;
+  z-index: 10;
+  background: #ffffff;
+  padding: 40px 20px;
+  border: 4px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-02-v5-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cf-fc-02-v5-header-badge {
+  background: {{ section.settings.tape_1 }};
+  color: {{ section.settings.tape_2 }};
+  padding: 4px 12px;
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  letter-spacing: 0.1em;
+}
+
+.cf-fc-02-v5-title {
+  font-size: clamp(32px, 6vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.title_color }};
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.cf-fc-02-v5-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.cf-fc-02-v5-item {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-fc-02-v5-img-wrap {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #f1f1f1;
+  border: 4px solid {{ section.settings.border_color }};
+  box-shadow: 6px 6px 0 {{ section.settings.border_color }};
+  overflow: hidden;
+  transition: all 0.2s;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.cf-fc-02-v5-item:hover .cf-fc-02-v5-img-wrap {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 {{ section.settings.border_color }};
+}
+
+.cf-fc-02-v5-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.1);
+}
+
+.cf-fc-02-v5-info {
+  text-align: center;
+}
+
+.cf-fc-02-v5-prod-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0 0 10px 0;
+  line-height: 1.1;
+}
+
+.cf-fc-02-v5-prod-price {
+  font-size: 16px;
+  font-weight: 900;
+  color: {{ section.settings.tape_2 }};
+  font-family: inherit;
+}
+
+.cf-fc-02-v5-footer {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.cf-fc-02-v5-link {
+  display: inline-block;
+  background: {{ section.settings.tape_2 }};
+  color: #fff;
+  padding: 16px 40px;
+  font-weight: 900;
+  font-size: 18px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 4px solid {{ section.settings.tape_2 }};
+  transition: 0.2s;
+}
+
+.cf-fc-02-v5-link:hover {
+  background: transparent;
+  color: {{ section.settings.tape_2 }};
+}
+
+@media (min-width: 768px) {
+  .cf-fc-02-v5-content { padding: 60px; }
+}
+</style>
+
+<div class="cf-fc-02-v5">
+  <div class="cf-fc-02-v5-inner">
+    <div class="cf-fc-02-v5-tape-border"></div>
+    <div class="cf-fc-02-v5-content">
+      
+      <div class="cf-fc-02-v5-header">
+        <div class="cf-fc-02-v5-header-badge">{{ section.settings.badge }}</div>
+        <h2 class="cf-fc-02-v5-title">{{ section.settings.title }}</h2>
+      </div>
+
+      <div class="cf-fc-02-v5-grid">
+        {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+          {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+            <a href="{{ product.url }}" class="cf-fc-02-v5-item">
+              <div class="cf-fc-02-v5-img-wrap">
+                <img class="cf-fc-02-v5-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+              </div>
+              <div class="cf-fc-02-v5-info">
+                <h3 class="cf-fc-02-v5-prod-title">{{ product.title }}</h3>
+                <div class="cf-fc-02-v5-prod-price">{{ product.price | money }}</div>
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+          {% for i in (1..section.settings.limit) %}
+            <a href="#" class="cf-fc-02-v5-item">
+              <div class="cf-fc-02-v5-img-wrap">
+                <div class="cf-fc-02-v5-img" style="background:#ddd;"></div>
+              </div>
+              <div class="cf-fc-02-v5-info">
+                <h3 class="cf-fc-02-v5-prod-title">Product {{ i }}</h3>
+                <div class="cf-fc-02-v5-prod-price">$65.00</div>
+              </div>
+            </a>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="cf-fc-02-v5-footer">
+        <a href="{{ section.settings.link }}" class="cf-fc-02-v5-link">{{ section.settings.link_text }}</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Caution Border Grid",
+  "settings": [
+    {"type":"text","id":"badge","label":"Badge Text","default":"RESTOCKED"},
+    {"type":"text","id":"title","label":"Section Title","default":"HIGH VISIBILITY"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":80,"step":2,"default":48},
+    {"type":"text","id":"link_text","label":"Link Text","default":"SHOP ALL GEAR"},
+    {"type":"url","id":"link","label":"Link URL"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":3,"max":12,"step":3,"default":6},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F8F8F8"},
+    {"type":"color","id":"border_color","label":"Grid & Borders","default":"#111111"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Product Title","default":"#111111"},
+    {"type":"color","id":"tape_1","label":"Tape Yellow","default":"#eab308"},
+    {"type":"color","id":"tape_2","label":"Tape Black/Text","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"05 · Caution Border Grid Collection"}]
+}
+{% endschema %}

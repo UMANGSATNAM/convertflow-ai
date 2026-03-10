@@ -1,0 +1,155 @@
+<style>
+.cf-tb-03-v4 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Abstract blob */
+.cf-tb-03-v4::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px; height: 200px;
+  background: rgba(37, 99, 235, 0.2);
+  filter: blur(80px);
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.cf-tb-03-v4-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.cf-tb-03-v4-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.cf-tb-03-v4-icon {
+  width: 50px; height: 50px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: {{ section.settings.accent_color }};
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: 0.3s;
+}
+
+.cf-tb-03-v4-item:hover .cf-tb-03-v4-icon {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.cf-tb-03-v4-icon svg {
+  width: 24px; height: 24px;
+}
+
+.cf-tb-03-v4-title {
+  color: {{ section.settings.text_color }};
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cf-tb-03-v4-desc {
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+  margin: 0;
+}
+</style>
+
+<div class="cf-tb-03-v4">
+  <div class="cf-tb-03-v4-inner">
+    {% for block in section.blocks %}
+      <div class="cf-tb-03-v4-item">
+        <div class="cf-tb-03-v4-icon">
+          {% if block.settings.icon == 'shield' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          {% elsif block.settings.icon == 'zap' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          {% elsif block.settings.icon == 'truck' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          {% else %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          {% endif %}
+        </div>
+        <div>
+          <h3 class="cf-tb-03-v4-title">{{ block.settings.title }}</h3>
+          {% if block.settings.desc != blank %}
+            <p class="cf-tb-03-v4-desc">{{ block.settings.desc }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Glass Trust Pane",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0f172a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#f8fafc"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#60a5fa"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {"value": "shield", "label": "Shield"},
+            {"value": "zap", "label": "Lightning Fast"},
+            {"value": "truck", "label": "Truck"},
+            {"value": "smile", "label": "Face"}
+          ],
+          "default": "shield"
+        },
+        {"type":"text","id":"title","label":"Title","default":"Secure Checkout"},
+        {"type":"text","id":"desc","label":"Description","default":"Fully encrypted integration"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Glassmorphism Trust Pane",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

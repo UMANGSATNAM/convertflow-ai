@@ -1,0 +1,134 @@
+<style>
+.cf-head-02-v7 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  box-sizing: border-box;
+}
+
+.cf-head-02-v7-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-head-02-v7-logo {
+  font-size: clamp(24px, 5vw, {{ section.settings.logo_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.logo_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: -0.05em;
+  background: {{ section.settings.logo_color }};
+  color: {{ section.settings.bg_color }};
+  padding: 4px 12px;
+  transform: skewX(-5deg);
+  display: inline-block;
+  transition: 0.2s;
+}
+
+.cf-head-02-v7-logo:hover {
+  transform: scale(1.05) skewX(-5deg);
+  background: {{ section.settings.hover_color }};
+}
+
+.cf-head-02-v7-nav {
+  display: none;
+  gap: 20px;
+}
+
+.cf-head-02-v7-link {
+  font-size: 15px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 12px;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.cf-head-02-v7-link:hover {
+  color: {{ section.settings.hover_color }};
+  border-color: {{ section.settings.hover_color }};
+  background: rgba(0,0,0,0.03);
+}
+
+.cf-head-02-v7-ticker {
+  background: {{ section.settings.ticker_bg }};
+  color: {{ section.settings.ticker_text }};
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 6px 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-head-02-v7-twrap {
+  display: inline-block;
+  animation: cf-h07-scroll 10s linear infinite;
+}
+
+@keyframes cf-h07-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (min-width: 1024px) {
+  .cf-head-02-v7-nav { display: flex; align-items: center; }
+  .cf-head-02-v7-main { padding: {{ section.settings.padding_y }}px 40px; }
+}
+</style>
+
+<header class="cf-head-02-v7">
+  <div class="cf-head-02-v7-main">
+    <a href="/" class="cf-head-02-v7-logo">{{ section.settings.logo_text }}</a>
+    <nav class="cf-head-02-v7-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-02-v7-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-02-v7-link">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-02-v7-link">{{ section.settings.link_3 }}</a>
+    </nav>
+    <a href="/cart" class="cf-head-02-v7-link" style="border: 2px solid {{ section.settings.text_color }};">CART (0)</a>
+  </div>
+  {% if section.settings.ticker != blank %}
+  <div class="cf-head-02-v7-ticker">
+    <div class="cf-head-02-v7-twrap">
+      {{ section.settings.ticker }} +++ {{ section.settings.ticker }} +++ {{ section.settings.ticker }} +++ {{ section.settings.ticker }} +++ {{ section.settings.ticker }} +++ {{ section.settings.ticker }}
+    </div>
+  </div>
+  {% endif %}
+</header>
+
+{% schema %}
+{
+  "name": "07 · Hypebeast Ticker",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"HYPE"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":60,"step":2,"default":40},
+    {"type":"text","id":"ticker","label":"Ticker Text","default":"LIMITED EDITION DROP // SECURE YOURS // EXCLUSIVE"},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Drops"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/drops"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Apparel"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/apparel"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Objects"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/objects"},
+    {"type":"color","id":"bg_color","label":"Main Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#000000"},
+    {"type":"color","id":"logo_color","label":"Logo Fill","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Link Color Text","default":"#000000"},
+    {"type":"color","id":"hover_color","label":"Hover Accent","default":"#ef4444"},
+    {"type":"color","id":"ticker_bg","label":"Ticker Background","default":"#000000"},
+    {"type":"color","id":"ticker_text","label":"Ticker Text","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":16}
+  ],
+  "presets": [{"name":"07 · Hypebeast Ticker Header"}]
+}
+{% endschema %}

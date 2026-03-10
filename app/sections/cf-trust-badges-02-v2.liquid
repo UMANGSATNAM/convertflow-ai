@@ -1,0 +1,131 @@
+<style>
+.cf-tb-02-v2 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-tb-02-v2-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  border-top: 1px solid {{ section.settings.neon_color }};
+  border-bottom: 1px solid {{ section.settings.neon_color }};
+  padding: 30px 0;
+}
+
+.cf-tb-02-v2-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.cf-tb-02-v2-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-align: left;
+}
+
+.cf-tb-02-v2-icon {
+  color: {{ section.settings.neon_color }};
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-shadow: 0 0 10px {{ section.settings.neon_color }};
+}
+
+.cf-tb-02-v2-icon svg {
+  width: 100%; height: 100%;
+  fill: currentColor;
+}
+
+.cf-tb-02-v2-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-tb-02-v2-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  margin: 0 0 4px 0;
+  letter-spacing: 0.1em;
+}
+
+.cf-tb-02-v2-desc {
+  font-size: 12px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.6;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .cf-tb-02-v2-grid {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 20px;
+  }
+}
+</style>
+
+<div class="cf-tb-02-v2">
+  <div class="cf-tb-02-v2-inner">
+    <div class="cf-tb-02-v2-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-v2-item">
+          <div class="cf-tb-02-v2-icon">
+            {% if block.settings.icon_svg != blank %}
+              {{ block.settings.icon_svg }}
+            {% else %}
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            {% endif %}
+          </div>
+          <div class="cf-tb-02-v2-info">
+            <h3 class="cf-tb-02-v2-title">{{ block.settings.title }}</h3>
+            <p class="cf-tb-02-v2-desc">{{ block.settings.desc }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Neon Utility Bar",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#09090b"},
+    {"type":"color","id":"neon_color","label":"Neon Color","default":"#00ff41"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"SECURE CHECKOUT"},
+        {"type":"text","id":"desc","label":"Description","default":"ENCRYPTED DATA TRANSFER"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "02 · Neon Utility Bar",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

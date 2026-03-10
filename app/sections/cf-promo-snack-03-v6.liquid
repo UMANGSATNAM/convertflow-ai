@@ -1,0 +1,87 @@
+<style>
+.cf-ps-03-v6 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-03-v6-inner {
+  background: {{ section.settings.bg_color }};
+  border: 1px solid {{ section.settings.accent_color }};
+  box-shadow: 0 0 10px {{ section.settings.accent_color }}, inset 0 0 10px {{ section.settings.accent_color }}40;
+  padding: 10px 30px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: {{ section.settings.text_size }}px;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.cf-ps-03-v6-icon {
+  color: {{ section.settings.accent_color }};
+  display: flex;
+  align-items: center;
+  /* Simple pulse animation on the icon */
+  animation: cf-ps-03-v6-pulse 2s infinite;
+}
+
+@keyframes cf-ps-03-v6-pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.cf-ps-03-v6-icon svg {
+  width: 18px; height: 18px;
+}
+
+.cf-ps-03-v6-link {
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.2s;
+  padding: 4px 8px;
+  background: rgba(0,255,255,0.1);
+}
+
+.cf-ps-03-v6-link:hover {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+  box-shadow: 0 0 10px {{ section.settings.accent_color }};
+}
+</style>
+
+<div class="cf-ps-03-v6">
+  <div class="cf-ps-03-v6-inner">
+    <div class="cf-ps-03-v6-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <span>{{ section.settings.text }}</span>
+    {% if section.settings.link_text != blank %}
+      <a href="{{ section.settings.link_url }}" class="cf-ps-03-v6-link">{{ section.settings.link_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Neon Frame Alert",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Neon Accent Config","default":"#0ff"},
+    {"type":"text","id":"text","label":"Text","default":"Server capacity at 98%"},
+    {"type":"text","id":"link_text","label":"Link Text","default":"UPGRADE PLAN"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":13},
+    {"type":"range","id":"padding_y","label":"Container Vertical Padding","min":5,"max":40,"step":1,"default":15}
+  ],
+  "presets": [{"name":"06 · Neon Frame Alert"}]
+}
+{% endschema %}

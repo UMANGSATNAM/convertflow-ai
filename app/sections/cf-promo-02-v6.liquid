@@ -1,0 +1,109 @@
+<style>
+.cf-pr-02-v6 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  min-height: {{ section.settings.height }}px;
+}
+
+.cf-pr-02-v6-container {
+  max-width: 1000px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    {{ section.settings.tape_color_1 }},
+    {{ section.settings.tape_color_1 }} 40px,
+    {{ section.settings.tape_color_2 }} 40px,
+    {{ section.settings.tape_color_2 }} 80px
+  );
+  padding: clamp(20px, 4vw, 40px);
+  position: relative;
+  box-shadow: 12px 12px 0 {{ section.settings.border_color }};
+  border: 4px solid {{ section.settings.border_color }};
+}
+
+.cf-pr-02-v6-inner {
+  background: {{ section.settings.inner_bg }};
+  border: 4px solid {{ section.settings.border_color }};
+  padding: clamp(40px, 8vw, 80px);
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.cf-pr-02-v6-title {
+  font-size: clamp(36px, 8vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.title_color }};
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  margin-bottom: 24px;
+  line-height: 0.9;
+  text-shadow: 2px 2px 0 {{ section.settings.tape_color_1 }};
+}
+
+.cf-pr-02-v6-desc {
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin-bottom: 40px;
+  letter-spacing: 0.1em;
+}
+
+.cf-pr-02-v6-btn {
+  display: inline-block;
+  background: {{ section.settings.border_color }};
+  color: {{ section.settings.inner_bg }};
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 16px 36px;
+  border: 4px solid {{ section.settings.border_color }};
+  transition: all 0.2s ease;
+}
+
+.cf-pr-02-v6-btn:hover {
+  background: transparent;
+  color: {{ section.settings.border_color }};
+  transform: scale(1.05);
+  box-shadow: 4px 4px 0 {{ section.settings.border_color }};
+}
+</style>
+
+<div class="cf-pr-02-v6">
+  <div class="cf-pr-02-v6-container">
+    <div class="cf-pr-02-v6-inner">
+      <h2 class="cf-pr-02-v6-title">{{ section.settings.title }}</h2>
+      <p class="cf-pr-02-v6-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v6-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Caution Tape Promo",
+  "settings": [
+    {"type":"text","id":"title","label":"Title","default":"FINAL SALE"},
+    {"type":"range","id":"title_size","label":"Title Size","min":40,"max":160,"step":4,"default":120},
+    {"type":"text","id":"desc","label":"Description","default":"UP TO 50% OFF ALL ARCHIVE COLLECTIONS"},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"SHOP THE SALE"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/sale"},
+    {"type":"color","id":"bg_color","label":"Page Background","default":"#f8f8f8"},
+    {"type":"color","id":"inner_bg","label":"Inner Box Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Borders & Button","default":"#111111"},
+    {"type":"color","id":"title_color","label":"Title Color","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Description Color","default":"#333333"},
+    {"type":"color","id":"tape_color_1","label":"Tape Color 1 (Yellow)","default":"#eab308"},
+    {"type":"color","id":"tape_color_2","label":"Tape Color 2 (Black)","default":"#111111"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":20,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60}
+  ],
+  "presets": [{"name":"06 · Caution Tape Promo"}]
+}
+{% endschema %}

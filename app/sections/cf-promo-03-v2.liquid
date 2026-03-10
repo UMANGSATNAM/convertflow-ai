@@ -1,0 +1,217 @@
+<style>
+.cf-pr-03-v2 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-pr-03-v2-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-pr-03-v2-card {
+  background: #000;
+  border: 1px solid {{ section.settings.accent_color }};
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scanlines */
+.cf-pr-03-v2-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.cf-pr-03-v2-topbar {
+  background: {{ section.settings.accent_color }};
+  padding: 8px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cf-pr-03-v2-title {
+  color: #000;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.cf-pr-03-v2-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.cf-pr-03-v2-btn {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #000;
+  opacity: 0.5;
+}
+
+.cf-pr-03-v2-content-wrap {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.cf-pr-03-v2-img-container {
+  width: 100%;
+  aspect-ratio: 16/9;
+  position: relative;
+  overflow: hidden;
+}
+
+.cf-pr-03-v2-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.2) sepia(100%) hue-rotate(80deg) saturate(400%) brightness(0.7);
+  opacity: 0.8;
+}
+
+.cf-pr-03-v2-text {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+.cf-pr-03-v2-heading {
+  font-size: clamp(24px, 5vw, 48px);
+  font-weight: bold;
+  color: {{ section.settings.accent_color }};
+  margin: 0 0 15px 0;
+  line-height: 1.2;
+}
+
+.cf-pr-03-v2-heading::before {
+  content: '>';
+  margin-right: 15px;
+}
+
+.cf-pr-03-v2-subheading {
+  font-size: 16px;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 30px 0;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.cf-pr-03-v2-subheading::before {
+  content: '$ ';
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-pr-03-v2-link {
+  display: inline-block;
+  background: transparent;
+  color: {{ section.settings.accent_color }};
+  border: 1px solid {{ section.settings.accent_color }};
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.cf-pr-03-v2-link:hover {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+  box-shadow: 0 0 15px {{ section.settings.accent_color }}80;
+}
+
+/* Typewriter animation approximation */
+.cf-pr-03-v2-cursor {
+  display: inline-block;
+  width: 10px; height: 1em;
+  background: {{ section.settings.accent_color }};
+  vertical-align: middle;
+  animation: cf-pr-03-v2-blink 1s step-end infinite;
+  margin-left: 5px;
+}
+
+@keyframes cf-pr-03-v2-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (min-width: 768px) {
+  .cf-pr-03-v2-content-wrap {
+    flex-direction: row;
+    align-items: center;
+  }
+  .cf-pr-03-v2-img-container {
+    flex: 1;
+    border-right: 1px solid {{ section.settings.accent_color }};
+  }
+  .cf-pr-03-v2-text {
+    flex: 1;
+  }
+}
+</style>
+
+<div class="cf-pr-03-v2">
+  <div class="cf-pr-03-v2-inner">
+    <div class="cf-pr-03-v2-card">
+      <div class="cf-pr-03-v2-topbar">
+        <h3 class="cf-pr-03-v2-title">{{ section.settings.top_label }}</h3>
+        <div class="cf-pr-03-v2-controls">
+          <div class="cf-pr-03-v2-btn"></div>
+          <div class="cf-pr-03-v2-btn"></div>
+          <div class="cf-pr-03-v2-btn"></div>
+        </div>
+      </div>
+      <div class="cf-pr-03-v2-content-wrap">
+        <div class="cf-pr-03-v2-img-container">
+          {% if section.settings.image != blank %}
+            <img src="{{ section.settings.image | image_url: width: 1000 }}" alt="Promo Image" class="cf-pr-03-v2-img">
+          {% else %}
+            <div class="cf-pr-03-v2-img" style="background: #222; display:flex; align-items:center; justify-content:center; color:#00ff41;">IMG_DATA_MISSING</div>
+          {% endif %}
+        </div>
+        <div class="cf-pr-03-v2-text">
+          <h2 class="cf-pr-03-v2-heading">{{ section.settings.heading | newline_to_br }}</h2>
+          <p class="cf-pr-03-v2-subheading">{{ section.settings.subheading }}<span class="cf-pr-03-v2-cursor"></span></p>
+          {% if section.settings.link_text != blank %}
+            <a href="{{ section.settings.link_url }}" class="cf-pr-03-v2-link">[{{ section.settings.link_text }}]</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Hacker Terminal Promo",
+  "settings": [
+    {"type":"text","id":"top_label","label":"Window Title","default":"root@system:~"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"textarea","id":"heading","label":"Heading","default":"NEW_HARDWARE\nDETECTED"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"Upgrade your rig with next-gen components."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"INITIATE_UPGRADE"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0b0b0f"},
+    {"type":"color","id":"accent_color","label":"Terminal Green Accent","default":"#00ff41"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#d4d4d4"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"02 · Hacker Terminal Promo"}]
+}
+{% endschema %}

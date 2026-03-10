@@ -1,0 +1,93 @@
+<style>
+.cf-ps-03-v4 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 10px; /* Assuming it might float */
+  z-index: 50;
+  pointer-events: none; /* Let clicks pass through the container... */
+}
+
+.cf-ps-03-v4-inner {
+  background: {{ section.settings.bg_color | color_modify: 'alpha', 0.6 }};
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 40px;
+  padding: 8px 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: 500;
+  color: {{ section.settings.text_color }};
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  pointer-events: auto; /* ...but catch clicks within the pill */
+}
+
+.cf-ps-03-v4-badge {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cf-ps-03-v4-link {
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: 0.2s;
+}
+
+.cf-ps-03-v4-link:hover {
+  text-decoration: underline;
+}
+
+.cf-ps-03-v4-link svg {
+  width: 14px; height: 14px;
+}
+</style>
+
+<div class="cf-ps-03-v4">
+  <div class="cf-ps-03-v4-inner">
+    {% if section.settings.label != blank %}
+      <div class="cf-ps-03-v4-badge">{{ section.settings.label }}</div>
+    {% endif %}
+    <span>{{ section.settings.text }}</span>
+    {% if section.settings.link_text != blank %}
+      <a href="{{ section.settings.link_url }}" class="cf-ps-03-v4-link">
+        {{ section.settings.link_text }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Glassmorphism Snack",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#1f2937"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#f9fafb"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#3b82f6"},
+    {"type":"text","id":"label","label":"Badge Label","default":"NEW"},
+    {"type":"text","id":"text","label":"Text","default":"Pro lineup is now available."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"Shop now"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":14},
+    {"type":"range","id":"padding_y","label":"Container Vertical Padding","min":5,"max":40,"step":1,"default":10}
+  ],
+  "presets": [{"name":"04 · Glassmorphism Snack"}]
+}
+{% endschema %}

@@ -1,0 +1,151 @@
+<style>
+.cf-pr-03-v8 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-pr-03-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-pr-03-v8-img-col {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #111;
+  overflow: hidden;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-pr-03-v8-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  filter: contrast(1.1);
+}
+
+.cf-pr-03-v8-data-overlay {
+  position: absolute;
+  top: 20px; left: 20px;
+  color: {{ section.settings.accent_color }};
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cf-pr-03-v8-text-col {
+  background: {{ section.settings.panel_bg }};
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cf-pr-03-v8-heading {
+  font-size: clamp(24px, 4vw, {{ section.settings.title_size }}px);
+  font-weight: bold;
+  color: {{ section.settings.accent_color }};
+  margin: 0 0 20px 0;
+  line-height: 1.2;
+}
+
+.cf-pr-03-v8-heading::before {
+  content: 'root@store:~# ';
+  color: {{ section.settings.text_color }};
+  opacity: 0.5;
+}
+
+.cf-pr-03-v8-desc {
+  font-size: 14px;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 30px 0;
+  line-height: 1.6;
+}
+
+.cf-pr-03-v8-desc span {
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-pr-03-v8-btn {
+  display: inline-block;
+  background: transparent;
+  color: {{ section.settings.accent_color }};
+  border: 1px solid {{ section.settings.accent_color }};
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: 0.2s;
+  align-self: flex-start;
+}
+
+.cf-pr-03-v8-btn:hover {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+}
+
+@media (min-width: 768px) {
+  .cf-pr-03-v8-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cf-pr-03-v8-img-col {
+    aspect-ratio: auto;
+    border-bottom: none;
+    border-right: 2px solid {{ section.settings.border_color }};
+  }
+}
+</style>
+
+<div class="cf-pr-03-v8">
+  <div class="cf-pr-03-v8-inner">
+    <div class="cf-pr-03-v8-img-col">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 800 }}" alt="Promo Image" class="cf-pr-03-v8-img">
+      {% else %}
+        <div class="cf-pr-03-v8-img" style="background: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect fill=\'%23222\' width=\'100\' height=\'100\'/></svg>');"></div>
+      {% endif %}
+      <div class="cf-pr-03-v8-data-overlay">
+        <span>REC_001</span>
+        <span>FPS: 60.0</span>
+        <span>ISO: 800</span>
+      </div>
+    </div>
+    <div class="cf-pr-03-v8-text-col">
+      <h2 class="cf-pr-03-v8-heading">./{{ section.settings.heading | downcase | replace: " ", "_" }}.sh</h2>
+      <p class="cf-pr-03-v8-desc">{{ section.settings.subheading | replace: "tech", "<span>tech</span>" }}</p>
+      {% if section.settings.link_text != blank %}
+        <a href="{{ section.settings.link_url }}" class="cf-pr-03-v8-btn">> {{ section.settings.link_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Split Terminal",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"heading","label":"Command Name","default":"INIT BUILD"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":60,"step":2,"default":36},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"Compile your ultimate workstation. Browse our new inventory of mechanical keyboards, ultra-wide monitors, and high-performance mice."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"EXECUTE"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
+    {"type":"color","id":"panel_bg","label":"Terminal BG","default":"#0a0a0a"},
+    {"type":"color","id":"border_color","label":"Borders","default":"#333333"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#d4d4d4"},
+    {"type":"color","id":"accent_color","label":"Terminal Green Focus","default":"#4af626"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"08 · Split Terminal Promo"}]
+}
+{% endschema %}

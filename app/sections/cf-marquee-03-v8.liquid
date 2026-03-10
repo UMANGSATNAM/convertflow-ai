@@ -1,0 +1,90 @@
+<style>
+.cf-mq-03-v8 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  /* Honeycomb Hexagon Background */
+  background-image: radial-gradient({{ section.settings.hex_color }} 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  padding: {{ section.settings.padding_y }}px 0;
+  overflow: hidden;
+  display: flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-mq-03-v8-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-03-v8-scroll {{ section.settings.speed }}s linear infinite;
+}
+
+@keyframes cf-mq-03-v8-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cf-mq-03-v8-item {
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  font-size: {{ section.settings.text_size }}px;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.8);
+  margin: 0 10px;
+  border: 1px solid {{ section.settings.text_color }};
+  padding: 8px 30px;
+  box-shadow: 0 0 10px {{ section.settings.text_color }}40;
+}
+
+.cf-mq-03-v8-item:hover {
+  background: {{ section.settings.text_color }};
+  color: #000;
+}
+</style>
+
+<div class="cf-mq-03-v8">
+  <div class="cf-mq-03-v8-track">
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v8-item">{{ block.settings.text }}</div>
+    {% endfor %}
+    {% for block in section.blocks %}
+      <div class="cf-mq-03-v8-item">{{ block.settings.text }}</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Hacker Hex",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0a0a0a"},
+    {"type":"color","id":"hex_color","label":"Hex Dot Color","default":"#1a1a1a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#4af626"},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":48,"step":1,"default":16},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":20},
+    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":20}
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "limit": 8,
+      "settings": [
+        {"type":"text","id":"text","label":"Text","default":"NODE CONNECTED"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "08 · Hacker Hex Marquee",
+      "blocks": [
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"},
+        {"type": "text"}
+      ]
+    }
+  ]
+}
+{% endschema %}

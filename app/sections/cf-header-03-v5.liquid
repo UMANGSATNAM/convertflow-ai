@@ -1,0 +1,146 @@
+<style>
+.cf-header-03-v5 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  /* Isometric grid background */
+  background-image: linear-gradient({{ section.settings.grid_color }} 1px, transparent 1px),
+                    linear-gradient(90deg, {{ section.settings.grid_color }} 1px, transparent 1px);
+  background-size: 20px 20px;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-header-03-v5-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: {{ section.settings.padding_y }}px 20px;
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-header-03-v5-logo {
+  font-size: {{ section.settings.logo_size }}px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+
+/* RGB Glitch effect on hover */
+.cf-header-03-v5-logo:hover {
+  text-shadow: 2px 0 red, -2px 0 blue;
+  animation: cf-h3-v5-glitch 0.2s linear infinite;
+}
+
+@keyframes cf-h3-v5-glitch {
+  0% { transform: translate(0) }
+  20% { transform: translate(-2px, 1px) }
+  40% { transform: translate(2px, -1px) }
+  60% { transform: translate(-1px, 2px) }
+  80% { transform: translate(1px, -2px) }
+  100% { transform: translate(0) }
+}
+
+.cf-header-03-v5-nav {
+  display: none;
+  align-items: center;
+  gap: 20px;
+  background: {{ section.settings.bg_color }};
+  border: 1px solid {{ section.settings.border_color }};
+  padding: 8px 16px;
+}
+
+.cf-header-03-v5-nav a {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  font-size: 13px;
+  text-transform: uppercase;
+  transition: 0.2s;
+  padding: 4px 8px;
+}
+
+.cf-header-03-v5-nav a:hover {
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-header-03-v5-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cf-header-03-v5-btn {
+  background: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  border: 1px solid {{ section.settings.border_color }};
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.cf-header-03-v5-btn:hover {
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-header-03-v5-btn svg {
+  width: 14px; height: 14px;
+}
+
+@media (min-width: 768px) {
+  .cf-header-03-v5-inner { padding: {{ section.settings.padding_y }}px 40px; }
+}
+@media (min-width: 1024px) {
+  .cf-header-03-v5-nav { display: flex; }
+}
+</style>
+
+<div class="cf-header-03-v5">
+  <div class="cf-header-03-v5-inner">
+    <a href="/" class="cf-header-03-v5-logo">{{ section.settings.logo_text }}</a>
+    
+    <nav class="cf-header-03-v5-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+
+    <div class="cf-header-03-v5-actions">
+      <a href="/search" class="cf-header-03-v5-btn" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </a>
+      <a href="/cart" class="cf-header-03-v5-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>CART [0]</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Grid UI Hub",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"FRAMEWORK"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":16,"max":48,"step":2,"default":28},
+    {"type":"link_list","id":"menu","label":"Menu","default":"main-menu"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F4F4F5"},
+    {"type":"color","id":"grid_color","label":"Grid Pattern Color","default":"#e4e4e7"},
+    {"type":"color","id":"border_color","label":"Lines & Borders","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":50,"step":2,"default":24},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1800,"step":100,"default":1400}
+  ],
+  "presets": [{"name":"05 · Grid UI Hub Header"}]
+}
+{% endschema %}

@@ -1,0 +1,66 @@
+<style>
+.cf-mq-02-v6 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  align-items: center;
+  border-top: 1px solid {{ section.settings.border_color }};
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-mq-02-v6-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v6-scroll {{ section.settings.speed }}s linear infinite;
+  align-items: center;
+}
+
+.cf-mq-02-v6-item {
+  display: flex;
+  align-items: center;
+}
+
+.cf-mq-02-v6-text {
+  font-family: inherit;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  color: {{ section.settings.text_color }};
+  letter-spacing: 0.1em;
+  padding: {{ section.settings.padding_y }}px 40px;
+  border-right: 1px solid {{ section.settings.border_color }};
+}
+
+@keyframes cf-mq-02-v6-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+</style>
+
+<div class="cf-mq-02-v6">
+  <div class="cf-mq-02-v6-track">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v6-item">
+        <span class="cf-mq-02-v6-text">{{ section.settings.text }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · The Grid Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"NEW ARRIVALS"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Fill","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#111111"},
+    {"type":"range","id":"speed","label":"Speed","min":10,"max":60,"step":1,"default":25},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":48,"step":1,"default":18},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":20}
+  ],
+  "presets": [{"name":"06 · The Grid Marquee"}]
+}
+{% endschema %}

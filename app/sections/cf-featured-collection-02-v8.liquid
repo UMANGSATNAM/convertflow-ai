@@ -1,0 +1,251 @@
+<style>
+.cf-fc-02-v8 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-fc-02-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-fc-02-v8-header {
+  text-align: left;
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cf-fc-02-v8-title {
+  font-size: clamp(40px, 8vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.cf-fc-02-v8-link {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: {{ section.settings.bg_color }};
+  background: {{ section.settings.text_color }};
+  padding: 12px 24px;
+  transition: 0.2s;
+  border: 2px solid {{ section.settings.text_color }};
+}
+
+.cf-fc-02-v8-link:hover {
+  background: transparent;
+  color: {{ section.settings.text_color }};
+}
+
+.cf-fc-02-v8-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.cf-fc-02-v8-item {
+  text-decoration: none;
+  background: {{ section.settings.card_bg }};
+  border: 4px solid {{ section.settings.border_color }};
+  display: flex;
+  flex-direction: row;
+  height: 250px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cf-fc-02-v8-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 8px 8px 0 {{ section.settings.border_color }};
+}
+
+.cf-fc-02-v8-barcode-sec {
+  background: {{ section.settings.border_color }};
+  color: {{ section.settings.card_bg }};
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 4px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-02-v8-barcode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-90deg);
+  white-space: nowrap;
+  gap: 4px;
+}
+
+.cf-fc-02-v8-bar {
+  background: {{ section.settings.card_bg }};
+  height: 40px;
+}
+
+.cf-fc-02-v8-img-wrap {
+  width: 200px;
+  height: 100%;
+  background: #f1f1f1;
+  position: relative;
+  overflow: hidden;
+  border-right: 4px solid {{ section.settings.border_color }};
+}
+
+.cf-fc-02-v8-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.cf-fc-02-v8-item:hover .cf-fc-02-v8-img {
+  transform: scale(1.1);
+}
+
+.cf-fc-02-v8-info {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cf-fc-02-v8-prod-title {
+  font-size: clamp(20px, 4vw, 32px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 10px 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cf-fc-02-v8-prod-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: {{ section.settings.text_color }};
+  opacity: 0.8;
+}
+
+@media (min-width: 1024px) {
+  .cf-fc-02-v8-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .cf-fc-02-v8-item {
+    flex-direction: column;
+    height: auto;
+  }
+  .cf-fc-02-v8-barcode-sec {
+    width: 100%;
+    height: 40px;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 4px solid {{ section.settings.border_color }};
+  }
+  .cf-fc-02-v8-barcode {
+    transform: none;
+    height: 20px;
+  }
+  .cf-fc-02-v8-img-wrap {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-right: none;
+    border-bottom: 4px solid {{ section.settings.border_color }};
+  }
+}
+</style>
+
+<div class="cf-fc-02-v8">
+  <div class="cf-fc-02-v8-inner">
+    <div class="cf-fc-02-v8-header">
+      <h2 class="cf-fc-02-v8-title">{{ section.settings.title | newline_to_br }}</h2>
+      <a href="{{ section.settings.link }}" class="cf-fc-02-v8-link">{{ section.settings.link_text }}</a>
+    </div>
+
+    <div class="cf-fc-02-v8-grid">
+      {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+        {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+          <a href="{{ product.url }}" class="cf-fc-02-v8-item">
+            <div class="cf-fc-02-v8-barcode-sec">
+               <div class="cf-fc-02-v8-barcode">
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 6px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 8px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 4px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 6px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 10px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 4px;"></div>
+               </div>
+            </div>
+            <div class="cf-fc-02-v8-img-wrap">
+              <img class="cf-fc-02-v8-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+            </div>
+            <div class="cf-fc-02-v8-info">
+              <h3 class="cf-fc-02-v8-prod-title">{{ product.title }}</h3>
+              <div class="cf-fc-02-v8-prod-price">{{ product.price | money }}</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.limit) %}
+          <a href="#" class="cf-fc-02-v8-item">
+            <div class="cf-fc-02-v8-barcode-sec">
+               <div class="cf-fc-02-v8-barcode">
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 6px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 8px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 4px;"></div>
+                  <div class="cf-fc-02-v8-bar" style="width: 2px;"></div>
+               </div>
+            </div>
+            <div class="cf-fc-02-v8-img-wrap">
+              <div class="cf-fc-02-v8-img" style="background:#ddd;"></div>
+            </div>
+            <div class="cf-fc-02-v8-info">
+              <h3 class="cf-fc-02-v8-prod-title">Streetwear Product {{ i }}</h3>
+              <div class="cf-fc-02-v8-prod-price">$65.00</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Barcode Showcase",
+  "settings": [
+    {"type":"textarea","id":"title","label":"Section Title","default":"STOCK\nMARKET"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":120,"step":2,"default":80},
+    {"type":"text","id":"link_text","label":"Link Text","default":"VIEW INVENTORY"},
+    {"type":"url","id":"link","label":"Link URL"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":2,"max":8,"step":2,"default":4},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F1F1F1"},
+    {"type":"color","id":"card_bg","label":"Product Card BG","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Barcode / Borders","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"08 · Barcode Showcase Collection"}]
+}
+{% endschema %}

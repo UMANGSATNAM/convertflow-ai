@@ -1,0 +1,130 @@
+<style>
+.cf-pr-02-v5 {
+  width: 100%;
+  position: relative;
+  min-height: {{ section.settings.height }}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: {{ section.settings.padding_y }}px 20px;
+  overflow: hidden;
+}
+
+.cf-pr-02-v5-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+}
+
+.cf-pr-02-v5-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.2);
+}
+
+.cf-pr-02-v5-grain {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opactity='0.15'/%3E%3C/svg%3E");
+  opacity: {{ section.settings.grain_opacity }}%;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cf-pr-02-v5-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0, {{ section.settings.overlay_opacity }}%);
+  z-index: 3;
+}
+
+.cf-pr-02-v5-content {
+  position: relative;
+  z-index: 10;
+  background: rgba(20, 20, 20, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 50px 30px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.cf-pr-02-v5-title {
+  font-size: clamp(32px, 5vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+  line-height: 1.1;
+}
+
+.cf-pr-02-v5-desc {
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.cf-pr-02-v5-btn {
+  display: inline-block;
+  background: #fff;
+  color: #000;
+  padding: 14px 32px;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: all 0.3s;
+}
+
+.cf-pr-02-v5-btn:hover {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  transform: translateY(-2px);
+}
+</style>
+
+<div class="cf-pr-02-v5">
+  <div class="cf-pr-02-v5-bg">
+    {% if section.settings.image != blank %}
+      <img class="cf-pr-02-v5-img" src="{{ section.settings.image | image_url: width: 1600 }}" alt="{{ section.settings.title }}">
+    {% else %}
+      <div class="cf-pr-02-v5-img" style="background:#111;"></div>
+    {% endif %}
+    <div class="cf-pr-02-v5-grain"></div>
+    <div class="cf-pr-02-v5-overlay"></div>
+  </div>
+
+  <div class="cf-pr-02-v5-content">
+    <h2 class="cf-pr-02-v5-title">{{ section.settings.title }}</h2>
+    <p class="cf-pr-02-v5-desc">{{ section.settings.desc }}</p>
+    <a href="{{ section.settings.btn_link }}" class="cf-pr-02-v5-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Frosted Glass & Grain",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Background Image"},
+    {"type":"text","id":"title","label":"Title","default":"THE ARCHIVES"},
+    {"type":"range","id":"title_size","label":"Title Size","min":30,"max":80,"step":2,"default":48},
+    {"type":"textarea","id":"desc","label":"Description","default":"Unlock access to past season grails and limited edition restocks before they vanish forever."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"UNLOCK VAULT"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/archives"},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":900,"step":20,"default":600},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":40},
+    {"type":"range","id":"overlay_opacity","label":"Dark Overlay Opacity %","min":0,"max":100,"step":5,"default":40},
+    {"type":"range","id":"grain_opacity","label":"Film Grain Opacity %","min":0,"max":100,"step":5,"default":30}
+  ],
+  "presets": [{"name":"05 · Frosted Glass & Grain"}]
+}
+{% endschema %}

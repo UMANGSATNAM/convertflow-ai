@@ -1,0 +1,151 @@
+<style>
+.cf-head-02-v10 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 6px solid #111;
+}
+
+.cf-head-02-v10-tape {
+  width: 100%;
+  height: 24px;
+  background: repeating-linear-gradient(
+    -45deg,
+    {{ section.settings.tape_color1 }},
+    {{ section.settings.tape_color1 }} 20px,
+    {{ section.settings.tape_color2 }} 20px,
+    {{ section.settings.tape_color2 }} 40px
+  );
+  border-bottom: 2px solid #111;
+}
+
+.cf-head-02-v10-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-head-02-v10-logo {
+  font-size: clamp(28px, 6vw, {{ section.settings.logo_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.logo_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: -0.05em;
+  background: #111;
+  color: #fff;
+  padding: 4px 12px;
+  border: 2px solid #111;
+  box-shadow: 4px 4px 0 {{ section.settings.tape_color1 }};
+  transition: 0.1s;
+}
+
+.cf-head-02-v10-logo:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 {{ section.settings.tape_color1 }};
+}
+
+.cf-head-02-v10-nav {
+  display: none;
+  gap: 24px;
+}
+
+.cf-head-02-v10-link {
+  font-size: 15px;
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  position: relative;
+  transition: 0.2s;
+}
+
+.cf-head-02-v10-link::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  bottom: -4px;
+  left: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    {{ section.settings.tape_color1 }},
+    {{ section.settings.tape_color1 }} 5px,
+    {{ section.settings.tape_color2 }} 5px,
+    {{ section.settings.tape_color2 }} 10px
+  );
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.cf-head-02-v10-link:hover {
+  color: #111;
+}
+
+.cf-head-02-v10-link:hover::after {
+  opacity: 1;
+}
+
+.cf-head-02-v10-btn {
+  background: {{ section.settings.tape_color1 }};
+  color: #111;
+  border: 2px solid #111;
+  padding: 10px 20px;
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 #111;
+  transition: 0.1s;
+}
+
+.cf-head-02-v10-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #111;
+}
+
+@media (min-width: 1024px) {
+  .cf-head-02-v10-nav { display: flex; align-items: center; }
+  .cf-head-02-v10-main { padding: {{ section.settings.padding_y }}px 40px; }
+}
+</style>
+
+<header class="cf-head-02-v10">
+  <div class="cf-head-02-v10-tape"></div>
+  <div class="cf-head-02-v10-main">
+    <a href="/" class="cf-head-02-v10-logo">{{ section.settings.logo_text }}</a>
+    <nav class="cf-head-02-v10-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-02-v10-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-02-v10-link">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-02-v10-link">{{ section.settings.link_3 }}</a>
+    </nav>
+    <a href="/cart" class="cf-head-02-v10-btn">Cart (0)</a>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "10 · Hazard Tape Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"HAZARD"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":64,"step":2,"default":40},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Warning"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/warning"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Apparel"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/apparel"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Accessories"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/accessories"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f8f8"},
+    {"type":"color","id":"logo_color","label":"Logo Fill (Unused explicitly)","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Link Color Text","default":"#333333"},
+    {"type":"color","id":"tape_color1","label":"Tape Color 1","default":"#eab308"},
+    {"type":"color","id":"tape_color2","label":"Tape Color 2","default":"#000000"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"10 · Hazard Tape Header"}]
+}
+{% endschema %}

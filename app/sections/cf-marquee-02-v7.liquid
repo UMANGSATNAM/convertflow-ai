@@ -1,0 +1,93 @@
+<style>
+.cf-mq-02-v7 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 0;
+  border-top: 2px solid {{ section.settings.border_color }};
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-mq-02-v7-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v7-scroll {{ section.settings.speed }}s linear infinite;
+  align-items: center;
+}
+
+.cf-mq-02-v7-item {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 0 20px;
+}
+
+.cf-mq-02-v7-text {
+  font-family: inherit;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: {{ section.settings.text_size }}px;
+  color: {{ section.settings.text_color }};
+  letter-spacing: -0.02em;
+}
+
+.cf-mq-02-v7-barcode {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: {{ section.settings.text_size }}px;
+}
+
+.cf-mq-02-v7-bar {
+  background: {{ section.settings.text_color }};
+  height: 100%;
+}
+
+@keyframes cf-mq-02-v7-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+</style>
+
+<div class="cf-mq-02-v7">
+  <div class="cf-mq-02-v7-track">
+    {% assign reps = (1..6) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v7-item">
+        <span class="cf-mq-02-v7-text">{{ section.settings.text }}</span>
+        <div class="cf-mq-02-v7-barcode">
+          <div class="cf-mq-02-v7-bar" style="width: 2px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 4px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 2px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 6px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 2px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 8px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 2px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 4px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 2px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 12px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 2px;"></div>
+          <div class="cf-mq-02-v7-bar" style="width: 4px;"></div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Barcode Marquee",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"AUTHENTIC GOODS"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f8f8"},
+    {"type":"color","id":"text_color","label":"Text & Barcode Fill","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#111111"},
+    {"type":"range","id":"speed","label":"Speed","min":10,"max":60,"step":1,"default":30},
+    {"type":"range","id":"text_size","label":"Size (Text & Barcode)","min":20,"max":100,"step":2,"default":48},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":1,"default":24}
+  ],
+  "presets": [{"name":"07 · Barcode Marquee"}]
+}
+{% endschema %}

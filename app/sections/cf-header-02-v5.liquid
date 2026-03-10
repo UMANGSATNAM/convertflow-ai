@@ -1,0 +1,127 @@
+<style>
+.cf-head-02-v5 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.cf-head-02-v5-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-head-02-v5-logo {
+  font-size: clamp(24px, 4vw, {{ section.settings.logo_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.logo_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-shadow: 0 0 10px {{ section.settings.neon_glow }}, 0 0 20px {{ section.settings.neon_glow }}, 0 0 40px {{ section.settings.neon_glow }};
+  transition: all 0.3s ease;
+}
+
+.cf-head-02-v5-logo:hover {
+  text-shadow: 0 0 15px {{ section.settings.neon_glow }}, 0 0 30px {{ section.settings.neon_glow }}, 0 0 60px {{ section.settings.neon_glow }}, 0 0 80px {{ section.settings.neon_glow }};
+  transform: scale(1.02);
+}
+
+.cf-head-02-v5-nav {
+  display: none;
+  gap: 30px;
+}
+
+.cf-head-02-v5-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+
+.cf-head-02-v5-link:hover {
+  color: {{ section.settings.neon_glow }};
+  text-shadow: 0 0 8px {{ section.settings.neon_glow }};
+}
+
+.cf-head-02-v5-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cf-head-02-v5-icon {
+  color: {{ section.settings.text_color }};
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.cf-head-02-v5-icon:hover {
+  color: {{ section.settings.neon_glow }};
+  filter: drop-shadow(0 0 6px {{ section.settings.neon_glow }});
+  transform: translateY(-2px);
+}
+
+@media (min-width: 1024px) {
+  .cf-head-02-v5-nav { display: flex; align-items: center; }
+  .cf-head-02-v5-main { padding: {{ section.settings.padding_y }}px 40px; }
+}
+</style>
+
+<header class="cf-head-02-v5">
+  <div class="cf-head-02-v5-main">
+    <a href="/" class="cf-head-02-v5-logo">{{ section.settings.logo_text }}</a>
+    
+    <nav class="cf-head-02-v5-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-02-v5-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-02-v5-link">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-02-v5-link">{{ section.settings.link_3 }}</a>
+    </nav>
+
+    <div class="cf-head-02-v5-actions">
+      <a href="/search" class="cf-head-02-v5-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </a>
+      <a href="/account" class="cf-head-02-v5-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+      <a href="/cart" class="cf-head-02-v5-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "05 · Neon Sign Header",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"CYBER_PUNK"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":64,"step":2,"default":34},
+    {"type":"text","id":"link_1","label":"Link 1","default":"System"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/system"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Hardware"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/hardware"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Apparel"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/apparel"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#09090b"},
+    {"type":"color","id":"logo_color","label":"Logo Text Color","default":"#ffffff"},
+    {"type":"color","id":"neon_glow","label":"Neon Glow Color","default":"#0ea5e9"},
+    {"type":"color","id":"text_color","label":"Link/Icon Color","default":"#a1a1aa"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":40,"step":2,"default":20}
+  ],
+  "presets": [{"name":"05 · Neon Sign Header"}]
+}
+{% endschema %}

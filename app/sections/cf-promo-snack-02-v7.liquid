@@ -1,0 +1,159 @@
+<style>
+.cf-ps-02-v7 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-02-v7-inner {
+  max-width: 900px;
+  width: 100%;
+  background: #ffffff;
+  border: 4px solid #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-ps-02-v7-barcode-sec {
+  background: #000;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 4px solid #000;
+}
+
+.cf-ps-02-v7-barcode {
+  display: flex;
+  height: 60px;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.cf-ps-02-v7-bar {
+  background: #fff;
+  height: 100%;
+}
+
+.cf-ps-02-v7-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+}
+
+.cf-ps-02-v7-content {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #fff;
+}
+
+.cf-ps-02-v7-title {
+  font-size: clamp(24px, 5vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.cf-ps-02-v7-desc {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 24px;
+  max-width: 400px;
+}
+
+.cf-ps-02-v7-btn {
+  background: #000;
+  color: #fff;
+  padding: 14px 40px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transition: 0.2s;
+  border: 2px solid transparent;
+}
+
+.cf-ps-02-v7-btn:hover {
+  background: transparent;
+  color: #000;
+  border-color: #000;
+}
+
+@media (min-width: 768px) {
+  .cf-ps-02-v7-inner {
+    flex-direction: row;
+  }
+  .cf-ps-02-v7-barcode-sec {
+    border-bottom: none;
+    border-right: 4px solid #000;
+    width: 250px;
+  }
+  .cf-ps-02-v7-barcode {
+    height: 100px;
+  }
+  .cf-ps-02-v7-content {
+    flex: 1;
+    align-items: flex-start;
+    text-align: left;
+    padding: 40px;
+  }
+}
+</style>
+
+<div class="cf-ps-02-v7">
+  <div class="cf-ps-02-v7-inner">
+    <div class="cf-ps-02-v7-barcode-sec">
+      <div class="cf-ps-02-v7-barcode">
+        <div class="cf-ps-02-v7-bar" style="width: 2px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 4px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 2px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 6px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 2px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 8px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 2px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 4px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 2px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 12px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 2px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 6px;"></div>
+        <div class="cf-ps-02-v7-bar" style="width: 4px;"></div>
+      </div>
+      <div class="cf-ps-02-v7-code">{{ section.settings.barcode_text }}</div>
+    </div>
+    
+    <div class="cf-ps-02-v7-content">
+      <h3 class="cf-ps-02-v7-title">{{ section.settings.title | newline_to_br }}</h3>
+      <p class="cf-ps-02-v7-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-ps-02-v7-btn">{{ section.settings.btn_label }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Barcode Block",
+  "settings": [
+    {"type":"text","id":"barcode_text","label":"Barcode Code","default":"0A8-9X3-VF4"},
+    {"type":"textarea","id":"title","label":"Title","default":"AUTHENTIC GOODS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":64,"step":2,"default":40},
+    {"type":"text","id":"desc","label":"Description","default":"Every piece verified. Guaranteed authentic. Don't settle for less."},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"LEARN MORE"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/pages/authenticity"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#f8f8f8"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"07 · Barcode Block Snack"}]
+}
+{% endschema %}

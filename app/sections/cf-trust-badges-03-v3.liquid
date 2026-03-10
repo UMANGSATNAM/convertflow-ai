@@ -1,0 +1,152 @@
+<style>
+.cf-tb-03-v3 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-tb-03-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  justify-items: center;
+}
+
+.cf-tb-03-v3-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.cf-tb-03-v3-hex {
+  width: 80px; height: 80px;
+  background: {{ section.settings.panel_bg }};
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: 0.3s;
+}
+
+.cf-tb-03-v3-hex::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px; right: 2px; bottom: 2px;
+  background: {{ section.settings.bg_color }};
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  z-index: 1;
+}
+
+.cf-tb-03-v3-item:hover .cf-tb-03-v3-hex {
+  background: {{ section.settings.accent_color }};
+  transform: scale(1.1);
+  box-shadow: 0 0 20px {{ section.settings.accent_color }}80;
+}
+
+.cf-tb-03-v3-icon {
+  position: relative;
+  z-index: 2;
+  color: {{ section.settings.accent_color }};
+  transition: 0.3s;
+}
+
+.cf-tb-03-v3-item:hover .cf-tb-03-v3-icon {
+  color: #fff;
+}
+
+.cf-tb-03-v3-icon svg {
+  width: 32px; height: 32px;
+}
+
+.cf-tb-03-v3-title {
+  color: {{ section.settings.text_color }};
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.cf-tb-03-v3-desc {
+  color: #888;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  margin: 5px 0 0 0;
+}
+</style>
+
+<div class="cf-tb-03-v3">
+  <div class="cf-tb-03-v3-inner">
+    {% for block in section.blocks %}
+      <div class="cf-tb-03-v3-item">
+        <div class="cf-tb-03-v3-hex">
+          <div class="cf-tb-03-v3-icon">
+            {% if block.settings.icon == 'shield' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            {% elsif block.settings.icon == 'lock' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            {% elsif block.settings.icon == 'truck' %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            {% else %}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {% endif %}
+          </div>
+        </div>
+        <div>
+          <h3 class="cf-tb-03-v3-title">{{ block.settings.title }}</h3>
+          {% if block.settings.desc != blank %}
+            <p class="cf-tb-03-v3-desc">{{ block.settings.desc }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Cyber Hexa-Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#08080c"},
+    {"type":"color","id":"panel_bg","label":"Hex border Base","default":"#333344"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Cyber Accent","default":"#ff003c"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {"value": "shield", "label": "Shield"},
+            {"value": "lock", "label": "Lock"},
+            {"value": "truck", "label": "Truck"},
+            {"value": "info", "label": "Info"}
+          ],
+          "default": "shield"
+        },
+        {"type":"text","id":"title","label":"Title","default":"ENCRYPTED"},
+        {"type":"text","id":"desc","label":"Description","default":"256-bit security"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "03 · Cyber Hexa-Badges",
+      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+    }
+  ]
+}
+{% endschema %}

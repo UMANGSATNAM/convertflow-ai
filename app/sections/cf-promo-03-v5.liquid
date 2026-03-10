@@ -1,0 +1,186 @@
+<style>
+.cf-pr-03-v5 {
+  width: 100%;
+  background-color: {{ section.settings.bg_color }};
+  background-image: linear-gradient({{ section.settings.grid_color }} 1px, transparent 1px),
+                    linear-gradient(90deg, {{ section.settings.grid_color }} 1px, transparent 1px);
+  background-size: 30px 30px;
+  padding: {{ section.settings.padding_y }}px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-pr-03-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  border: 1px solid {{ section.settings.border_color }};
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-pr-03-v5-top {
+  padding: 10px 20px;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+}
+
+.cf-pr-03-v5-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-pr-03-v5-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.cf-pr-03-v5-label {
+  color: {{ section.settings.accent_color }};
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 20px;
+  letter-spacing: 0.1em;
+}
+
+.cf-pr-03-v5-heading {
+  font-size: clamp(32px, 6vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.cf-pr-03-v5-desc {
+  font-size: 15px;
+  color: {{ section.settings.text_color }};
+  opacity: 0.8;
+  margin: 0 0 30px 0;
+  line-height: 1.5;
+  max-width: 500px;
+}
+
+.cf-pr-03-v5-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: {{ section.settings.bg_color }};
+  border: 1px solid {{ section.settings.border_color }};
+  color: {{ section.settings.text_color }};
+  padding: 12px 24px;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: 0.2s;
+  align-self: flex-start;
+}
+
+.cf-pr-03-v5-btn:hover {
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-pr-03-v5-img-col {
+  aspect-ratio: 1/1;
+  position: relative;
+  overflow: hidden;
+  background: #f4f4f5;
+}
+
+.cf-pr-03-v5-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.cf-pr-03-v5-crosshair {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px; height: 40px;
+  pointer-events: none;
+}
+.cf-pr-03-v5-crosshair::before, .cf-pr-03-v5-crosshair::after {
+  content: '';
+  position: absolute;
+  background: {{ section.settings.accent_color }};
+}
+.cf-pr-03-v5-crosshair::before { top: 50%; left: 0; width: 100%; height: 2px; transform: translateY(-50%); }
+.cf-pr-03-v5-crosshair::after { left: 50%; top: 0; height: 100%; width: 2px; transform: translateX(-50%); }
+
+@media (min-width: 768px) {
+  .cf-pr-03-v5-main {
+    flex-direction: row;
+  }
+  .cf-pr-03-v5-content {
+    flex: 1;
+    border-bottom: none;
+    border-right: 1px solid {{ section.settings.border_color }};
+  }
+  .cf-pr-03-v5-img-col {
+    flex: 1;
+  }
+}
+</style>
+
+<div class="cf-pr-03-v5">
+  <div class="cf-pr-03-v5-inner">
+    <div class="cf-pr-03-v5-top">
+      <span>UI_MODULE_V5</span>
+      <span>STATUS: <span style="color: {{ section.settings.accent_color }}">ACTIVE</span></span>
+    </div>
+    
+    <div class="cf-pr-03-v5-main">
+      <div class="cf-pr-03-v5-content">
+        <div class="cf-pr-03-v5-label">{{ section.settings.label }}</div>
+        <h2 class="cf-pr-03-v5-heading">{{ section.settings.heading | newline_to_br }}</h2>
+        <p class="cf-pr-03-v5-desc">{{ section.settings.subheading }}</p>
+        {% if section.settings.link_text != blank %}
+          <a href="{{ section.settings.link_url }}" class="cf-pr-03-v5-btn">
+            {{ section.settings.link_text }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        {% endif %}
+      </div>
+      
+      <div class="cf-pr-03-v5-img-col">
+        {% if section.settings.image != blank %}
+          <img src="{{ section.settings.image | image_url: width: 800 }}" alt="Promo Image" class="cf-pr-03-v5-img">
+        {% else %}
+          <div class="cf-pr-03-v5-img" style="background:#ddd;"></div>
+        {% endif %}
+        <div class="cf-pr-03-v5-crosshair"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Grid Interface Panel",
+  "settings": [
+    {"type":"text","id":"label","label":"Small Label","default":"// LOG_ENTRY_01"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"textarea","id":"heading","label":"Heading","default":"MODULAR\nBACKPACKS"},
+    {"type":"range","id":"title_size","label":"Title Size","min":32,"max":80,"step":2,"default":56},
+    {"type":"textarea","id":"subheading","label":"Subheading","default":"Designed for extreme durability and tech carry. Customize with MOLLE pouches."},
+    {"type":"text","id":"link_text","label":"Link Text","default":"VIEW SPECS"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F4F4F5"},
+    {"type":"color","id":"grid_color","label":"Grid Color","default":"#e5e7eb"},
+    {"type":"color","id":"border_color","label":"Borders","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#3b82f6"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"05 · Grid Interface Panel"}]
+}
+{% endschema %}

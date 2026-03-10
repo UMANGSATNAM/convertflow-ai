@@ -1,0 +1,154 @@
+<style>
+.cf-head-02-v8 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  box-sizing: border-box;
+}
+
+.cf-head-02-v8-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-head-02-v8-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-bottom: 2px solid {{ section.settings.border_color }};
+}
+
+.cf-head-02-v8-logo {
+  font-size: clamp(28px, 5vw, {{ section.settings.logo_size }}px);
+  font-weight: 900;
+  color: {{ section.settings.logo_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: -0.05em;
+  padding: {{ section.settings.padding_y }}px 20px;
+  text-align: center;
+  border-right: none;
+  background: {{ section.settings.bg_color }};
+  transition: all 0.2s;
+}
+
+.cf-head-02-v8-logo:hover {
+  background: {{ section.settings.hover_bg }};
+  color: {{ section.settings.hover_text }};
+}
+
+.cf-head-02-v8-nav {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+}
+
+.cf-head-02-v8-link {
+  font-size: 14px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 20px;
+  border-right: 2px solid {{ section.settings.border_color }};
+  border-bottom: 2px solid {{ section.settings.border_color }};
+  text-align: center;
+  transition: all 0.15s ease-in-out;
+}
+
+.cf-head-02-v8-link:nth-child(even) { border-right: none; }
+.cf-head-02-v8-link:last-child, .cf-head-02-v8-link:nth-last-child(2) { border-bottom: none; }
+
+.cf-head-02-v8-link:hover {
+  background: {{ section.settings.border_color }};
+  color: {{ section.settings.bg_color }};
+}
+
+.cf-head-02-v8-cart {
+  padding: 14px 20px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 14px;
+  color: {{ section.settings.bg_color }};
+  background: {{ section.settings.logo_color }};
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.cf-head-02-v8-cart:hover {
+  background: {{ section.settings.hover_bg }};
+  color: {{ section.settings.hover_text }};
+}
+
+@media (min-width: 1024px) {
+  .cf-head-02-v8-main {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .cf-head-02-v8-top {
+    flex: 1;
+    border-bottom: none;
+  }
+  .cf-head-02-v8-logo {
+    text-align: left;
+    padding: {{ section.settings.padding_y }}px 40px;
+    border-right: 2px solid {{ section.settings.border_color }};
+  }
+  .cf-head-02-v8-nav {
+    display: flex;
+    width: auto;
+  }
+  .cf-head-02-v8-link {
+    border-bottom: none !important;
+    border-right: 2px solid {{ section.settings.border_color }} !important;
+    display: flex;
+    align-items: center;
+  }
+  .cf-head-02-v8-cart {
+    display: flex;
+    align-items: center;
+    border-left: 2px solid {{ section.settings.border_color }};
+  }
+}
+</style>
+
+<header class="cf-head-02-v8">
+  <div class="cf-head-02-v8-main">
+    <div class="cf-head-02-v8-top">
+      <a href="/" class="cf-head-02-v8-logo">{{ section.settings.logo_text }}</a>
+    </div>
+    <nav class="cf-head-02-v8-nav">
+      <a href="{{ section.settings.link_1_url }}" class="cf-head-02-v8-link">{{ section.settings.link_1 }}</a>
+      <a href="{{ section.settings.link_2_url }}" class="cf-head-02-v8-link">{{ section.settings.link_2 }}</a>
+      <a href="{{ section.settings.link_3_url }}" class="cf-head-02-v8-link">{{ section.settings.link_3 }}</a>
+    </nav>
+    <a href="/cart" class="cf-head-02-v8-cart">BAG [0]</a>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "08 · The Grid Brutalist",
+  "settings": [
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"GRID"},
+    {"type":"range","id":"logo_size","label":"Logo Size","min":20,"max":64,"step":2,"default":36},
+    {"type":"text","id":"link_1","label":"Link 1","default":"Outerwear"},
+    {"type":"text","id":"link_1_url","label":"Link 1 URL","default":"/collections/outerwear"},
+    {"type":"text","id":"link_2","label":"Link 2","default":"Footwear"},
+    {"type":"text","id":"link_2_url","label":"Link 2 URL","default":"/collections/footwear"},
+    {"type":"text","id":"link_3","label":"Link 3","default":"Objects"},
+    {"type":"text","id":"link_3_url","label":"Link 3 URL","default":"/collections/objects"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Border Lines","default":"#000000"},
+    {"type":"color","id":"logo_color","label":"Logo Text","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Link Color","default":"#000000"},
+    {"type":"color","id":"hover_bg","label":"Hover Fill","default":"#ef4444"},
+    {"type":"color","id":"hover_text","label":"Hover Text","default":"#ffffff"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding Logo","min":10,"max":40,"step":2,"default":16}
+  ],
+  "presets": [{"name":"08 · The Grid Brutalist Header"}]
+}
+{% endschema %}

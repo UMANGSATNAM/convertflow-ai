@@ -1,0 +1,210 @@
+<style>
+.cf-fc-02-v9 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-fc-02-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.cf-fc-02-v9-header {
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 20;
+}
+
+.cf-fc-02-v9-title {
+  font-size: clamp(40px, 10vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  /* Cut off text effect */
+  background: {{ section.settings.text_color }};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 4px 4px 0 {{ section.settings.accent_color }};
+}
+
+.cf-fc-02-v9-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 40px;
+  align-items: center;
+}
+
+.cf-fc-02-v9-item {
+  position: relative;
+  text-decoration: none;
+  background: {{ section.settings.card_bg }};
+  border: 4px solid {{ section.settings.border_color }};
+  padding: 20px;
+  box-shadow: 10px 10px 0 {{ section.settings.border_color }};
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 5;
+}
+
+.cf-fc-02-v9-item:hover {
+  transform: translate(-5px, -5px);
+  box-shadow: 15px 15px 0 {{ section.settings.accent_color }};
+  border-color: {{ section.settings.accent_color }};
+  z-index: 15;
+}
+
+.cf-fc-02-v9-img-wrap {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: #f1f1f1;
+  overflow: hidden;
+  border: 2px solid {{ section.settings.border_color }};
+  margin-bottom: 20px;
+}
+
+.cf-fc-02-v9-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  transition: 0.3s;
+}
+
+.cf-fc-02-v9-item:hover .cf-fc-02-v9-img {
+  filter: grayscale(0%);
+}
+
+.cf-fc-02-v9-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cf-fc-02-v9-prod-title {
+  font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  line-height: 1.1;
+  max-width: 70%;
+}
+
+.cf-fc-02-v9-prod-price {
+  font-size: 18px;
+  font-weight: 900;
+  color: {{ section.settings.accent_color }};
+}
+
+.cf-fc-02-v9-link {
+  display: inline-block;
+  background: {{ section.settings.border_color }};
+  color: {{ section.settings.bg_color }};
+  padding: 20px 40px;
+  font-weight: 900;
+  font-size: 18px;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin-top: 60px;
+  transition: 0.2s;
+  border: 4px solid transparent;
+}
+
+.cf-fc-02-v9-link:hover {
+  background: transparent;
+  color: {{ section.settings.border_color }};
+  border-color: {{ section.settings.border_color }};
+}
+
+/* Staggered layout for desktop */
+@media (min-width: 768px) {
+  .cf-fc-02-v9-grid {
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0;
+  }
+  .cf-fc-02-v9-item {
+    margin-bottom: -100px; /* Overlap items vertically */
+  }
+  .cf-fc-02-v9-item:nth-child(1) { grid-column: 1 / 6; margin-top: 50px; }
+  .cf-fc-02-v9-item:nth-child(2) { grid-column: 7 / 12; margin-top: 150px; }
+  .cf-fc-02-v9-item:nth-child(3) { grid-column: 3 / 8; margin-top: 250px; }
+  .cf-fc-02-v9-item:nth-child(4) { grid-column: 9 / 13; margin-top: 50px; }
+  .cf-fc-02-v9-item:nth-child(5) { grid-column: 1 / 5; margin-top: 300px; }
+  .cf-fc-02-v9-item:nth-child(6) { grid-column: 6 / 11; margin-top: 400px; }
+}
+@media (max-width: 767px) {
+  .cf-fc-02-v9-item {
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+<div class="cf-fc-02-v9">
+  <div class="cf-fc-02-v9-inner">
+    
+    <div class="cf-fc-02-v9-header">
+      <h2 class="cf-fc-02-v9-title">{{ section.settings.title | newline_to_br }}</h2>
+    </div>
+
+    <div class="cf-fc-02-v9-grid">
+      {% if section.settings.collection != blank and collections[section.settings.collection].products.size > 0 %}
+        {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+          <a href="{{ product.url }}" class="cf-fc-02-v9-item">
+            <div class="cf-fc-02-v9-img-wrap">
+              <img class="cf-fc-02-v9-img" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}">
+            </div>
+            <div class="cf-fc-02-v9-info">
+              <h3 class="cf-fc-02-v9-prod-title">{{ product.title }}</h3>
+              <div class="cf-fc-02-v9-prod-price">{{ product.price | money }}</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..section.settings.limit) %}
+          <a href="#" class="cf-fc-02-v9-item">
+            <div class="cf-fc-02-v9-img-wrap">
+              <div class="cf-fc-02-v9-img" style="background:#ddd;"></div>
+            </div>
+            <div class="cf-fc-02-v9-info">
+              <h3 class="cf-fc-02-v9-prod-title">Heavyweight Hoodie Block {{ i }}</h3>
+              <div class="cf-fc-02-v9-prod-price">$120</div>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div style="text-align: center;">
+      <a href="{{ section.settings.link }}" class="cf-fc-02-v9-link">{{ section.settings.link_text }}</a>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Off-Grid Brutal Collection",
+  "settings": [
+    {"type":"textarea","id":"title","label":"Section Title","default":"HEAVY\nWEIGHT"},
+    {"type":"range","id":"title_size","label":"Title Size","min":60,"max":150,"step":5,"default":120},
+    {"type":"text","id":"link_text","label":"Link Text","default":"ALL HEAVYWEIGHTS"},
+    {"type":"url","id":"link","label":"Link URL"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"range","id":"limit","label":"Product Limit","min":2,"max":6,"step":1,"default":4},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#F8F8F8"},
+    {"type":"color","id":"card_bg","label":"Product Card BG","default":"#ffffff"},
+    {"type":"color","id":"border_color","label":"Borders & Text Base","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Title/Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Hover/Shadows","default":"#ef4444"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":10,"default":100},
+    {"type":"range","id":"max_width","label":"Max Width","min":1000,"max":1600,"step":100,"default":1200}
+  ],
+  "presets": [{"name":"09 · Off-Grid Brutal Collection"}]
+}
+{% endschema %}

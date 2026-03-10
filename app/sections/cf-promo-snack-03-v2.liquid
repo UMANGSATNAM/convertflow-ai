@@ -1,0 +1,94 @@
+<style>
+.cf-ps-03-v2 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: {{ section.settings.padding_y }}px 20px;
+  text-align: center;
+  border-top: 2px dashed {{ section.settings.accent_color }};
+  border-bottom: 2px dashed {{ section.settings.accent_color }};
+  box-shadow: 0 0 10px {{ section.settings.accent_color }}40;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Static noise/scanline overlay */
+.cf-ps-03-v2::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.2) 2px,
+    rgba(0, 0, 0, 0.2) 4px
+  );
+  pointer-events: none;
+}
+
+.cf-ps-03-v2-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.cf-ps-03-v2-icon {
+  color: {{ section.settings.accent_color }};
+  display: flex;
+  align-items: center;
+}
+
+.cf-ps-03-v2-icon svg {
+  width: 18px; height: 18px;
+}
+
+.cf-ps-03-v2-link {
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+  border-bottom: 1px solid {{ section.settings.accent_color }};
+  transition: 0.2s;
+}
+
+.cf-ps-03-v2-link:hover {
+  background: {{ section.settings.accent_color }};
+  color: #000;
+}
+</style>
+
+<div class="cf-ps-03-v2">
+  <div class="cf-ps-03-v2-inner">
+    <div class="cf-ps-03-v2-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <span>{{ section.settings.text }}</span>
+    {% if section.settings.link_text != blank %}
+      <a href="{{ section.settings.link_url }}" class="cf-ps-03-v2-link">{{ section.settings.link_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Hacker Tape Snack",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#0a0a0a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#00ff41"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#00ff41"},
+    {"type":"text","id":"text","label":"Text","default":"SYSTEM UPDATE IN PROGRESS"},
+    {"type":"text","id":"link_text","label":"Link Text","default":"VIEW LOGS"},
+    {"type":"url","id":"link_url","label":"Link URL"},
+    {"type":"range","id":"text_size","label":"Text Size","min":10,"max":24,"step":1,"default":13},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":30,"step":1,"default":10}
+  ],
+  "presets": [{"name":"02 · Hacker Tape Snack"}]
+}
+{% endschema %}

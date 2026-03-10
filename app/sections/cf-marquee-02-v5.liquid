@@ -1,0 +1,92 @@
+<style>
+.cf-mq-02-v5 {
+  width: 100%;
+  overflow: hidden;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  align-items: center;
+  padding: {{ section.settings.padding_y }}px 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.cf-mq-02-v5-track {
+  display: flex;
+  white-space: nowrap;
+  animation: cf-mq-02-v5-scroll {{ section.settings.speed }}s linear infinite;
+  align-items: center;
+}
+
+.cf-mq-02-v5-item {
+  font-size: {{ section.settings.text_size }}px;
+  font-weight: bold;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  padding: 0 30px;
+  position: relative;
+}
+
+/* Glitch Effect on hover or constant */
+.cf-mq-02-v5-item::before,
+.cf-mq-02-v5-item::after {
+  content: '{{ section.settings.text }}';
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  opacity: 0.8;
+}
+
+.cf-mq-02-v5-item::before {
+  color: {{ section.settings.glitch_color1 }};
+  z-index: -1;
+  animation: cf-mq-02-v5-glitch 2s infinite linear alternate-reverse;
+}
+
+.cf-mq-02-v5-item::after {
+  color: {{ section.settings.glitch_color2 }};
+  z-index: -2;
+  animation: cf-mq-02-v5-glitch 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes cf-mq-02-v5-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes cf-mq-02-v5-glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(-1px, -1px); }
+  60% { transform: translate(2px, 1px); }
+  80% { transform: translate(1px, -1px); }
+  100% { transform: translate(0); }
+}
+</style>
+
+<div class="cf-mq-02-v5">
+  <div class="cf-mq-02-v5-track">
+    {% assign reps = (1..10) %}
+    {% for i in reps %}
+      <div class="cf-mq-02-v5-item">{{ section.settings.text }}</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · Tech Glitch",
+  "settings": [
+    {"type":"text","id":"text","label":"Text","default":"SYSTEM_WARNING // ENTERING RESTRICTED ZONE"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
+    {"type":"color","id":"text_color","label":"Text Fill","default":"#ffffff"},
+    {"type":"color","id":"glitch_color1","label":"Glitch Color 1","default":"#0ea5e9"},
+    {"type":"color","id":"glitch_color2","label":"Glitch Color 2","default":"#ef4444"},
+    {"type":"range","id":"speed","label":"Speed","min":10,"max":60,"step":1,"default":20},
+    {"type":"range","id":"text_size","label":"Text Size","min":12,"max":64,"step":1,"default":24},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":15}
+  ],
+  "presets": [{"name":"05 · Tech Glitch Marquee"}]
+}
+{% endschema %}

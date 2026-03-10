@@ -1,0 +1,135 @@
+<style>
+.cf-tb-02-v6 {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_y }}px 20px;
+}
+
+.cf-tb-02-v6-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+.cf-tb-02-v6-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+.cf-tb-02-v6-item {
+  background: #fff;
+  padding: 40px 20px 20px;
+  position: relative;
+  text-align: center;
+  box-shadow: 4px 4px 15px rgba(0,0,0,0.1);
+  /* slight random rotations */
+}
+
+.cf-tb-02-v6-item:nth-child(even) { transform: rotate(2deg); }
+.cf-tb-02-v6-item:nth-child(odd) { transform: rotate(-2deg); }
+.cf-tb-02-v6-item:nth-child(3n) { transform: rotate(1deg); }
+
+/* Tape styling */
+.cf-tb-02-v6-tape {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 100px;
+  height: 25px;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-left: 2px dashed rgba(0,0,0,0.1);
+  border-right: 2px dashed rgba(0,0,0,0.1);
+  z-index: 10;
+  backdrop-filter: blur(2px);
+}
+
+.cf-tb-02-v6-icon {
+  width: 50px; height: 50px;
+  color: {{ section.settings.icon_color }};
+  margin: 0 auto 20px;
+}
+
+.cf-tb-02-v6-icon svg {
+  width: 100%; height: 100%;
+  fill: currentColor;
+}
+
+.cf-tb-02-v6-title {
+  font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #111;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.02em;
+}
+
+.cf-tb-02-v6-desc {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .cf-tb-02-v6-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>
+
+<div class="cf-tb-02-v6">
+  <div class="cf-tb-02-v6-inner">
+    <div class="cf-tb-02-v6-grid">
+      {% for block in section.blocks %}
+        <div class="cf-tb-02-v6-item">
+          <div class="cf-tb-02-v6-tape"></div>
+          <div class="cf-tb-02-v6-icon">
+            {% if block.settings.icon_svg != blank %}
+              {{ block.settings.icon_svg }}
+            {% else %}
+              <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+            {% endif %}
+          </div>
+          <h3 class="cf-tb-02-v6-title">{{ block.settings.title }}</h3>
+          <p class="cf-tb-02-v6-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Torn Tape Badges",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#e5e5e5"},
+    {"type":"color","id":"icon_color","label":"Icon Content Color","default":"#ff003c"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust Badge",
+      "limit": 4,
+      "settings": [
+        {"type":"html","id":"icon_svg","label":"Icon SVG"},
+        {"type":"text","id":"title","label":"Title","default":"VERIFIED"},
+        {"type":"text","id":"desc","label":"Description","default":"Every item is thoroughly inspected."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "06 · Torn Tape Badges",
+      "blocks": [
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"},
+        {"type": "badge"}
+      ]
+    }
+  ]
+}
+{% endschema %}

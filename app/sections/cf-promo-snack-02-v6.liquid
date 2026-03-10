@@ -1,0 +1,105 @@
+<style>
+.cf-ps-02-v6 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+}
+
+.cf-ps-02-v6-inner {
+  max-width: 900px;
+  width: 100%;
+  background: {{ section.settings.box_bg }};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 50px 30px;
+}
+
+/* Torn paper edge top */
+.cf-ps-02-v6-inner::before {
+  content: '';
+  position: absolute;
+  top: -10px; left: 0; width: 100%; height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpolygon points='100,0 100,10 0,10 0,0 5,6 10,2 15,8 20,1 25,9 30,3 35,7 40,2 45,8 50,4 55,9 60,3 65,8 70,2 75,7 80,1 85,8 90,3 95,9' fill='{{ section.settings.box_bg | url_encode }}'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+}
+
+/* Torn paper edge bottom */
+.cf-ps-02-v6-inner::after {
+  content: '';
+  position: absolute;
+  bottom: -10px; left: 0; width: 100%; height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpolygon points='100,10 100,0 0,0 0,10 5,4 10,8 15,2 20,9 25,1 30,7 35,3 40,8 45,2 50,6 55,1 60,7 65,2 70,8 75,3 80,9 85,2 90,7 95,1' fill='{{ section.settings.box_bg | url_encode }}'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+}
+
+.cf-ps-02-v6-tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  color: {{ section.settings.text_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.cf-ps-02-v6-title {
+  font-size: clamp(28px, 5vw, {{ section.settings.title_size }}px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: {{ section.settings.text_color }};
+  margin-bottom: 30px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.cf-ps-02-v6-btn {
+  background: transparent;
+  color: {{ section.settings.text_color }};
+  border: 2px solid {{ section.settings.text_color }};
+  padding: 14px 36px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+  box-shadow: 4px 4px 0 {{ section.settings.text_color }};
+}
+
+.cf-ps-02-v6-btn:hover {
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.box_bg }};
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 {{ section.settings.text_color }};
+}
+</style>
+
+<div class="cf-ps-02-v6">
+  <div class="cf-ps-02-v6-inner">
+    <div class="cf-ps-02-v6-tag">{{ section.settings.tag }}</div>
+    <h3 class="cf-ps-02-v6-title">{{ section.settings.title | newline_to_br }}</h3>
+    <a href="{{ section.settings.btn_link }}" class="cf-ps-02-v6-btn">{{ section.settings.btn_label }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Torn Paper Snack",
+  "settings": [
+    {"type":"text","id":"tag","label":"Tagline","default":"WINTER 02"},
+    {"type":"textarea","id":"title","label":"Title","default":"THE PUFFER\nRE-ENGINEERED"},
+    {"type":"range","id":"title_size","label":"Title Size","min":20,"max":64,"step":2,"default":48},
+    {"type":"text","id":"btn_label","label":"Button Label","default":"DISCOVER"},
+    {"type":"text","id":"btn_link","label":"Button Link","default":"/collections/outerwear"},
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#111111"},
+    {"type":"color","id":"box_bg","label":"Torn Box Color","default":"#e5e5e5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"06 · Torn Paper Snack"}]
+}
+{% endschema %}

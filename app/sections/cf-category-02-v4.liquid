@@ -1,0 +1,135 @@
+<style>
+.cf-cat-02-v4 {
+  width: 100%;
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cf-cat-02-v4-container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  position: relative;
+}
+
+.cf-cat-02-v4-item {
+  position: relative;
+  background: #ffffff;
+  padding: 15px 15px 50px 15px; /* Polaroid styling */
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transition: all 0.3s;
+  width: 100%;
+  max-width: 300px;
+  filter: sepia(0.2);
+}
+
+.cf-cat-02-v4-item:nth-child(even) {
+  transform: rotate(4deg);
+}
+
+.cf-cat-02-v4-item:nth-child(odd) {
+  transform: rotate(-3deg);
+}
+
+.cf-cat-02-v4-item:nth-child(3n) {
+  transform: rotate(6deg);
+}
+
+.cf-cat-02-v4-item:hover {
+  transform: rotate(0deg) scale(1.05) translateY(-10px);
+  z-index: 10;
+  filter: sepia(0);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.cf-cat-02-v4-img-wrap {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #111;
+  overflow: hidden;
+}
+
+.cf-cat-02-v4-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.1);
+}
+
+.cf-cat-02-v4-label {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: 'Gloria Hallelujah', cursive, sans-serif; /* A handwritten-style font fallback */
+  font-size: {{ section.settings.label_size }}px;
+  font-weight: bold;
+  color: {{ section.settings.text_color }};
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* Include handwritten font from Google */
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
+</style>
+
+<div class="cf-cat-02-v4">
+  <div class="cf-cat-02-v4-container">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-02-v4-item">
+        <div class="cf-cat-02-v4-img-wrap">
+          {% if block.settings.image != blank %}
+            <img class="cf-cat-02-v4-img" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.label | strip_html | escape }}">
+          {% else %}
+            <div class="cf-cat-02-v4-img" style="background: #222;"></div>
+          {% endif %}
+        </div>
+        <h3 class="cf-cat-02-v4-label">{{ block.settings.label }}</h3>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Polaroid Scatter",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Base","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Marker Ink Color","default":"#000000"},
+    {"type":"range","id":"label_size","label":"Label Size","min":16,"max":40,"step":2,"default":22},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 5,
+      "settings": [
+        {"type":"image_picker","id":"image","label":"Image"},
+        {"type":"text","id":"label","label":"Label","default":"Vintage"},
+        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Polaroid Scatter Grid",
+      "blocks": [
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"},
+        {"type": "category"}
+      ]
+    }
+  ]
+}
+{% endschema %}
