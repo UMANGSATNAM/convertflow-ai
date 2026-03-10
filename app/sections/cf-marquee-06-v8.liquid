@@ -1,0 +1,100 @@
+<div class="cf-auto-marquee-v8" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; position: relative;">
+  
+  <div class="cf-marquee-track-v8" style="display: inline-block; animation: cf-scroll-v8 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Space Grotesk', sans-serif;">
+      {% for i in (1..6) %}
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; padding: 0 40px;">
+          {{ section.settings.text }}
+        </span>
+        <!-- Minimal Dot -->
+        <div style="width: 8px; height: 8px; background: {{ section.settings.accent_color }};"></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cf-marquee-track-v8" style="display: inline-block; animation: cf-scroll-v8 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Space Grotesk', sans-serif;">
+      {% for i in (1..6) %}
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; padding: 0 40px;">
+          {{ section.settings.text }}
+        </span>
+        <div style="width: 8px; height: 8px; background: {{ section.settings.accent_color }};"></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Fade overlays for clean entering/exiting effect -->
+  <div style="position: absolute; top: 0; left: 0; width: 100px; height: 100%; background: linear-gradient(90deg, {{ section.settings.bg_color }} 0%, transparent 100%); z-index: 2;"></div>
+  <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100%; background: linear-gradient(-90deg, {{ section.settings.bg_color }} 0%, transparent 100%); z-index: 2;"></div>
+
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap');
+  @keyframes cf-scroll-v8 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Clean Tech Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Dot Accent Color",
+      "default": "#00d2ff"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Marquee Text",
+      "default": "PREMIUM AFTERMARKET ELECTRONICS"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 14,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 25
+    }
+  ]
+}
+{% endschema %}

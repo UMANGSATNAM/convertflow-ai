@@ -1,0 +1,96 @@
+<div class="cf-auto-marquee-v6" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; position: relative; border-top: 2px solid {{ section.settings.accent_color }}; border-bottom: 2px solid {{ section.settings.accent_color }};">
+  
+  <div class="cf-marquee-track-v6" style="display: inline-block; animation: cf-scroll-v6 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Syne', sans-serif;">
+      {% for i in (1..6) %}
+        <!-- Text -->
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; text-shadow: 0 0 10px {{ section.settings.accent_color }}80; padding: 0 40px;">
+          {{ section.settings.text }}
+        </span>
+        <!-- Neon Divider Line -->
+        <div style="width: 60px; height: 3px; background: {{ section.settings.accent_color }}; box-shadow: 0 0 10px {{ section.settings.accent_color }}, 0 0 20px {{ section.settings.accent_color }}; transform: skewX(-45deg);"></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cf-marquee-track-v6" style="display: inline-block; animation: cf-scroll-v6 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Syne', sans-serif;">
+      {% for i in (1..6) %}
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; text-shadow: 0 0 10px {{ section.settings.accent_color }}80; padding: 0 40px;">
+          {{ section.settings.text }}
+        </span>
+        <div style="width: 60px; height: 3px; background: {{ section.settings.accent_color }}; box-shadow: 0 0 10px {{ section.settings.accent_color }}, 0 0 20px {{ section.settings.accent_color }}; transform: skewX(-45deg);"></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');
+  @keyframes cf-scroll-v6 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Neon Tuner Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Neon Glow Color",
+      "default": "#00ffcc"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Marquee Text",
+      "default": "JDM / EURO / MUSCLE TUNE"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 18
+    }
+  ]
+}
+{% endschema %}

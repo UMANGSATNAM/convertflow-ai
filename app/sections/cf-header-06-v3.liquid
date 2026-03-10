@@ -1,0 +1,147 @@
+<div class="cf-auto-header-v3" style="background: {{ section.settings.bg_color }}; position: relative; overflow: hidden; font-family: 'Exo 2', sans-serif;">
+  
+  <!-- Sleek Top Strip -->
+  <div style="background: {{ section.settings.accent_color }}; height: 4px; width: 100%;"></div>
+
+  <div class="cf-auto-header-v3-container" style="max-width: 1600px; margin: 0 auto; padding: 20px 40px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 40px;">
+
+    <!-- Left side: Menu -->
+    <div class="cf-auto-header-v3-menu" style="display: flex; gap: 30px;">
+      {% for link in linklists[section.settings.menu].links limit: 4 %}
+        <a href="{{ link.url }}" style="color: {{ section.settings.text_color }}; text-decoration: none; font-size: 15px; font-weight: 500; letter-spacing: 0.5px; transition: color 0.3s; position: relative;" class="cf-nav-link">
+          {{ link.title }}
+        </a>
+      {% endfor %}
+    </div>
+
+    <!-- Center: Logo -->
+    <div class="cf-auto-header-v3-logo" style="text-align: center;">
+      <a href="/" style="text-decoration: none;">
+        {% if section.settings.logo %}
+          <img src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}" style="max-height: {{ section.settings.logo_height }}px; width: auto; display: block; margin: 0 auto;">
+        {% else %}
+          <span style="font-size: 32px; font-weight: 800; color: {{ section.settings.text_color }}; letter-spacing: 2px; text-transform: uppercase;">
+            {{ shop.name }}
+          </span>
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Right side: Actions -->
+    <div class="cf-auto-header-v3-actions" style="display: flex; justify-content: flex-end; align-items: center; gap: 20px;">
+      
+      <!-- Phone -->
+      <a href="tel:{{ section.settings.phone }}" style="display: flex; align-items: center; gap: 8px; color: {{ section.settings.text_color }}; text-decoration: none; font-weight: 600; font-size: 14px; padding-right: 20px; border-right: 1px solid rgba(0,0,0,0.1);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        {{ section.settings.phone }}
+      </a>
+
+      <!-- Search -->
+      <button class="cf-icon-btn" style="background: none; border: none; padding: 5px; color: {{ section.settings.text_color }}; cursor: pointer; transition: color 0.3s;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </button>
+
+      <!-- Account -->
+      <a href="/account" class="cf-icon-btn" style="color: {{ section.settings.text_color }}; padding: 5px; transition: color 0.3s;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+
+      <!-- Cart -->
+      <a href="/cart" class="cf-icon-btn" style="color: {{ section.settings.text_color }}; padding: 5px; position: relative; transition: color 0.3s;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span style="position: absolute; top: 0px; right: 0px; background: {{ section.settings.accent_color }}; color: #fff; font-size: 10px; font-weight: 700; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Google Fonts Import for Automotive feel */
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap');
+
+  .cf-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: {{ section.settings.accent_color }};
+    transition: width 0.3s ease;
+  }
+  .cf-nav-link:hover::after {
+    width: 100%;
+  }
+  .cf-icon-btn:hover {
+    color: {{ section.settings.accent_color }} !important;
+  }
+
+  @media (max-width: 990px) {
+    .cf-auto-header-v3-container {
+      grid-template-columns: 1fr 1fr;
+      padding: 20px;
+    }
+    .cf-auto-header-v3-menu {
+      display: none !important;
+    }
+    .cf-auto-header-v3-logo {
+      text-align: left;
+    }
+    .cf-auto-header-v3-actions a[href^="tel:"] {
+      display: none !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Sleek Dealership Head",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (e.g. Blue)",
+      "default": "#0056b3"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo Height",
+      "default": 35
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "1-800-MOTORS"
+    }
+  ]
+}
+{% endschema %}

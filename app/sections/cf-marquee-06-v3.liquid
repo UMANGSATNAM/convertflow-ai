@@ -1,0 +1,95 @@
+<div class="cf-auto-marquee-v3" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; position: relative;">
+  
+  <div class="cf-marquee-track-v3" style="display: inline-block; animation: cf-scroll-v3 {{ section.settings.scroll_speed }}s linear infinite;">
+    {% for i in (1..8) %}
+      <div style="display: inline-flex; align-items: center; padding: 0 30px; font-family: 'Space Grotesk', sans-serif;">
+        <!-- Lightning icon -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="{{ section.settings.accent_color }}" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 500; text-transform: uppercase; letter-spacing: 3px;">
+          {{ section.settings.text }}
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="cf-marquee-track-v3" style="display: inline-block; animation: cf-scroll-v3 {{ section.settings.scroll_speed }}s linear infinite;">
+    {% for i in (1..8) %}
+      <div style="display: inline-flex; align-items: center; padding: 0 30px; font-family: 'Space Grotesk', sans-serif;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="{{ section.settings.accent_color }}" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 500; text-transform: uppercase; letter-spacing: 3px;">
+          {{ section.settings.text }}
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap');
+  @keyframes cf-scroll-v3 {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(0); } /* Reverse direction */
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · EV Lightning Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f4f6f8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Icon)",
+      "default": "#0056b3"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Marquee Text",
+      "default": "100% ELECTRIC PERFORMANCE"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 25
+    }
+  ]
+}
+{% endschema %}

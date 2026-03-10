@@ -1,0 +1,109 @@
+<div class="cf-auto-marquee-v10" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; position: relative;">
+  
+  <div class="cf-marquee-track-v10" style="display: inline-block; animation: cf-scroll-v10 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+      {% for i in (1..5) %}
+        
+        <!-- Trust Text -->
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 40px;">
+          {{ section.settings.text }}
+        </span>
+
+        <!-- Trust Badges Inline -->
+        <span style="display: inline-flex; gap: 15px; align-items: center;">
+          <!-- Shield -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <!-- Check -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <!-- Lock -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </span>
+
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cf-marquee-track-v10" style="display: inline-block; animation: cf-scroll-v10 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+      {% for i in (1..5) %}
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; padding: 0 40px;">
+          {{ section.settings.text }}
+        </span>
+        <span style="display: inline-flex; gap: 15px; align-items: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes cf-scroll-v10 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Trust Badge Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon Color",
+      "default": "#0052cc"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Marquee Text",
+      "default": "SECURE CHECKOUT & AUTHENTIC PARTS"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 14,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 25
+    }
+  ]
+}
+{% endschema %}

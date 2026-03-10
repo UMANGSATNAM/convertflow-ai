@@ -1,0 +1,112 @@
+<div class="cf-auto-marquee-v9" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; position: relative; border-bottom: 4px solid {{ section.settings.accent_color }};">
+  
+  <div class="cf-marquee-track-v9" style="display: inline-block; animation: cf-scroll-v9 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Oswald', sans-serif;">
+      {% for i in (1..6) %}
+        
+        <!-- Text 1 -->
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; padding: 0 30px; letter-spacing: 1px;">
+          {{ section.settings.text_1 }}
+        </span>
+        <!-- Slash Separator -->
+        <span style="font-size: {{ section.settings.font_size | plus: 6 }}px; font-weight: 900; color: {{ section.settings.accent_color }}; font-style: italic;">/</span>
+
+        <!-- Text 2 -->
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; padding: 0 30px; letter-spacing: 1px; color: {{ section.settings.accent_color }};">
+          {{ section.settings.text_2 }}
+        </span>
+        <!-- Slash Separator -->
+        <span style="font-size: {{ section.settings.font_size | plus: 6 }}px; font-weight: 900; color: {{ section.settings.text_color }}; font-style: italic; opacity: 0.3;">/</span>
+
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cf-marquee-track-v9" style="display: inline-block; animation: cf-scroll-v9 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Oswald', sans-serif;">
+      {% for i in (1..6) %}
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; padding: 0 30px; letter-spacing: 1px;">{{ section.settings.text_1 }}</span>
+        <span style="font-size: {{ section.settings.font_size | plus: 6 }}px; font-weight: 900; color: {{ section.settings.accent_color }}; font-style: italic;">/</span>
+
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; padding: 0 30px; letter-spacing: 1px; color: {{ section.settings.accent_color }};">{{ section.settings.text_2 }}</span>
+        <span style="font-size: {{ section.settings.font_size | plus: 6 }}px; font-weight: 900; color: {{ section.settings.text_color }}; font-style: italic; opacity: 0.3;">/</span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:ital,wght@0,700;1,900&display=swap');
+  @keyframes cf-scroll-v9 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Slash Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color 1",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Text Color 2 & Slash",
+      "default": "#ff3b30"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Text 1",
+      "default": "WORLDWIDE SHIPPING"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Text 2",
+      "default": "FREE RETURNS"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 15
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,158 @@
+<div class="cf-auto-marquee-v4" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; border-top: 1px solid {{ section.settings.border_color }}; border-bottom: 1px solid {{ section.settings.border_color }}; position: relative;">
+  
+  <div class="cf-marquee-track-v4" style="display: inline-block; animation: cf-scroll-v4 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Exo 2', sans-serif;">
+      
+      <!-- Feature 1 -->
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">
+        {{ section.settings.text_1 }}
+      </span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+      <!-- Feature 2 -->
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">
+        {{ section.settings.text_2 }}
+      </span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+      <!-- Feature 3 -->
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">
+        {{ section.settings.text_3 }}
+      </span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+      <!-- Feature 4 -->
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">
+        {{ section.settings.text_4 }}
+      </span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+    </div>
+  </div>
+
+  <div class="cf-marquee-track-v4" style="display: inline-block; animation: cf-scroll-v4 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Exo 2', sans-serif;">
+      
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">{{ section.settings.text_1 }}</span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">{{ section.settings.text_2 }}</span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">{{ section.settings.text_3 }}</span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+      <span style="padding: 0 40px; font-size: {{ section.settings.font_size }}px; font-weight: 600; text-transform: uppercase;">{{ section.settings.text_4 }}</span>
+      <div style="width: 6px; height: 6px; border-radius: 50%; background: {{ section.settings.accent_color }};"></div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600&display=swap');
+  @keyframes cf-scroll-v4 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+</style>
+
+<script>
+  // Clone twice to ensure seamless looping for short text
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.querySelector('.cf-auto-marquee-v4');
+    if(container) {
+      const tracks = container.querySelectorAll('.cf-marquee-track-v4');
+      if(tracks.length === 2) {
+        container.appendChild(tracks[0].cloneNode(true));
+        container.appendChild(tracks[1].cloneNode(true));
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "06 · Multi-Feature Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Dot Color",
+      "default": "#ff3b30"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Text 1",
+      "default": "FREE SHIPPING ON ORDERS OVER $99"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Text 2",
+      "default": "30-DAY HASSLE FREE RETURNS"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "Text 3",
+      "default": "100% FITMENT GUARANTEE"
+    },
+    {
+      "type": "text",
+      "id": "text_4",
+      "label": "Text 4",
+      "default": "SAME DAY DISPATCH"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 14,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 20
+    }
+  ]
+}
+{% endschema %}

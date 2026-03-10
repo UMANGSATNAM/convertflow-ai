@@ -1,0 +1,115 @@
+<div class="cf-auto-marquee-v7" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; position: relative;">
+  
+  <div class="cf-marquee-track-v7" style="display: inline-block; animation: cf-scroll-v7 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Inter', sans-serif;">
+      {% for i in (1..6) %}
+        
+        <!-- Text 1 -->
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 500; color: {{ section.settings.text_color_1 }}; padding: 0 35px; letter-spacing: 0.5px;">
+          {{ section.settings.text_1 }}
+        </span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+        <!-- Text 2 -->
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 500; color: {{ section.settings.text_color_2 }}; padding: 0 35px; letter-spacing: 0.5px;">
+          {{ section.settings.text_2 }}
+        </span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cf-marquee-track-v7" style="display: inline-block; animation: cf-scroll-v7 {{ section.settings.scroll_speed }}s linear infinite;">
+    <div style="display: inline-flex; align-items: center; font-family: 'Inter', sans-serif;">
+      {% for i in (1..6) %}
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 500; color: {{ section.settings.text_color_1 }}; padding: 0 35px; letter-spacing: 0.5px;">{{ section.settings.text_1 }}</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 500; color: {{ section.settings.text_color_2 }}; padding: 0 35px; letter-spacing: 0.5px;">{{ section.settings.text_2 }}</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes cf-scroll-v7 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · 5-Star Auto Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color_1",
+      "label": "Text Color 1",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color_2",
+      "label": "Text Color 2",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Star Color",
+      "default": "#fbbf24"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Text 1",
+      "default": "OVER 10,000 HAPPY DRIVERS"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Text 2",
+      "default": "RATED 4.9/5 ON TRUSTPILOT"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 14,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 22
+    }
+  ]
+}
+{% endschema %}

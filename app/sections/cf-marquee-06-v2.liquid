@@ -1,0 +1,98 @@
+<div class="cf-auto-marquee-v2" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: {{ section.settings.padding_y }}px 0; overflow: hidden; white-space: nowrap; position: relative;">
+  
+  <div class="cf-marquee-track-v2" style="display: inline-block; animation: cf-scroll-v2 {{ section.settings.scroll_speed }}s linear infinite;">
+    {% for i in (1..8) %}
+      <div style="display: inline-flex; align-items: center; padding: 0 40px; font-family: 'Oswald', sans-serif;">
+        <!-- Checkered flag icon -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
+          {{ section.settings.text }}
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="cf-marquee-track-v2" style="display: inline-block; animation: cf-scroll-v2 {{ section.settings.scroll_speed }}s linear infinite;">
+    {% for i in (1..8) %}
+      <div style="display: inline-flex; align-items: center; padding: 0 40px; font-family: 'Oswald', sans-serif;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 15px;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+        <span style="font-size: {{ section.settings.font_size }}px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
+          {{ section.settings.text }}
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+  @keyframes cf-scroll-v2 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+  .cf-auto-marquee-v2:hover .cf-marquee-track-v2 {
+    animation-play-state: paused;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Racing Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Icon)",
+      "default": "#e60000"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Marquee Text",
+      "default": "PREMIUM PERFORMANCE PARTS"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 20
+    }
+  ]
+}
+{% endschema %}

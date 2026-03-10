@@ -1,0 +1,142 @@
+<div class="cf-auto-header-v9" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; position: relative;">
+  
+  <div class="cf-auto-header-v9-container" style="max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column;">
+    
+    <!-- Top utility row -->
+    <div style="display: flex; justify-content: space-between; padding: 10px 40px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 12px; font-family: 'Montserrat', sans-serif;">
+      <div style="display: flex; gap: 20px; opacity: 0.8;">
+        <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:relative; top:2px; margin-right:4px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>{{ section.settings.phone }}</span>
+        <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:relative; top:2px; margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>{{ section.settings.email }}</span>
+      </div>
+      <div>
+        <a href="/account" style="color: {{ section.settings.text_color }}; text-decoration: none; font-weight: 500;">Login / Register</a>
+      </div>
+    </div>
+
+    <!-- Main Header Row -->
+    <div style="padding: 25px 40px; display: flex; align-items: center; justify-content: space-between;">
+      
+      <!-- Logo -->
+      <a href="/" style="text-decoration: none; flex: 0 0 auto;">
+        {% if section.settings.logo %}
+          <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" style="max-height: {{ section.settings.logo_height }}px; width: auto; display: block;">
+        {% else %}
+          <span style="font-family: 'Montserrat', sans-serif; font-size: 32px; font-weight: 900; color: {{ section.settings.text_color }}; letter-spacing: -1px; text-transform: uppercase;">
+            {{ shop.name }} <span style="color: {{ section.settings.accent_color }};">.</span>
+          </span>
+        {% endif %}
+      </a>
+
+      <!-- Large Center Navigation -->
+      <div class="cf-auto-header-v9-nav" style="flex: 1; display: flex; justify-content: center;">
+        <ul style="list-style: none; margin: 0; padding: 0; display: flex; gap: 40px;">
+          {% for link in linklists[section.settings.menu].links %}
+            <li>
+              <a href="{{ link.url }}" style="color: {{ section.settings.text_color }}; text-decoration: none; font-size: 14px; font-weight: 600; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 1.5px; position: relative; padding: 5px 0;" class="cf-line-hover">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Right Icons -->
+      <div class="cf-auto-header-v9-actions" style="flex: 0 0 auto; display: flex; gap: 25px; align-items: center;">
+        <button style="background: none; border: none; color: {{ section.settings.text_color }}; padding: 0; cursor: pointer; transition: color 0.2s;" class="cf-hover-accent">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+        <a href="/cart" style="color: {{ section.settings.text_color }}; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s;" class="cf-hover-accent">
+          <div style="position: relative;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            <span style="position: absolute; top: -8px; right: -8px; background: {{ section.settings.accent_color }}; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 5px; border-radius: 10px;">{{ cart.item_count }}</span>
+          </div>
+          <span style="font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; margin-left: 5px;">{{ cart.total_price | money_without_trailing_zeros }}</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;900&display=swap');
+
+  .cf-line-hover::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: {{ section.settings.accent_color }};
+    transition: width 0.3s ease;
+  }
+  .cf-line-hover:hover::after { width: 100%; }
+  .cf-hover-accent:hover { color: {{ section.settings.accent_color }} !important; }
+
+  @media (max-width: 990px) {
+    .cf-auto-header-v9-nav { display: none !important; }
+    .cf-auto-header-v9-container > div:first-child { display: none !important; }
+    .cf-auto-header-v9-container > div:last-child { padding: 20px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Premium Tuning Head",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#00d2ff"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo Height",
+      "default": 35
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "1-800-TUNING"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "sales@tuning.com"
+    }
+  ]
+}
+{% endschema %}
