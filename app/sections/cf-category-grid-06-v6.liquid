@@ -1,0 +1,210 @@
+<div class="cf-auto-cat-v6" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v6-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid {{ section.settings.border_color }};">
+      <div>
+        <h2 style="font-family: 'Arial Black', Impact, sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 900; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: -2px;">
+          {{ section.settings.title }}
+        </h2>
+        <p style="font-family: Helvetica, sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.7; margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+          {{ section.settings.subtitle }}
+        </p>
+      </div>
+      {% if section.settings.show_view_all %}
+        <a href="{{ section.settings.view_all_link }}" class="cf-btn-cat-v6" style="display: inline-block; background: transparent; color: {{ section.settings.text_color }}; border: 2px solid {{ section.settings.text_color }}; padding: 10px 25px; font-family: 'Arial Black', Impact, sans-serif; font-size: 14px; text-transform: uppercase; text-decoration: none; transition: all 0.2s;">
+          View All
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="cf-auto-cat-v6-list" style="display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 30px;">
+      
+      {% for i in (1..section.settings.blocks) %}
+        {% capture img %}image_{{i}}{% endcapture %}
+        {% capture name %}name_{{i}}{% endcapture %}
+        {% capture count %}count_{{i}}{% endcapture %}
+        {% capture link %}link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v6-item" style="display: flex; align-items: center; gap: 20px; text-decoration: none; padding: 20px; background: {{ section.settings.card_bg }}; border: 1px solid {{ section.settings.border_color }}; transition: border-color 0.2s, box-shadow 0.2s;">
+          
+          <div style="width: 80px; height: 80px; flex: 0 0 auto; background: {{ section.settings.bg_color }}; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            {% if section.settings[img] %}
+              <img src="{{ section.settings[img] | image_url: width: 200 }}" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply;" alt="{{ section.settings[name] }}">
+            {% else %}
+               <!-- Placeholder Icon -->
+               <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_color }}" stroke-width="1.5" opacity="0.3"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            {% endif %}
+          </div>
+          
+          <div style="flex: 1;">
+            <h3 style="font-family: 'Arial Black', Impact, sans-serif; font-size: 18px; font-weight: 900; color: {{ section.settings.text_color }}; margin: 0 0 5px 0; text-transform: uppercase;">
+              {{ section.settings[name] | default: 'Category' }}
+            </h3>
+            <span style="font-family: Helvetica, sans-serif; font-size: 13px; color: {{ section.settings.accent_color }}; font-weight: 700;">
+              {{ section.settings[count] | default: 'Explore' }}
+            </span>
+          </div>
+
+          <div class="cf-cat-v6-arrow" style="flex: 0 0 auto; color: {{ section.settings.text_color }}; opacity: 0.3; transition: transform 0.2s, opacity 0.2s;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </div>
+
+        </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .cf-btn-cat-v6:hover {
+    background: {{ section.settings.text_color }} !important;
+    color: {{ section.settings.bg_color }} !important;
+  }
+  .cf-auto-cat-v6-item:hover {
+    border-color: {{ section.settings.text_color }} !important;
+    box-shadow: 4px 4px 0 {{ section.settings.text_color }};
+  }
+  .cf-auto-cat-v6-item:hover .cf-cat-v6-arrow {
+    opacity: 1;
+    transform: translateX(5px);
+  }
+
+  @media (max-width: 1024px) {
+    .cf-auto-cat-v6-list { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 768px) {
+    .cf-auto-cat-v6-container > div:first-child { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .cf-auto-cat-v6-list { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Tool Block List",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#e60000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "GARAGE ESSENTIALS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 42
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Everything you need to wrench."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Button",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "label": "Number of Categories",
+      "default": 6
+    },
+    { "type": "header", "content": "Category 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image/Icon" },
+    { "type": "text", "id": "name_1", "label": "Name", "default": "Hand Tools" },
+    { "type": "text", "id": "count_1", "label": "Label", "default": "240+ Items" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Category 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image/Icon" },
+    { "type": "text", "id": "name_2", "label": "Name", "default": "Power Tools" },
+    { "type": "text", "id": "count_2", "label": "Label", "default": "85+ Items" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Category 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image/Icon" },
+    { "type": "text", "id": "name_3", "label": "Name", "default": "Jacks & Lifts" },
+    { "type": "text", "id": "count_3", "label": "Label", "default": "Heavy Duty" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Category 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image/Icon" },
+    { "type": "text", "id": "name_4", "label": "Name", "default": "Storage" },
+    { "type": "text", "id": "count_4", "label": "Label", "default": "Cabinets & Chests" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Category 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image/Icon" },
+    { "type": "text", "id": "name_5", "label": "Name", "default": "Diagnostic" },
+    { "type": "text", "id": "count_5", "label": "Label", "default": "OBD2 Scanners" },
+    { "type": "url", "id": "link_5", "label": "Link" },
+    { "type": "header", "content": "Category 6" },
+    { "type": "image_picker", "id": "image_6", "label": "Image/Icon" },
+    { "type": "text", "id": "name_6", "label": "Name", "default": "Air Compressors" },
+    { "type": "text", "id": "count_6", "label": "Label", "default": "Shop Air" },
+    { "type": "url", "id": "link_6", "label": "Link" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,167 @@
+<div class="cf-auto-cat-v8" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v8-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="display: flex; flex-direction: column; align-items: center; border: 2px solid {{ section.settings.border_color }}; padding: 60px 40px; position: relative;">
+      
+      <!-- Overlapping Header -->
+      <div style="position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); background: {{ section.settings.bg_color }}; padding: 0 30px; display: flex; align-items: center; gap: 15px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+        <h2 style="font-family: 'Exo 2', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0; letter-spacing: 1px; white-space: nowrap;">
+          {{ section.settings.title }}
+        </h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+      </div>
+
+      <p style="font-family: 'Exo 2', sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.8; margin: 0 0 50px 0; text-align: center; max-width: 600px;">
+        {{ section.settings.subtitle }}
+      </p>
+
+      <!-- Carousel-like layout (using flex for simplicity here) -->
+      <div class="cf-auto-cat-v8-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; width: 100%;">
+        
+        {% for i in (1..section.settings.blocks) %}
+          {% capture img %}image_{{i}}{% endcapture %}
+          {% capture name %}name_{{i}}{% endcapture %}
+          {% capture link %}link_{{i}}{% endcapture %}
+
+          <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v8-item" style="flex: 1; min-width: 200px; max-width: 250px; text-decoration: none; text-align: center;">
+            <div style="background: {{ section.settings.card_bg }}; padding: 30px 20px; border: 1px solid {{ section.settings.border_color }}; border-radius: 8px; transition: all 0.3s; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+              <div class="cf-img-wrapper" style="width: 120px; height: 120px; border-radius: 50%; border: 2px dashed {{ section.settings.accent_color }}; padding: 10px; transition: all 0.4s;">
+                <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: {{ section.settings.bg_color }};">
+                  {% if section.settings[img] %}
+                    <img src="{{ section.settings[img] | image_url: width: 200 }}" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply;" alt="{{ section.settings[name] }}">
+                  {% endif %}
+                </div>
+              </div>
+              <h3 style="font-family: 'Exo 2', sans-serif; font-size: 18px; font-weight: 700; color: {{ section.settings.text_color }}; margin: 0; text-transform: uppercase;">
+                {{ section.settings[name] | default: 'Category' }}
+              </h3>
+            </div>
+          </a>
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&display=swap');
+  
+  .cf-auto-cat-v8-item:hover > div {
+    border-color: {{ section.settings.accent_color }};
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    background: {{ section.settings.bg_color }};
+  }
+  .cf-auto-cat-v8-item:hover .cf-img-wrapper {
+    border-style: solid;
+    transform: rotate(15deg);
+  }
+
+  @media (max-width: 900px) {
+    .cf-auto-cat-v8-container > div { padding: 50px 20px; border-left: none; border-right: none; }
+    .cf-auto-cat-v8-container > div > div:first-child h2 { font-size: 24px !important; white-space: normal; text-align: center; }
+    .cf-auto-cat-v8-container > div > div:first-child svg { display: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Mechanics Frame Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Frame",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "WORKSHOP CATEGORIES"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 32
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "From hand tools to heavy machinery, select your category below."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Number of Categories",
+      "default": 5
+    },
+    { "type": "header", "content": "Category 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image (Transparent)" },
+    { "type": "text", "id": "name_1", "label": "Name", "default": "Hand Tools" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Category 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image (Transparent)" },
+    { "type": "text", "id": "name_2", "label": "Name", "default": "Power Tools" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Category 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image (Transparent)" },
+    { "type": "text", "id": "name_3", "label": "Name", "default": "Lifting" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Category 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image (Transparent)" },
+    { "type": "text", "id": "name_4", "label": "Name", "default": "Storage" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Category 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image (Transparent)" },
+    { "type": "text", "id": "name_5", "label": "Name", "default": "Safety" },
+    { "type": "url", "id": "link_5", "label": "Link" }
+  ]
+}
+{% endschema %}

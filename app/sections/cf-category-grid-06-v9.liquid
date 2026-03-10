@@ -1,0 +1,159 @@
+<div class="cf-auto-cat-v9" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v9-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 50px;">
+      <h2 style="font-family: 'Rajdhani', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 700; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: 2px;">
+        {{ section.settings.title }}
+      </h2>
+      <div style="width: 100px; height: 1px; background: {{ section.settings.text_color }}; opacity: 0.2; margin: 0 auto;">
+        <div style="width: 40px; height: 3px; background: {{ section.settings.accent_color }}; margin: -1px auto 0 auto;"></div>
+      </div>
+    </div>
+
+    <!-- 4x4 OffRoad style rugged grid -->
+    <div class="cf-auto-cat-v9-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 20px;">
+      
+      {% for i in (1..section.settings.blocks) %}
+        {% capture img %}image_{{i}}{% endcapture %}
+        {% capture name %}name_{{i}}{% endcapture %}
+        {% capture link %}link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v9-item" style="position: relative; padding-top: 100%; text-decoration: none; overflow: hidden; display: block; background: #222;">
+          
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.4s ease-out;">
+            {% if section.settings[img] %}
+              <img src="{{ section.settings[img] | image_url: width: 600 }}" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;" alt="{{ section.settings[name] }}">
+            {% endif %}
+          </div>
+          
+          <!-- Geometric overlays -->
+          <div class="cf-overlay-1" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: {{ section.settings.accent_color }}; mix-blend-mode: multiply; opacity: 0; transition: opacity 0.3s;"></div>
+          <div style="position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;" class="cf-border-box"></div>
+          
+          <div style="position: absolute; bottom: 40px; left: 40px; right: 40px;">
+            <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 1px; display: inline-block; background: rgba(0,0,0,0.8); padding: 5px 15px;">
+              {{ section.settings[name] | default: 'Category' }}
+            </h3>
+          </div>
+
+          <div class="cf-plus-icon" style="position: absolute; top: 40px; right: 40px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: {{ section.settings.accent_color }}; color: #fff; opacity: 0; transform: scale(0.5); transition: all 0.3s;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+
+        </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
+  
+  .cf-auto-cat-v9-item:hover > div:first-child { transform: scale(1.1); }
+  .cf-auto-cat-v9-item:hover .cf-overlay-1 { opacity: 0.5; }
+  .cf-auto-cat-v9-item:hover .cf-border-box { transform: scale(0.95); border-color: #fff; }
+  .cf-auto-cat-v9-item:hover .cf-plus-icon { opacity: 1; transform: scale(1); }
+
+  @media (max-width: 1024px) {
+    .cf-auto-cat-v9-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 600px) {
+    .cf-auto-cat-v9-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Off-Road Square Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#ff5500"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "OUTFIT YOUR RIG"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 2,
+      "max": 9,
+      "step": 1,
+      "label": "Number of Categories",
+      "default": 6
+    },
+    { "type": "header", "content": "Category 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image" },
+    { "type": "text", "id": "name_1", "label": "Name", "default": "Wheels" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Category 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image" },
+    { "type": "text", "id": "name_2", "label": "Name", "default": "Tires" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Category 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image" },
+    { "type": "text", "id": "name_3", "label": "Name", "default": "Lift Kits" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Category 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image" },
+    { "type": "text", "id": "name_4", "label": "Name", "default": "Bumpers" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Category 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image" },
+    { "type": "text", "id": "name_5", "label": "Name", "default": "Lighting" },
+    { "type": "url", "id": "link_5", "label": "Link" },
+    { "type": "header", "content": "Category 6" },
+    { "type": "image_picker", "id": "image_6", "label": "Image" },
+    { "type": "text", "id": "name_6", "label": "Name", "default": "Winches" },
+    { "type": "url", "id": "link_6", "label": "Link" }
+  ]
+}
+{% endschema %}

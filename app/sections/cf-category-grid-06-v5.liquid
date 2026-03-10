@@ -1,0 +1,164 @@
+<div class="cf-auto-cat-v5" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v5-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 50px;">
+      <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: -1px;">
+        {{ section.settings.title }}
+      </h2>
+      <div style="width: 80px; height: 3px; background: {{ section.settings.accent_color }}; margin: 0 auto;"></div>
+    </div>
+
+    <!-- Hexagon-style overlapping layout via flex/margins visually representing tech -->
+    <div class="cf-auto-cat-v5-layout" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px;">
+      
+      {% for i in (1..section.settings.blocks) %}
+        {% capture img %}image_{{i}}{% endcapture %}
+        {% capture name %}name_{{i}}{% endcapture %}
+        {% capture subtitle %}subtitle_{{i}}{% endcapture %}
+        {% capture link %}link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v5-card" style="width: 280px; text-decoration: none; position: relative; display: block; group">
+          
+          <div style="background: {{ section.settings.card_bg }}; border: 1px solid {{ section.settings.border_color }}; border-radius: 8px; overflow: hidden; position: relative; z-index: 2; transition: all 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div style="height: 200px; width: 100%; overflow: hidden; position: relative;">
+              {% if section.settings[img] %}
+                <img src="{{ section.settings[img] | image_url: width: 400 }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" class="cf-cat-v5-img" alt="{{ section.settings[name] }}">
+              {% else %}
+                <div style="width: 100%; height: 100%; background: #eaeaea;"></div>
+              {% endif %}
+              <!-- Accent Line on Image -->
+              <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: {{ section.settings.accent_color }};"></div>
+            </div>
+
+            <div style="padding: 25px 20px; text-align: center; background: {{ section.settings.card_bg }};">
+              <h3 style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: {{ section.settings.text_color }}; margin: 0 0 5px 0; text-transform: uppercase;">
+                {{ section.settings[name] | default: 'Category' }}
+              </h3>
+              <p style="font-family: 'Inter', sans-serif; font-size: 14px; color: {{ section.settings.text_color }}; opacity: 0.6; margin: 0;">
+                {{ section.settings[subtitle] | default: 'Shop Now' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Decorative backdrop element for tech feel -->
+           <div class="cf-cat-v5-backdrop" style="position: absolute; top: -10px; left: -10px; width: 100%; height: 100%; border: 2px solid {{ section.settings.accent_color }}; border-radius: 8px; z-index: 1; opacity: 0; transition: all 0.3s;"></div>
+
+        </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:wght@400;700&display=swap');
+  
+  .cf-auto-cat-v5-card:hover > div:first-child { transform: translateY(-10px); }
+  .cf-auto-cat-v5-card:hover .cf-cat-v5-img { transform: scale(1.1); }
+  .cf-auto-cat-v5-card:hover .cf-cat-v5-backdrop { opacity: 1; transform: translate(15px, 15px); }
+
+</style>
+
+{% schema %}
+{
+  "name": "06 · Clean Tech Cards",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#0052cc"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "SYSTEM ENHANCEMENTS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Number of Cards",
+      "default": 4
+    },
+    { "type": "header", "content": "Card 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image" },
+    { "type": "text", "id": "name_1", "label": "Name", "default": "Audio Systems" },
+    { "type": "text", "id": "subtitle_1", "label": "Subtitle", "default": "Head units & speakers" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Card 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image" },
+    { "type": "text", "id": "name_2", "label": "Name", "default": "Dash Cams" },
+    { "type": "text", "id": "subtitle_2", "label": "Subtitle", "default": "Record your drive" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Card 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image" },
+    { "type": "text", "id": "name_3", "label": "Name", "default": "Lighting" },
+    { "type": "text", "id": "subtitle_3", "label": "Subtitle", "default": "LEDs & conversions" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Card 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image" },
+    { "type": "text", "id": "name_4", "label": "Name", "default": "Diagnostics" },
+    { "type": "text", "id": "subtitle_4", "label": "Subtitle", "default": "Scanners & tools" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Card 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image" },
+    { "type": "text", "id": "name_5", "label": "Name", "default": "Sensors" },
+    { "type": "text", "id": "subtitle_5", "label": "Subtitle", "default": "OEM electrical" },
+    { "type": "url", "id": "link_5", "label": "Link" },
+    { "type": "header", "content": "Card 6" },
+    { "type": "image_picker", "id": "image_6", "label": "Image" },
+    { "type": "text", "id": "name_6", "label": "Name", "default": "Batteries" },
+    { "type": "text", "id": "subtitle_6", "label": "Subtitle", "default": "Power solutions" },
+    { "type": "url", "id": "link_6", "label": "Link" }
+  ]
+}
+{% endschema %}

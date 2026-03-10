@@ -1,0 +1,190 @@
+<div class="cf-auto-cat-v4" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v4-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 300px 1fr; gap: 40px;">
+    
+    <!-- Left Intro -->
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+      <h2 style="font-family: 'Oswald', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 700; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 15px 0; line-height: 1.1;">
+        {{ section.settings.title }}
+      </h2>
+      <p style="font-family: 'Roboto', sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.8; margin: 0 0 30px 0; line-height: 1.5;">
+        {{ section.settings.subtitle }}
+      </p>
+      {% if section.settings.show_btn %}
+        <div>
+          <a href="{{ section.settings.btn_link }}" class="cf-btn-cat-v4" style="display: inline-block; background: {{ section.settings.accent_color }}; color: #fff; padding: 14px 30px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-decoration: none;">
+            {{ section.settings.btn_text }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Grid Layout -->
+    <div class="cf-auto-cat-v4-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 250px); gap: 15px;">
+      
+      <!-- Box 1 (Large, takes 2 cols) -->
+      {% if section.settings.show_1 %}
+        <a href="{{ section.settings.link_1 }}" class="cf-auto-cat-v4-item" style="grid-column: span 2; position: relative; overflow: hidden; background: #222;">
+          {% if section.settings.bg_1 %}
+            <img src="{{ section.settings.bg_1 | image_url: width: 800 }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" alt="{{ section.settings.label_1 }}">
+          {% endif %}
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3);"></div>
+          <div style="position: absolute; bottom: 20px; left: 20px;">
+            <span style="font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;">{{ section.settings.label_1 }}</span>
+          </div>
+        </a>
+      {% endif %}
+
+      <!-- Box 2 -->
+      {% if section.settings.show_2 %}
+        <a href="{{ section.settings.link_2 }}" class="cf-auto-cat-v4-item" style="position: relative; overflow: hidden; background: #333;">
+          {% if section.settings.bg_2 %}
+            <img src="{{ section.settings.bg_2 | image_url: width: 400 }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" alt="{{ section.settings.label_2 }}">
+          {% endif %}
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3);"></div>
+          <div style="position: absolute; bottom: 20px; left: 20px;">
+            <span style="font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;">{{ section.settings.label_2 }}</span>
+          </div>
+        </a>
+      {% endif %}
+
+      <!-- Box 3 -->
+      {% if section.settings.show_3 %}
+        <a href="{{ section.settings.link_3 }}" class="cf-auto-cat-v4-item" style="position: relative; overflow: hidden; background: #333;">
+          {% if section.settings.bg_3 %}
+            <img src="{{ section.settings.bg_3 | image_url: width: 400 }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" alt="{{ section.settings.label_3 }}">
+          {% endif %}
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3);"></div>
+          <div style="position: absolute; bottom: 20px; left: 20px;">
+            <span style="font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;">{{ section.settings.label_3 }}</span>
+          </div>
+        </a>
+      {% endif %}
+
+      <!-- Box 4 (Large, takes 2 cols) -->
+      {% if section.settings.show_4 %}
+        <a href="{{ section.settings.link_4 }}" class="cf-auto-cat-v4-item" style="grid-column: span 2; position: relative; overflow: hidden; background: #222;">
+          {% if section.settings.bg_4 %}
+            <img src="{{ section.settings.bg_4 | image_url: width: 800 }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" alt="{{ section.settings.label_4 }}">
+          {% endif %}
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3);"></div>
+          <div style="position: absolute; bottom: 20px; left: 20px;">
+            <span style="font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;">{{ section.settings.label_4 }}</span>
+          </div>
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+  
+  .cf-auto-cat-v4-item:hover img { transform: scale(1.05); }
+  .cf-btn-cat-v4:hover { filter: brightness(1.2); }
+
+  @media (max-width: 1024px) {
+    .cf-auto-cat-v4-container { grid-template-columns: 1fr; }
+    .cf-auto-cat-v4-container > div:first-child { text-align: center; align-items: center; max-width: 600px; margin: 0 auto; }
+  }
+  @media (max-width: 768px) {
+    .cf-auto-cat-v4-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .cf-auto-cat-v4-item { grid-column: span 1 !important; height: 200px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Masonry Parts Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#ff3b30"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "THE PARTS DEPOT"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Everything you need to repair, rebuild, and race. Top rated brands in stock."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_btn",
+      "label": "Show Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "SHOP ALL DIRECTORY"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    { "type": "header", "content": "Category 1 (Large Top)" },
+    { "type": "checkbox", "id": "show_1", "label": "Show", "default": true },
+    { "type": "image_picker", "id": "bg_1", "label": "Image" },
+    { "type": "text", "id": "label_1", "label": "Label", "default": "Engine Components" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Category 2 (Small Top Right)" },
+    { "type": "checkbox", "id": "show_2", "label": "Show", "default": true },
+    { "type": "image_picker", "id": "bg_2", "label": "Image" },
+    { "type": "text", "id": "label_2", "label": "Label", "default": "Brakes" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Category 3 (Small Bottom Left)" },
+    { "type": "checkbox", "id": "show_3", "label": "Show", "default": true },
+    { "type": "image_picker", "id": "bg_3", "label": "Image" },
+    { "type": "text", "id": "label_3", "label": "Label", "default": "Filters" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Category 4 (Large Bottom)" },
+    { "type": "checkbox", "id": "show_4", "label": "Show", "default": true },
+    { "type": "image_picker", "id": "bg_4", "label": "Image" },
+    { "type": "text", "id": "label_4", "label": "Label", "default": "Fluids & Chemicals" },
+    { "type": "url", "id": "link_4", "label": "Link" }
+  ]
+}
+{% endschema %}

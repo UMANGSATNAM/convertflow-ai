@@ -1,0 +1,162 @@
+<div class="cf-auto-cat-v10" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px; overflow: hidden;">
+  <div class="cf-auto-cat-v10-container" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 60px;">
+    
+    <!-- Left Static Content -->
+    <div style="flex: 0 0 350px;">
+      <h2 style="font-family: 'Oswald', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 700; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 20px 0; line-height: 1.1;">
+        {{ section.settings.title }}
+      </h2>
+      <p style="font-family: 'Inter', sans-serif; font-size: 16px; color: {{ section.settings.text_color }}; opacity: 0.8; margin: 0 0 40px 0;">
+        {{ section.settings.subtitle }}
+      </p>
+      
+      <div style="display: flex; gap: 15px;">
+        <!-- Simple JS arrows for visual completeness, ideally tied to a slider lib but CSS scroll snap used here -->
+        <button onclick="document.getElementById('cf-slider-v10-{{ section.id }}').scrollBy({left: -300, behavior: 'smooth'})" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid {{ section.settings.text_color }}; background: transparent; color: {{ section.settings.text_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" class="cf-nav-btn-v10">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button onclick="document.getElementById('cf-slider-v10-{{ section.id }}').scrollBy({left: 300, behavior: 'smooth'})" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid {{ section.settings.text_color }}; background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" class="cf-nav-btn-v10-fill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Horizontal Scrolling Grid -->
+    <div id="cf-slider-v10-{{ section.id }}" style="flex: 1; display: flex; gap: 30px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; scrollbar-width: none; -ms-overflow-style: none;">
+      <style>#cf-slider-v10-{{ section.id }}::-webkit-scrollbar { display: none; }</style>
+
+      {% for i in (1..section.settings.blocks) %}
+        {% capture img %}image_{{i}}{% endcapture %}
+        {% capture name %}name_{{i}}{% endcapture %}
+        {% capture link %}link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v10-item" style="flex: 0 0 300px; scroll-snap-align: start; text-decoration: none; display: block; group">
+          
+          <div style="width: 100%; height: 400px; position: relative; overflow: hidden; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);">
+              {% if section.settings[img] %}
+                <img src="{{ section.settings[img] | image_url: width: 600 }}" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ section.settings[name] }}">
+              {% else %}
+                <div style="width: 100%; height: 100%; background: #ccc;"></div>
+              {% endif %}
+            </div>
+            
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); padding: 60px 30px 30px 30px;">
+              <h3 style="font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; color: #fff; margin: 0 0 10px 0; text-transform: uppercase;">
+                {{ section.settings[name] | default: 'Category' }}
+              </h3>
+              <span style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: {{ section.settings.accent_color }}; text-transform: uppercase; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 5px;">
+                Shop Brand <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </span>
+            </div>
+          </div>
+
+        </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@400;600&display=swap');
+  
+  .cf-auto-cat-v10-item:hover > div > div:first-child { transform: scale(1.05); }
+  .cf-nav-btn-v10:hover { background: {{ section.settings.text_color }} !important; color: {{ section.settings.bg_color }} !important; }
+  .cf-nav-btn-v10-fill:hover { background: transparent !important; color: {{ section.settings.text_color }} !important; }
+
+  @media (max-width: 900px) {
+    .cf-auto-cat-v10-container { flex-direction: column; align-items: flex-start; gap: 30px; }
+    .cf-auto-cat-v10-container > div:first-child { flex: none; width: 100%; text-align: center; }
+    .cf-auto-cat-v10-container > div:first-child > div { justify-content: center; }
+    #cf-slider-v10-{{ section.id }} { width: 100%; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Brands Slider",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#e60000"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "SHOP TOP BRANDS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "We stock the most trusted names in the automotive industry."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "label": "Number of Brands",
+      "default": 5
+    },
+    { "type": "header", "content": "Brand 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image" },
+    { "type": "text", "id": "name_1", "label": "Name", "default": "Performance Co" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Brand 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image" },
+    { "type": "text", "id": "name_2", "label": "Name", "default": "Suspension Tech" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Brand 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image" },
+    { "type": "text", "id": "name_3", "label": "Name", "default": "Aero Parts" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Brand 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image" },
+    { "type": "text", "id": "name_4", "label": "Name", "default": "Grip Tires" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Brand 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image" },
+    { "type": "text", "id": "name_5", "label": "Name", "default": "Volt Audio" },
+    { "type": "url", "id": "link_5", "label": "Link" }
+  ]
+}
+{% endschema %}

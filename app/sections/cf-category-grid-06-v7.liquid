@@ -1,0 +1,161 @@
+<div class="cf-auto-cat-v7" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v7-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 50px;">
+      <div style="font-family: 'Syne', sans-serif; font-size: 14px; color: {{ section.settings.accent_color }}; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">
+        {{ section.settings.kicker }}
+      </div>
+      <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0; line-height: 1;">
+        {{ section.settings.title }}
+      </h2>
+    </div>
+
+    <!-- Slanted / Parallelogram Grid -->
+    <div class="cf-auto-cat-v7-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+      
+      {% for i in (1..section.settings.blocks) %}
+        {% capture img %}image_{{i}}{% endcapture %}
+        {% capture name %}name_{{i}}{% endcapture %}
+        {% capture link %}link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v7-item" style="flex: 1; min-width: 250px; max-width: 350px; height: 300px; position: relative; text-decoration: none; overflow: hidden; transform: skewX(-10deg);">
+          
+          <!-- Image Container (Un-skewed inside) -->
+          <div style="position: absolute; top: 0; left: -20px; width: calc(100% + 40px); height: 100%; transform: skewX(10deg); overflow: hidden;">
+            {% if section.settings[img] %}
+              <img src="{{ section.settings[img] | image_url: width: 600 }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; filter: grayscale(100%);" class="cf-img-v7" alt="{{ section.settings[name] }}">
+            {% else %}
+              <div style="width: 100%; height: 100%; background: #333;" class="cf-img-v7"></div>
+            {% endif %}
+            
+            <!-- Hover Gradient -->
+            <div class="cf-gradient-v7" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%); transition: opacity 0.3s;"></div>
+            <div class="cf-gradient-hover-v7" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, {{ section.settings.accent_color | color_modify: 'alpha', 0.8 }} 0%, rgba(0,0,0,0.2) 100%); opacity: 0; transition: opacity 0.3s;"></div>
+          </div>
+
+          <!-- Content (Un-skewed) -->
+          <div style="position: absolute; bottom: 30px; left: 0; width: 100%; text-align: center; transform: skewX(10deg); z-index: 2;">
+            <h3 style="font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: #fff; margin: 0; text-transform: uppercase;">
+              {{ section.settings[name] | default: 'Category' }}
+            </h3>
+          </div>
+
+        </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');
+  
+  .cf-auto-cat-v7-item:hover .cf-img-v7 {
+    transform: scale(1.1);
+    filter: grayscale(0%) !important;
+  }
+  .cf-auto-cat-v7-item:hover .cf-gradient-v7 { opacity: 0; }
+  .cf-auto-cat-v7-item:hover .cf-gradient-hover-v7 { opacity: 1; }
+
+  @media (max-width: 768px) {
+    .cf-auto-cat-v7-item {
+      transform: skewX(0) !important;
+      min-width: 100% !important;
+      height: 200px !important;
+    }
+    .cf-auto-cat-v7-item > div:first-child,
+    .cf-auto-cat-v7-item > div:last-child {
+      transform: skewX(0) !important;
+      left: 0 !important;
+      width: 100% !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Slant Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Hover Accent Color",
+      "default": "#cc0000"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "SELECT YOUR MOD"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "SHOP UPGRADES"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "label": "Number of Categories",
+      "default": 4
+    },
+    { "type": "header", "content": "Category 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image" },
+    { "type": "text", "id": "name_1", "label": "Name", "default": "Intakes" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Category 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image" },
+    { "type": "text", "id": "name_2", "label": "Name", "default": "Exhaust" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Category 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image" },
+    { "type": "text", "id": "name_3", "label": "Name", "default": "Tuning" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Category 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image" },
+    { "type": "text", "id": "name_4", "label": "Name", "default": "Suspension" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Category 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image" },
+    { "type": "text", "id": "name_5", "label": "Name", "default": "Aero" },
+    { "type": "url", "id": "link_5", "label": "Link" }
+  ]
+}
+{% endschema %}

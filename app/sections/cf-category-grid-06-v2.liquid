@@ -1,0 +1,186 @@
+<div class="cf-auto-cat-v2" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v2-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 50px;">
+      <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.title_color }}; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: -1px;">
+        {{ section.settings.title }}
+      </h2>
+      <p style="font-family: 'Syne', sans-serif; font-size: 16px; color: {{ section.settings.title_color }}; opacity: 0.7; margin: 0; text-transform: uppercase; letter-spacing: 2px;">
+        {{ section.settings.subtitle }}
+      </p>
+    </div>
+
+    <div class="cf-auto-cat-v2-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.columns }}, 1fr); gap: 20px;">
+      {% for i in (1..section.settings.blocks) %}
+        {% capture bg %}bg_{{i}}{% endcapture %}
+        {% capture label %}label_{{i}}{% endcapture %}
+        {% capture link %}link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v2-item" style="display: block; position: relative; height: 350px; border-radius: {{ section.settings.border_radius }}px; overflow: hidden; text-decoration: none;">
+          
+          <div class="cf-auto-cat-v2-img" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);">
+            {% if section.settings[bg] %}
+              <img src="{{ section.settings[bg] | image_url: width: 600 }}" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ section.settings[label] }}">
+            {% else %}
+              <div style="width: 100%; height: 100%; background: #222;"></div>
+            {% endif %}
+          </div>
+          
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%);"></div>
+
+          <div style="position: absolute; bottom: 30px; left: 30px; right: 30px; display: flex; align-items: flex-end; justify-content: space-between;">
+            <h3 style="font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: #fff; margin: 0; text-transform: uppercase;">
+              {{ section.settings[label] | default: 'Category' }}
+            </h3>
+            <div class="cf-auto-cat-v2-arrow" style="background: {{ section.settings.accent_color }}; color: #000; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; opacity: 0; transform: translateX(-10px); transition: all 0.3s ease;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+          </div>
+
+        </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');
+  
+  .cf-auto-cat-v2-item:hover .cf-auto-cat-v2-img {
+    transform: scale(1.05);
+  }
+  .cf-auto-cat-v2-item:hover .cf-auto-cat-v2-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (max-width: 1024px) {
+    .cf-auto-cat-v2-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  }
+  @media (max-width: 768px) {
+    .cf-auto-cat-v2-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .cf-auto-cat-v2-item { height: 280px !important; }
+  }
+  @media (max-width: 480px) {
+    .cf-auto-cat-v2-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Category Grid",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Hover Accent",
+      "default": "#00ffcc"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "BROWSE UPGRADES"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Size",
+      "default": 36
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "FIND PARTS FOR YOUR BUILD"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Columns (Desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "label": "Number of Blocks",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Corner Radius",
+      "default": 0
+    },
+    { "type": "header", "content": "Block 1" },
+    { "type": "image_picker", "id": "bg_1", "label": "Image" },
+    { "type": "text", "id": "label_1", "label": "Label", "default": "Performance" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Block 2" },
+    { "type": "image_picker", "id": "bg_2", "label": "Image" },
+    { "type": "text", "id": "label_2", "label": "Label", "default": "Suspension" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Block 3" },
+    { "type": "image_picker", "id": "bg_3", "label": "Image" },
+    { "type": "text", "id": "label_3", "label": "Label", "default": "Lighting" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Block 4" },
+    { "type": "image_picker", "id": "bg_4", "label": "Image" },
+    { "type": "text", "id": "label_4", "label": "Label", "default": "Interior" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Block 5" },
+    { "type": "image_picker", "id": "bg_5", "label": "Image" },
+    { "type": "text", "id": "label_5", "label": "Label", "default": "Exterior" },
+    { "type": "url", "id": "link_5", "label": "Link" },
+    { "type": "header", "content": "Block 6" },
+    { "type": "image_picker", "id": "bg_6", "label": "Image" },
+    { "type": "text", "id": "label_6", "label": "Label", "default": "Wheels" },
+    { "type": "url", "id": "link_6", "label": "Link" },
+    { "type": "header", "content": "Block 7" },
+    { "type": "image_picker", "id": "bg_7", "label": "Image" },
+    { "type": "text", "id": "label_7", "label": "Label", "default": "Audio" },
+    { "type": "url", "id": "link_7", "label": "Link" },
+    { "type": "header", "content": "Block 8" },
+    { "type": "image_picker", "id": "bg_8", "label": "Image" },
+    { "type": "text", "id": "label_8", "label": "Label", "default": "Tools" },
+    { "type": "url", "id": "link_8", "label": "Link" }
+  ]
+}
+{% endschema %}

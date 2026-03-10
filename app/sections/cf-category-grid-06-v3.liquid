@@ -1,0 +1,162 @@
+<div class="cf-auto-cat-v3" style="background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 20px;">
+  <div class="cf-auto-cat-v3-container" style="max-width: 1200px; margin: 0 auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+      <div>
+        <h2 style="font-family: 'Exo 2', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 5px 0; letter-spacing: -1px;">
+          {{ section.settings.title }}
+        </h2>
+        <div style="width: 60px; height: 4px; background: {{ section.settings.accent_color }};"></div>
+      </div>
+      {% if section.settings.show_view_all %}
+        <a href="{{ section.settings.view_all_link }}" style="font-family: 'Exo 2', sans-serif; font-size: 14px; font-weight: 700; color: {{ section.settings.text_color }}; text-decoration: none; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+          View All <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="cf-auto-cat-v3-grid" style="display: flex; flex-wrap: wrap; gap: 20px;">
+      {% for i in (1..section.settings.blocks) %}
+        {% capture img %}image_{{i}}{% endcapture %}
+        {% capture name %}name_{{i}}{% endcapture %}
+        {% capture link %}link_{{i}}{% endcapture %}
+
+        <a href="{{ section.settings[link] | default: '#' }}" class="cf-auto-cat-v3-item" style="flex: 1; min-width: 180px; text-decoration: none; text-align: center; display: flex; flex-direction: column; align-items: center;">
+          
+          <div class="cf-auto-cat-v3-circle" style="width: 160px; height: 160px; border-radius: 50%; border: 3px solid {{ section.settings.border_color }}; padding: 8px; margin-bottom: 15px; transition: border-color 0.3s;">
+            <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; position: relative;">
+              {% if section.settings[img] %}
+                <img src="{{ section.settings[img] | image_url: width: 300 }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" alt="{{ section.settings[name] }}">
+              {% else %}
+                <div style="width: 100%; height: 100%; background: #eee;"></div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <h3 style="font-family: 'Exo 2', sans-serif; font-size: 16px; font-weight: 700; color: {{ section.settings.text_color }}; margin: 0; text-transform: uppercase;">
+            {{ section.settings[name] | default: 'Part Category' }}
+          </h3>
+
+        </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800&display=swap');
+  
+  .cf-auto-cat-v3-item:hover .cf-auto-cat-v3-circle {
+    border-color: {{ section.settings.accent_color }} !important;
+  }
+  .cf-auto-cat-v3-item:hover img {
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    .cf-auto-cat-v3-circle { width: 120px; height: 120px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Dealership Circles",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Circle Border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Hover/Accent Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "SHOP BY VEHICLE"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Size",
+      "default": 32
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Link",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All URL"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "blocks",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "label": "Number of Categories",
+      "default": 5
+    },
+    { "type": "header", "content": "Category 1" },
+    { "type": "image_picker", "id": "image_1", "label": "Image" },
+    { "type": "text", "id": "name_1", "label": "Name", "default": "Sedans" },
+    { "type": "url", "id": "link_1", "label": "Link" },
+    { "type": "header", "content": "Category 2" },
+    { "type": "image_picker", "id": "image_2", "label": "Image" },
+    { "type": "text", "id": "name_2", "label": "Name", "default": "SUVs" },
+    { "type": "url", "id": "link_2", "label": "Link" },
+    { "type": "header", "content": "Category 3" },
+    { "type": "image_picker", "id": "image_3", "label": "Image" },
+    { "type": "text", "id": "name_3", "label": "Name", "default": "Trucks" },
+    { "type": "url", "id": "link_3", "label": "Link" },
+    { "type": "header", "content": "Category 4" },
+    { "type": "image_picker", "id": "image_4", "label": "Image" },
+    { "type": "text", "id": "name_4", "label": "Name", "default": "Hybrids" },
+    { "type": "url", "id": "link_4", "label": "Link" },
+    { "type": "header", "content": "Category 5" },
+    { "type": "image_picker", "id": "image_5", "label": "Image" },
+    { "type": "text", "id": "name_5", "label": "Name", "default": "Performance" },
+    { "type": "url", "id": "link_5", "label": "Link" },
+    { "type": "header", "content": "Category 6" },
+    { "type": "image_picker", "id": "image_6", "label": "Image" },
+    { "type": "text", "id": "name_6", "label": "Name", "default": "Commercial" },
+    { "type": "url", "id": "link_6", "label": "Link" }
+  ]
+}
+{% endschema %}
