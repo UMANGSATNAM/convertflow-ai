@@ -1,0 +1,49 @@
+<style>
+.cf-mq-05-v3 { overflow: hidden; background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 0; border-top: 1px solid {{ section.settings.border_color }}; border-bottom: 1px solid {{ section.settings.border_color }}; }
+.cf-mq-05-v3-track {
+  display: flex;
+  animation: mq05v3s {{ section.settings.speed }}s linear infinite;
+}
+.cf-mq-05-v3-track:hover { animation-play-state: paused; }
+@keyframes mq05v3s { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.cf-mq-05-v3-item {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 0 40px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 600;
+  color: {{ section.settings.text_color }};
+  white-space: nowrap;
+}
+.cf-mq-05-v3-icon { width: 18px; height: 18px; color: {{ section.settings.accent_color }}; }
+</style>
+
+<div class="cf-mq-05-v3">
+  <div class="cf-mq-05-v3-track">
+    {% for i in (1..4) %}{% for block in section.blocks %}
+      <span class="cf-mq-05-v3-item">
+        <svg class="cf-mq-05-v3-icon" viewBox="0 0 24 24" fill="{{ section.settings.accent_color }}"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/><path fill="#fff" d="M9 12l2 2 4-4"/></svg>
+        {{ block.settings.text }}
+      </span>
+    {% endfor %}{% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Clean Beauty Marquee",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#f0fdf4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},
+    {"type":"color","id":"accent_color","label":"Icon Color","default":"#22c55e"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#bbf7d0"},
+    {"type":"range","id":"font_size","label":"Font Size","min":12,"max":24,"step":1,"default":15},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":80,"step":5,"default":35}
+  ],
+  "blocks": [
+    {"type":"item","name":"Item","settings":[{"type":"text","id":"text","label":"Text","default":"100% Vegan"}]}
+  ],
+  "presets": [{"name": "03 · Clean Beauty Marquee","blocks": [{"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"}]}]
+}
+{% endschema %}

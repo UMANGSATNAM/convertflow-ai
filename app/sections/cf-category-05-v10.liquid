@@ -1,0 +1,31 @@
+<style>
+.cf-cat-05-v10 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-cat-05-v10-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-cat-05-v10-title { font-size: 32px; font-weight: 700; color: {{ section.settings.text_color }}; margin: 0 0 30px 0; }
+.cf-cat-05-v10-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 20px; }
+.cf-cat-05-v10-card { display: block; text-decoration: none; background: #fff; border: 1px solid {{ section.settings.border_color }}; border-radius: 12px; padding: 20px; display: flex; gap: 15px; align-items: center; transition: border-color 0.2s, box-shadow 0.2s; }
+.cf-cat-05-v10-card:hover { border-color: {{ section.settings.accent_color }}; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.cf-cat-05-v10-img { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; background: #dcfce7; flex-shrink: 0; position: relative; }
+.cf-cat-05-v10-img img { width: 100%; height: 100%; object-fit: cover; }
+.cf-cat-05-v10-text {}
+.cf-cat-05-v10-name { font-size: 16px; font-weight: 700; color: {{ section.settings.text_color }}; margin-bottom: 4px; }
+.cf-cat-05-v10-sub { font-size: 13px; color: {{ section.settings.accent_color }}; font-weight: 600; }
+@media (max-width: 900px) { .cf-cat-05-v10-grid { grid-template-columns: 1fr; } }
+</style>
+<div class="cf-cat-05-v10">
+  <div class="cf-cat-05-v10-inner">
+    <h2 class="cf-cat-05-v10-title">{{ section.settings.title }}</h2>
+    <div class="cf-cat-05-v10-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-05-v10-card">
+        <div class="cf-cat-05-v10-img">{% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 200 }}" alt="{{ block.settings.title }}">{% endif %}</div>
+        <div class="cf-cat-05-v10-text">
+          <div class="cf-cat-05-v10-name">{{ block.settings.title }}</div>
+          {% if block.settings.sub != blank %}<div class="cf-cat-05-v10-sub">{{ block.settings.sub }}</div>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}{"name": "10 · Sustainable Grid","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},{"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},{"type":"color","id":"border_color","label":"Border Color","default":"#bbf7d0"},{"type":"color","id":"accent_color","label":"Accent Color","default":"#16a34a"},{"type":"text","id":"title","label":"Title","default":"Shop by Value"},{"type":"range","id":"cols","label":"Columns","min":1,"max":3,"step":1,"default":2},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1000}],"blocks": [{"type": "category","name": "Category","settings": [{"type":"text","id":"title","label":"Name","default":"Zero Waste"},{"type":"text","id":"sub","label":"Subtext","default":"Refillable options"},{"type":"image_picker","id":"image","label":"Image"},{"type":"url","id":"link","label":"Link"}]}],"presets": [{"name": "10 · Sustainable Grid","blocks": [{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"}]}]}{% endschema %}

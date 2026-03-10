@@ -1,0 +1,18 @@
+<style>
+.cf-tb-05-v10 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-tb-05-v10-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+.cf-tb-05-v10-badge { background: {{ section.settings.card_bg }}; border: 1px solid {{ section.settings.border_color }}; border-radius: 10px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; }
+.cf-tb-05-v10-icon { font-size: 24px; flex-shrink: 0; }
+.cf-tb-05-v10-label { font-size: 14px; font-weight: 600; color: {{ section.settings.text_color }}; line-height: 1.4; }
+</style>
+<div class="cf-tb-05-v10">
+  <div class="cf-tb-05-v10-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tb-05-v10-badge">
+      <span class="cf-tb-05-v10-icon">{{ block.settings.icon }}</span>
+      <span class="cf-tb-05-v10-label">{{ block.settings.label }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}{"name": "10 · Sustainable Badges","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},{"type":"color","id":"card_bg","label":"Card BG","default":"#fff"},{"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},{"type":"color","id":"border_color","label":"Border Color","default":"#bbf7d0"},{"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":50},{"type":"range","id":"max_width","label":"Max Width","min":600,"max":1400,"step":50,"default":1100}],"blocks": [{"type": "badge","name": "Badge","settings": [{"type":"text","id":"icon","label":"Icon","default":"🌿"},{"type":"text","id":"label","label":"Label","default":"Carbon Neutral Shipping"}]}],"presets": [{"name": "10 · Sustainable Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]}{% endschema %}

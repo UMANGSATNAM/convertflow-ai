@@ -1,0 +1,23 @@
+<style>
+.cf-tb-05-v5 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-tb-05-v5-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+.cf-tb-05-v5-badge { display: flex; align-items: center; gap: 12px; }
+.cf-tb-05-v5-icon { font-size: 24px; }
+.cf-tb-05-v5-text {}
+.cf-tb-05-v5-title { font-size: 14px; font-weight: 700; color: {{ section.settings.text_color }}; }
+.cf-tb-05-v5-sub { font-size: 12px; color: #6b7280; }
+</style>
+<div class="cf-tb-05-v5">
+  <div class="cf-tb-05-v5-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tb-05-v5-badge">
+      <span class="cf-tb-05-v5-icon">{{ block.settings.icon }}</span>
+      <div class="cf-tb-05-v5-text">
+        <div class="cf-tb-05-v5-title">{{ block.settings.title }}</div>
+        {% if block.settings.sub != blank %}<div class="cf-tb-05-v5-sub">{{ block.settings.sub }}</div>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}{"name": "05 · K-Beauty Badges","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#fff8f9"},{"type":"color","id":"text_color","label":"Text Color","default":"#2d2d2d"},{"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40},{"type":"range","id":"max_width","label":"Max Width","min":600,"max":1400,"step":50,"default":1100}],"blocks": [{"type": "badge","name": "Badge","settings": [{"type":"text","id":"icon","label":"Icon","default":"🌸"},{"type":"text","id":"title","label":"Title","default":"Cruelty Free"},{"type":"text","id":"sub","label":"Subtitle","default":"Never tested on animals"}]}],"presets": [{"name": "05 · K-Beauty Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]}{% endschema %}

@@ -1,0 +1,39 @@
+<style>
+.cf-fc-05-v4 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: 'Didot','Playfair Display','Georgia',serif; }
+.cf-fc-05-v4-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-fc-05-v4-header { text-align: center; margin-bottom: 60px; }
+.cf-fc-05-v4-title { font-size: 42px; font-weight: normal; font-style: italic; color: {{ section.settings.text_color }}; margin: 0; }
+.cf-fc-05-v4-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 30px; }
+.cf-fc-05-v4-card { text-decoration: none; display: flex; flex-direction: column; }
+.cf-fc-05-v4-img { aspect-ratio: 3/4; background: #111; overflow: hidden; position: relative; margin-bottom: 20px; border: 1px solid {{ section.settings.border_color }}; }
+.cf-fc-05-v4-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(15%); transition: all 0.5s; }
+.cf-fc-05-v4-card:hover .cf-fc-05-v4-img img { filter: grayscale(0%); transform: scale(1.04); }
+.cf-fc-05-v4-name { color: {{ section.settings.text_color }}; font-size: 20px; font-weight: normal; text-align: center; margin: 0 0 8px 0; }
+.cf-fc-05-v4-price { font-family: -apple-system,sans-serif; font-size: 14px; color: {{ section.settings.accent_color }}; text-align: center; letter-spacing: 0.05em; }
+.cf-fc-05-v4-footer { text-align: center; margin-top: 50px; }
+.cf-fc-05-v4-btn {
+  display: inline-block; border: 1px solid {{ section.settings.text_color }};
+  color: {{ section.settings.text_color }};
+  font-family: -apple-system,sans-serif;
+  text-decoration: none; padding: 13px 35px; font-size: 12px;
+  letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.3s;
+}
+.cf-fc-05-v4-btn:hover { background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; }
+@media (max-width: 900px) { .cf-fc-05-v4-grid { grid-template-columns: repeat(2,1fr); } }
+</style>
+<div class="cf-fc-05-v4">
+  <div class="cf-fc-05-v4-inner">
+    <div class="cf-fc-05-v4-header"><h2 class="cf-fc-05-v4-title">{{ section.settings.title }}</h2></div>
+    <div class="cf-fc-05-v4-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.url }}" class="cf-fc-05-v4-card">
+        <div class="cf-fc-05-v4-img">{% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">{% endif %}</div>
+        <div class="cf-fc-05-v4-name">{{ block.settings.title }}</div>
+        <div class="cf-fc-05-v4-price">{{ block.settings.price }}</div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="cf-fc-05-v4-footer"><a href="{{ section.settings.btn_link }}" class="cf-fc-05-v4-btn">{{ section.settings.btn_text }}</a></div>
+  </div>
+</div>
+{% schema %}{"name": "04 · Luxury Cosmetics Products","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#1a1a1a"},{"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},{"type":"color","id":"accent_color","label":"Gold Accent","default":"#d4af37"},{"type":"color","id":"border_color","label":"Border Color","default":"#333"},{"type":"text","id":"title","label":"Title","default":"Iconic Formulas"},{"type":"text","id":"btn_text","label":"Button Text","default":"Explore All"},{"type":"url","id":"btn_link","label":"Button Link"},{"type":"range","id":"cols","label":"Columns","min":2,"max":5,"step":1,"default":3},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}],"blocks": [{"type": "product","name": "Product","settings": [{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"title","label":"Title","default":"Rouge Noir Lipstick"},{"type":"text","id":"price","label":"Price","default":"$75.00"},{"type":"url","id":"url","label":"Link"}]}],"presets": [{"name": "04 · Luxury Products","blocks": [{"type":"product"},{"type":"product"},{"type":"product"}]}]}{% endschema %}

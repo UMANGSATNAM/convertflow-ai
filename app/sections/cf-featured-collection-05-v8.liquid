@@ -1,0 +1,35 @@
+<style>
+.cf-fc-05-v8 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-fc-05-v8-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-fc-05-v8-header { text-align: center; margin-bottom: 50px; }
+.cf-fc-05-v8-title { font-size: 36px; font-weight: 800; font-style: italic; color: {{ section.settings.text_color }}; margin: 0; }
+.cf-fc-05-v8-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 20px; }
+.cf-fc-05-v8-card { text-decoration: none; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.cf-fc-05-v8-img { width: 100%; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #fdf2f8; margin-bottom: 15px; position: relative; }
+.cf-fc-05-v8-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; transition: transform 0.4s; }
+.cf-fc-05-v8-card:hover .cf-fc-05-v8-img img { transform: scale(1.06); }
+.cf-fc-05-v8-shade { display: flex; gap: 5px; margin-bottom: 10px; justify-content: center; }
+.cf-fc-05-v8-dot { width: 12px; height: 12px; border-radius: 50%; }
+.cf-fc-05-v8-name { color: {{ section.settings.text_color }}; font-size: 15px; font-weight: 700; margin: 0 0 5px 0; font-style: italic; }
+.cf-fc-05-v8-price { color: {{ section.settings.accent_color }}; font-size: 14px; font-weight: 600; }
+@media (max-width: 900px) { .cf-fc-05-v8-grid { grid-template-columns: repeat(2,1fr); } }
+</style>
+<div class="cf-fc-05-v8">
+  <div class="cf-fc-05-v8-inner">
+    <div class="cf-fc-05-v8-header"><h2 class="cf-fc-05-v8-title">{{ section.settings.title }}</h2></div>
+    <div class="cf-fc-05-v8-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.url }}" class="cf-fc-05-v8-card">
+        <div class="cf-fc-05-v8-img">{% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">{% endif %}</div>
+        <div class="cf-fc-05-v8-shade">
+          {% assign colors = block.settings.shades | split: ',' %}
+          {% for color in colors %}<div class="cf-fc-05-v8-dot" style="background: {{ color | strip }};"></div>{% endfor %}
+        </div>
+        <div class="cf-fc-05-v8-name">{{ block.settings.title }}</div>
+        <div class="cf-fc-05-v8-price">{{ block.settings.price }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}{"name": "08 · Nail Art Products","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#fff5f7"},{"type":"color","id":"text_color","label":"Text Color","default":"#831843"},{"type":"color","id":"accent_color","label":"Accent Color","default":"#ec4899"},{"type":"text","id":"title","label":"Title","default":"Trending Polish"},{"type":"range","id":"cols","label":"Columns","min":2,"max":6,"step":1,"default":4},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}],"blocks": [{"type": "product","name": "Product","settings": [{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"title","label":"Title","default":"Rose Gold Chrome"},{"type":"text","id":"price","label":"Price","default":"$16.00"},{"type":"text","id":"shades","label":"Color Swatches (comma-separated hex)","default":"#ec4899, #f43f5e, #a855f7"},{"type":"url","id":"url","label":"Link"}]}],"presets": [{"name": "08 · Nail Products","blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]}]}{% endschema %}

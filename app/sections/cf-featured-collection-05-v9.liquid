@@ -1,0 +1,33 @@
+<style>
+.cf-fc-05-v9 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: 'Baskerville','Georgia',serif; }
+.cf-fc-05-v9-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-fc-05-v9-header { text-align: center; margin-bottom: 60px; }
+.cf-fc-05-v9-label { font-family: -apple-system,sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 15px; }
+.cf-fc-05-v9-title { font-size: 44px; font-weight: normal; font-style: italic; color: {{ section.settings.text_color }}; margin: 0; }
+.cf-fc-05-v9-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 30px; }
+.cf-fc-05-v9-card { text-decoration: none; display: flex; flex-direction: column; }
+.cf-fc-05-v9-img { aspect-ratio: 2/3; overflow: hidden; background: #f5f0e8; margin-bottom: 20px; position: relative; }
+.cf-fc-05-v9-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+.cf-fc-05-v9-card:hover .cf-fc-05-v9-img img { transform: scale(1.05); }
+.cf-fc-05-v9-name { font-size: 20px; color: {{ section.settings.text_color }}; text-align: center; margin: 0 0 6px 0; }
+.cf-fc-05-v9-price { font-family: -apple-system,sans-serif; font-size: 14px; text-align: center; color: {{ section.settings.accent_color }}; letter-spacing: 0.05em; }
+@media (max-width: 900px) { .cf-fc-05-v9-grid { grid-template-columns: repeat(2,1fr); gap: 20px; } }
+</style>
+<div class="cf-fc-05-v9">
+  <div class="cf-fc-05-v9-inner">
+    <div class="cf-fc-05-v9-header">
+      <div class="cf-fc-05-v9-label">{{ section.settings.label }}</div>
+      <h2 class="cf-fc-05-v9-title">{{ section.settings.title }}</h2>
+    </div>
+    <div class="cf-fc-05-v9-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.url }}" class="cf-fc-05-v9-card">
+        <div class="cf-fc-05-v9-img">{% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">{% endif %}</div>
+        <div class="cf-fc-05-v9-name">{{ block.settings.title }}</div>
+        <div class="cf-fc-05-v9-price">{{ block.settings.price }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}{"name": "09 · Fragrance Products","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#faf8f5"},{"type":"color","id":"text_color","label":"Text Color","default":"#2c2416"},{"type":"color","id":"accent_color","label":"Gold Accent","default":"#b8973a"},{"type":"text","id":"label","label":"Label","default":"La Maison"},{"type":"text","id":"title","label":"Title","default":"The Collection"},{"type":"range","id":"cols","label":"Columns","min":2,"max":6,"step":1,"default":4},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1300}],"blocks": [{"type": "product","name": "Product","settings": [{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"title","label":"Title","default":"Velvet Oud"},{"type":"text","id":"price","label":"Price","default":"$210.00"},{"type":"url","id":"url","label":"Link"}]}],"presets": [{"name": "09 · Fragrance Products","blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]}]}{% endschema %}

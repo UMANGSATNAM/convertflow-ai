@@ -1,0 +1,66 @@
+<style>
+.cf-snack-05 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-snack-05-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: {{ section.settings.card_bg }};
+  border-radius: 50px;
+  padding: 16px 30px;
+}
+.cf-snack-05-left { display: flex; align-items: center; gap: 12px; }
+.cf-snack-05-icon { color: {{ section.settings.accent_color }}; font-size: 24px; }
+.cf-snack-05-text { font-size: 15px; font-weight: 600; color: {{ section.settings.text_color }}; }
+.cf-snack-05-text span { color: {{ section.settings.accent_color }}; }
+.cf-snack-05-btn {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.cf-snack-05-btn:hover { opacity: 0.85; }
+@media (max-width: 600px) {
+  .cf-snack-05-inner { flex-direction: column; align-items: center; text-align: center; border-radius: 16px; }
+}
+</style>
+
+<div class="cf-snack-05">
+  <div class="cf-snack-05-inner">
+    <div class="cf-snack-05-left">
+      <span class="cf-snack-05-icon">✨</span>
+      <span class="cf-snack-05-text">{{ section.settings.text | replace: '*', '<span>' }}{%- if section.settings.text contains '*' -%}</span>{%- endif -%}</span>
+    </div>
+    <a href="{{ section.settings.btn_link }}" class="cf-snack-05-btn">{{ section.settings.btn_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Glam Promo Snack",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fdf2f8"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#fce7f3"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#831843"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#ec4899"},
+    {"type":"text","id":"text","label":"Message Text","default":"🎁 Use code *GLOW20* for 20% off your first order"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Copy Code"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":900}
+  ],
+  "presets": [{"name": "02 · Glam Promo Snack"}]
+}
+{% endschema %}

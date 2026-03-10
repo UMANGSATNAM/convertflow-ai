@@ -1,0 +1,47 @@
+<style>
+.cf-mq-05-v4 { overflow: hidden; background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 0; }
+.cf-mq-05-v4-track { display: flex; animation: mq05v4s {{ section.settings.speed }}s linear infinite; }
+.cf-mq-05-v4-track:hover { animation-play-state: paused; }
+@keyframes mq05v4s { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.cf-mq-05-v4-item {
+  display: inline-flex; align-items: center; gap: 20px;
+  padding: 0 50px;
+  font-family: 'Didot','Playfair Display','Georgia',serif;
+  font-size: {{ section.settings.font_size }}px;
+  font-style: italic;
+  font-weight: normal;
+  color: {{ section.settings.text_color }};
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+.cf-mq-05-v4-sep { width: 4px; height: 4px; background: {{ section.settings.accent_color }}; border-radius: 50%; display: inline-block; }
+</style>
+
+<div class="cf-mq-05-v4">
+  <div class="cf-mq-05-v4-track">
+    {% for i in (1..4) %}{% for block in section.blocks %}
+      <span class="cf-mq-05-v4-item">
+        {{ block.settings.text }}
+        <span class="cf-mq-05-v4-sep"></span>
+      </span>
+    {% endfor %}{% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Luxury Cosmetics Marquee",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#1a1a1a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},
+    {"type":"color","id":"accent_color","label":"Separator Color","default":"#d4af37"},
+    {"type":"range","id":"font_size","label":"Font Size","min":12,"max":28,"step":1,"default":18},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":18},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":80,"step":5,"default":40}
+  ],
+  "blocks": [
+    {"type":"item","name":"Item","settings":[{"type":"text","id":"text","label":"Text","default":"Couture Formulas"}]}
+  ],
+  "presets": [{"name": "04 · Luxury Marquee","blocks": [{"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"}]}]
+}
+{% endschema %}

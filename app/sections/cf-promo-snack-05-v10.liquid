@@ -1,0 +1,53 @@
+<style>
+.cf-snack-05-v10 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-snack-05-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  background: {{ section.settings.card_bg }};
+  border-radius: 10px; padding: 15px 25px;
+  border: 1px solid {{ section.settings.accent_color | color_modify: 'alpha', 0.3 }};
+}
+.cf-snack-05-v10-left { display: flex; align-items: center; gap: 10px; }
+.cf-snack-05-v10-icon { font-size: 20px; }
+.cf-snack-05-v10-text { font-size: 14px; color: {{ section.settings.text_color }}; font-weight: 600; }
+.cf-snack-05-v10-btn {
+  background: {{ section.settings.accent_color }}; color: #fff;
+  text-decoration: none; padding: 8px 18px; border-radius: 6px;
+  font-size: 13px; font-weight: 600; white-space: nowrap; transition: opacity 0.2s;
+}
+.cf-snack-05-v10-btn:hover { opacity: 0.85; }
+@media (max-width: 600px) { .cf-snack-05-v10-inner { flex-direction: column; text-align: center; border-radius: 10px; } }
+</style>
+
+<div class="cf-snack-05-v10">
+  <div class="cf-snack-05-v10-inner">
+    <div class="cf-snack-05-v10-left">
+      <span class="cf-snack-05-v10-icon">🌿</span>
+      <span class="cf-snack-05-v10-text">{{ section.settings.text }}</span>
+    </div>
+    <a href="{{ section.settings.btn_link }}" class="cf-snack-05-v10-btn">{{ section.settings.btn_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Sustainable Snack",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},
+    {"type":"color","id":"card_bg","label":"Card BG","default":"#dcfce7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},
+    {"type":"color","id":"accent_color","label":"Green Accent","default":"#16a34a"},
+    {"type":"text","id":"text","label":"Message Text","default":"🌍 All orders ship carbon neutral — we offset 100% of shipping emissions"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Learn More"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":18},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1000}
+  ],
+  "presets": [{"name": "10 · Sustainable Snack"}]
+}
+{% endschema %}

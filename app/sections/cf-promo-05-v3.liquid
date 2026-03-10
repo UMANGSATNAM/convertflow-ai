@@ -1,0 +1,110 @@
+<style>
+.cf-promo-05-v3 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-promo-05-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.cf-promo-05-v3-content { order: 2; }
+.cf-promo-05-v3-image { order: 1; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: #d1fae5; }
+.cf-promo-05-v3-image img { width: 100%; height: 100%; object-fit: cover; }
+.cf-promo-05-v3-tag {
+  display: inline-block;
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.cf-promo-05-v3-title {
+  font-size: clamp(30px, 3.5vw, 50px);
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 15px 0;
+  line-height: 1.15;
+}
+.cf-promo-05-v3-list {
+  list-style: none; padding: 0; margin: 0 0 30px 0;
+}
+.cf-promo-05-v3-list li {
+  display: flex; align-items: center; gap: 10px;
+  color: #374151; font-size: 15px; margin-bottom: 8px;
+}
+.cf-promo-05-v3-list li::before {
+  content: '✓'; color: {{ section.settings.accent_color }}; font-weight: 700;
+  background: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
+.cf-promo-05-v3-btn {
+  display: inline-block;
+  background: {{ section.settings.text_color }};
+  color: {{ section.settings.bg_color }};
+  text-decoration: none;
+  padding: 14px 30px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: opacity 0.2s;
+}
+.cf-promo-05-v3-btn:hover { opacity: 0.85; }
+@media (max-width: 768px) {
+  .cf-promo-05-v3-inner { grid-template-columns: 1fr; gap: 30px; }
+  .cf-promo-05-v3-content { order: 1; }
+  .cf-promo-05-v3-image { order: 2; }
+}
+</style>
+
+<div class="cf-promo-05-v3">
+  <div class="cf-promo-05-v3-inner">
+    <div class="cf-promo-05-v3-image">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">
+      {% endif %}
+    </div>
+    <div class="cf-promo-05-v3-content">
+      <div class="cf-promo-05-v3-tag">{{ section.settings.tag }}</div>
+      <h2 class="cf-promo-05-v3-title">{{ section.settings.title }}</h2>
+      <ul class="cf-promo-05-v3-list">
+        {% if section.settings.point1 != blank %}<li>{{ section.settings.point1 }}</li>{% endif %}
+        {% if section.settings.point2 != blank %}<li>{{ section.settings.point2 }}</li>{% endif %}
+        {% if section.settings.point3 != blank %}<li>{{ section.settings.point3 }}</li>{% endif %}
+      </ul>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-05-v3-btn">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Clean Beauty Promo",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#22c55e"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"tag","label":"Tag","default":"Clean Formula"},
+    {"type":"text","id":"title","label":"Title","default":"Ingredients You Can Trust"},
+    {"type":"text","id":"point1","label":"Feature 1","default":"100% Vegan & Cruelty-Free"},
+    {"type":"text","id":"point2","label":"Feature 2","default":"Free From 1300+ Harmful Chemicals"},
+    {"type":"text","id":"point3","label":"Feature 3","default":"Certified Organic Ingredients"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Clean"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "presets": [{"name": "03 · Clean Beauty Promo"}]
+}
+{% endschema %}

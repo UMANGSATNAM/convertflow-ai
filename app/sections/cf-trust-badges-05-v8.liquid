@@ -1,0 +1,18 @@
+<style>
+.cf-tb-05-v8 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-tb-05-v8-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+.cf-tb-05-v8-badge { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.cf-tb-05-v8-swatch { width: 50px; height: 50px; border-radius: 50%; background: {{ section.settings.accent_color | color_modify: 'alpha', 0.2 }}; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.cf-tb-05-v8-label { font-size: 12px; font-weight: 700; color: {{ section.settings.text_color }}; text-align: center; max-width: 80px; }
+</style>
+<div class="cf-tb-05-v8">
+  <div class="cf-tb-05-v8-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tb-05-v8-badge">
+      <div class="cf-tb-05-v8-swatch">{{ block.settings.emoji }}</div>
+      <div class="cf-tb-05-v8-label">{{ block.settings.label }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}{"name": "08 · Nail Art Badges","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#fdf2f8"},{"type":"color","id":"text_color","label":"Text Color","default":"#831843"},{"type":"color","id":"accent_color","label":"Accent Color","default":"#ec4899"},{"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40},{"type":"range","id":"max_width","label":"Max Width","min":600,"max":1400,"step":50,"default":900}],"blocks": [{"type": "badge","name": "Badge","settings": [{"type":"text","id":"emoji","label":"Emoji","default":"💅"},{"type":"text","id":"label","label":"Label","default":"21-Day Wear"}]}],"presets": [{"name": "08 · Nail Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]}{% endschema %}

@@ -1,0 +1,135 @@
+<style>
+.cf-header-05-v2 {
+  background: linear-gradient(135deg, #fef2f8 0%, #fce7f3 50%, #ede9fe 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+.cf-header-05-v2::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -10%;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244,114,182,0.3), transparent 70%);
+  pointer-events: none;
+}
+.cf-header-05-v2-top {
+  background: {{ section.settings.top_bg }};
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: {{ section.settings.top_text }};
+  font-weight: 500;
+}
+.cf-header-05-v2-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+.cf-header-05-v2-logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+.cf-header-05-v2-logo span { color: {{ section.settings.accent_color }}; }
+.cf-header-05-v2-nav {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.cf-header-05-v2-nav a {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.9;
+  transition: color 0.2s, opacity 0.2s;
+}
+.cf-header-05-v2-nav a:hover { color: {{ section.settings.accent_color }}; opacity: 1; }
+.cf-header-05-v2-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.cf-header-05-v2-icon {
+  color: {{ section.settings.text_color }};
+  cursor: pointer;
+}
+.cf-header-05-v2-icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+.cf-header-05-v2-btn {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cf-header-05-v2-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px {{ section.settings.accent_color | color_modify: 'alpha', 0.4 }};
+}
+@media (max-width: 900px) {
+  .cf-header-05-v2-nav { display: none; }
+  .cf-header-05-v2-bar { padding: 15px 20px; }
+}
+</style>
+
+<div class="cf-header-05-v2">
+  {% if section.settings.top_text != blank %}
+    <div class="cf-header-05-v2-top">{{ section.settings.top_text }}</div>
+  {% endif %}
+  <div class="cf-header-05-v2-bar">
+    <a href="/" class="cf-header-05-v2-logo">{{ section.settings.logo_text | replace: '*', '<span>' }}{% assign parts = section.settings.logo_text | split: '*' %}{% if parts.size > 1 %}</span>{% endif %}</a>
+    <nav>
+      <ul class="cf-header-05-v2-nav">
+        {% for block in section.blocks %}
+          <li><a href="{{ block.settings.link }}">{{ block.settings.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <div class="cf-header-05-v2-actions">
+      <div class="cf-header-05-v2-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <div class="cf-header-05-v2-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <a href="{{ section.settings.btn_link }}" class="cf-header-05-v2-btn">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Glam Influencer",
+  "settings": [
+    {"type":"color","id":"top_bg","label":"Top Bar BG","default":"#f9a8d4"},
+    {"type":"color","id":"top_text","label":"Top Bar Text","default":"#831843"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#1e1b4b"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Pink)","default":"#ec4899"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"GLOW"},
+    {"type":"text","id":"top_text","label":"Announcement Text","default":"✨ Free Shipping on orders over $50"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Now"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "nav_item", "name": "Nav Item",
+      "settings": [{"type":"text","id":"label","label":"Label","default":"New In"},{"type":"url","id":"link","label":"Link"}]
+    }
+  ],
+  "presets": [{"name": "02 · Glam Influencer Header","blocks": [{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"}]}]
+}
+{% endschema %}

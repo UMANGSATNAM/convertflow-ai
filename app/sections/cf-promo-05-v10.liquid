@@ -1,0 +1,74 @@
+<style>
+.cf-promo-05-v10 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-promo-05-v10-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.cf-promo-05-v10-image { order: 2; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: #dcfce7; }
+.cf-promo-05-v10-image img { width: 100%; height: 100%; object-fit: cover; }
+.cf-promo-05-v10-content { order: 1; }
+.cf-promo-05-v10-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+.cf-promo-05-v10-badge {
+  background: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
+  color: {{ section.settings.accent_color }};
+  font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px;
+}
+.cf-promo-05-v10-title {
+  font-size: clamp(28px, 3vw, 44px); font-weight: 800;
+  color: {{ section.settings.text_color }}; margin: 0 0 15px 0;
+}
+.cf-promo-05-v10-desc { color: #4b5563; font-size: 16px; line-height: 1.7; margin-bottom: 30px; }
+.cf-promo-05-v10-btn {
+  display: inline-block; background: {{ section.settings.accent_color }};
+  color: #fff; text-decoration: none; padding: 14px 28px;
+  border-radius: 8px; font-weight: 700; font-size: 14px; transition: opacity 0.2s;
+}
+.cf-promo-05-v10-btn:hover { opacity: 0.85; }
+@media (max-width: 768px) { .cf-promo-05-v10-inner { grid-template-columns: 1fr; gap: 30px; } .cf-promo-05-v10-content, .cf-promo-05-v10-image { order: 0; } }
+</style>
+
+<div class="cf-promo-05-v10">
+  <div class="cf-promo-05-v10-inner">
+    <div class="cf-promo-05-v10-content">
+      <div class="cf-promo-05-v10-badges">
+        {% for block in section.blocks %}<div class="cf-promo-05-v10-badge">{{ block.settings.text }}</div>{% endfor %}
+      </div>
+      <h2 class="cf-promo-05-v10-title">{{ section.settings.title }}</h2>
+      <p class="cf-promo-05-v10-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-05-v10-btn">{{ section.settings.btn_text }}</a>
+    </div>
+    <div class="cf-promo-05-v10-image">
+      {% if section.settings.image != blank %}<img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">{% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "10 · Sustainable Beauty Promo",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#16a34a"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"title","label":"Title","default":"Good for You,\nGood for the Planet"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Our refillable beauty line cuts plastic waste by 90% without compromising on performance."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Make the Switch"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "badge", "name": "Eco Badge",
+      "settings": [{"type":"text","id":"text","label":"Badge Text","default":"🌿 Carbon Neutral"}]
+    }
+  ],
+  "presets": [{"name": "10 · Sustainable Promo","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]
+}
+{% endschema %}

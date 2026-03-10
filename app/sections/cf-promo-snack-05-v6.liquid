@@ -1,0 +1,46 @@
+<style>
+.cf-snack-05-v6 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-snack-05-v6-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+}
+.cf-snack-05-v6-text { font-size: 15px; color: {{ section.settings.text_color }}; font-weight: 500; }
+.cf-snack-05-v6-text strong { color: {{ section.settings.accent_color }}; }
+.cf-snack-05-v6-btn {
+  background: transparent; border: 2px solid {{ section.settings.accent_color }};
+  color: {{ section.settings.accent_color }};
+  text-decoration: none; padding: 8px 20px; border-radius: 6px;
+  font-size: 13px; font-weight: 700; white-space: nowrap; transition: all 0.2s;
+}
+.cf-snack-05-v6-btn:hover { background: {{ section.settings.accent_color }}; color: #fff; }
+@media (max-width: 600px) { .cf-snack-05-v6-inner { flex-direction: column; text-align: center; } }
+</style>
+
+<div class="cf-snack-05-v6">
+  <div class="cf-snack-05-v6-inner">
+    <span class="cf-snack-05-v6-text">{{ section.settings.text | replace: '*', '<strong>' | replace: '*', '</strong>' }}</span>
+    <a href="{{ section.settings.btn_link }}" class="cf-snack-05-v6-btn">{{ section.settings.btn_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Indie Beauty Snack",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fffbf5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#7c3aed"},
+    {"type":"text","id":"text","label":"Message Text","default":"🌸 *New drop* — Spring Bloom Collection is LIVE"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Drop"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":18},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1100}
+  ],
+  "presets": [{"name": "06 · Indie Promo Snack"}]
+}
+{% endschema %}

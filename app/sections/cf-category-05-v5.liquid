@@ -1,0 +1,27 @@
+<style>
+.cf-cat-05-v5 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-cat-05-v5-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-cat-05-v5-header { text-align: center; margin-bottom: 50px; }
+.cf-cat-05-v5-title { font-size: 36px; font-weight: 700; color: {{ section.settings.text_color }}; margin: 0; }
+.cf-cat-05-v5-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 20px; }
+.cf-cat-05-v5-card { display: flex; text-decoration: none; align-items: center; gap: 15px; background: #fff; border-radius: 50px; padding: 12px 20px 12px 12px; transition: box-shadow 0.2s; }
+.cf-cat-05-v5-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.cf-cat-05-v5-img { width: 60px; height: 60px; border-radius: 50%; overflow: hidden; background: {{ section.settings.accent_color | color_modify: 'alpha', 0.2 }}; flex-shrink: 0; position: relative; }
+.cf-cat-05-v5-img img { width: 100%; height: 100%; object-fit: cover; }
+.cf-cat-05-v5-name { font-size: 15px; font-weight: 700; color: {{ section.settings.text_color }}; }
+@media (max-width: 900px) { .cf-cat-05-v5-grid { grid-template-columns: 1fr; } }
+</style>
+<div class="cf-cat-05-v5">
+  <div class="cf-cat-05-v5-inner">
+    <div class="cf-cat-05-v5-header"><h2 class="cf-cat-05-v5-title">{{ section.settings.title }}</h2></div>
+    <div class="cf-cat-05-v5-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-05-v5-card">
+        <div class="cf-cat-05-v5-img">{% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 200 }}" alt="{{ block.settings.title }}">{% endif %}</div>
+        <span class="cf-cat-05-v5-name">{{ block.settings.title }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}{"name": "05 · K-Beauty Grid","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#fff8f9"},{"type":"color","id":"text_color","label":"Text Color","default":"#2d2d2d"},{"type":"color","id":"accent_color","label":"Accent Color","default":"#fb7185"},{"type":"text","id":"title","label":"Title","default":"Your Skincare Routine"},{"type":"range","id":"cols","label":"Columns","min":1,"max":3,"step":1,"default":2},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1000}],"blocks": [{"type": "category","name": "Category","settings": [{"type":"text","id":"title","label":"Name","default":"Cleansers"},{"type":"image_picker","id":"image","label":"Image"},{"type":"url","id":"link","label":"Link"}]}],"presets": [{"name": "05 · K-Beauty Grid","blocks": [{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"}]}]}{% endschema %}

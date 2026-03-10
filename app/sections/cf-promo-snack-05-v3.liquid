@@ -1,0 +1,42 @@
+<style>
+.cf-snack-05-v3 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.accent_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-snack-05-v3-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+}
+.cf-snack-05-v3-text { font-size: 14px; font-weight: 600; color: #fff; }
+.cf-snack-05-v3-btn {
+  background: #fff; color: {{ section.settings.accent_color }};
+  text-decoration: none; padding: 8px 20px; border-radius: 4px;
+  font-size: 13px; font-weight: 700; white-space: nowrap; transition: opacity 0.2s;
+}
+.cf-snack-05-v3-btn:hover { opacity: 0.85; }
+@media (max-width: 600px) { .cf-snack-05-v3-inner { flex-direction: column; text-align: center; } }
+</style>
+
+<div class="cf-snack-05-v3">
+  <div class="cf-snack-05-v3-inner">
+    <span class="cf-snack-05-v3-text">{{ section.settings.text }}</span>
+    <a href="{{ section.settings.btn_link }}" class="cf-snack-05-v3-btn">{{ section.settings.btn_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "03 · Clean Beauty Snack",
+  "settings": [
+    {"type":"color","id":"accent_color","label":"Background Color","default":"#22c55e"},
+    {"type":"text","id":"text","label":"Message Text","default":"✅ All formulas are now certified ECOCERT Organic"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Learn More"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":15},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1000}
+  ],
+  "presets": [{"name": "03 · Clean Beauty Snack"}]
+}
+{% endschema %}

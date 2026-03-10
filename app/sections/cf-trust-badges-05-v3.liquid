@@ -1,0 +1,19 @@
+<style>
+.cf-tb-05-v3 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; border-top: 1px solid {{ section.settings.border_color }}; border-bottom: 1px solid {{ section.settings.border_color }}; }
+.cf-tb-05-v3-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; display: flex; justify-content: space-around; gap: 20px; flex-wrap: wrap; }
+.cf-tb-05-v3-badge { display: flex; align-items: center; gap: 10px; }
+.cf-tb-05-v3-icon { color: {{ section.settings.accent_color }}; }
+.cf-tb-05-v3-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+.cf-tb-05-v3-label { font-size: 14px; font-weight: 600; color: {{ section.settings.text_color }}; }
+</style>
+<div class="cf-tb-05-v3">
+  <div class="cf-tb-05-v3-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tb-05-v3-badge">
+      <div class="cf-tb-05-v3-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+      <span class="cf-tb-05-v3-label">{{ block.settings.label }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}{"name": "03 · Clean Beauty Badges","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},{"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},{"type":"color","id":"accent_color","label":"Icon Color","default":"#22c55e"},{"type":"color","id":"border_color","label":"Border Color","default":"#bbf7d0"},{"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":30},{"type":"range","id":"max_width","label":"Max Width","min":600,"max":1400,"step":50,"default":1100}],"blocks": [{"type": "badge","name": "Badge","settings": [{"type":"text","id":"label","label":"Label","default":"100% Vegan"}]}],"presets": [{"name": "03 · Clean Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]}{% endschema %}

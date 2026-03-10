@@ -1,0 +1,47 @@
+<style>
+.cf-mq-05-v6 { overflow: hidden; background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 0; }
+.cf-mq-05-v6-track { display: flex; animation: mq05v6s {{ section.settings.speed }}s linear infinite; }
+.cf-mq-05-v6-track:hover { animation-play-state: paused; }
+@keyframes mq05v6s { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.cf-mq-05-v6-item {
+  display: inline-flex; align-items: center; gap: 15px;
+  padding: 0 40px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.cf-mq-05-v6-sep { width: 6px; height: 6px; background: {{ section.settings.accent_color }}; border-radius: 50%; }
+</style>
+
+<div class="cf-mq-05-v6">
+  <div class="cf-mq-05-v6-track">
+    {% for i in (1..4) %}{% for block in section.blocks %}
+      <span class="cf-mq-05-v6-item">
+        {{ block.settings.text }}
+        <span class="cf-mq-05-v6-sep"></span>
+      </span>
+    {% endfor %}{% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "06 · Indie Beauty Marquee",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#fffbf5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},
+    {"type":"color","id":"accent_color","label":"Dot Color","default":"#7c3aed"},
+    {"type":"range","id":"font_size","label":"Font Size","min":12,"max":24,"step":1,"default":14},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":14},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":80,"step":5,"default":35}
+  ],
+  "blocks": [
+    {"type":"item","name":"Item","settings":[{"type":"text","id":"text","label":"Text","default":"Small Batch Beauty"}]}
+  ],
+  "presets": [{"name": "06 · Indie Marquee","blocks": [{"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"}]}]
+}
+{% endschema %}

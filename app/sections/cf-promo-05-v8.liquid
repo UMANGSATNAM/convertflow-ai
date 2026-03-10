@@ -1,0 +1,79 @@
+<style>
+.cf-promo-05-v8 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-promo-05-v8-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.cf-promo-05-v8-image {
+  aspect-ratio: 1; position: relative;
+  background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+  border-radius: 200px 0 200px 0;
+  overflow: hidden;
+}
+.cf-promo-05-v8-image img { width: 100%; height: 100%; object-fit: cover; }
+.cf-promo-05-v8-title {
+  font-size: clamp(30px, 3.5vw, 52px); font-weight: 900; font-style: italic;
+  color: {{ section.settings.text_color }}; margin: 0 0 15px 0; line-height: 1.1;
+}
+.cf-promo-05-v8-title span { color: {{ section.settings.accent_color }}; }
+.cf-promo-05-v8-desc { color: #6b7280; font-size: 16px; line-height: 1.7; margin-bottom: 30px; }
+.cf-promo-05-v8-colors { display: flex; gap: 10px; margin-bottom: 25px; }
+.cf-promo-05-v8-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #ccc; cursor: pointer; }
+.cf-promo-05-v8-btn {
+  display: inline-block; background: {{ section.settings.accent_color }};
+  color: #fff; text-decoration: none; padding: 14px 28px;
+  border-radius: 50px; font-weight: 700; font-size: 14px;
+  box-shadow: 0 8px 20px {{ section.settings.accent_color | color_modify: 'alpha', 0.4 }};
+  transition: transform 0.2s;
+}
+.cf-promo-05-v8-btn:hover { transform: translateY(-2px); }
+@media (max-width: 768px) { .cf-promo-05-v8-inner { grid-template-columns: 1fr; gap: 30px; } }
+</style>
+
+<div class="cf-promo-05-v8">
+  <div class="cf-promo-05-v8-inner">
+    <div class="cf-promo-05-v8-image">
+      {% if section.settings.image != blank %}<img src="{{ section.settings.image | image_url: width: 800 }}" alt="Nail Art">{% endif %}
+    </div>
+    <div>
+      <h2 class="cf-promo-05-v8-title">{{ section.settings.title | replace: '[', '<span>' | replace: ']', '</span>' }}</h2>
+      <p class="cf-promo-05-v8-desc">{{ section.settings.desc }}</p>
+      <div class="cf-promo-05-v8-colors">
+        {% for block in section.blocks %}
+          <div class="cf-promo-05-v8-swatch" style="background: {{ block.settings.color }};"></div>
+        {% endfor %}
+      </div>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-05-v8-btn">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Nail Art Promo",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fff5f7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#831843"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#ec4899"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"title","label":"Title","default":"50+ [Shades] on Trend"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Long-lasting gel polish that stays chip-free for up to 21 days."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Find Your Shade"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "swatch", "name": "Color Swatch",
+      "settings": [{"type":"color","id":"color","label":"Color","default":"#ec4899"}]
+    }
+  ],
+  "presets": [{"name": "08 · Nail Art Promo","blocks": [{"type":"swatch"},{"type":"swatch"},{"type":"swatch"},{"type":"swatch"},{"type":"swatch"}]}]
+}
+{% endschema %}

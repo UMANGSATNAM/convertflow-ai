@@ -1,0 +1,50 @@
+<style>
+.cf-snack-05-v4 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: 'Didot','Georgia',serif;
+  border-top: 1px solid {{ section.settings.accent_color }};
+  border-bottom: 1px solid {{ section.settings.accent_color }};
+}
+.cf-snack-05-v4-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;
+}
+.cf-snack-05-v4-text { font-size: 18px; font-style: italic; font-weight: normal; color: {{ section.settings.text_color }}; }
+.cf-snack-05-v4-dot { color: {{ section.settings.accent_color }}; font-size: 8px; }
+.cf-snack-05-v4-btn {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  border: 1px solid {{ section.settings.accent_color }};
+  color: {{ section.settings.accent_color }};
+  text-decoration: none; padding: 7px 16px;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: all 0.2s;
+}
+.cf-snack-05-v4-btn:hover { background: {{ section.settings.accent_color }}; color: {{ section.settings.bg_color }}; }
+</style>
+
+<div class="cf-snack-05-v4">
+  <div class="cf-snack-05-v4-inner">
+    <span class="cf-snack-05-v4-text">{{ section.settings.text }}</span>
+    <span class="cf-snack-05-v4-dot">◆</span>
+    <a href="{{ section.settings.btn_link }}" class="cf-snack-05-v4-btn">{{ section.settings.btn_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "04 · Luxury Cosmetics Snack",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#1a1a1a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},
+    {"type":"color","id":"accent_color","label":"Gold Accent","default":"#d4af37"},
+    {"type":"text","id":"text","label":"Message Text","default":"Complimentary Gift Wrapping on All Orders"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Now"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":18},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1000}
+  ],
+  "presets": [{"name": "04 · Luxury Cosmetics Snack"}]
+}
+{% endschema %}

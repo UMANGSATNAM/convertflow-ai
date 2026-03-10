@@ -1,0 +1,37 @@
+<style>
+.cf-fc-05-v6 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-fc-05-v6-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-fc-05-v6-header { margin-bottom: 40px; }
+.cf-fc-05-v6-tag { font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; color: {{ section.settings.accent_color }}; font-weight: 700; margin-bottom: 10px; }
+.cf-fc-05-v6-title { font-size: 34px; font-weight: 900; color: {{ section.settings.text_color }}; margin: 0; }
+.cf-fc-05-v6-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 20px; }
+.cf-fc-05-v6-card { text-decoration: none; background: #fff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s; }
+.cf-fc-05-v6-card:hover { transform: translateY(-5px); }
+.cf-fc-05-v6-img { aspect-ratio: 1; overflow: hidden; background: #faf5ff; position: relative; }
+.cf-fc-05-v6-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; transition: transform 0.4s; }
+.cf-fc-05-v6-card:hover .cf-fc-05-v6-img img { transform: scale(1.06); }
+.cf-fc-05-v6-info { padding: 15px; }
+.cf-fc-05-v6-name { color: {{ section.settings.text_color }}; font-size: 15px; font-weight: 700; margin: 0 0 6px 0; }
+.cf-fc-05-v6-price { color: {{ section.settings.accent_color }}; font-weight: 700; font-size: 15px; }
+@media (max-width: 900px) { .cf-fc-05-v6-grid { grid-template-columns: repeat(2,1fr); } }
+</style>
+<div class="cf-fc-05-v6">
+  <div class="cf-fc-05-v6-inner">
+    <div class="cf-fc-05-v6-header">
+      <div class="cf-fc-05-v6-tag">{{ section.settings.tag }}</div>
+      <h2 class="cf-fc-05-v6-title">{{ section.settings.title }}</h2>
+    </div>
+    <div class="cf-fc-05-v6-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.url }}" class="cf-fc-05-v6-card">
+        <div class="cf-fc-05-v6-img">{% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">{% endif %}</div>
+        <div class="cf-fc-05-v6-info">
+          <div class="cf-fc-05-v6-name">{{ block.settings.title }}</div>
+          <div class="cf-fc-05-v6-price">{{ block.settings.price }}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}{"name": "06 · Indie Beauty Products","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#fffbf5"},{"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},{"type":"color","id":"accent_color","label":"Accent Color","default":"#7c3aed"},{"type":"text","id":"tag","label":"Tag","default":"Spring Collection"},{"type":"text","id":"title","label":"Title","default":"New In"},{"type":"range","id":"cols","label":"Columns","min":2,"max":5,"step":1,"default":4},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}],"blocks": [{"type": "product","name": "Product","settings": [{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"title","label":"Title","default":"Bloom Face Oil"},{"type":"text","id":"price","label":"Price","default":"$55.00"},{"type":"url","id":"url","label":"Link"}]}],"presets": [{"name": "06 · Indie Products","blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]}]}{% endschema %}

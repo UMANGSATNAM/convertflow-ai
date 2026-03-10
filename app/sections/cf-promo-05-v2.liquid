@@ -1,0 +1,97 @@
+<style>
+.cf-promo-05-v2 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-promo-05-v2-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.cf-promo-05-v2-image {
+  aspect-ratio: 4/5;
+  border-radius: 200px 200px 0 0;
+  overflow: hidden;
+  position: relative;
+  background: #fce7f3;
+}
+.cf-promo-05-v2-image img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.cf-promo-05-v2-content {}
+.cf-promo-05-v2-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: {{ section.settings.accent_color }};
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.cf-promo-05-v2-title {
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.cf-promo-05-v2-desc { color: #6b7280; font-size: 17px; line-height: 1.7; margin-bottom: 35px; }
+.cf-promo-05-v2-btn {
+  display: inline-block;
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 700;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cf-promo-05-v2-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px {{ section.settings.accent_color | color_modify: 'alpha', 0.4 }};
+}
+@media (max-width: 768px) {
+  .cf-promo-05-v2-inner { grid-template-columns: 1fr; gap: 30px; }
+}
+</style>
+
+<div class="cf-promo-05-v2">
+  <div class="cf-promo-05-v2-inner">
+    <div class="cf-promo-05-v2-image">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">
+      {% endif %}
+    </div>
+    <div class="cf-promo-05-v2-content">
+      <div class="cf-promo-05-v2-label">{{ section.settings.label }}</div>
+      <h2 class="cf-promo-05-v2-title">{{ section.settings.title }}</h2>
+      <p class="cf-promo-05-v2-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-05-v2-btn">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "02 · Glam Influencer Promo",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fff0f6"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#1e1b4b"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#ec4899"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"label","label":"Label","default":"New Drop"},
+    {"type":"text","id":"title","label":"Title","default":"Your Glow,\nYour Rules."},
+    {"type":"textarea","id":"desc","label":"Description","default":"The radiant serum edit your skin has been waiting for."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop the Drop"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "presets": [{"name": "02 · Glam Promo Poster"}]
+}
+{% endschema %}

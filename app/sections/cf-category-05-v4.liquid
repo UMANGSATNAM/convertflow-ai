@@ -1,0 +1,35 @@
+<style>
+.cf-cat-05-v4 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: 'Didot','Playfair Display','Georgia',serif;
+}
+.cf-cat-05-v4-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-cat-05-v4-header { text-align: center; margin-bottom: 50px; }
+.cf-cat-05-v4-title { font-size: 40px; font-weight: normal; font-style: italic; color: {{ section.settings.text_color }}; margin: 0; }
+.cf-cat-05-v4-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 30px; }
+.cf-cat-05-v4-card { display: block; text-decoration: none; text-align: center; }
+.cf-cat-05-v4-img { aspect-ratio: 3/4; overflow: hidden; background: #1a1a1a; margin-bottom: 20px; position: relative; border: 1px solid {{ section.settings.border_color }}; }
+.cf-cat-05-v4-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(10%); transition: filter 0.5s, transform 0.5s; }
+.cf-cat-05-v4-card:hover .cf-cat-05-v4-img img { filter: grayscale(0%); transform: scale(1.05); }
+.cf-cat-05-v4-name { font-size: 22px; color: {{ section.settings.text_color }}; font-weight: normal; }
+.cf-cat-05-v4-sub { font-family: -apple-system,sans-serif; font-size: 12px; color: {{ section.settings.accent_color }}; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 5px; }
+@media (max-width: 900px) { .cf-cat-05-v4-grid { grid-template-columns: repeat(2,1fr); gap: 20px; } }
+</style>
+<div class="cf-cat-05-v4">
+  <div class="cf-cat-05-v4-inner">
+    <div class="cf-cat-05-v4-header"><h2 class="cf-cat-05-v4-title">{{ section.settings.title }}</h2></div>
+    <div class="cf-cat-05-v4-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.link }}" class="cf-cat-05-v4-card">
+        <div class="cf-cat-05-v4-img">
+          {% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">{% endif %}
+        </div>
+        <div class="cf-cat-05-v4-name">{{ block.settings.title }}</div>
+        {% if block.settings.sub != blank %}<div class="cf-cat-05-v4-sub">{{ block.settings.sub }}</div>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}{"name": "04 · Luxury Cosmetics Grid","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#1a1a1a"},{"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},{"type":"color","id":"accent_color","label":"Gold Accent","default":"#d4af37"},{"type":"color","id":"border_color","label":"Border Color","default":"#333"},{"type":"text","id":"title","label":"Title","default":"Les Collections"},{"type":"range","id":"cols","label":"Columns","min":2,"max":5,"step":1,"default":3},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}],"blocks": [{"type": "category","name": "Category","settings": [{"type":"text","id":"title","label":"Name","default":"Lip"},{"type":"text","id":"sub","label":"Subtext","default":"12 Shades"},{"type":"image_picker","id":"image","label":"Image"},{"type":"url","id":"link","label":"Link"}]}],"presets": [{"name": "04 · Luxury Grid","blocks": [{"type":"category"},{"type":"category"},{"type":"category"}]}]}{% endschema %}

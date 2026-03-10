@@ -1,0 +1,116 @@
+<style>
+.cf-header-05-v7 {
+  background-color: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+.cf-header-05-v7-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 40px;
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+.cf-header-05-v7-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.cf-header-05-v7-logo-icon {
+  width: 36px; height: 36px;
+  background: {{ section.settings.accent_color }};
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+.cf-header-05-v7-logo-icon svg { width: 18px; height: 18px; stroke-width: 2; }
+.cf-header-05-v7-logo-text {
+  font-size: 18px;
+  font-weight: 800;
+  color: {{ section.settings.text_color }};
+  letter-spacing: -0.01em;
+}
+.cf-header-05-v7-logo-text span {
+  font-size: 11px;
+  font-weight: 400;
+  display: block;
+  color: {{ section.settings.accent_color }};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.cf-header-05-v7-nav {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.cf-header-05-v7-nav a {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.cf-header-05-v7-nav a:hover { color: {{ section.settings.accent_color }}; }
+.cf-header-05-v7-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.cf-header-05-v7-icon { color: {{ section.settings.text_color }}; cursor: pointer; opacity: 0.7; transition: opacity 0.2s;}
+.cf-header-05-v7-icon:hover { opacity: 1; }
+.cf-header-05-v7-icon svg { width: 20px; height: 20px; stroke-width: 1.8; }
+@media (max-width: 900px) {
+  .cf-header-05-v7-nav { display: none; }
+  .cf-header-05-v7-bar { padding: 15px 20px; }
+}
+</style>
+
+<div class="cf-header-05-v7">
+  <div class="cf-header-05-v7-bar">
+    <a href="/" class="cf-header-05-v7-logo">
+      <div class="cf-header-05-v7-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div class="cf-header-05-v7-logo-text">
+        {{ section.settings.logo_text }}
+        <span>Dermatologist Tested</span>
+      </div>
+    </a>
+    <nav>
+      <ul class="cf-header-05-v7-nav">
+        {% for block in section.blocks %}
+          <li><a href="{{ block.settings.link }}">{{ block.settings.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <div class="cf-header-05-v7-actions">
+      <div class="cf-header-05-v7-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+      <div class="cf-header-05-v7-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div class="cf-header-05-v7-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg></div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Dermatology",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#1e3a5f"},
+    {"type":"color","id":"accent_color","label":"Accent Color (Teal)","default":"#0d9488"},
+    {"type":"color","id":"border_color","label":"Border Color","default":"#e2e8f0"},
+    {"type":"text","id":"logo_text","label":"Logo Text","default":"DermRx"},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "blocks": [
+    {
+      "type": "nav_item", "name": "Nav Item",
+      "settings": [{"type":"text","id":"label","label":"Label","default":"Treatments"},{"type":"url","id":"link","label":"Link"}]
+    }
+  ],
+  "presets": [{"name": "07 · Dermatology Header","blocks": [{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"}]}]
+}
+{% endschema %}

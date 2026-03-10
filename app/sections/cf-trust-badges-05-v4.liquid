@@ -1,0 +1,20 @@
+<style>
+.cf-tb-05-v4 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-tb-05-v4-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; display: flex; justify-content: center; gap: 0; }
+.cf-tb-05-v4-badge { flex: 1; text-align: center; padding: 30px 20px; border-right: 1px solid {{ section.settings.border_color }}; }
+.cf-tb-05-v4-badge:last-child { border-right: none; }
+.cf-tb-05-v4-number { font-size: 32px; font-weight: 800; color: {{ section.settings.accent_color }}; margin-bottom: 5px; display: block; }
+.cf-tb-05-v4-label { font-size: 12px; color: {{ section.settings.text_color }}; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.1em; }
+@media (max-width: 600px) { .cf-tb-05-v4-inner { flex-direction: column; } .cf-tb-05-v4-badge { border-right: none; border-bottom: 1px solid {{ section.settings.border_color }}; } }
+</style>
+<div class="cf-tb-05-v4">
+  <div class="cf-tb-05-v4-inner">
+    {% for block in section.blocks %}
+    <div class="cf-tb-05-v4-badge">
+      <span class="cf-tb-05-v4-number">{{ block.settings.number }}</span>
+      <span class="cf-tb-05-v4-label">{{ block.settings.label }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% schema %}{"name": "04 · Luxury Cosmetics Badges","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#1a1a1a"},{"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},{"type":"color","id":"accent_color","label":"Gold Accent","default":"#d4af37"},{"type":"color","id":"border_color","label":"Border Color","default":"#333"},{"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40},{"type":"range","id":"max_width","label":"Max Width","min":600,"max":1400,"step":50,"default":1200}],"blocks": [{"type": "badge","name": "Badge","settings": [{"type":"text","id":"number","label":"Stat Number","default":"50+"},{"type":"text","id":"label","label":"Label","default":"Years of Expertise"}]}],"presets": [{"name": "04 · Luxury Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]}{% endschema %}

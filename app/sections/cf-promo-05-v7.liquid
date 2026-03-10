@@ -1,0 +1,72 @@
+<style>
+.cf-promo-05-v7 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-promo-05-v7-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.cf-promo-05-v7-image { order: 2; aspect-ratio: 4/5; border-radius: 8px; overflow: hidden; background: #e0f2fe; }
+.cf-promo-05-v7-image img { width: 100%; height: 100%; object-fit: cover; }
+.cf-promo-05-v7-content { order: 1; }
+.cf-promo-05-v7-cert {
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px;
+}
+.cf-promo-05-v7-cert svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 2; }
+.cf-promo-05-v7-title {
+  font-size: clamp(28px, 3vw, 46px); font-weight: 800;
+  color: {{ section.settings.text_color }}; margin: 0 0 15px 0;
+}
+.cf-promo-05-v7-desc { color: #475569; font-size: 16px; line-height: 1.7; margin-bottom: 30px; }
+.cf-promo-05-v7-btn {
+  display: inline-block; background: {{ section.settings.accent_color }};
+  color: #fff; text-decoration: none; padding: 14px 30px;
+  border-radius: 6px; font-weight: 700; font-size: 14px; transition: opacity 0.2s;
+}
+.cf-promo-05-v7-btn:hover { opacity: 0.85; }
+@media (max-width: 768px) { .cf-promo-05-v7-inner { grid-template-columns: 1fr; gap: 30px; } .cf-promo-05-v7-image, .cf-promo-05-v7-content { order: 0; } }
+</style>
+
+<div class="cf-promo-05-v7">
+  <div class="cf-promo-05-v7-inner">
+    <div class="cf-promo-05-v7-content">
+      <div class="cf-promo-05-v7-cert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        {{ section.settings.cert_text }}
+      </div>
+      <h2 class="cf-promo-05-v7-title">{{ section.settings.title }}</h2>
+      <p class="cf-promo-05-v7-desc">{{ section.settings.desc }}</p>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-05-v7-btn">{{ section.settings.btn_text }}</a>
+    </div>
+    <div class="cf-promo-05-v7-image">
+      {% if section.settings.image != blank %}<img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">{% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "07 · Derm Promo",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#f0fdfa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#134e4a"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#0d9488"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"cert_text","label":"Cert Badge Text","default":"Dermatologist Tested"},
+    {"type":"text","id":"title","label":"Title","default":"Clinically Proven Results in 28 Days"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Our targeted formulas are developed with leading dermatologists for visible results."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Discover the Science"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "presets": [{"name": "07 · Dermatology Promo"}]
+}
+{% endschema %}

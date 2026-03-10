@@ -1,0 +1,58 @@
+<style>
+.cf-snack-05-v5 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-snack-05-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  background: #fff; border: 2px solid {{ section.settings.accent_color }};
+  border-radius: 12px; padding: 15px 25px;
+}
+.cf-snack-05-v5-left { display: flex; align-items: center; gap: 12px; }
+.cf-snack-05-v5-emoji { font-size: 22px; }
+.cf-snack-05-v5-text { font-size: 14px; font-weight: 600; color: {{ section.settings.text_color }}; }
+.cf-snack-05-v5-code {
+  background: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
+  color: {{ section.settings.accent_color }};
+  font-weight: 800; font-family: monospace; padding: 2px 8px; border-radius: 4px;
+}
+.cf-snack-05-v5-btn {
+  background: {{ section.settings.accent_color }}; color: #fff;
+  text-decoration: none; padding: 9px 20px; border-radius: 8px;
+  font-size: 13px; font-weight: 700; white-space: nowrap; transition: opacity 0.2s;
+}
+.cf-snack-05-v5-btn:hover { opacity: 0.85; }
+@media (max-width: 600px) { .cf-snack-05-v5-inner { flex-direction: column; text-align: center; } }
+</style>
+
+<div class="cf-snack-05-v5">
+  <div class="cf-snack-05-v5-inner">
+    <div class="cf-snack-05-v5-left">
+      <span class="cf-snack-05-v5-emoji">🌸</span>
+      <span class="cf-snack-05-v5-text">{{ section.settings.text_before }} <span class="cf-snack-05-v5-code">{{ section.settings.code }}</span> {{ section.settings.text_after }}</span>
+    </div>
+    <a href="{{ section.settings.btn_link }}" class="cf-snack-05-v5-btn">{{ section.settings.btn_text }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · K-Beauty Snack",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fff8f9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#2d2d2d"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#fb7185"},
+    {"type":"text","id":"text_before","label":"Text Before Code","default":"Use code"},
+    {"type":"text","id":"code","label":"Promo Code","default":"KBEAUTY15"},
+    {"type":"text","id":"text_after","label":"Text After Code","default":"for 15% off glass-skin essentials"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Now"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":60,"step":5,"default":20},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":900}
+  ],
+  "presets": [{"name": "05 · K-Beauty Snack"}]
+}
+{% endschema %}

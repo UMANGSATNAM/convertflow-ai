@@ -1,0 +1,33 @@
+<style>
+.cf-fc-05-v2 { padding: {{ section.settings.padding_y }}px 20px; background: {{ section.settings.bg_color }}; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.cf-fc-05-v2-inner { max-width: {{ section.settings.max_width }}px; margin: 0 auto; }
+.cf-fc-05-v2-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+.cf-fc-05-v2-title { font-size: 34px; font-weight: 800; color: {{ section.settings.text_color }}; margin: 0; letter-spacing: -0.02em; }
+.cf-fc-05-v2-link { color: {{ section.settings.accent_color }}; text-decoration: none; font-weight: 600; font-size: 14px; }
+.cf-fc-05-v2-grid { display: grid; grid-template-columns: repeat({{ section.settings.cols }}, 1fr); gap: 20px; }
+.cf-fc-05-v2-card { text-decoration: none; display: flex; flex-direction: column; }
+.cf-fc-05-v2-img { aspect-ratio: 3/4; background: #fce7f3; border-radius: 200px 200px 0 0; overflow: hidden; position: relative; margin-bottom: 20px; }
+.cf-fc-05-v2-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.cf-fc-05-v2-card:hover .cf-fc-05-v2-img img { transform: scale(1.05); }
+.cf-fc-05-v2-name { color: {{ section.settings.text_color }}; font-size: 16px; font-weight: 700; margin: 0 0 5px 0; text-align: center; }
+.cf-fc-05-v2-price { color: {{ section.settings.accent_color }}; font-size: 15px; font-weight: 600; text-align: center; }
+@media (max-width: 900px) { .cf-fc-05-v2-grid { grid-template-columns: repeat(2,1fr); } .cf-fc-05-v2-header { flex-direction: column; align-items: flex-start; gap: 15px; } }
+</style>
+<div class="cf-fc-05-v2">
+  <div class="cf-fc-05-v2-inner">
+    <div class="cf-fc-05-v2-header">
+      <h2 class="cf-fc-05-v2-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.btn_link }}" class="cf-fc-05-v2-link">{{ section.settings.btn_text }} &rarr;</a>
+    </div>
+    <div class="cf-fc-05-v2-grid">
+      {% for block in section.blocks %}
+      <a href="{{ block.settings.url }}" class="cf-fc-05-v2-card">
+        <div class="cf-fc-05-v2-img">{% if block.settings.image != blank %}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title }}">{% endif %}</div>
+        <div class="cf-fc-05-v2-name">{{ block.settings.title }}</div>
+        <div class="cf-fc-05-v2-price">{{ block.settings.price }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}{"name": "02 · Glam Products","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#fff0f6"},{"type":"color","id":"text_color","label":"Text Color","default":"#1e1b4b"},{"type":"color","id":"accent_color","label":"Accent Color","default":"#ec4899"},{"type":"text","id":"title","label":"Title","default":"Trending Now"},{"type":"text","id":"btn_text","label":"View All Text","default":"Shop All"},{"type":"url","id":"btn_link","label":"View All Link"},{"type":"range","id":"cols","label":"Columns","min":2,"max":6,"step":1,"default":4},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}],"blocks": [{"type": "product","name": "Product","settings": [{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"title","label":"Title","default":"Glow Serum"},{"type":"text","id":"price","label":"Price","default":"$42.00"},{"type":"url","id":"url","label":"Link"}]}],"presets": [{"name": "02 · Glam Products","blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]}]}{% endschema %}

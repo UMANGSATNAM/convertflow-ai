@@ -1,0 +1,73 @@
+<style>
+.cf-promo-05-v9 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: 'Didot','Playfair Display','Georgia',serif;
+}
+.cf-promo-05-v9-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center;
+}
+.cf-promo-05-v9-image { aspect-ratio: 3/4; overflow: hidden; background: #f5f0e8; }
+.cf-promo-05-v9-image img { width: 100%; height: 100%; object-fit: cover; }
+.cf-promo-05-v9-label {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: {{ section.settings.accent_color }}; margin-bottom: 25px;
+}
+.cf-promo-05-v9-title {
+  font-size: clamp(32px, 4vw, 58px); font-weight: normal; font-style: italic;
+  color: {{ section.settings.text_color }}; margin: 0 0 25px 0; line-height: 1.2;
+}
+.cf-promo-05-v9-quote {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px; color: #888; line-height: 1.8; font-style: italic;
+  border-left: 2px solid {{ section.settings.accent_color }}; padding-left: 20px;
+  margin-bottom: 30px;
+}
+.cf-promo-05-v9-btn {
+  display: inline-block; border: 1px solid {{ section.settings.text_color }};
+  color: {{ section.settings.text_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-decoration: none; padding: 14px 35px;
+  font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+  transition: all 0.3s;
+}
+.cf-promo-05-v9-btn:hover { background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; }
+@media (max-width: 768px) { .cf-promo-05-v9-inner { grid-template-columns: 1fr; gap: 30px; } }
+</style>
+
+<div class="cf-promo-05-v9">
+  <div class="cf-promo-05-v9-inner">
+    <div class="cf-promo-05-v9-image">
+      {% if section.settings.image != blank %}<img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">{% endif %}
+    </div>
+    <div>
+      <div class="cf-promo-05-v9-label">{{ section.settings.label }}</div>
+      <h2 class="cf-promo-05-v9-title">{{ section.settings.title }}</h2>
+      <blockquote class="cf-promo-05-v9-quote">{{ section.settings.quote }}</blockquote>
+      <a href="{{ section.settings.btn_link }}" class="cf-promo-05-v9-btn">{{ section.settings.btn_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "09 · Fragrance Promo",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#faf8f5"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#2c2416"},
+    {"type":"color","id":"accent_color","label":"Gold Accent","default":"#b8973a"},
+    {"type":"image_picker","id":"image","label":"Image"},
+    {"type":"text","id":"label","label":"Label","default":"New Olfactive Journey"},
+    {"type":"text","id":"title","label":"Title","default":"A Scent That Tells Your Story"},
+    {"type":"textarea","id":"quote","label":"Fragrance Quote","default":"\"Warm sandalwood, fresh bergamot, and a whisper of white rose. A timeless signature.\""},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Discover the Scent"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1300}
+  ],
+  "presets": [{"name": "09 · Fragrance Promo"}]
+}
+{% endschema %}

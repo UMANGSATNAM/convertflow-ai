@@ -1,0 +1,103 @@
+<style>
+.cf-promo-05-v5 {
+  padding: {{ section.settings.padding_y }}px 20px;
+  background: {{ section.settings.bg_color }};
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.cf-promo-05-v5-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.cf-promo-05-v5-image { aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: #fce7f3; }
+.cf-promo-05-v5-image img { width: 100%; height: 100%; object-fit: cover; }
+.cf-promo-05-v5-eyebrow {
+  font-size: 14px; font-weight: 600;
+  color: {{ section.settings.accent_color }};
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.cf-promo-05-v5-eyebrow::before {
+  content: '';
+  width: 30px; height: 2px;
+  background: {{ section.settings.accent_color }};
+  display: inline-block;
+}
+.cf-promo-05-v5-title {
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  margin: 0 0 20px 0;
+  line-height: 1.2;
+}
+.cf-promo-05-v5-desc {
+  color: #6b7280; font-size: 16px; line-height: 1.7; margin-bottom: 30px;
+}
+.cf-promo-05-v5-cta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.cf-promo-05-v5-btn {
+  display: inline-block;
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  text-decoration: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 14px; font-weight: 700;
+  transition: opacity 0.2s;
+}
+.cf-promo-05-v5-btn:hover { opacity: 0.85; }
+.cf-promo-05-v5-link {
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  font-size: 14px; font-weight: 500;
+  border-bottom: 1px solid currentColor; padding-bottom: 2px;
+}
+@media (max-width: 768px) {
+  .cf-promo-05-v5-inner { grid-template-columns: 1fr; gap: 30px; }
+  .cf-promo-05-v5-image { width: 70%; margin: 0 auto; }
+}
+</style>
+
+<div class="cf-promo-05-v5">
+  <div class="cf-promo-05-v5-inner">
+    <div class="cf-promo-05-v5-image">
+      {% if section.settings.image != blank %}
+        <img src="{{ section.settings.image | image_url: width: 800 }}" alt="{{ section.settings.title }}">
+      {% endif %}
+    </div>
+    <div class="cf-promo-05-v5-content">
+      <div class="cf-promo-05-v5-eyebrow">{{ section.settings.eyebrow }}</div>
+      <h2 class="cf-promo-05-v5-title">{{ section.settings.title }}</h2>
+      <p class="cf-promo-05-v5-desc">{{ section.settings.desc }}</p>
+      <div class="cf-promo-05-v5-cta">
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-05-v5-btn">{{ section.settings.btn_text }}</a>
+        {% if section.settings.link2_text != blank %}
+          <a href="{{ section.settings.link2_url }}" class="cf-promo-05-v5-link">{{ section.settings.link2_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "05 · K-Beauty Promo",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background","default":"#fff8f9"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#2d2d2d"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#fb7185"},
+    {"type":"image_picker","id":"image","label":"Product Image"},
+    {"type":"text","id":"eyebrow","label":"Eyebrow Text","default":"K-Beauty Bestseller"},
+    {"type":"text","id":"title","label":"Title","default":"Achieve Glass Skin with 10 Steps"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Our bestselling multi-step routine gives you the dewy, luminous skin of your dreams."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop the Routine"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"text","id":"link2_text","label":"Secondary Link Text","default":"Learn More"},
+    {"type":"url","id":"link2_url","label":"Secondary Link"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
+    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+  ],
+  "presets": [{"name": "05 · K-Beauty Promo"}]
+}
+{% endschema %}

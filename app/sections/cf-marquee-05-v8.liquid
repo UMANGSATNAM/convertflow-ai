@@ -1,0 +1,46 @@
+<style>
+.cf-mq-05-v8 { overflow: hidden; background: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_y }}px 0; }
+.cf-mq-05-v8-track { display: flex; animation: mq05v8s {{ section.settings.speed }}s linear infinite; }
+.cf-mq-05-v8-track:hover { animation-play-state: paused; }
+@keyframes mq05v8s { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.cf-mq-05-v8-item {
+  display: inline-flex; align-items: center; gap: 15px;
+  padding: 0 35px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: {{ section.settings.font_size }}px;
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  white-space: nowrap;
+  font-style: italic;
+}
+.cf-mq-05-v8-sep { color: {{ section.settings.accent_color }}; font-size: 20px; font-style: normal; }
+</style>
+
+<div class="cf-mq-05-v8">
+  <div class="cf-mq-05-v8-track">
+    {% for i in (1..4) %}{% for block in section.blocks %}
+      <span class="cf-mq-05-v8-item">
+        {{ block.settings.text }}
+        <span class="cf-mq-05-v8-sep">💅</span>
+      </span>
+    {% endfor %}{% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "08 · Nail Art Marquee",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Color","default":"#fdf2f8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#831843"},
+    {"type":"color","id":"accent_color","label":"Separator Color","default":"#ec4899"},
+    {"type":"range","id":"font_size","label":"Font Size","min":12,"max":24,"step":1,"default":15},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":12},
+    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":80,"step":5,"default":30}
+  ],
+  "blocks": [
+    {"type":"item","name":"Item","settings":[{"type":"text","id":"text","label":"Text","default":"Gel Manicure Kit"}]}
+  ],
+  "presets": [{"name": "08 · Nail Art Marquee","blocks": [{"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"}]}]
+}
+{% endschema %}
