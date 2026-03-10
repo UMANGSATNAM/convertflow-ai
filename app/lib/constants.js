@@ -10,7 +10,37 @@ export const SECTION_CATEGORIES = [
     { id: 'hero', name: 'Hero Sections', description: '10 premium hero banners', icon: 'Image' }
 ];
 
+// ── Auto-generate expansion entries for niches 02–05 ─────────────────
+const NICHE_LABELS = {
+    '02': 'Streetwear', '03': 'Tech', '04': 'Health', '05': 'Beauty'
+};
+const EXPANSION_DEFS = [
+    // [keyPrefix, category, nicheFileMap]  — nicheFileMap: { nicheId: filePrefix }
+    ['header', 'header', { '02': 'cf-header-02', '03': 'cf-header-03', '04': 'cf-header-04', '05': 'cf-header-05' }],
+    ['marquee', 'marquee', { '02': 'cf-marquee-02', '03': 'cf-marquee-03', '04': 'cf-marquee-04', '05': 'cf-marquee-05' }],
+    ['promo', 'promo', { '02': 'cf-promo-02', '03': 'cf-promo-03', '04': 'cf-promo-04', '05': 'cf-promo-05' }],
+    ['snack', 'snack', { '02': 'cf-promo-snack-02', '03': 'cf-promo-snack-03', '04': 'cf-promo-snack-04', '05': 'cf-promo-snack-05' }],
+    ['cat', 'category', { '02': 'cf-category-02', '03': 'cf-category-grid-03', '04': 'cf-category-04', '05': 'cf-category-05' }],
+    ['feat', 'feature', { '02': 'cf-featured-collection-02', '03': 'cf-featured-collection-03', '04': 'cf-featured-collection-04', '05': 'cf-featured-collection-05' }],
+    ['trust', 'trust', { '02': 'cf-trust-badges-02', '03': 'cf-trust-badges-03', '04': 'cf-trust-badges-04', '05': 'cf-trust-badges-05' }],
+];
+const COMP_LABELS = { header: 'Header', marquee: 'Marquee', promo: 'Promo', snack: 'Snack', cat: 'Category', feat: 'Featured', trust: 'Trust' };
+
+function buildExpansions() {
+    const out = {};
+    for (const [compKey, category, nicheMap] of EXPANSION_DEFS) {
+        for (const [niche, filePrefix] of Object.entries(nicheMap)) {
+            for (let v = 2; v <= 10; v++) {
+                const id = `${filePrefix}-v${v}`;
+                out[id] = { category, name: `${niche} · ${NICHE_LABELS[niche]} ${COMP_LABELS[compKey]} (v${v})`, file: `${filePrefix}-v${v}.liquid` };
+            }
+        }
+    }
+    return out;
+}
+
 export const SECTION_FILES = {
+    ...buildExpansions(),
     'cf-head-01': { category: 'header', name: '01 · Luxury Header', file: 'cf-head-01.liquid' },
     'cf-head-02': { category: 'header', name: '02 · Streetwear Header', file: 'cf-head-02.liquid' },
     'cf-head-03': { category: 'header', name: '03 · Tech Header', file: 'cf-head-03.liquid' },
