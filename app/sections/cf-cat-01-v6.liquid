@@ -1,0 +1,53 @@
+<style>
+.cf-cat-01-v6{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif}
+.cf-cat-01-v6-grid{display:grid;grid-template-columns:repeat(4, 1fr);border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-cat-01-v6-card{aspect-ratio:3/4;border-right:1px solid {{ section.settings.border_color }};position:relative;display:flex;align-items:center;justify-content:center;text-decoration:none;color:inherit;overflow:hidden;background:{{ section.settings.card_bg }}}
+.cf-cat-01-v6-card:last-child{border-right:none}
+.cf-cat-01-v6-img-wrap{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transition:opacity 0.6s}
+.cf-cat-01-v6-img{width:100%;height:100%;object-fit:cover;transform:scale(1.1);transition:transform 0.8s}
+.cf-cat-01-v6-card:hover .cf-cat-01-v6-img-wrap{opacity:1}
+.cf-cat-01-v6-card:hover .cf-cat-01-v6-img{transform:scale(1)}
+.cf-cat-01-v6-content{position:relative;z-index:2;text-align:center;transition:0.4s}
+.cf-cat-01-v6-card:hover .cf-cat-01-v6-content{color:#FFFFFF;transform:scale(1.1)}
+.cf-cat-01-v6-name{font-size:24px;font-style:italic;margin:0 0 10px 0;font-weight:400}
+.cf-cat-01-v6-link{font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase}
+@media(max-width:1024px){
+  .cf-cat-01-v6-grid{grid-template-columns:repeat(2, 1fr)}
+  .cf-cat-01-v6-card:nth-child(2){border-right:none}
+  .cf-cat-01-v6-card:nth-child(1), .cf-cat-01-v6-card:nth-child(2){border-bottom:1px solid {{ section.settings.border_color }}}
+}
+@media(max-width:600px){
+  .cf-cat-01-v6-grid{grid-template-columns:1fr}
+  .cf-cat-01-v6-card{border-right:none;border-bottom:1px solid {{ section.settings.border_color }}}
+  .cf-cat-01-v6-card:last-child{border-bottom:none}
+}
+</style>
+
+<div class="cf-cat-01-v6">
+  <div class="cf-cat-01-v6-grid">
+    {% for i in (1..4) %}
+      <a href="#" class="cf-cat-01-v6-card">
+        <div class="cf-cat-01-v6-img-wrap">
+          <div class="cf-cat-01-v6-img" style="background:#{{ i }}2{{ i }}2{{ i }}2;"></div>
+        </div>
+        <div class="cf-cat-01-v6-content">
+          <h3 class="cf-cat-01-v6-name">Category 0{{ i }}</h3>
+          <div class="cf-cat-01-v6-link">Discover</div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Category (v6)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Solid Card Background","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Divider","default":"#E2DFD8"}
+  ],
+  "presets": [{"name":"01 · Luxury Category (v6)"}]
+}
+{% endschema %}

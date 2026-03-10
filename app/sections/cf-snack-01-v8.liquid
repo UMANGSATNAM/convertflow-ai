@@ -1,0 +1,45 @@
+<style>
+.cf-snack-01-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;display:flex;justify-content:center}
+.cf-snack-01-v8-inner{max-width:900px;width:100%;display:flex;align-items:center;gap:40px;background:{{ section.settings.inner_bg }};padding:40px 60px;box-shadow:0 10px 30px rgba(0,0,0,0.03)}
+.cf-snack-01-v8-monogram{font-size:80px;line-height:0.8;font-style:italic;color:transparent;-webkit-text-stroke:1px {{ section.settings.text_color }};opacity:0.6}
+.cf-snack-01-v8-content{flex:1}
+.cf-snack-01-v8-title{font-size:24px;margin:0 0 10px 0;font-weight:400;letter-spacing:0.02em}
+.cf-snack-01-v8-desc{font-family:sans-serif;font-size:12px;opacity:0.8;line-height:1.6;margin:0}
+.cf-snack-01-v8-btn{flex-shrink:0;display:inline-block;padding:12px 30px;border:1px solid {{ section.settings.text_color }};font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-snack-01-v8-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.inner_bg }}}
+@media(max-width:768px){
+  .cf-snack-01-v8-inner{flex-direction:column;text-align:center;padding:30px 20px;gap:20px}
+  .cf-snack-01-v8-monogram{display:none}
+}
+</style>
+
+<div class="cf-snack-01-v8">
+  <div class="cf-snack-01-v8-inner">
+    <div class="cf-snack-01-v8-monogram">{{ section.settings.monogram }}</div>
+    <div class="cf-snack-01-v8-content">
+      <h3 class="cf-snack-01-v8-title">{{ section.settings.title }}</h3>
+      <p class="cf-snack-01-v8-desc">{{ section.settings.desc }}</p>
+    </div>
+    {% if section.settings.btn_text != blank %}
+      <a href="{{ section.settings.btn_link }}" class="cf-snack-01-v8-btn">{{ section.settings.btn_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Snack (v8)",
+  "settings": [
+    {"type":"text","id":"monogram","label":"Brand Monogram Initial","default":"H"},
+    {"type":"text","id":"title","label":"Header Title","default":"The Archive Sale"},
+    {"type":"text","id":"desc","label":"Description","default":"A curated selection of legacy silhouettes at exceptional value."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Archive"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F8F8F8"},
+    {"type":"color","id":"inner_bg","label":"Inner Card Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"01 · Luxury Snack (v8)"}]
+}
+{% endschema %}

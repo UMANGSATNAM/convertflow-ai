@@ -1,0 +1,52 @@
+<style>
+.cf-header-01-v8{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;border-bottom:1px solid {{ section.settings.border_color }};position:relative;z-index:50}
+.cf-header-01-v8-inner{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;align-items:center;padding:40px 20px 0 20px}
+.cf-header-01-v8-monogram{width:60px;height:60px;border-radius:50%;border:1px solid {{ section.settings.text_color }};display:flex;align-items:center;justify-content:center;font-family:serif;font-size:32px;text-decoration:none;color:inherit;margin-bottom:20px;transition:0.4s;flex-shrink:0}
+.cf-header-01-v8-monogram:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-header-01-v8-logo{font-family:serif;font-size:18px;letter-spacing:0.3em;text-transform:uppercase;margin:0 0 30px 0;font-weight:400;text-decoration:none;color:inherit}
+.cf-header-01-v8-nav{display:flex;gap:40px;border-top:1px solid {{ section.settings.border_color }};width:100%;justify-content:center;padding:20px 0}
+.cf-header-01-v8-link{font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:inherit;opacity:0.6;transition:0.3s}
+.cf-header-01-v8-link:hover{opacity:1;color:{{ section.settings.accent_color }}}
+.cf-header-01-v8-actions{position:absolute;top:40px;right:40px;display:flex;gap:20px}
+.cf-header-01-v8-icon{text-decoration:none;color:inherit;opacity:0.6;transition:0.3s;display:flex;align-items:center}
+.cf-header-01-v8-icon:hover{opacity:1;color:{{ section.settings.accent_color }}}
+.cf-header-01-v8-icon svg{width:20px;height:20px;stroke-width:1;fill:none;stroke:currentColor}
+@media(max-width:900px){
+  .cf-header-01-v8-actions{position:static;justify-content:center;margin-bottom:20px;width:100%}
+  .cf-header-01-v8-nav{display:none}
+}
+</style>
+
+<div class="cf-header-01-v8">
+  <div class="cf-header-01-v8-inner">
+    <div class="cf-header-01-v8-actions">
+      <a href="/search" class="cf-header-01-v8-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></a>
+      <a href="/account" class="cf-header-01-v8-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a>
+      <a href="/cart" class="cf-header-01-v8-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg></a>
+    </div>
+    
+    <a href="/" class="cf-header-01-v8-monogram">{{ section.settings.monogram }}</a>
+    <a href="/" class="cf-header-01-v8-logo">{{ shop.name }}</a>
+    
+    <nav class="cf-header-01-v8-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-header-01-v8-link">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Header (v8)",
+  "settings": [
+    {"type":"text","id":"monogram","label":"Brand Monogram Letter","default":"V"},
+    {"type":"link_list","id":"menu","label":"Header Menu","default":"main-menu"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Hover","default":"#D4AF37"},
+    {"type":"color","id":"border_color","label":"Border Separator","default":"#EEEEEE"}
+  ],
+  "presets": [{"name":"01 · Luxury Header (v8)"}]
+}
+{% endschema %}

@@ -1,0 +1,51 @@
+<style>
+.cf-trust-01-v9{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif}
+.cf-trust-01-v9-inner{max-width:1400px;margin:0 auto;display:flex;align-items:flex-start;gap:60px}
+.cf-trust-01-v9-left{flex:1;position:sticky;top:40px}
+.cf-trust-01-v9-title{font-size:clamp(40px, 6vw, 72px);font-weight:400;margin:0;line-height:1.1;letter-spacing:0.02em}
+.cf-trust-01-v9-right{flex:1.5;display:flex;flex-direction:column}
+.cf-trust-01-v9-item{display:flex;align-items:center;justify-content:space-between;padding:40px 0;border-bottom:1px solid {{ section.settings.border_color }};transition:opacity 0.4s;cursor:default}
+.cf-trust-01-v9-item:first-child{border-top:1px solid {{ section.settings.border_color }}}
+.cf-trust-01-v9-item:hover{opacity:0.5}
+.cf-trust-01-v9-item-title{font-size:28px;font-style:italic;font-weight:400;margin:0}
+.cf-trust-01-v9-item-val{font-family:sans-serif;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase}
+@media(max-width:900px){
+  .cf-trust-01-v9-inner{flex-direction:column}
+  .cf-trust-01-v9-left{position:static;margin-bottom:40px}
+  .cf-trust-01-v9-item{flex-direction:column;align-items:flex-start;gap:15px;padding:30px 0}
+}
+</style>
+
+<div class="cf-trust-01-v9">
+  <div class="cf-trust-01-v9-inner">
+    <div class="cf-trust-01-v9-left">
+      <h2 class="cf-trust-01-v9-title">{{ section.settings.title | newline_to_br }}</h2>
+    </div>
+    <div class="cf-trust-01-v9-right">
+      {% for i in (1..4) %}
+        <div class="cf-trust-01-v9-item">
+          <h4 class="cf-trust-01-v9-item-title">
+            {% if i == 1 %}Material Sourcing{% elsif i == 2 %}Manufacturing{% elsif i == 3 %}Shipping Origin{% else %}Warranty{% endif %}
+          </h4>
+          <span class="cf-trust-01-v9-item-val">
+            {% if i == 1 %}Italy & France{% elsif i == 2 %}Handcrafted in Paris{% elsif i == 3 %}Global Distribution{% else %}Lifetime Guarantee{% endif %}
+          </span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Trust (v9)",
+  "settings": [
+    {"type":"textarea","id":"title","label":"Header Title","default":"The Elements\nOf Value"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Divider","default":"#E2DFD8"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Trust (v9)"}]
+}
+{% endschema %}

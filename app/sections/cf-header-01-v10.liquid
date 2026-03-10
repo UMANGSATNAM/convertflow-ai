@@ -1,0 +1,38 @@
+<style>
+.cf-header-01-v10{width:100%;height:100vh;margin-bottom:-100vh;pointer-events:none;z-index:100;position:sticky;top:0;display:flex;flex-direction:column;justify-content:space-between;padding:40px;color:{{ section.settings.text_color }};font-family:serif}
+.cf-header-01-v10-inner{width:100%;pointer-events:auto;display:flex;justify-content:space-between;align-items:flex-start}
+.cf-header-01-v10-logo{font-size:32px;font-style:italic;line-height:0.8;text-decoration:none;color:inherit;mix-blend-mode:{{ section.settings.blend_mode }};transition:opacity 0.3s}
+.cf-header-01-v10-logo:hover{opacity:0.7}
+.cf-header-01-v10-nav{display:flex;flex-direction:column;align-items:flex-end;gap:15px;mix-blend-mode:{{ section.settings.blend_mode }};font-family:sans-serif}
+.cf-header-01-v10-link{font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-header-01-v10-link:hover{transform:translateX(-5px)}
+@media(max-width:768px){
+  .cf-header-01-v10{padding:20px}
+  .cf-header-01-v10-logo{font-size:24px}
+  .cf-header-01-v10-nav{background:rgba(255,255,255,0.9);color:#000;padding:20px;mix-blend-mode:normal;display:none} /* Menu toggle would ideally handle this */
+}
+</style>
+
+<div class="cf-header-01-v10">
+  <div class="cf-header-01-v10-inner">
+    <a href="/" class="cf-header-01-v10-logo">{{ shop.name }}</a>
+    <nav class="cf-header-01-v10-nav">
+      {% for link in linklists[section.settings.menu].links limit: 5 %}
+        <a href="{{ link.url }}" class="cf-header-01-v10-link">{{ link.title }}</a>
+      {% endfor %}
+      <a href="/cart" class="cf-header-01-v10-link" style="margin-top:20px;">Cart [0]</a>
+    </nav>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Header (v10)",
+  "settings": [
+    {"type":"link_list","id":"menu","label":"Header Menu","default":"main-menu"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"select","id":"blend_mode","label":"Mix Blend Mode","options":[{"value":"normal","label":"Normal"},{"value":"difference","label":"Difference"},{"value":"overlay","label":"Overlay"}],"default":"difference"}
+  ],
+  "presets": [{"name":"01 · Luxury Header (v10)"}]
+}
+{% endschema %}

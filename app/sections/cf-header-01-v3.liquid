@@ -1,0 +1,59 @@
+<style>
+.cf-header-01-v3{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;position:relative;z-index:50;display:flex;flex-direction:column;align-items:center}
+.cf-header-01-v3-top{padding:40px 20px 20px 20px;width:100%;text-align:center;border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-header-01-v3-logo{font-size:42px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;color:inherit;line-height:1;margin:0;display:inline-block}
+.cf-header-01-v3-img-logo{height:50px;width:auto;object-fit:contain}
+.cf-header-01-v3-bottom{display:flex;justify-content:space-between;align-items:center;padding:20px 60px;width:100%;max-width:1600px}
+.cf-header-01-v3-nav{display:flex;gap:50px}
+.cf-header-01-v3-link{text-decoration:none;color:inherit;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;transition:opacity 0.3s;opacity:0.7}
+.cf-header-01-v3-link:hover{opacity:1}
+.cf-header-01-v3-actions{display:flex;gap:30px}
+.cf-header-01-v3-icon{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;transition:0.3s;opacity:0.7}
+.cf-header-01-v3-icon:hover{opacity:1}
+.cf-header-01-v3-icon svg{width:16px;height:16px;stroke-width:1.5;fill:none;stroke:currentColor}
+@media(max-width:900px){
+  .cf-header-01-v3-bottom{padding:20px;flex-direction:column;gap:20px}
+  .cf-header-01-v3-nav{gap:20px;flex-wrap:wrap;justify-content:center}
+}
+</style>
+
+<div class="cf-header-01-v3">
+  <div class="cf-header-01-v3-top">
+    {% if section.settings.logo_image %}
+      <a href="/"><img src="{{ section.settings.logo_image | image_url: height: 100 }}" class="cf-header-01-v3-img-logo" alt="{{ shop.name }}"></a>
+    {% else %}
+      <a href="/" class="cf-header-01-v3-logo">{{ shop.name }}</a>
+    {% endif %}
+  </div>
+  <div class="cf-header-01-v3-bottom">
+    <nav class="cf-header-01-v3-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-header-01-v3-link">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+    <div class="cf-header-01-v3-actions">
+      <a href="/account" class="cf-header-01-v3-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Account</span>
+      </a>
+      <a href="/cart" class="cf-header-01-v3-icon">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        <span>Cart (0)</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Header (v3)",
+  "settings": [
+    {"type":"image_picker","id":"logo_image","label":"Custom Logo Image"},
+    {"type":"link_list","id":"menu","label":"Header Menu","default":"main-menu"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Divider","default":"#EEEEEE"}
+  ],
+  "presets": [{"name":"01 · Luxury Header (v3)"}]
+}
+{% endschema %}

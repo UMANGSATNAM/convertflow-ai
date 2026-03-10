@@ -1,0 +1,75 @@
+<style>
+.cf-promo-01-v7{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;display:flex;justify-content:center}
+.cf-promo-01-v7-inner{max-width:1400px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:20px;position:relative}
+.cf-promo-01-v7-col{display:flex;flex-direction:column;gap:20px}
+.cf-promo-01-v7-img-wrap{width:100%;aspect-ratio:2/3;background:#e5e5e5;overflow:hidden;position:relative}
+.cf-promo-01-v7-img{width:100%;height:100%;object-fit:cover;transition:1s}
+.cf-promo-01-v7-col:hover .cf-promo-01-v7-img{transform:scale(1.05)}
+.cf-promo-01-v7-text-box{padding:20px 0}
+.cf-promo-01-v7-title{font-size:clamp(32px, 4vw, 56px);font-weight:400;margin:0 0 10px 0;line-height:1.1;letter-spacing:0.02em}
+.cf-promo-01-v7-subtitle{font-family:sans-serif;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;opacity:0.6;margin:0}
+.cf-promo-01-v7-badge{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);width:120px;height:120px;border-radius:50%;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};display:flex;align-items:center;justify-content:center;text-align:center;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:20px;z-index:10;box-shadow:0 20px 40px rgba(0,0,0,0.1)}
+.cf-promo-01-v7-col:first-child{padding-top:100px}
+.cf-promo-01-v7-col:last-child{padding-bottom:100px}
+@media(max-width:900px){
+  .cf-promo-01-v7-inner{grid-template-columns:1fr;gap:40px}
+  .cf-promo-01-v7-col:first-child{padding-top:0}
+  .cf-promo-01-v7-col:last-child{padding-bottom:0}
+  .cf-promo-01-v7-badge{display:none} /* Hide badge on mobile for cleaner look */
+}
+</style>
+
+<div class="cf-promo-01-v7">
+  <div class="cf-promo-01-v7-inner">
+    {% if section.settings.badge_text != blank %}
+      <div class="cf-promo-01-v7-badge">{{ section.settings.badge_text }}</div>
+    {% endif %}
+    
+    <div class="cf-promo-01-v7-col">
+      <div class="cf-promo-01-v7-img-wrap">
+        {% if section.settings.image_1 %}
+          <img src="{{ section.settings.image_1 | image_url: width: 800 }}" class="cf-promo-01-v7-img" alt="">
+        {% else %}
+          <div class="cf-promo-01-v7-img" style="background:#555;"></div>
+        {% endif %}
+      </div>
+      <div class="cf-promo-01-v7-text-box">
+        <h3 class="cf-promo-01-v7-title">{{ section.settings.title_1 }}</h3>
+        <p class="cf-promo-01-v7-subtitle">{{ section.settings.sub_1 }}</p>
+      </div>
+    </div>
+    
+    <div class="cf-promo-01-v7-col">
+      <div class="cf-promo-01-v7-img-wrap">
+        {% if section.settings.image_2 %}
+          <img src="{{ section.settings.image_2 | image_url: width: 800 }}" class="cf-promo-01-v7-img" alt="">
+        {% else %}
+          <div class="cf-promo-01-v7-img" style="background:#777;"></div>
+        {% endif %}
+      </div>
+      <div class="cf-promo-01-v7-text-box">
+        <h3 class="cf-promo-01-v7-title">{{ section.settings.title_2 }}</h3>
+        <p class="cf-promo-01-v7-subtitle">{{ section.settings.sub_2 }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Promo (v7)",
+  "settings": [
+    {"type":"image_picker","id":"image_1","label":"Left Image"},
+    {"type":"text","id":"title_1","label":"Left Title","default":"The Atelier"},
+    {"type":"text","id":"sub_1","label":"Left Subtitle","default":"PARIS EST. 1994"},
+    {"type":"image_picker","id":"image_2","label":"Right Image"},
+    {"type":"text","id":"title_2","label":"Right Title","default":"New Standard"},
+    {"type":"text","id":"sub_2","label":"Right Subtitle","default":"EXCEPTIONAL TAILORING"},
+    {"type":"text","id":"badge_text","label":"Center Badge Text","default":"EXPLORE CAMPAIGN"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Promo (v7)"}]
+}
+{% endschema %}

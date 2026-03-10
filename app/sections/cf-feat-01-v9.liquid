@@ -1,0 +1,77 @@
+<style>
+.cf-feat-01-v9{width:100%;height:100vh;min-height:700px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.cf-feat-01-v9-left{position:absolute;left:40px;top:50%;transform:translateY(-50%);z-index:10}
+.cf-feat-01-v9-right{position:absolute;right:40px;top:50%;transform:translateY(-50%);z-index:10;text-align:right}
+.cf-feat-01-v9-title{font-size:clamp(40px, 6vw, 84px);font-weight:400;margin:0 0 10px 0;line-height:1;letter-spacing:0.02em}
+.cf-feat-01-v9-price{font-family:sans-serif;font-size:14px;font-weight:700;letter-spacing:0.1em;opacity:0.8}
+.cf-feat-01-v9-btn{display:inline-block;padding:15px 40px;border:1px solid {{ section.settings.text_color }};font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-feat-01-v9-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-feat-01-v9-center{width:60%;height:80%;position:relative;z-index:5}
+.cf-feat-01-v9-img{width:100%;height:100%;object-fit:cover;transition:opacity 0.8s, transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);opacity:0}
+.cf-feat-01-v9-img.active{opacity:1;transform:scale(1.02)}
+.cf-feat-01-v9-thumbs{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:15px}
+.cf-feat-01-v9-thumb{width:60px;height:80px;object-fit:cover;cursor:pointer;opacity:0.5;transition:0.3s;border:1px solid transparent}
+.cf-feat-01-v9-thumb.active{opacity:1;border-color:{{ section.settings.text_color }}}
+@media(max-width:1024px){
+  .cf-feat-01-v9{flex-direction:column;height:auto;padding:100px 20px}
+  .cf-feat-01-v9-left, .cf-feat-01-v9-right{position:relative;left:auto;right:auto;top:auto;transform:none;text-align:center;margin-bottom:30px}
+  .cf-feat-01-v9-center{width:100%;height:60vh;margin-bottom:30px}
+  .cf-feat-01-v9-thumbs{position:relative;bottom:auto;left:auto;transform:none;justify-content:center}
+}
+</style>
+
+<div class="cf-feat-01-v9">
+  <div class="cf-feat-01-v9-left">
+    <h2 class="cf-feat-01-v9-title" id="cf-feat-01-v9-title-{{ section.id }}">Product 01</h2>
+    <div class="cf-feat-01-v9-price" id="cf-feat-01-v9-price-{{ section.id }}">$1,200</div>
+  </div>
+  
+  <div class="cf-feat-01-v9-center" id="cf-feat-01-v9-gallery-{{ section.id }}">
+    <div class="cf-feat-01-v9-img active" style="background:hsl(0, 0%, 20%);position:absolute;"></div>
+    <div class="cf-feat-01-v9-img" style="background:hsl(0, 0%, 40%);position:absolute;"></div>
+    <div class="cf-feat-01-v9-img" style="background:hsl(0, 0%, 60%);position:absolute;"></div>
+  </div>
+  
+  <div class="cf-feat-01-v9-right">
+    <a href="#" class="cf-feat-01-v9-btn">Discover Details</a>
+  </div>
+  
+  <div class="cf-feat-01-v9-thumbs" id="cf-feat-01-v9-thumbs-{{ section.id }}">
+    <div class="cf-feat-01-v9-thumb active" style="background:hsl(0, 0%, 20%);" data-idx="0" data-title="Product 01" data-price="$1,200"></div>
+    <div class="cf-feat-01-v9-thumb" style="background:hsl(0, 0%, 40%);" data-idx="1" data-title="Product 02" data-price="$1,450"></div>
+    <div class="cf-feat-01-v9-thumb" style="background:hsl(0, 0%, 60%);" data-idx="2" data-title="Product 03" data-price="$1,800"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const thumbs = document.querySelectorAll('#cf-feat-01-v9-thumbs-{{ section.id }} .cf-feat-01-v9-thumb');
+    const images = document.querySelectorAll('#cf-feat-01-v9-gallery-{{ section.id }} .cf-feat-01-v9-img');
+    const titleEl = document.getElementById('cf-feat-01-v9-title-{{ section.id }}');
+    const priceEl = document.getElementById('cf-feat-01-v9-price-{{ section.id }}');
+    
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const idx = thumb.getAttribute('data-idx');
+        thumbs.forEach(t => t.classList.remove('active'));
+        images.forEach(i => i.classList.remove('active'));
+        thumb.classList.add('active');
+        images[idx].classList.add('active');
+        
+        titleEl.textContent = thumb.getAttribute('data-title');
+        priceEl.textContent = thumb.getAttribute('data-price');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "01 · Luxury Featured (v9)",
+  "settings": [
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"}
+  ],
+  "presets": [{"name":"01 · Luxury Featured (v9)"}]
+}
+{% endschema %}

@@ -1,0 +1,65 @@
+<style>
+.cf-header-01-v7{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};border-bottom:1px solid {{ section.settings.text_color }};position:relative;z-index:50;display:flex}
+.cf-header-01-v7-sidebar{width:250px;border-right:1px solid {{ section.settings.text_color }};display:flex;flex-direction:column;justify-content:space-between;padding:40px;min-height:300px;font-family:sans-serif}
+.cf-header-01-v7-logo{font-family:serif;font-size:24px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;color:inherit;margin-bottom:60px;display:block}
+.cf-header-01-v7-nav{display:flex;flex-direction:column;gap:20px}
+.cf-header-01-v7-link{text-decoration:none;color:inherit;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;transition:0.3s;opacity:0.7}
+.cf-header-01-v7-link:hover{opacity:1;transform:translateX(5px)}
+.cf-header-01-v7-right{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.cf-header-01-v7-top{display:flex;justify-content:space-between;padding:20px 40px;border-bottom:1px solid {{ section.settings.text_color }};font-family:sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em}
+.cf-header-01-v7-promo{opacity:0.8}
+.cf-header-01-v7-actions{display:flex;gap:30px}
+.cf-header-01-v7-icon{text-decoration:none;color:inherit;transition:0.3s}
+.cf-header-01-v7-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-header-01-v7-hero{flex:1;display:flex;align-items:center;padding:0 40px;position:relative}
+.cf-header-01-v7-hero-txt{font-family:serif;font-size:clamp(32px, 4vw, 56px);font-style:italic;line-height:1;margin:0;max-width:600px}
+@media(max-width:1024px){
+  .cf-header-01-v7{flex-direction:column}
+  .cf-header-01-v7-sidebar{width:100%;border-right:none;border-bottom:1px solid {{ section.settings.text_color }};min-height:auto;padding:20px}
+  .cf-header-01-v7-nav{display:none} /* Hidden on mobile for simplicity */
+  .cf-header-01-v7-logo{margin-bottom:0;text-align:center}
+  .cf-header-01-v7-top{flex-direction:column;text-align:center;gap:15px;padding:15px}
+  .cf-header-01-v7-actions{justify-content:center}
+}
+</style>
+
+<div class="cf-header-01-v7">
+  <div class="cf-header-01-v7-sidebar">
+    <a href="/" class="cf-header-01-v7-logo">{{ shop.name }}</a>
+    <nav class="cf-header-01-v7-nav">
+      {% for link in linklists[section.settings.menu].links limit: 6 %}
+        <a href="{{ link.url }}" class="cf-header-01-v7-link">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+    <div style="font-size:10px; opacity:0.5; text-transform:uppercase; letter-spacing:0.1em; margin-top:40px;">Est. 2024</div>
+  </div>
+  
+  <div class="cf-header-01-v7-right">
+    <div class="cf-header-01-v7-top">
+      <div class="cf-header-01-v7-promo">{{ section.settings.announcement }}</div>
+      <div class="cf-header-01-v7-actions">
+        <a href="/search" class="cf-header-01-v7-icon">Search</a>
+        <a href="/account" class="cf-header-01-v7-icon">Account</a>
+        <a href="/cart" class="cf-header-01-v7-icon">Cart (0)</a>
+      </div>
+    </div>
+    <div class="cf-header-01-v7-hero">
+      <h2 class="cf-header-01-v7-hero-txt">{{ section.settings.ambient_text }}</h2>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Header (v7)",
+  "settings": [
+    {"type":"link_list","id":"menu","label":"Sidebar Menu","default":"main-menu"},
+    {"type":"text","id":"announcement","label":"Top Promo Text","default":"Worldwide Delivery / Concierge Available"},
+    {"type":"textarea","id":"ambient_text","label":"Large Ambient Text","default":"Refined Elegance, Crafted for the Modern Era."},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text & Border Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Accent","default":"#A38971"}
+  ],
+  "presets": [{"name":"01 · Luxury Header (v7)"}]
+}
+{% endschema %}

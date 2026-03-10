@@ -1,0 +1,56 @@
+<style>
+.cf-feat-01-v4{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;display:flex;flex-direction:column;align-items:center}
+.cf-feat-01-v4-header{text-align:center;margin-bottom:100px;max-width:600px}
+.cf-feat-01-v4-title{font-size:clamp(32px, 5vw, 64px);font-style:italic;font-weight:400;margin:0 0 15px 0;letter-spacing:0.02em}
+.cf-feat-01-v4-desc{font-family:sans-serif;font-size:12px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;margin:0;opacity:0.6}
+.cf-feat-01-v4-inner{max-width:1400px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.cf-feat-01-v4-card{text-decoration:none;color:inherit;display:block}
+.cf-feat-01-v4-card:nth-child(2){margin-top:200px}
+.cf-feat-01-v4-img-wrap{width:100%;aspect-ratio:3/4;background:{{ section.settings.card_bg }};margin-bottom:30px;overflow:hidden}
+.cf-feat-01-v4-img{width:100%;height:100%;object-fit:cover;transition:1.2s cubic-bezier(0.2, 0.8, 0.2, 1)}
+.cf-feat-01-v4-card:hover .cf-feat-01-v4-img{transform:scale(1.05)}
+.cf-feat-01-v4-info{text-align:center}
+.cf-feat-01-v4-name{font-size:32px;font-weight:400;margin:0 0 10px 0;letter-spacing:0.02em}
+.cf-feat-01-v4-price{font-family:sans-serif;font-size:12px;opacity:0.7;letter-spacing:0.1em}
+@media(max-width:900px){
+  .cf-feat-01-v4-inner{grid-template-columns:1fr;gap:80px}
+  .cf-feat-01-v4-card:nth-child(2){margin-top:0}
+  .cf-feat-01-v4-header{margin-bottom:60px}
+}
+</style>
+
+<div class="cf-feat-01-v4">
+  <div class="cf-feat-01-v4-header">
+    <h2 class="cf-feat-01-v4-title">{{ section.settings.title }}</h2>
+    <p class="cf-feat-01-v4-desc">{{ section.settings.subtitle }}</p>
+  </div>
+  
+  <div class="cf-feat-01-v4-inner">
+    {% for i in (1..2) %}
+      <a href="#" class="cf-feat-01-v4-card">
+        <div class="cf-feat-01-v4-img-wrap">
+          <div class="cf-feat-01-v4-img" style="background:#555;"></div>
+        </div>
+        <div class="cf-feat-01-v4-info">
+          <h4 class="cf-feat-01-v4-name">Key Silhouette {{ i }}</h4>
+          <span class="cf-feat-01-v4-price">$3,200</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Featured (v4)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Icons"},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"ESSENTIAL PIECES ENHANCED"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"card_bg","label":"Product Background","default":"#F4F4F4"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Featured (v4)"}]
+}
+{% endschema %}

@@ -1,0 +1,53 @@
+<style>
+.cf-promo-01-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;display:flex;justify-content:center}
+.cf-promo-01-v3-inner{max-width:1200px;width:100%;display:flex;flex-direction:column;align-items:center;background:{{ section.settings.matte_color }};padding:40px;box-shadow:0 30px 60px rgba(0,0,0,0.05)}
+.cf-promo-01-v3-img-wrap{width:100%;aspect-ratio:16/9;background:#e2e2e2;overflow:hidden;margin-bottom:40px}
+.cf-promo-01-v3-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s}
+.cf-promo-01-v3-inner:hover .cf-promo-01-v3-img{transform:scale(1.03)}
+.cf-promo-01-v3-content{text-align:center;max-width:600px}
+.cf-promo-01-v3-title{font-size:32px;font-style:italic;font-weight:400;letter-spacing:0.02em;margin:0 0 15px 0}
+.cf-promo-01-v3-desc{font-family:sans-serif;font-size:13px;line-height:1.6;opacity:0.7;margin:0 0 30px 0;text-transform:uppercase;letter-spacing:0.1em}
+.cf-promo-01-v3-btn{display:inline-block;padding:12px 40px;border:1px solid {{ section.settings.text_color }};font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-promo-01-v3-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:768px){
+  .cf-promo-01-v3-inner{padding:20px}
+  .cf-promo-01-v3-img-wrap{aspect-ratio:4/5;margin-bottom:30px}
+}
+</style>
+
+<div class="cf-promo-01-v3">
+  <div class="cf-promo-01-v3-inner">
+    <div class="cf-promo-01-v3-img-wrap">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1400 }}" class="cf-promo-01-v3-img" alt="Campaign">
+      {% else %}
+        <div class="cf-promo-01-v3-img" style="background:#555;"></div>
+      {% endif %}
+    </div>
+    <div class="cf-promo-01-v3-content">
+      <h2 class="cf-promo-01-v3-title">{{ section.settings.title }}</h2>
+      <p class="cf-promo-01-v3-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-01-v3-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Promo (v3)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Campaign Image"},
+    {"type":"text","id":"title","label":"Header Title","default":"A Study in Shadows"},
+    {"type":"textarea","id":"desc","label":"Description","default":"EVENING WEAR ELEVATED FOR THE UPCOMING GALA SEASON"},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"View Lookbook"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F2F0ED"},
+    {"type":"color","id":"matte_color","label":"Inner Frame Color","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text & Line Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"01 · Luxury Promo (v3)"}]
+}
+{% endschema %}

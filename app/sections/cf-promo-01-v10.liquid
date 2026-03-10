@@ -1,0 +1,61 @@
+<style>
+.cf-promo-01-v10{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;overflow:hidden}
+.cf-promo-01-v10-inner{max-width:1600px;margin:0 auto;display:grid;grid-template-columns:repeat(12, 1fr);gap:40px;align-items:center}
+.cf-promo-01-v10-img-1{grid-column:1 / span 4;aspect-ratio:3/4;overflow:hidden;background:#ececec}
+.cf-promo-01-v10-img-2{grid-column:9 / span 4;aspect-ratio:4/5;overflow:hidden;background:#dfdfdf;margin-top:200px}
+.cf-promo-01-v10-img{width:100%;height:100%;object-fit:cover;transition:1.2s cubic-bezier(0.2, 0.8, 0.2, 1)}
+.cf-promo-01-v10-img-1:hover .cf-promo-01-v10-img, .cf-promo-01-v10-img-2:hover .cf-promo-01-v10-img{transform:scale(1.05)}
+.cf-promo-01-v10-content{grid-column:5 / span 4;text-align:center;padding:40px}
+.cf-promo-01-v10-manifesto{font-size:clamp(28px, 4vw, 42px);font-weight:400;font-style:italic;line-height:1.2;margin:0 0 40px 0;letter-spacing:0.02em}
+.cf-promo-01-v10-btn{display:inline-block;padding:15px 40px;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:{{ section.settings.bg_color }};background:{{ section.settings.text_color }};transition:0.3s}
+.cf-promo-01-v10-btn:hover{background:{{ section.settings.accent_color }}}
+@media(max-width:1024px){
+  .cf-promo-01-v10-inner{display:flex;flex-direction:column;gap:60px}
+  .cf-promo-01-v10-img-1, .cf-promo-01-v10-img-2{width:100%;max-width:500px;margin:0 auto;aspect-ratio:4/5}
+}
+</style>
+
+<div class="cf-promo-01-v10">
+  <div class="cf-promo-01-v10-inner">
+    <div class="cf-promo-01-v10-img-1">
+      {% if section.settings.image_1 %}
+        <img src="{{ section.settings.image_1 | image_url: width: 800 }}" class="cf-promo-01-v10-img" alt="">
+      {% else %}
+        <div class="cf-promo-01-v10-img" style="background:#555;"></div>
+      {% endif %}
+    </div>
+    
+    <div class="cf-promo-01-v10-content">
+      <h2 class="cf-promo-01-v10-manifesto">{{ section.settings.manifesto }}</h2>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-01-v10-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+    
+    <div class="cf-promo-01-v10-img-2">
+      {% if section.settings.image_2 %}
+        <img src="{{ section.settings.image_2 | image_url: width: 800 }}" class="cf-promo-01-v10-img" alt="">
+      {% else %}
+        <div class="cf-promo-01-v10-img" style="background:#777;"></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Promo (v10)",
+  "settings": [
+    {"type":"image_picker","id":"image_1","label":"Left Image"},
+    {"type":"image_picker","id":"image_2","label":"Right Image"},
+    {"type":"textarea","id":"manifesto","label":"Center Text","default":"Exploring the space between classical tailoring and modern ease. A refined wardrobe for every day."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Explore The Editorial"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Button Hover Background","default":"#888888"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Promo (v10)"}]
+}
+{% endschema %}

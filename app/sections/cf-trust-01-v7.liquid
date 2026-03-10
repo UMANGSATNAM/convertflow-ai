@@ -1,0 +1,50 @@
+<style>
+.cf-trust-01-v7{width:100%;padding:{{ section.settings.padding_y }}px 0;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;overflow:hidden}
+.cf-trust-01-v7-header{text-align:center;padding:0 20px;margin-bottom:60px}
+.cf-trust-01-v7-title{font-size:clamp(32px, 5vw, 56px);font-weight:400;margin:0;letter-spacing:0.02em}
+.cf-trust-01-v7-track{display:flex;padding:0 40px 60px 40px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:40px}
+.cf-trust-01-v7-track::-webkit-scrollbar{display:none}
+.cf-trust-01-v7-card{flex:0 0 350px;scroll-snap-align:center;padding:40px;border:1px solid {{ section.settings.border_color }};background:{{ section.settings.card_bg }};text-align:center;transition:transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)}
+.cf-trust-01-v7-card:hover{transform:translateY(-10px);box-shadow:0 30px 60px rgba(0,0,0,0.05)}
+.cf-trust-01-v7-icon{font-size:24px;margin-bottom:20px;color:{{ section.settings.accent_color }}}
+.cf-trust-01-v7-name{font-size:20px;font-style:italic;margin:0 0 15px 0}
+.cf-trust-01-v7-desc{font-family:sans-serif;font-size:12px;opacity:0.75;line-height:1.6;margin:0}
+@media(max-width:768px){
+  .cf-trust-01-v7-card{flex:0 0 280px;padding:30px 20px}
+}
+</style>
+
+<div class="cf-trust-01-v7">
+  <div class="cf-trust-01-v7-header">
+    <h2 class="cf-trust-01-v7-title">{{ section.settings.title }}</h2>
+  </div>
+  <div class="cf-trust-01-v7-track">
+    {% for i in (1..5) %}
+      <div class="cf-trust-01-v7-card">
+        <div class="cf-trust-01-v7-icon">✧</div>
+        <h4 class="cf-trust-01-v7-name">
+          {% if i == 1 %}Signature Packaging{% elsif i == 2 %}Complimentary Returns{% elsif i == 3 %}In-Store Appointments{% elsif i == 4 %}Secure Checkout{% else %}Dedicated Concierge{% endif %}
+        </h4>
+        <p class="cf-trust-01-v7-desc">
+          {% if i == 1 %}Every order arrives in our iconic, meticulously crafted gift boxes.{% elsif i == 2 %}Enjoy effortless returns within 30 days of standard delivery.{% elsif i == 3 %}Book a private viewing at any of our flagship boutiques worldwide.{% elsif i == 4 %}Absolute encrypted security for your ultimate peace of mind.{% else %}Direct access to a personal advisor for styling and sourcing.{% endif %}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Trust (v7)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Services"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Card Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Highlight Accent","default":"#D4AF37"},
+    {"type":"color","id":"border_color","label":"Card Border","default":"#E2DFD8"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Trust (v7)"}]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+<style>
+.cf-snack-01-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;display:flex;justify-content:center}
+.cf-snack-01-v2-inner{max-width:1000px;width:100%;border:1px solid {{ section.settings.border_color }};padding:40px;position:relative;text-align:center;text-decoration:none;display:block;transition:0.4s}
+.cf-snack-01-v2-inner:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-snack-01-v2-title{font-size:24px;font-style:italic;font-weight:400;margin:0 0 10px 0;letter-spacing:0.02em}
+.cf-snack-01-v2-desc{font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;margin:0;opacity:0.8}
+.cf-snack-01-v2-inner::before, .cf-snack-01-v2-inner::after{content:"✦";position:absolute;top:50%;transform:translateY(-50%);font-size:14px}
+.cf-snack-01-v2-inner::before{left:40px}
+.cf-snack-01-v2-inner::after{right:40px}
+@media(max-width:768px){
+  .cf-snack-01-v2-inner{padding:30px 20px}
+  .cf-snack-01-v2-inner::before, .cf-snack-01-v2-inner::after{display:none}
+}
+</style>
+
+<div class="cf-snack-01-v2">
+  <a href="{{ section.settings.link }}" class="cf-snack-01-v2-inner">
+    <h3 class="cf-snack-01-v2-title">{{ section.settings.title }}</h3>
+    <p class="cf-snack-01-v2-desc">{{ section.settings.desc }}</p>
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Snack (v2)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"Complimentary Gift Packaging"},
+    {"type":"text","id":"desc","label":"Description","default":"ON ALL ORDERS THIS WEEKEND"},
+    {"type":"url","id":"link","label":"Block Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Divider","default":"#D4AF37"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"01 · Luxury Snack (v2)"}]
+}
+{% endschema %}

@@ -1,0 +1,55 @@
+<style>
+.cf-header-01-v9{width:100%;padding:30px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};position:relative;z-index:50;border-bottom:4px solid {{ section.settings.text_color }}}
+.cf-header-01-v9-inner{max-width:1800px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end}
+.cf-header-01-v9-left{display:flex;flex-direction:column;gap:15px}
+.cf-header-01-v9-nav{display:flex;gap:30px}
+.cf-header-01-v9-link{font-family:sans-serif;font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;color:inherit;opacity:0.5;transition:0.3s}
+.cf-header-01-v9-link:hover{opacity:1}
+.cf-header-01-v9-logo{font-family:serif;font-size:clamp(40px, 6vw, 84px);line-height:0.8;font-weight:400;text-transform:uppercase;letter-spacing:-0.02em;text-decoration:none;color:inherit;margin:0}
+.cf-header-01-v9-right{display:flex;gap:25px}
+.cf-header-01-v9-icon{text-decoration:none;color:inherit;font-family:sans-serif;font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;transition:0.3s;display:flex;align-items:center;gap:8px}
+.cf-header-01-v9-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-header-01-v9-icon svg{width:16px;height:16px;stroke-width:2;fill:none;stroke:currentColor}
+@media(max-width:1024px){
+  .cf-header-01-v9-inner{flex-direction:column;align-items:center;gap:30px}
+  .cf-header-01-v9-left{align-items:center}
+  .cf-header-01-v9-nav{display:none}
+}
+</style>
+
+<div class="cf-header-01-v9">
+  <div class="cf-header-01-v9-inner">
+    <div class="cf-header-01-v9-left">
+      <nav class="cf-header-01-v9-nav">
+        {% for link in linklists[section.settings.menu].links limit: 4 %}
+          <a href="{{ link.url }}" class="cf-header-01-v9-link">{{ link.title }}</a>
+        {% endfor %}
+      </nav>
+      <a href="/" class="cf-header-01-v9-logo">{{ shop.name }}</a>
+    </div>
+    
+    <div class="cf-header-01-v9-right">
+      <a href="/search" class="cf-header-01-v9-icon">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Search
+      </a>
+      <a href="/cart" class="cf-header-01-v9-icon">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        Bag (0)
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Header (v9)",
+  "settings": [
+    {"type":"link_list","id":"menu","label":"Header Menu","default":"main-menu"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#888888"}
+  ],
+  "presets": [{"name":"01 · Luxury Header (v9)"}]
+}
+{% endschema %}

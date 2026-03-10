@@ -1,0 +1,53 @@
+<style>
+.cf-feat-01-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif}
+.cf-feat-01-v8-inner{max-width:1200px;margin:0 auto}
+.cf-feat-01-v8-header{text-align:center;margin-bottom:80px}
+.cf-feat-01-v8-title{font-family:serif;font-size:clamp(40px, 5vw, 64px);font-weight:400;margin:0;letter-spacing:0.02em}
+.cf-feat-01-v8-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:20px}
+.cf-feat-01-v8-card{text-decoration:none;color:inherit;background:{{ section.settings.card_bg }};padding:40px;display:flex;flex-direction:column;align-items:center;text-align:center;transition:0.4s;border:1px solid rgba(0,0,0,0.03)}
+.cf-feat-01-v8-card:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-feat-01-v8-img-wrap{width:100%;aspect-ratio:1/1;margin-bottom:30px;overflow:hidden}
+.cf-feat-01-v8-img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;transition:transform 1s;filter:contrast(1.1)}
+.cf-feat-01-v8-card:hover .cf-feat-01-v8-img{transform:scale(1.05);filter:invert(1) contrast(1.1);mix-blend-mode:screen}
+.cf-feat-01-v8-name{font-family:serif;font-size:20px;font-style:italic;margin:0 0 10px 0;letter-spacing:0.02em}
+.cf-feat-01-v8-price{font-size:11px;font-weight:700;letter-spacing:0.15em}
+@media(max-width:1024px){
+  .cf-feat-01-v8-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .cf-feat-01-v8-grid{grid-template-columns:1fr}
+}
+</style>
+
+<div class="cf-feat-01-v8">
+  <div class="cf-feat-01-v8-inner">
+    <div class="cf-feat-01-v8-header">
+      <h2 class="cf-feat-01-v8-title">{{ section.settings.title }}</h2>
+    </div>
+    <div class="cf-feat-01-v8-grid">
+      {% for i in (1..3) %}
+        <a href="#" class="cf-feat-01-v8-card">
+          <div class="cf-feat-01-v8-img-wrap">
+            <div class="cf-feat-01-v8-img" style="background:#e5e5e5;"></div>
+          </div>
+          <h4 class="cf-feat-01-v8-name">Minimalist Object 0{{ i }}</h4>
+          <span class="cf-feat-01-v8-price">$980</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Featured (v8)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Monochrome Edit"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Product Background","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Featured (v8)"}]
+}
+{% endschema %}

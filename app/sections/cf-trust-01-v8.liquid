@@ -1,0 +1,30 @@
+<style>
+.cf-trust-01-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;text-align:center;display:flex;justify-content:center}
+.cf-trust-01-v8-inner{max-width:900px}
+.cf-trust-01-v8-title{font-size:clamp(40px, 6vw, 84px);font-weight:400;margin:0 0 30px 0;line-height:1.1;letter-spacing:0.02em}
+.cf-trust-01-v8-desc{font-family:sans-serif;font-size:14px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:{{ section.settings.accent_color }};margin:0}
+.cf-trust-01-v8-line{width:1px;height:60px;background:{{ section.settings.accent_color }};margin:0 auto 40px auto}
+</style>
+
+<div class="cf-trust-01-v8">
+  <div class="cf-trust-01-v8-inner">
+    <div class="cf-trust-01-v8-line"></div>
+    <h2 class="cf-trust-01-v8-title">{{ section.settings.title }}</h2>
+    <p class="cf-trust-01-v8-desc">{{ section.settings.subtitle }}</p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Trust (v8)",
+  "settings": [
+    {"type":"textarea","id":"title","label":"Statement Title","default":"Uncompromising Quality.\nAbsolute Discretion."},
+    {"type":"text","id":"subtitle","label":"Subtitle","default":"THE FOUNDATION OF OUR HOUSE"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Detail Color","default":"#A38971"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":150}
+  ],
+  "presets": [{"name":"01 · Luxury Trust (v8)"}]
+}
+{% endschema %}

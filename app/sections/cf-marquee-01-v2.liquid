@@ -1,0 +1,36 @@
+<style>
+.cf-marquee-01-v2{width:100%;overflow:hidden;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};padding:{{ section.settings.padding_y }}px 0;border-top:1px solid {{ section.settings.border_color }};border-bottom:1px solid {{ section.settings.border_color }}}
+.cf-marquee-01-v2-track{display:flex;white-space:nowrap;animation:cf-marquee-01-v2-scroll {{ section.settings.speed }}s linear infinite}
+.cf-marquee-01-v2-item{display:inline-flex;align-items:center;padding:0 40px}
+.cf-marquee-01-v2-text{font-family:serif;font-size:clamp(24px, 4vw, 42px);font-weight:400;font-style:italic;letter-spacing:0.05em}
+.cf-marquee-01-v2-separator{margin:0 40px;opacity:0.4;font-family:serif;font-size:clamp(20px, 3vw, 32px)}
+@keyframes cf-marquee-01-v2-scroll{0%{transform:translateX(0)} 100%{transform:translateX(-50%)}}
+</style>
+
+<div class="cf-marquee-01-v2">
+  <div class="cf-marquee-01-v2-track">
+    {% for j in (1..3) %}
+      {% for i in (1..4) %}
+        <div class="cf-marquee-01-v2-item">
+          <span class="cf-marquee-01-v2-text">{{ section.settings.text }}</span>
+          <span class="cf-marquee-01-v2-separator">✦</span>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Marquee (v2)",
+  "settings": [
+    {"type":"text","id":"text","label":"Marquee Text","default":"The Art of Understatement"},
+    {"type":"range","id":"speed","label":"Scroll Duration (s)","min":10,"max":100,"step":5,"default":40},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"border_color","label":"Border Divider","default":"#E2DFD8"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":100,"step":5,"default":30}
+  ],
+  "presets": [{"name":"01 · Luxury Marquee (v2)"}]
+}
+{% endschema %}

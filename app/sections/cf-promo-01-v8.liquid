@@ -1,0 +1,60 @@
+<style>
+.cf-promo-01-v8{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;overflow:hidden}
+.cf-promo-01-v8-inner{max-width:1400px;margin:0 auto;position:relative;display:flex;align-items:center;min-height:800px}
+.cf-promo-01-v8-bg-img{position:absolute;top:0;right:0;width:70%;height:100%;aspect-ratio:3/4;object-fit:cover;z-index:1}
+.cf-promo-01-v8-fg-img{position:absolute;bottom:-{{ section.settings.padding_y }}px;left:10%;width:40%;aspect-ratio:4/5;object-fit:cover;z-index:2;box-shadow:20px 20px 60px rgba(0,0,0,0.15);transition:transform 0.5s}
+.cf-promo-01-v8-inner:hover .cf-promo-01-v8-fg-img{transform:translateY(-15px)}
+.cf-promo-01-v8-content{position:relative;z-index:3;max-width:500px;background:{{ section.settings.bg_color }};padding:60px;box-shadow:0 30px 60px rgba(0,0,0,0.05)}
+.cf-promo-01-v8-title{font-size:clamp(40px, 6vw, 72px);font-style:italic;font-weight:400;line-height:1;margin:0 0 20px 0;letter-spacing:0.02em}
+.cf-promo-01-v8-desc{font-family:sans-serif;font-size:14px;line-height:1.6;opacity:0.8;margin:0 0 40px 0}
+.cf-promo-01-v8-btn{display:inline-block;padding:15px 40px;border:1px solid {{ section.settings.text_color }};font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-promo-01-v8-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+@media(max-width:1024px){
+  .cf-promo-01-v8-inner{flex-direction:column;min-height:auto;padding-top:60vh}
+  .cf-promo-01-v8-bg-img{width:100%;height:60vh}
+  .cf-promo-01-v8-fg-img{display:none} /* Hide foreground image on mobile for simplicity */
+  .cf-promo-01-v8-content{width:100%;max-width:none;padding:40px 20px;text-align:center;box-shadow:none}
+}
+</style>
+
+<div class="cf-promo-01-v8">
+  <div class="cf-promo-01-v8-inner">
+    {% if section.settings.bg_image %}
+      <img src="{{ section.settings.bg_image | image_url: width: 1400 }}" class="cf-promo-01-v8-bg-img" alt="">
+    {% else %}
+      <div class="cf-promo-01-v8-bg-img" style="background:#ddd;"></div>
+    {% endif %}
+    
+    {% if section.settings.fg_image %}
+      <img src="{{ section.settings.fg_image | image_url: width: 800 }}" class="cf-promo-01-v8-fg-img" alt="">
+    {% else %}
+      <div class="cf-promo-01-v8-fg-img" style="background:#bbb;"></div>
+    {% endif %}
+    
+    <div class="cf-promo-01-v8-content">
+      <h2 class="cf-promo-01-v8-title">{{ section.settings.title }}</h2>
+      <p class="cf-promo-01-v8-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-01-v8-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Promo (v8)",
+  "settings": [
+    {"type":"image_picker","id":"bg_image","label":"Background Image (Right)"},
+    {"type":"image_picker","id":"fg_image","label":"Foreground Image (Left)"},
+    {"type":"text","id":"title","label":"Header Title","default":"The Heritage Collection"},
+    {"type":"textarea","id":"desc","label":"Description","default":"Reimagining our most iconic silhouettes for the contemporary era. Discover the pieces defining a luxury standard."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"View Campaign"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Promo (v8)"}]
+}
+{% endschema %}

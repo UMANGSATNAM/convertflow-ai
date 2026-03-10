@@ -1,0 +1,73 @@
+<style>
+.cf-header-01-v6{width:100%;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:sans-serif;border-bottom:1px solid {{ section.settings.border_color }};position:relative;z-index:50}
+.cf-header-01-v6-top{display:flex;justify-content:space-between;align-items:center;padding:10px 40px;border-bottom:1px solid {{ section.settings.border_color }};font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;opacity:0.8}
+.cf-header-01-v6-top-links{display:flex;gap:30px}
+.cf-header-01-v6-top-link{text-decoration:none;color:inherit;transition:0.3s}
+.cf-header-01-v6-top-link:hover{color:{{ section.settings.accent_color }}}
+.cf-header-01-v6-main{display:flex;justify-content:space-between;align-items:center;padding:30px 40px}
+.cf-header-01-v6-logo{font-family:serif;font-size:32px;text-transform:uppercase;text-decoration:none;color:inherit;letter-spacing:0.2em;line-height:1}
+.cf-header-01-v6-actions{display:flex;gap:25px;align-items:center}
+.cf-header-01-v6-icon{text-decoration:none;color:inherit;transition:0.3s;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase}
+.cf-header-01-v6-icon:hover{color:{{ section.settings.accent_color }}}
+.cf-header-01-v6-bottom{display:flex;justify-content:center;padding:0 20px 20px 20px}
+.cf-header-01-v6-nav{display:flex;gap:50px}
+.cf-header-01-v6-link{text-decoration:none;color:inherit;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;transition:0.3s;position:relative;padding-bottom:5px}
+.cf-header-01-v6-link::after{content:"";position:absolute;bottom:0;left:0;width:0;height:1px;background:{{ section.settings.accent_color }};transition:width 0.3s ease}
+.cf-header-01-v6-link:hover{color:{{ section.settings.accent_color }}}
+.cf-header-01-v6-link:hover::after{width:100%}
+@media(max-width:1024px){
+  .cf-header-01-v6-top{display:none}
+  .cf-header-01-v6-nav{display:none}
+  .cf-header-01-v6-main{padding:20px}
+  .cf-header-01-v6-bottom{display:none}
+}
+</style>
+
+<div class="cf-header-01-v6">
+  <div class="cf-header-01-v6-top">
+    <div class="cf-header-01-v6-top-links">
+      <a href="#" class="cf-header-01-v6-top-link">EN / USD</a>
+      <a href="#" class="cf-header-01-v6-top-link">Boutiques</a>
+      <a href="#" class="cf-header-01-v6-top-link">Contact</a>
+    </div>
+    <div class="cf-header-01-v6-top-links">
+      <span>{{ section.settings.announcement }}</span>
+    </div>
+  </div>
+  
+  <div class="cf-header-01-v6-main">
+    <div style="flex:1;">
+      <a href="/search" class="cf-header-01-v6-icon">Search</a>
+    </div>
+    
+    <a href="/" class="cf-header-01-v6-logo">{{ shop.name }}</a>
+    
+    <div class="cf-header-01-v6-actions" style="flex:1; justify-content:flex-end;">
+      <a href="/account" class="cf-header-01-v6-icon">Sign In</a>
+      <a href="/cart" class="cf-header-01-v6-icon">Shopping Bag (0)</a>
+    </div>
+  </div>
+  
+  <div class="cf-header-01-v6-bottom">
+    <nav class="cf-header-01-v6-nav">
+      {% for link in linklists[section.settings.menu].links %}
+        <a href="{{ link.url }}" class="cf-header-01-v6-link">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Header (v6)",
+  "settings": [
+    {"type":"link_list","id":"menu","label":"Header Menu","default":"main-menu"},
+    {"type":"text","id":"announcement","label":"Right Top Announcement","default":"COMPLIMENTARY RETURNS"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#222222"},
+    {"type":"color","id":"accent_color","label":"Hover Accent Color","default":"#888888"},
+    {"type":"color","id":"border_color","label":"Border Divider","default":"#E0E0E0"}
+  ],
+  "presets": [{"name":"01 · Luxury Header (v6)"}]
+}
+{% endschema %}

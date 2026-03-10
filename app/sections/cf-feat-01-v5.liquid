@@ -1,0 +1,62 @@
+<style>
+.cf-feat-01-v5{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;border-bottom:1px solid rgba(255,255,255,0.1)}
+.cf-feat-01-v5-inner{max-width:1400px;margin:0 auto}
+.cf-feat-01-v5-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;padding-bottom:20px;border-bottom:1px solid {{ section.settings.accent_color }}}
+.cf-feat-01-v5-title{font-size:clamp(28px, 4vw, 42px);font-weight:400;margin:0;color:{{ section.settings.accent_color }};letter-spacing:0.02em}
+.cf-feat-01-v5-link{font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-feat-01-v5-link:hover{color:{{ section.settings.accent_color }}}
+.cf-feat-01-v5-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:30px}
+.cf-feat-01-v5-card{text-decoration:none;color:inherit;display:block}
+.cf-feat-01-v5-img-wrap{width:100%;aspect-ratio:3/4;background:#1a1a1a;margin-bottom:20px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.05)}
+.cf-feat-01-v5-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s, opacity 0.8s}
+.cf-feat-01-v5-card:hover .cf-feat-01-v5-img{transform:scale(1.05);opacity:0.8}
+.cf-feat-01-v5-info{text-align:center}
+.cf-feat-01-v5-name{font-size:16px;font-weight:400;letter-spacing:0.02em;margin:0 0 5px 0}
+.cf-feat-01-v5-price{font-family:sans-serif;font-size:12px;color:{{ section.settings.accent_color }};opacity:0.9}
+@media(max-width:1024px){
+  .cf-feat-01-v5-grid{grid-template-columns:repeat(2, 1fr);gap:40px}
+}
+@media(max-width:600px){
+  .cf-feat-01-v5-grid{grid-template-columns:1fr}
+  .cf-feat-01-v5-header{flex-direction:column;align-items:flex-start;gap:20px}
+}
+</style>
+
+<div class="cf-feat-01-v5">
+  <div class="cf-feat-01-v5-inner">
+    <div class="cf-feat-01-v5-header">
+      <h2 class="cf-feat-01-v5-title">{{ section.settings.title }}</h2>
+      <a href="{{ section.settings.link_url }}" class="cf-feat-01-v5-link">{{ section.settings.link_text }}</a>
+    </div>
+    
+    <div class="cf-feat-01-v5-grid">
+      {% for i in (1..4) %}
+        <a href="#" class="cf-feat-01-v5-card">
+          <div class="cf-feat-01-v5-img-wrap">
+             <div class="cf-feat-01-v5-img" style="background:#222;"></div>
+          </div>
+          <div class="cf-feat-01-v5-info">
+            <h4 class="cf-feat-01-v5-name">Evening Artifact 0{{ i }}</h4>
+            <div class="cf-feat-01-v5-price">$1,850</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Featured (v5)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Night Collection"},
+    {"type":"text","id":"link_text","label":"View All Text","default":"View All"},
+    {"type":"url","id":"link_url","label":"View All Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#080808"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#FFFFFF"},
+    {"type":"color","id":"accent_color","label":"Accent (Gold/Metallic)","default":"#D4AF37"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"01 · Luxury Featured (v5)"}]
+}
+{% endschema %}

@@ -1,0 +1,59 @@
+<style>
+.cf-promo-01-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;overflow:hidden}
+.cf-promo-01-v2-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center}
+.cf-promo-01-v2-left{width:40%;position:relative;z-index:2;padding-right:40px}
+.cf-promo-01-v2-right{width:60%;position:relative;z-index:1}
+.cf-promo-01-v2-img-wrap{width:100%;aspect-ratio:4/5;background:#ececec;overflow:hidden}
+.cf-promo-01-v2-img{width:100%;height:100%;object-fit:cover;transition:1.2s cubic-bezier(0.2, 0.8, 0.2, 1)}
+.cf-promo-01-v2:hover .cf-promo-01-v2-img{transform:scale(1.05)}
+.cf-promo-01-v2-title{font-size:clamp(50px, 8vw, 120px);font-weight:400;line-height:0.9;margin:0 0 30px 0;white-space:nowrap;margin-right:-150px;letter-spacing:-0.02em;text-transform:uppercase}
+.cf-promo-01-v2-desc{font-family:sans-serif;font-size:14px;line-height:1.6;opacity:0.8;margin:0 0 40px 0;max-width:320px;letter-spacing:0.02em}
+.cf-promo-01-v2-btn{display:inline-flex;align-items:center;padding-bottom:5px;border-bottom:1px solid {{ section.settings.text_color }};font-family:sans-serif;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-promo-01-v2-btn:hover{color:{{ section.settings.accent_color }};border-bottom-color:{{ section.settings.accent_color }}}
+@media(max-width:1024px){
+  .cf-promo-01-v2-inner{flex-direction:column}
+  .cf-promo-01-v2-left{width:100%;padding:0 0 40px 0}
+  .cf-promo-01-v2-title{white-space:normal;margin-right:0;font-size:60px}
+  .cf-promo-01-v2-right{width:100%}
+  .cf-promo-01-v2-img-wrap{aspect-ratio:1/1}
+}
+</style>
+
+<div class="cf-promo-01-v2">
+  <div class="cf-promo-01-v2-inner">
+    <div class="cf-promo-01-v2-left">
+      <h2 class="cf-promo-01-v2-title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="cf-promo-01-v2-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-promo-01-v2-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+    <div class="cf-promo-01-v2-right">
+      <div class="cf-promo-01-v2-img-wrap">
+        {% if section.settings.image %}
+          <img src="{{ section.settings.image | image_url: width: 1200 }}" class="cf-promo-01-v2-img" alt="{{ section.settings.title | escape }}">
+        {% else %}
+          <div class="cf-promo-01-v2-img" style="background:#ddd;"></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Promo (v2)",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Campaign Image"},
+    {"type":"textarea","id":"title","label":"Header Title (Newlines allowed)","default":"THE\nSPRING\nCOLLECTION"},
+    {"type":"textarea","id":"desc","label":"Description","default":"An exploration of form and fluidity. Discover pieces crafted with exceptional materials and refined intent."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"DISCOVER THE CAMPAIGN"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Hover Accent","default":"#888888"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Promo (v2)"}]
+}
+{% endschema %}

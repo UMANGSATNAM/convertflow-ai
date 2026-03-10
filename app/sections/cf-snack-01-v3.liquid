@@ -1,0 +1,41 @@
+<style>
+.cf-snack-01-v3{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};display:flex;justify-content:center}
+.cf-snack-01-v3-inner{background:{{ section.settings.pill_bg }};color:{{ section.settings.text_color }};padding:20px 40px;border-radius:100px;display:flex;align-items:center;gap:30px;box-shadow:0 20px 40px rgba(0,0,0,0.08);text-decoration:none;transition:transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);font-family:serif}
+.cf-snack-01-v3-inner:hover{transform:translateY(-5px);box-shadow:0 25px 50px rgba(0,0,0,0.12)}
+.cf-snack-01-v3-title{font-size:18px;font-style:italic;margin:0}
+.cf-snack-01-v3-divider{width:1px;height:20px;background:{{ section.settings.text_color }};opacity:0.3}
+.cf-snack-01-v3-action{font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.cf-snack-01-v3-action svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transition:transform 0.3s}
+.cf-snack-01-v3-inner:hover .cf-snack-01-v3-action svg{transform:translateX(5px)}
+@media(max-width:600px){
+  .cf-snack-01-v3-inner{flex-direction:column;border-radius:20px;padding:30px 20px;text-align:center;gap:15px}
+  .cf-snack-01-v3-divider{display:none}
+}
+</style>
+
+<div class="cf-snack-01-v3">
+  <a href="{{ section.settings.link }}" class="cf-snack-01-v3-inner">
+    <h3 class="cf-snack-01-v3-title">{{ section.settings.title }}</h3>
+    <div class="cf-snack-01-v3-divider"></div>
+    <div class="cf-snack-01-v3-action">
+      {{ section.settings.btn_text }}
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </div>
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Snack (v3)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"Private Sale Invitation"},
+    {"type":"text","id":"btn_text","label":"Action Text","default":"Unlock Access"},
+    {"type":"url","id":"link","label":"Pill Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"pill_bg","label":"Pill Background","default":"#FFFFFF"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+  ],
+  "presets": [{"name":"01 · Luxury Snack (v3)"}]
+}
+{% endschema %}

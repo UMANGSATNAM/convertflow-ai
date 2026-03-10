@@ -1,0 +1,75 @@
+<style>
+.cf-feat-01-v2{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif}
+.cf-feat-01-v2-inner{max-width:1600px;margin:0 auto;display:flex;gap:40px}
+.cf-feat-01-v2-campaign{flex:1;position:relative;background:#e5e5e5;aspect-ratio:4/5;overflow:hidden}
+.cf-feat-01-v2-campaign-img{width:100%;height:100%;object-fit:cover;transition:1.5s cubic-bezier(0.2, 0.8, 0.2, 1)}
+.cf-feat-01-v2-campaign:hover .cf-feat-01-v2-campaign-img{transform:scale(1.05)}
+.cf-feat-01-v2-campaign-overlay{position:absolute;bottom:40px;left:40px;color:#FFFFFF;z-index:2}
+.cf-feat-01-v2-campaign-title{font-size:clamp(32px, 4vw, 56px);font-weight:400;margin:0 0 10px 0;letter-spacing:0.02em}
+.cf-feat-01-v2-campaign-btn{display:inline-block;border-bottom:1px solid #FFFFFF;padding-bottom:5px;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#FFFFFF;text-decoration:none}
+.cf-feat-01-v2-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cf-feat-01-v2-card{text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.cf-feat-01-v2-img-container{width:100%;aspect-ratio:3/4;background:{{ section.settings.card_bg }};margin-bottom:15px;overflow:hidden;position:relative}
+.cf-feat-01-v2-img{width:100%;height:100%;object-fit:cover;transition:0.6s}
+.cf-feat-01-v2-card:hover .cf-feat-01-v2-img{transform:scale(1.05)}
+.cf-feat-01-v2-info{display:flex;justify-content:space-between;align-items:flex-start}
+.cf-feat-01-v2-product{font-family:sans-serif;font-size:12px;font-weight:700;letter-spacing:0.05em;margin:0 0 5px 0}
+.cf-feat-01-v2-price{font-family:serif;font-size:14px;color:{{ section.settings.accent_color }}}
+@media(max-width:1024px){
+  .cf-feat-01-v2-inner{flex-direction:column}
+  .cf-feat-01-v2-campaign{aspect-ratio:1/1}
+}
+@media(max-width:600px){
+  .cf-feat-01-v2-grid{grid-template-columns:1fr}
+}
+</style>
+
+<div class="cf-feat-01-v2">
+  <div class="cf-feat-01-v2-inner">
+    <a href="{{ section.settings.campaign_link }}" class="cf-feat-01-v2-campaign">
+      {% if section.settings.campaign_image %}
+        <img src="{{ section.settings.campaign_image | image_url: width: 1000 }}" class="cf-feat-01-v2-campaign-img" alt="">
+      {% else %}
+        <div class="cf-feat-01-v2-campaign-img" style="background:#444;"></div>
+      {% endif %}
+      <div class="cf-feat-01-v2-campaign-overlay">
+        <h3 class="cf-feat-01-v2-campaign-title">{{ section.settings.title }}</h3>
+        <span class="cf-feat-01-v2-campaign-btn">Shop The Edit</span>
+      </div>
+    </a>
+    
+    <div class="cf-feat-01-v2-grid">
+      {% for i in (1..4) %}
+        <a href="#" class="cf-feat-01-v2-card">
+          <div class="cf-feat-01-v2-img-container">
+             <div class="cf-feat-01-v2-img" style="background:#eee;"></div>
+          </div>
+          <div class="cf-feat-01-v2-info">
+            <div>
+              <h4 class="cf-feat-01-v2-product">Signature Object {{ i }}</h4>
+              <p style="margin:0;font-family:serif;font-size:12px;opacity:0.6;font-style:italic">Black Leather</p>
+            </div>
+            <div class="cf-feat-01-v2-price">$1,450</div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Featured (v2)",
+  "settings": [
+    {"type":"image_picker","id":"campaign_image","label":"Campaign Poster Image"},
+    {"type":"text","id":"title","label":"Campaign Title","default":"The Autumn Edit"},
+    {"type":"url","id":"campaign_link","label":"Campaign Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FFFFFF"},
+    {"type":"color","id":"card_bg","label":"Product Image Background","default":"#F8F8F8"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Price Color","default":"#555555"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":100}
+  ],
+  "presets": [{"name":"01 · Luxury Featured (v2)"}]
+}
+{% endschema %}

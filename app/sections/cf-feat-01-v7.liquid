@@ -1,0 +1,67 @@
+<style>
+.cf-feat-01-v7{width:100%;padding:{{ section.settings.padding_y }}px 20px;background:{{ section.settings.bg_color }};color:{{ section.settings.text_color }};font-family:serif;overflow:hidden;position:relative}
+.cf-feat-01-v7-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center;min-height:500px}
+.cf-feat-01-v7-left{width:30%;padding-right:40px;position:relative;z-index:10}
+.cf-feat-01-v7-title{font-size:clamp(40px, 6vw, 72px);font-weight:400;margin:0 0 20px 0;line-height:1;letter-spacing:0.02em}
+.cf-feat-01-v7-desc{font-family:sans-serif;font-size:12px;line-height:1.6;opacity:0.8;margin:0 0 40px 0}
+.cf-feat-01-v7-btn{display:inline-block;padding:12px 30px;border:1px solid {{ section.settings.text_color }};font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;color:inherit;transition:0.3s}
+.cf-feat-01-v7-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-feat-01-v7-right{width:70%;position:relative;z-index:1;overflow:hidden}
+.cf-feat-01-v7-track{display:flex;white-space:nowrap;padding-bottom:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:30px}
+.cf-feat-01-v7-track::-webkit-scrollbar{display:none}
+.cf-feat-01-v7-card{flex:0 0 320px;scroll-snap-align:start;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.cf-feat-01-v7-img-wrap{width:100%;aspect-ratio:3/4;background:{{ section.settings.card_bg }};margin-bottom:20px;overflow:hidden}
+.cf-feat-01-v7-img{width:100%;height:100%;object-fit:cover;transition:1.2s cubic-bezier(0.2, 0.8, 0.2, 1)}
+.cf-feat-01-v7-card:hover .cf-feat-01-v7-img{transform:scale(1.05)}
+.cf-feat-01-v7-name{font-size:16px;font-weight:400;margin:0 0 5px 0}
+.cf-feat-01-v7-price{font-family:sans-serif;font-size:11px;font-weight:700;color:{{ section.settings.accent_color }}}
+@media(max-width:1024px){
+  .cf-feat-01-v7-inner{flex-direction:column}
+  .cf-feat-01-v7-left{width:100%;padding:0 0 60px 0;text-align:center}
+  .cf-feat-01-v7-right{width:100%}
+}
+</style>
+
+<div class="cf-feat-01-v7">
+  <div class="cf-feat-01-v7-inner">
+    <div class="cf-feat-01-v7-left">
+      <h2 class="cf-feat-01-v7-title">{{ section.settings.title }}</h2>
+      <p class="cf-feat-01-v7-desc">{{ section.settings.desc }}</p>
+      {% if section.settings.btn_text != blank %}
+        <a href="{{ section.settings.btn_link }}" class="cf-feat-01-v7-btn">{{ section.settings.btn_text }}</a>
+      {% endif %}
+    </div>
+    
+    <div class="cf-feat-01-v7-right">
+      <div class="cf-feat-01-v7-track">
+        {% for i in (1..6) %}
+          <a href="#" class="cf-feat-01-v7-card">
+            <div class="cf-feat-01-v7-img-wrap">
+              <div class="cf-feat-01-v7-img" style="background:#444;"></div>
+            </div>
+            <h4 class="cf-feat-01-v7-name">Timeless Object 0{{ i }}</h4>
+            <span class="cf-feat-01-v7-price">$850</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "01 · Luxury Featured (v7)",
+  "settings": [
+    {"type":"text","id":"title","label":"Header Title","default":"The Signatures"},
+    {"type":"textarea","id":"desc","label":"Description","default":"A curation of our most sought-after silhouettes, representing the pinnacle of our atelier's craftsmanship."},
+    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop The Edit"},
+    {"type":"url","id":"btn_link","label":"Button Link"},
+    {"type":"color","id":"bg_color","label":"Background Canvas","default":"#FDFBF7"},
+    {"type":"color","id":"card_bg","label":"Product Background","default":"#F0EEEA"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Price Color","default":"#777777"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":200,"step":10,"default":120}
+  ],
+  "presets": [{"name":"01 · Luxury Featured (v7)"}]
+}
+{% endschema %}
