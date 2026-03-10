@@ -37,6 +37,38 @@ export const loader = async ({ request }) => {
     return json({ themeId: theme.id, shop, pageBlocks, categories });
 };
 
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+// Shopify rejects settings values that are not valid Shopify CDN URLs for
+// image_picker, url, and image settings. Strip out base64 data URIs,
+// placeholder URLs, and any invalid values before saving to index.json.
+function isValidShopifyUrl(v) {
+    if (!v || typeof v !== 'string') return false;
+    // Shopify CDN URLs
+    if (v.includes('cdn.shopify')) return true;
+    // Already uploaded Shopify assets
+    if (v.startsWith('shopify://')) return true;
+    // Relative Shopify paths
+    if (v.startsWith('/') && !v.startsWith('//')) return true;
+    return false;
+}
+
+function sanitizeSettingsForTheme(settings) {
+    if (!settings || typeof settings !== 'object') return {};
+    const clean = {};
+    for (const [key, val] of Object.entries(settings)) {
+        // Skip image/url settings that have invalid values
+        if (typeof val === 'string') {
+            // Skip base64 data URIs (from local upload preview)
+            if (val.startsWith('data:')) continue;
+            // Skip empty strings for image-like keys
+            const isImageKey = /image|img|bg_image|background|photo|banner|logo|icon_image|hero_image/i.test(key);
+            if (isImageKey && val && !isValidShopifyUrl(val)) continue;
+        }
+        clean[key] = val;
+    }
+    return clean;
+}
+
 // ─── ACTION ───────────────────────────────────────────────────────────────────
 export const action = async ({ request }) => {
     const { session } = await authenticate.admin(request);
@@ -70,7 +102,19 @@ export const action = async ({ request }) => {
             }
         }
 
-        await uploadAsset(shop, accessToken, theme.id, 'templates/index.json', JSON.stringify(idx, null, 2));
+        // Sanitize ALL section settings to strip invalid image/url values
+        for (const key of Object.keys(idx.sections)) {
+            if (idx.sections[key].settings) {
+                idx.sections[key].settings = sanitizeSettingsForTheme(idx.sections[key].settings);
+            }
+        }
+
+        // Compact JSON to stay under Shopify 512KB limit
+        const payload = JSON.stringify(idx);
+        if (payload.length > 500000) {
+            throw new Error('Template is too large. Please remove some sections to stay under Shopify\'s 512KB limit.');
+        }
+        await uploadAsset(shop, accessToken, theme.id, 'templates/index.json', payload);
     };
 
     try {
@@ -106,7 +150,7 @@ export const action = async ({ request }) => {
             // Update index.json
             const idx = await getIndex();
             const blockId = `cf_${sectionId}_${Date.now().toString(36)}`;
-            idx.sections[blockId] = { type: sectionId, settings };
+            idx.sections[blockId] = { type: sectionId, settings: sanitizeSettingsForTheme(settings) };
 
             if (placement === "top") {
                 const hi = idx.order.findIndex(id => id.toLowerCase().includes("header"));
@@ -146,7 +190,7 @@ export const action = async ({ request }) => {
             const blockId = fd.get("blockId");
             const settings = JSON.parse(fd.get("settings") || "{}");
             const idx = await getIndex();
-            if (idx.sections[blockId]) idx.sections[blockId].settings = settings;
+            if (idx.sections[blockId]) idx.sections[blockId].settings = sanitizeSettingsForTheme(settings);
             await saveIndex(idx);
             return json({ ok: true, message: "Settings saved to theme!" });
         }
@@ -210,8 +254,7 @@ export default function ThemeEditor() {
         if (fetcher.data.error) {
             setToast({ msg: '❌ ' + fetcher.data.error, ok: false });
             setTimeout(() => setToast(null), 10000);
-            // Nuclear fallback so user ALWAYS sees the error
-            setTimeout(() => window.alert('Error: ' + fetcher.data.error), 100);
+            // Error is shown in toast — no need for window.alert
         }
         if (fetcher.data.newBlockId) {
             setActiveBlockId(fetcher.data.newBlockId);
@@ -847,6 +890,9 @@ function SettingRow({ setting, value, onChange }) {
                 <select className="te-select" value={v} onChange={e => onChange(setting.id, e.target.value)}>
                     {(setting.options || []).map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
+            )}
+            {setting.type === 'url' && (
+                <input type="text" className="te-input" value={v} placeholder="https://..." onChange={e => onChange(setting.id, e.target.value)} />
             )}
         </div>
     );
