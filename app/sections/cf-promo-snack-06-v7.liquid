@@ -1,0 +1,128 @@
+<div class="cf-auto-snack-v7" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 30px 20px;">
+  <div class="cf-auto-snack-v7-container" style="max-width: 900px; margin: 0 auto; background: {{ section.settings.card_bg }}; border-radius: {{ section.settings.border_radius }}px; display: flex; align-items: stretch; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+    
+    <!-- Image Left -->
+    <div class="cf-auto-snack-v7-image" style="width: 250px; position: relative;">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 400 }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Promo Image">
+      {% else %}
+        <div style="width: 100%; height: 100%; background: #e5e5e5; display: flex; align-items: center; justify-content: center; min-height: 200px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        </div>
+      {% endif %}
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, {{ section.settings.card_bg }} 100%);"></div>
+    </div>
+
+    <!-- Content Right -->
+    <div style="flex: 1; padding: 30px 40px; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2;">
+      <h3 style="font-family: 'Exo 2', sans-serif; font-size: 24px; font-weight: 800; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: -0.5px; line-height: 1.2;">
+        {{ section.settings.title }}
+      </h3>
+      <p style="font-family: 'Exo 2', sans-serif; font-size: 15px; opacity: 0.8; margin: 0 0 20px 0;">
+        {{ section.settings.subtitle }}
+      </p>
+      <div style="display: flex; gap: 15px;">
+        <input type="email" placeholder="{{ section.settings.placeholder }}" style="flex: 1; padding: 12px 15px; border: 1px solid {{ section.settings.border_color }}; border-radius: 4px; font-family: 'Exo 2', sans-serif; font-size: 14px; background: transparent; color: {{ section.settings.text_color }};">
+        <a href="{{ section.settings.btn_link }}" class="cf-btn-snack-v7" style="display: inline-block; background: {{ section.settings.accent_color }}; color: #fff; padding: 12px 25px; font-family: 'Exo 2', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; border-radius: 4px; transition: opacity 0.2s;">
+          {{ section.settings.btn_text }}
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@500;700;800&display=swap');
+  
+  .cf-btn-snack-v7:hover { opacity: 0.9; }
+
+  @media (max-width: 768px) {
+    .cf-auto-snack-v7-container { flex-direction: column; }
+    .cf-auto-snack-v7-image { width: 100%; height: 150px; }
+    .cf-auto-snack-v7-image > div { background: linear-gradient(180deg, transparent 0%, {{ section.settings.card_bg }} 100%) !important; }
+    .cf-auto-snack-v7-container > div:last-child > div { flex-direction: column; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · VIP Access Snack",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page Background",
+      "default": "#efefef"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Input Border",
+      "default": "#cccccc"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Side Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "GET EARLY ACCESS TO NEW DROPS"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Join the VIP list and get 10% off your next purchase."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input Placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "JOIN LIST"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 8
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,152 @@
+<div class="cf-auto-promo-v10" style="background: {{ section.settings.bg_color }}; padding: 60px 20px;">
+  <div class="cf-auto-promo-v10-container" style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 0;">
+
+    <!-- Card 1 -->
+    <div style="background: {{ section.settings.card_1_bg }}; color: {{ section.settings.text_color_1 }}; padding: 60px; display: flex; flex-direction: column; justify-content: center;">
+      <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 700; text-transform: uppercase; margin: 0 0 15px 0; line-height: 1.1;">
+        {{ section.settings.title_1 }}
+      </h2>
+      <p style="font-family: 'Space Grotesk', sans-serif; font-size: 16px; opacity: 0.8; margin: 0 0 40px 0; max-width: 400px;">
+        {{ section.settings.subtitle_1 }}
+      </p>
+      <div>
+        <a href="{{ section.settings.btn_link_1 }}" class="cf-btn-v10-left" style="display: inline-block; background: transparent; color: {{ section.settings.text_color_1 }}; border: 1px solid {{ section.settings.text_color_1 }}; padding: 12px 30px; font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: all 0.3s;">
+          {{ section.settings.btn_text_1 }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div style="background: {{ section.settings.card_2_bg }}; color: {{ section.settings.text_color_2 }}; padding: 60px; display: flex; flex-direction: column; justify-content: center;">
+      <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 700; text-transform: uppercase; margin: 0 0 15px 0; line-height: 1.1;">
+        {{ section.settings.title_2 }}
+      </h2>
+      <p style="font-family: 'Space Grotesk', sans-serif; font-size: 16px; opacity: 0.8; margin: 0 0 40px 0; max-width: 400px;">
+        {{ section.settings.subtitle_2 }}
+      </p>
+      <div>
+        <a href="{{ section.settings.btn_link_2 }}" class="cf-btn-v10-right" style="display: inline-block; background: {{ section.settings.accent_color }}; color: #fff; padding: 12px 30px; font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: background 0.3s; border: 1px solid {{ section.settings.accent_color }};">
+          {{ section.settings.btn_text_2 }}
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap');
+
+  .cf-btn-v10-left:hover {
+    background: {{ section.settings.text_color_1 }} !important;
+    color: {{ section.settings.card_1_bg }} !important;
+  }
+  .cf-btn-v10-right:hover {
+    filter: brightness(1.2);
+  }
+
+  @media (max-width: 900px) {
+    .cf-auto-promo-v10-container { grid-template-columns: 1fr; }
+    .cf-auto-promo-v10-container > div { padding: 40px 20px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Dual Action Poster",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page Background",
+      "default": "#efefef"
+    },
+    {
+      "type": "color",
+      "id": "card_1_bg",
+      "label": "Left Card Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color_1",
+      "label": "Left Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_2_bg",
+      "label": "Right Card Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color_2",
+      "label": "Right Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Right Btn)",
+      "default": "#0056b3"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "label": "Left Heading",
+      "default": "OEM REPLACEMENTS"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_1",
+      "label": "Left Subtitle",
+      "default": "Guaranteed fit for your make and model."
+    },
+    {
+      "type": "text",
+      "id": "btn_text_1",
+      "label": "Left Button",
+      "default": "OEM PARTS"
+    },
+    {
+      "type": "url",
+      "id": "btn_link_1",
+      "label": "Left Link"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "label": "Right Heading",
+      "default": "PREMIUM UPGRADES"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_2",
+      "label": "Right Subtitle",
+      "default": "Push your limits with aftermarket performance gear."
+    },
+    {
+      "type": "text",
+      "id": "btn_text_2",
+      "label": "Right Button",
+      "default": "PERFORMANCE"
+    },
+    {
+      "type": "url",
+      "id": "btn_link_2",
+      "label": "Right Link"
+    }
+  ]
+}
+{% endschema %}

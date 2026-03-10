@@ -1,0 +1,154 @@
+<div class="cf-auto-promo-v7" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 60px 20px;">
+  <div class="cf-auto-promo-v7-container" style="max-width: 1400px; margin: 0 auto;">
+    
+    <div style="background: {{ section.settings.card_bg }}; display: grid; grid-template-columns: 1fr 1fr; border-radius: {{ section.settings.border_radius }}px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+      
+      <!-- Text Area -->
+      <div class="cf-auto-promo-v7-content" style="padding: 60px; display: flex; flex-direction: column; justify-content: center; position: relative;">
+        <!-- Watermark -->
+        <div style="position: absolute; top: 20px; left: 20px; font-family: 'Rajdhani', sans-serif; font-size: 150px; font-weight: 700; opacity: 0.03; line-height: 0.8; z-index: 1;">
+          {{ section.settings.watermark }}
+        </div>
+
+        <div style="position: relative; z-index: 2;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span style="font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: {{ section.settings.accent_color }}; letter-spacing: 2px;">{{ section.settings.kicker }}</span>
+          </div>
+
+          <h2 style="font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: {{ section.settings.title_size }}px; line-height: 1.1; margin: 0 0 20px 0; text-transform: uppercase;">
+            {{ section.settings.title }}
+          </h2>
+
+          <p style="font-family: 'Roboto', sans-serif; font-size: 16px; line-height: 1.6; opacity: 0.8; margin: 0 0 35px 0; max-width: 400px;">
+            {{ section.settings.subtitle }}
+          </p>
+
+          <a href="{{ section.settings.btn_link }}" class="cf-btn-v7" style="display: inline-block; background: {{ section.settings.accent_color }}; color: #000; padding: 14px 30px; font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; border-radius: 4px; transition: filter 0.2s;">
+            {{ section.settings.btn_text }}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Image Area -->
+      <div class="cf-auto-promo-v7-image" style="position: relative; min-height: 400px;">
+        {% if section.settings.image %}
+          <img src="{{ section.settings.image | image_url: width: 1000 }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Promo Image">
+        {% else %}
+          <div style="width: 100%; height: 100%; background: #333; display: flex; align-items: center; justify-content: center;">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          </div>
+        {% endif %}
+        <!-- Overlay slant -->
+        <div style="position: absolute; top: 0; left: 0; width: 100px; height: 100%; background: {{ section.settings.card_bg }}; clip-path: polygon(0 0, 100% 0, 0% 100%, 0% 100%);"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
+  
+  .cf-btn-v7:hover { filter: brightness(1.1); }
+
+  @media (max-width: 900px) {
+    .cf-auto-promo-v7-container > div { grid-template-columns: 1fr; }
+    .cf-auto-promo-v7-content { padding: 40px !important; }
+    .cf-auto-promo-v7-image { order: -1; }
+    .cf-auto-promo-v7-image > div:last-child { display: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Off-Road Promo Card",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#f59e0b"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Showcase Image"
+    },
+    {
+      "type": "text",
+      "id": "watermark",
+      "label": "BG Watermark",
+      "default": "4X4"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "SALE EVENT"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "SAVE INSTANTLY ON LIFT KITS & WHEELS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 70,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 42
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Get your rig trail-ready. Take 15% off all suspension components, wheels, and rugged terrain tires this weekend only."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "SHOP THE SALE"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

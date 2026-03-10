@@ -1,0 +1,142 @@
+<div class="cf-auto-promo-v5" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 80px 20px;">
+  <div class="cf-auto-promo-v5-container" style="max-width: 1000px; margin: 0 auto; text-align: center;">
+
+    <div style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+      <span style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">{{ section.settings.kicker }}</span>
+    </div>
+
+    <h2 style="font-size: {{ section.settings.title_size }}px; font-family: 'Inter', sans-serif; font-weight: 800; line-height: 1.1; margin: 0 0 20px 0; letter-spacing: -1px;">
+      {{ section.settings.title }}
+    </h2>
+
+    <p style="font-size: 18px; line-height: 1.6; max-width: 600px; margin: 0 auto 40px auto; opacity: 0.7; font-family: 'Inter', sans-serif;">
+      {{ section.settings.subtitle }}
+    </p>
+
+    <!-- Two Image Layout -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;">
+      
+      <div style="border-radius: {{ section.settings.border_radius }}px; overflow: hidden; height: 350px;">
+        {% if section.settings.image_1 %}
+          <img src="{{ section.settings.image_1 | image_url: width: 800 }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Promo Image 1">
+        {% else %}
+          <div style="width: 100%; height: 100%; background: #eaeaea;"></div>
+        {% endif %}
+      </div>
+
+      <div style="border-radius: {{ section.settings.border_radius }}px; overflow: hidden; height: 350px;">
+        {% if section.settings.image_2 %}
+          <img src="{{ section.settings.image_2 | image_url: width: 800 }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Promo Image 2">
+        {% else %}
+          <div style="width: 100%; height: 100%; background: #dcdcdc;"></div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <a href="{{ section.settings.btn_link }}" class="cf-btn-v5" style="display: inline-block; background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; padding: 16px 40px; border-radius: 30px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: transform 0.2s, background 0.2s;">
+      {{ section.settings.btn_text }}
+    </a>
+
+  </div>
+</div>
+
+<style>
+  .cf-btn-v5:hover {
+    background: {{ section.settings.accent_color }} !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+  }
+  @media (max-width: 768px) {
+    .cf-auto-promo-v5-container > div:nth-child(4) {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Clean Tech Poster",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#3b82f6"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "NEXT-GEN UPGRADES"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "SMART TECH FOR YOUR CABIN"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Upgrade your driving experience with our latest head units, ambient lighting, and smart dash cams."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "EXPLORE ELECTRONICS"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Image Corner Radius",
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

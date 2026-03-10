@@ -1,0 +1,187 @@
+<div class="cf-auto-promo-v6" style="background: {{ section.settings.bg_color }};">
+  <div class="cf-auto-promo-v6-container" style="max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column;">
+    
+    <!-- Top Bold Bar -->
+    <div style="background: {{ section.settings.accent_color }}; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between;">
+      <span style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #000; text-transform: uppercase;">{{ section.settings.kicker_left }}</span>
+      <span style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #000; text-transform: uppercase;">{{ section.settings.kicker_right }}</span>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="cf-auto-promo-v6-main" style="position: relative; min-height: {{ section.settings.height }}px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      
+      <!-- Background -->
+      {% if section.settings.bg_image %}
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+          <img src="{{ section.settings.bg_image | image_url: width: 2000 }}" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6; filter: grayscale(100%); mix-blend-mode: luminosity;" alt="Promo Image">
+        </div>
+      {% else %}
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; z-index: 1;"></div>
+      {% endif %}
+
+      <!-- Center Text -->
+      <div style="position: relative; z-index: 2; text-align: center; max-width: 1000px; padding: 40px;">
+        <h2 class="cf-glitch-text" data-text="{{ section.settings.title }}" style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: {{ section.settings.title_size }}px; color: {{ section.settings.text_color }}; text-transform: uppercase; margin: 0 0 20px 0; line-height: 1; letter-spacing: -2px;">
+          {{ section.settings.title }}
+        </h2>
+        
+        <p style="font-family: monospace; font-size: 16px; color: {{ section.settings.accent_color }}; margin: 0 0 40px 0; letter-spacing: 2px;">
+          [ {{ section.settings.subtitle }} ]
+        </p>
+
+        <a href="{{ section.settings.btn_link }}" class="cf-btn-v6" style="display: inline-block; background: transparent; color: {{ section.settings.text_color }}; border: 2px solid {{ section.settings.text_color }}; padding: 15px 40px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; text-decoration: none; position: relative; overflow: hidden; transition: color 0.3s, border-color 0.3s;">
+          <span style="position: relative; z-index: 2;">{{ section.settings.btn_text }}</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');
+
+  .cf-btn-v6::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: {{ section.settings.accent_color }};
+    transition: left 0.3s ease;
+    z-index: 1;
+  }
+  .cf-btn-v6:hover {
+    border-color: {{ section.settings.accent_color }} !important;
+    color: #000 !important;
+  }
+  .cf-btn-v6:hover::before {
+    left: 0;
+  }
+
+  /* Glitch effect on hover */
+  .cf-glitch-text { position: relative; }
+  .cf-auto-promo-v6-main:hover .cf-glitch-text::before,
+  .cf-auto-promo-v6-main:hover .cf-glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+  .cf-auto-promo-v6-main:hover .cf-glitch-text::before {
+    left: 4px;
+    text-shadow: -2px 0 {{ section.settings.accent_color }};
+    clip: rect(24px, 550px, 90px, 0);
+    animation: cf-glitch-anim 3s infinite linear alternate-reverse;
+  }
+  .cf-auto-promo-v6-main:hover .cf-glitch-text::after {
+    left: -4px;
+    text-shadow: -2px 0 #fff;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: cf-glitch-anim 2.5s infinite linear alternate-reverse;
+  }
+
+  @keyframes cf-glitch-anim {
+    0% { clip: rect(10px, 9999px, 81px, 0); }
+    20% { clip: rect(61px, 9999px, 35px, 0); }
+    40% { clip: rect(27px, 9999px, 95px, 0); }
+    60% { clip: rect(80px, 9999px, 12px, 0); }
+    80% { clip: rect(4px, 9999px, 56px, 0); }
+    100% { clip: rect(44px, 9999px, 9px, 0); }
+  }
+
+  @media (max-width: 900px) {
+    .cf-glitch-text { font-size: 40px !important; }
+    .cf-auto-promo-v6-main { min-height: 400px !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Tuner Poster",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Neon Accent",
+      "default": "#39ff14"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 400,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Container Height",
+      "default": 600
+    },
+    {
+      "type": "text",
+      "id": "kicker_left",
+      "label": "Top Bar Left",
+      "default": "SYSTEM OVERRIDE"
+    },
+    {
+      "type": "text",
+      "id": "kicker_right",
+      "label": "Top Bar Right",
+      "default": "NEW ECU TUNES AVAIL."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "MAXIMUM OUTPUT."
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 40,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 90
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "PLUG IN. FLASH. DOMINATE."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "INITIALIZE BUILD"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,105 @@
+<div class="cf-auto-snack-v4" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 40px 20px;">
+  <div class="cf-auto-snack-v4-container" style="max-width: 800px; margin: 0 auto; background: {{ section.settings.card_bg }}; border-radius: {{ section.settings.border_radius }}px; padding: 30px 40px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+    
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <div style="background: rgba(0,123,255,0.1); color: {{ section.settings.accent_color }}; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      </div>
+      <div>
+        <h3 style="font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; margin: 0 0 4px 0;">
+          {{ section.settings.title }}
+        </h3>
+        <p style="font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7; margin: 0;">
+          {{ section.settings.subtitle }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Code Block -->
+    <div style="display: flex; align-items: center; background: {{ section.settings.bg_color }}; border: 1px solid {{ section.settings.border_color }}; border-radius: 6px; overflow: hidden;">
+      <div style="padding: 12px 20px; font-family: monospace; font-size: 18px; font-weight: 700; color: {{ section.settings.accent_color }}; letter-spacing: 1px;">
+        {{ section.settings.code }}
+      </div>
+      <button class="cf-copy-btn-v4" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); alert('Code copied!');" style="background: {{ section.settings.text_color }}; color: {{ section.settings.card_bg }}; border: none; padding: 12px 20px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+        COPY
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .cf-copy-btn-v4:hover {
+    background: {{ section.settings.accent_color }} !important;
+  }
+  @media (max-width: 600px) {
+    .cf-auto-snack-v4-container { flex-direction: column; text-align: center; gap: 25px; padding: 30px 20px; }
+    .cf-auto-snack-v4-container > div:first-child { flex-direction: column; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Clean Tech Snack",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page Background",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "First Order Discount"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Save 10% on electronics & dash cams."
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "Promo Code",
+      "default": "WELCOME10"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

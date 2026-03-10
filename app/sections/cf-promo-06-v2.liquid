@@ -1,0 +1,153 @@
+<div class="cf-auto-promo-v2" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
+  <div class="cf-auto-promo-v2-container" style="max-width: 1400px; margin: 0 auto; min-height: {{ section.settings.height }}px; position: relative; overflow: hidden; display: flex; align-items: center; border-radius: {{ section.settings.border_radius }}px;">
+    
+    <!-- Background Image -->
+    {% if section.settings.bg_image %}
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+        <img src="{{ section.settings.bg_image | image_url: width: 2000 }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Auto Promo">
+      </div>
+    {% else %}
+      <!-- Placeholder abstract background -->
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #222 0%, #111 100%); z-index: 1;">
+        <div style="position: absolute; bottom: 0; right: 0; width: 70%; height: 100%; opacity: 0.1; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #fff 10px, #fff 20px);"></div>
+      </div>
+    {% endif %}
+
+    <!-- Overlay Gradient (Dark to transition text) -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%); z-index: 2;"></div>
+
+    <!-- Content -->
+    <div class="cf-auto-promo-v2-content" style="position: relative; z-index: 3; max-width: 650px; padding: 40px; margin-left: 5%;">
+      
+      <div style="display: inline-block; background: {{ section.settings.accent_color }}; color: #fff; padding: 6px 12px; font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);">
+        {{ section.settings.badge }}
+      </div>
+
+      <h2 style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: {{ section.settings.title_size }}px; line-height: 1.1; margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: -1px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+        {{ section.settings.title }}
+      </h2>
+
+      <p style="font-family: 'Roboto', sans-serif; font-size: 18px; line-height: 1.6; opacity: 0.8; margin: 0 0 35px 0;">
+        {{ section.settings.subtitle }}
+      </p>
+
+      <a href="{{ section.settings.btn_link }}" class="cf-btn-v2" style="display: inline-block; background: transparent; color: {{ section.settings.accent_color }}; border: 2px solid {{ section.settings.accent_color }}; padding: 15px 35px; font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; transition: all 0.3s;">
+        {{ section.settings.btn_text }}
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+  
+  .cf-btn-v2:hover {
+    background: {{ section.settings.accent_color }} !important;
+    color: #fff !important;
+    box-shadow: 0 0 20px {{ section.settings.accent_color }}80;
+  }
+
+  @media (max-width: 768px) {
+    .cf-auto-promo-v2-container {
+      min-height: auto !important;
+      padding: 60px 20px;
+    }
+    .cf-auto-promo-v2-content {
+      margin-left: 0;
+      padding: 20px;
+      text-align: center;
+      max-width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Performance Poster",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#ff3b30"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 400,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Min Height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge Text",
+      "default": "TRACK READY"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "UPGRADE YOUR HORSEPOWER"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 64
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Unlock the true potential of your engine with our premium aftermarket performance parts."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "SHOP PERFORMANCE"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    }
+  ]
+}
+{% endschema %}

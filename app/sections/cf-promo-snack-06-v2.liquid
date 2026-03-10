@@ -1,0 +1,106 @@
+<div class="cf-auto-snack-v2" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 30px 20px;">
+  <div class="cf-auto-snack-v2-container" style="max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; border-radius: {{ section.settings.border_radius }}px; overflow: hidden; position: relative;">
+    
+    <!-- Background element -->
+    <div style="position: absolute; top: 0; left: 0; width: 40%; height: 100%; background: {{ section.settings.accent_color }}; transform: skewX(-20deg) translateX(-40px); z-index: 1;"></div>
+
+    <!-- Left side (Discount) -->
+    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 20px; padding: 25px 40px; color: #fff;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 12H16c-.7 2-2 3-4 3s-3.3-1-4-3H2.5"></path><path d="M5.5 5.1L2 12v6c0 1.1.9 2 2 2h16a2 2 0 002-2v-6l-3.4-6.9A2 2 0 0017 4H7a2 2 0 00-1.5 1.1z"></path></svg>
+      <div>
+        <div style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 700; line-height: 1; letter-spacing: -1px; margin-bottom: 5px;">{{ section.settings.discount }}</div>
+        <div style="font-family: 'Oswald', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">{{ section.settings.discount_label }}</div>
+      </div>
+    </div>
+
+    <!-- Right side (Code & Timer) -->
+    <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 40px; padding: 25px 40px;">
+      
+      <div>
+        <div style="font-family: 'Roboto', sans-serif; font-size: 14px; opacity: 0.8; margin-bottom: 5px;">Use code at checkout</div>
+        <div style="font-family: monospace; font-size: 24px; font-weight: 800; color: {{ section.settings.accent_color }}; letter-spacing: 3px; background: rgba(0,0,0,0.05); padding: 5px 15px; border: 2px dashed rgba(0,0,0,0.2);">
+          {{ section.settings.code }}
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: flex-end;">
+        <span style="font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 5px; display: flex; align-items: center; gap: 5px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Sale ends in
+        </span>
+        <div style="display: flex; gap: 10px; font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700;">
+          <div style="text-align: center;"><span style="display: block; background: #222; color: #fff; padding: 5px 10px; border-radius: 4px;">48</span><span style="font-size: 10px; color: #666;">HRS</span></div>
+          <div style="font-size: 24px; line-height: 1.2;">:</div>
+          <div style="text-align: center;"><span style="display: block; background: #222; color: #fff; padding: 5px 10px; border-radius: 4px;">00</span><span style="font-size: 10px; color: #666;">MIN</span></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+  
+  @media (max-width: 900px) {
+    .cf-auto-snack-v2-container { flex-direction: column; text-align: center; }
+    .cf-auto-snack-v2-container > div:first-child { transform: skewX(0) translateX(0); width: 100%; height: 40%; }
+    .cf-auto-snack-v2-container > div:nth-child(2) { flex-direction: column; padding: 30px; }
+    .cf-auto-snack-v2-container > div:nth-child(3) { flex-direction: column; padding: 30px; gap: 20px; }
+    .cf-auto-snack-v2-container > div:nth-child(3) > div:last-child { align-items: center; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Racing Urgent Snack",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Box Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#e60000"
+    },
+    {
+      "type": "text",
+      "id": "discount",
+      "label": "Discount Amount",
+      "default": "15% OFF"
+    },
+    {
+      "type": "text",
+      "id": "discount_label",
+      "label": "Discount Label",
+      "default": "ALL EXHAUST SYSTEMS"
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "Discount Code",
+      "default": "EXHAUST15"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 8
+    }
+  ]
+}
+{% endschema %}

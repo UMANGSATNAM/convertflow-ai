@@ -1,0 +1,88 @@
+<div class="cf-auto-snack-v5" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 40px 20px;">
+  <div class="cf-auto-snack-v5-container" style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; border-left: 8px solid {{ section.settings.accent_color }}; background: rgba(0,0,0,0.03); padding: 30px 40px;">
+    
+    <div style="flex: 1;">
+      <h3 style="font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; text-transform: uppercase; margin: 0 0 10px 0; letter-spacing: 1px;">
+        {{ section.settings.title }}
+      </h3>
+      <div style="display: flex; gap: 30px; align-items: center; font-family: 'Roboto', sans-serif; font-size: 15px;">
+        <span style="display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Free Shipping over $99</span>
+        <span style="display: flex; align-items: center; gap: 8px; opacity: 0.7;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Secure Checkout</span>
+      </div>
+    </div>
+
+    <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 20px;">
+      <div style="text-align: right;">
+        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: {{ section.settings.accent_color }}; margin-bottom: 5px;">Promo Code</div>
+        <div style="font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: 2px;">{{ section.settings.code }}</div>
+      </div>
+      <a href="{{ section.settings.btn_link }}" class="cf-btn-snack-v5" style="background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; padding: 18px 35px; font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: background 0.2s;">
+        {{ section.settings.btn_text }}
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+  
+  .cf-btn-snack-v5:hover {
+    background: {{ section.settings.accent_color }} !important;
+  }
+
+  @media (max-width: 900px) {
+    .cf-auto-snack-v5-container { flex-direction: column; align-items: flex-start; gap: 30px; }
+    .cf-auto-snack-v5-container > div:last-child { width: 100%; flex-direction: column; align-items: flex-start; gap: 20px; }
+    .cf-auto-snack-v5-container > div:last-child > div { text-align: left; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Essential Part Snack",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#f59e0b"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "NEED LIFT KITS? TAKE 15% OFF."
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "Promo Code",
+      "default": "LIFT15"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "SHOP SUSPENSION"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    }
+  ]
+}
+{% endschema %}

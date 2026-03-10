@@ -1,0 +1,181 @@
+<div class="cf-auto-promo-v3" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 80px 20px;">
+  <div class="cf-auto-promo-v3-container" style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+    
+    <!-- Image Side -->
+    <div class="cf-auto-promo-v3-image">
+      <div style="position: relative; border-radius: {{ section.settings.border_radius }}px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
+        {% if section.settings.image %}
+          <img src="{{ section.settings.image | image_url: width: 800 }}" style="width: 100%; height: auto; display: block;" alt="Promo Image">
+        {% else %}
+          <div style="width: 100%; aspect-ratio: 4/3; background: #e5e5e5; display: flex; align-items: center; justify-content: center;">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          </div>
+        {% endif %}
+
+        <!-- Floating Badge -->
+        <div style="position: absolute; bottom: 30px; left: -20px; background: {{ section.settings.accent_color }}; color: #fff; padding: 15px 30px; font-family: 'Exo 2', sans-serif; font-weight: 800; font-size: 24px; text-transform: uppercase; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+          {{ section.settings.floating_text }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Side -->
+    <div class="cf-auto-promo-v3-content">
+      
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <div style="width: 40px; height: 3px; background: {{ section.settings.accent_color }};"></div>
+        <span style="font-family: 'Exo 2', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">{{ section.settings.kicker }}</span>
+      </div>
+
+      <h2 style="font-family: 'Exo 2', sans-serif; font-weight: 800; font-size: {{ section.settings.title_size }}px; line-height: 1.1; margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: -1.5px;">
+        {{ section.settings.title }}
+      </h2>
+
+      <div style="display: flex; gap: 40px; margin-bottom: 30px;">
+        <div>
+          <span style="display: block; font-size: 32px; font-weight: 800; color: {{ section.settings.accent_color }}; font-family: 'Exo 2', sans-serif;">{{ section.settings.stat_1_val }}</span>
+          <span style="font-size: 13px; opacity: 0.7; text-transform: uppercase; font-weight: 600;">{{ section.settings.stat_1_label }}</span>
+        </div>
+        <div>
+          <span style="display: block; font-size: 32px; font-weight: 800; color: {{ section.settings.accent_color }}; font-family: 'Exo 2', sans-serif;">{{ section.settings.stat_2_val }}</span>
+          <span style="font-size: 13px; opacity: 0.7; text-transform: uppercase; font-weight: 600;">{{ section.settings.stat_2_label }}</span>
+        </div>
+      </div>
+
+      <p style="font-size: 16px; line-height: 1.6; opacity: 0.8; margin: 0 0 40px 0;">
+        {{ section.settings.subtitle }}
+      </p>
+
+      <a href="{{ section.settings.btn_link }}" class="cf-btn-v3" style="display: inline-block; background: {{ section.settings.accent_color }}; color: #fff; padding: 18px 40px; font-family: 'Exo 2', sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; border-radius: 4px; transition: transform 0.2s, box-shadow 0.2s;">
+        {{ section.settings.btn_text }}
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&display=swap');
+  
+  .cf-btn-v3:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+
+  @media (max-width: 900px) {
+    .cf-auto-promo-v3-container {
+      grid-template-columns: 1fr;
+    }
+    .cf-auto-promo-v3-image { order: -1; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Dealership Split",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#0056b3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Showcase Image"
+    },
+    {
+      "type": "text",
+      "id": "floating_text",
+      "label": "Badge Text",
+      "default": "0% APR"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "SPECIAL FINANCING"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "DRIVE HOME YOUR DREAM CAR"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "stat_1_val",
+      "label": "Stat 1 Value",
+      "default": "$0"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 Label",
+      "default": "Down Payment"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_val",
+      "label": "Stat 2 Value",
+      "default": "72"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 Label",
+      "default": "Months to Pay"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Take advantage of our limited time offers. Excellent financing options available for qualified buyers across our entire lineup."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "VIEW INVENTORY"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Image Radius",
+      "default": 8
+    }
+  ]
+}
+{% endschema %}

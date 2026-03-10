@@ -1,0 +1,111 @@
+<div class="cf-auto-snack-v9" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 40px 20px;">
+  <div class="cf-auto-snack-v9-container" style="max-width: 1000px; margin: 0 auto; background: {{ section.settings.card_bg }}; display: flex; align-items: stretch; justify-content: space-between; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+    
+    <!-- Heavy Left Block -->
+    <div style="background: {{ section.settings.accent_color }}; color: #fff; padding: 25px 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-width: 200px;">
+      <div style="font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; line-height: 1;">
+        {{ section.settings.discount_val }}
+      </div>
+      <div style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
+        {{ section.settings.discount_lbl }}
+      </div>
+    </div>
+
+    <!-- Center Content -->
+    <div style="flex: 1; padding: 25px 40px; display: flex; flex-direction: column; justify-content: center;">
+      <h3 style="font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; text-transform: uppercase; margin: 0 0 8px 0; letter-spacing: 1px;">
+        {{ section.settings.title }}
+      </h3>
+      <p style="font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 400; color: {{ section.settings.accent_color }}; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+        {{ section.settings.subtitle }}
+      </p>
+    </div>
+
+    <!-- Right Action -->
+    <div style="padding: 25px 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);">
+      <div style="text-align: right;">
+        <div style="font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; opacity: 0.6;">Use Code</div>
+        <div class="cf-snack-code-v9" style="font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; border: 2px dashed {{ section.settings.accent_color }}; padding: 8px 20px; color: {{ section.settings.text_color }}; letter-spacing: 2px; cursor: pointer; transition: all 0.2s;" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); alert('Code copied!');">
+          {{ section.settings.code }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Syne:wght@800&display=swap');
+  
+  .cf-snack-code-v9:hover {
+    background: rgba(255,0,0,0.1);
+  }
+
+  @media (max-width: 800px) {
+    .cf-auto-snack-v9-container { flex-direction: column; }
+    .cf-auto-snack-v9-container > div:nth-child(2) { text-align: center; }
+    .cf-auto-snack-v9-container > div:last-child > div { text-align: center; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Stealth Drop Snack",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#cc0000"
+    },
+    {
+      "type": "text",
+      "id": "discount_val",
+      "label": "Big Value",
+      "default": "$50"
+    },
+    {
+      "type": "text",
+      "id": "discount_lbl",
+      "label": "Big Label",
+      "default": "CREDIT"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "TRADE-IN BONUS EVENT"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Get $50 towards core returns this week."
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "Promo Code",
+      "default": "CORE50"
+    }
+  ]
+}
+{% endschema %}

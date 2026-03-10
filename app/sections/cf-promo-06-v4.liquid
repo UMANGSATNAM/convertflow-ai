@@ -1,0 +1,130 @@
+<div class="cf-auto-promo-v4" style="background: {{ section.settings.bg_color }}; padding: 60px 20px;">
+  <div class="cf-auto-promo-v4-container" style="max-width: 1200px; margin: 0 auto; display: flex; align-items: stretch; border: 2px solid {{ section.settings.border_color }};">
+    
+    <!-- Left: Content Block (Dark/Solid) -->
+    <div class="cf-auto-promo-v4-content" style="flex: 1; background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; padding: 60px 50px; display: flex; flex-direction: column; justify-content: center;">
+      
+      <div style="font-family: 'Arial Narrow', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: {{ section.settings.accent_color }}; margin-bottom: 20px;">
+        {{ section.settings.kicker }}
+      </div>
+
+      <h2 style="font-family: 'Arial Black', Impact, sans-serif; font-weight: 900; font-size: {{ section.settings.title_size }}px; line-height: 1; margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: -2px;">
+        {{ section.settings.title }}
+      </h2>
+
+      <p style="font-size: 16px; line-height: 1.5; font-family: Helvetica, sans-serif; margin: 0 0 40px 0; max-width: 400px; opacity: 0.9;">
+        {{ section.settings.subtitle }}
+      </p>
+
+      <div>
+        <a href="{{ section.settings.btn_link }}" class="cf-btn-v4" style="display: inline-block; background: {{ section.settings.accent_color }}; color: #fff; padding: 15px 30px; font-family: 'Arial Black', Impact, sans-serif; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: filter 0.2s;">
+          {{ section.settings.btn_text }}
+        </a>
+      </div>
+      
+    </div>
+
+    <!-- Right: Image Block -->
+    <div class="cf-auto-promo-v4-image" style="flex: 1.2; position: relative;">
+      {% if section.settings.image %}
+        <img src="{{ section.settings.image | image_url: width: 1000 }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Promo Image">
+      {% else %}
+        <div style="width: 100%; height: 100%; background: #ccc; display: flex; align-items: center; justify-content: center; min-height: 400px;">
+          <span style="color:#666; font-family: sans-serif;">IMAGE (800x600+)</span>
+        </div>
+      {% endif %}
+      
+      <!-- Graphic Element over image -->
+      <div style="position: absolute; bottom: 0; right: 0; background: {{ section.settings.accent_color }}; padding: 20px;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="13 2 13 9 20 9"></polyline><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path></svg>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .cf-btn-v4:hover {
+    filter: brightness(1.1);
+  }
+  @media (max-width: 900px) {
+    .cf-auto-promo-v4-container { flex-direction: column; }
+    .cf-auto-promo-v4-image { width: 100%; height: 350px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Mechanics Block Poster",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Outer Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Box Color (Dark)",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#e60000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Promotion Image"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "WORKSHOP ESSENTIALS"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "PRO-GRADE TOOLS FOR DIYERS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Stock your garage with the gear the professionals use. Heavy duty jacks, torque wrenches, and diagnositc computers."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "SHOP GARAGE TOOLS"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    }
+  ]
+}
+{% endschema %}

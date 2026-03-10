@@ -1,0 +1,136 @@
+<div class="cf-auto-promo-v8" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 80px 20px;">
+  <div class="cf-auto-promo-v8-container" style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: center; position: relative;">
+
+    <!-- Background Image / Pattern -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient({{ section.settings.text_color }} 1px, transparent 1px); background-size: 20px 20px; z-index: 1;"></div>
+
+    <div style="background: {{ section.settings.card_bg }}; box-shadow: 0 20px 40px rgba(0,0,0,0.05); padding: 50px 80px; position: relative; z-index: 2; display: flex; align-items: center; gap: 60px; max-width: 1000px; width: 100%; border-top: 4px solid {{ section.settings.accent_color }};">
+
+      <!-- Left Text -->
+      <div class="cf-auto-promo-v8-text" style="flex: 1;">
+        <h2 style="font-family: 'Syne', sans-serif; font-size: {{ section.settings.title_size }}px; font-weight: 800; text-transform: uppercase; margin: 0 0 15px 0; line-height: 1.1; letter-spacing: -1px;">
+          {{ section.settings.title }}
+        </h2>
+        <p style="font-size: 16px; opacity: 0.8; margin: 0; max-width: 300px; font-family: 'Inter', sans-serif; line-height: 1.5;">
+          {{ section.settings.subtitle }}
+        </p>
+      </div>
+
+      <!-- Arrow Divider -->
+      <div class="cf-auto-promo-v8-arrow" style="flex: 0 0 auto; color: {{ section.settings.accent_color }};">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </div>
+
+      <!-- Right Action -->
+      <div class="cf-auto-promo-v8-action" style="flex: 1; text-align: center;">
+        <div style="font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: {{ section.settings.accent_color }}; margin-bottom: 5px; line-height: 1;">
+          {{ section.settings.stat }}
+        </div>
+        <div style="font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; opacity: 0.8;">
+          {{ section.settings.stat_label }}
+        </div>
+        <a href="{{ section.settings.btn_link }}" class="cf-btn-v8" style="display: inline-block; background: {{ section.settings.text_color }}; color: {{ section.settings.bg_color }}; padding: 15px 35px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; transition: background 0.3s; border-radius: 2px;">
+          {{ section.settings.btn_text }}
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');
+
+  .cf-btn-v8:hover {
+    background: {{ section.settings.accent_color }} !important;
+    color: #fff !important;
+  }
+
+  @media (max-width: 900px) {
+    .cf-auto-promo-v8-container > div {
+      flex-direction: column;
+      padding: 40px 20px;
+      text-align: center;
+      gap: 30px;
+    }
+    .cf-auto-promo-v8-arrow { transform: rotate(90deg); }
+    .cf-auto-promo-v8-text p { margin: 0 auto; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Clean Banner Promo",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page Background",
+      "default": "#f4f6f8"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#0052cc"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "UPGRADE YOUR RIDE"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 36
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Explore our new selection of high-grade OEM replacements."
+    },
+    {
+      "type": "text",
+      "id": "stat",
+      "label": "Highlight Feature",
+      "default": "-20%"
+    },
+    {
+      "type": "text",
+      "id": "stat_label",
+      "label": "Highlight Label",
+      "default": "SITEWIDE DISCOUNT"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,108 @@
+<div class="cf-auto-snack-v10" style="background: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; padding: 40px 20px;">
+  <div class="cf-auto-snack-v10-container" style="max-width: 800px; margin: 0 auto; border: 2px solid {{ section.settings.border_color }}; border-radius: {{ section.settings.border_radius }}px; padding: 25px 35px; display: flex; align-items: center; justify-content: space-between; overflow: relative;">
+    
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <!-- Pulsing Dot -->
+      <div style="position: relative; width: 12px; height: 12px;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: {{ section.settings.accent_color }}; border-radius: 50%;"></div>
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: {{ section.settings.accent_color }}; border-radius: 50%; animation: cf-pulse-v10 2s infinite;"></div>
+      </div>
+      
+      <div>
+        <h3 style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 4px 0;">
+          {{ section.settings.title }}
+        </h3>
+        <p style="font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7; margin: 0;">
+          {{ section.settings.subtitle }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Clickable Code Area -->
+    <button class="cf-snack-code-v10" onclick="navigator.clipboard.writeText('{{ section.settings.code }}'); alert('Code copied!');" style="background: rgba(0,0,0,0.05); border: 1px dashed {{ section.settings.border_color }}; color: {{ section.settings.text_color }}; padding: 12px 25px; border-radius: 4px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s;">
+      <span style="font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 2px;">{{ section.settings.code }}</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+    </button>
+
+  </div>
+</div>
+
+<style>
+  @keyframes cf-pulse-v10 {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  .cf-snack-code-v10:hover {
+    background: {{ section.settings.text_color }} !important;
+    color: {{ section.settings.bg_color }} !important;
+    border-color: {{ section.settings.text_color }} !important;
+  }
+  .cf-snack-code-v10:hover svg {
+    stroke: {{ section.settings.bg_color }} !important;
+  }
+
+  @media (max-width: 600px) {
+    .cf-auto-snack-v10-container { flex-direction: column; text-align: center; gap: 20px; }
+    .cf-auto-snack-v10-container > div:first-child { flex-direction: column; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "06 · Minimal Pulse Snack",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Pulse Color",
+      "default": "#00c853"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "FLASH DEAL ACTIVE"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Apply code at checkout for express shipping upgrade."
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "Promo Code",
+      "default": "FASTSHIP"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 8
+    }
+  ]
+}
+{% endschema %}
