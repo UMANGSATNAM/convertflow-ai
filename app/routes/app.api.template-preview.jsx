@@ -2,6 +2,7 @@ import { json } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import { readSectionFile } from "../lib/shopify.server";
 import { simulateLiquidRendering } from "../lib/liquid-preview.server";
+import { SECTION_FILES } from "../lib/constants";
 
 // Helper to render a single section
 function renderSectionHtml(sectionType, settings, blockId) {
@@ -40,7 +41,6 @@ export const action = async ({ request }) => {
     bodyHtml = renderSectionHtml(sectionId, settings, blockId);
   } else if (categoryId) {
     // Render MULTIPLE TEMPLATES for Visual Grid Picker
-    const { SECTION_FILES } = require("../lib/constants");
     const templates = Object.entries(SECTION_FILES).filter(([_, meta]) => meta.category === categoryId);
 
     const results = {};

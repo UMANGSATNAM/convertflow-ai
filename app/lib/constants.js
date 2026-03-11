@@ -12,17 +12,17 @@ export const SECTION_CATEGORIES = [
 
 // ── Auto-generate expansion entries for niches 02–05 ─────────────────
 const NICHE_LABELS = {
-    '02': 'Streetwear', '03': 'Tech', '04': 'Health', '05': 'Beauty'
+    '02': 'Streetwear', '03': 'Tech', '04': 'Health', '05': 'Beauty', '06': 'Auto'
 };
 const EXPANSION_DEFS = [
     // [keyPrefix, category, nicheFileMap]  — nicheFileMap: { nicheId: filePrefix }
-    ['header', 'header', { '02': 'cf-header-02', '03': 'cf-header-03', '04': 'cf-header-04', '05': 'cf-header-05' }],
-    ['marquee', 'marquee', { '02': 'cf-marquee-02', '03': 'cf-marquee-03', '04': 'cf-marquee-04', '05': 'cf-marquee-05' }],
-    ['promo', 'promo', { '02': 'cf-promo-02', '03': 'cf-promo-03', '04': 'cf-promo-04', '05': 'cf-promo-05' }],
-    ['snack', 'snack', { '02': 'cf-promo-snack-02', '03': 'cf-promo-snack-03', '04': 'cf-promo-snack-04', '05': 'cf-promo-snack-05' }],
-    ['cat', 'category', { '02': 'cf-category-02', '03': 'cf-category-grid-03', '04': 'cf-category-04', '05': 'cf-category-05' }],
-    ['feat', 'feature', { '02': 'cf-featured-collection-02', '03': 'cf-featured-collection-03', '04': 'cf-featured-collection-04', '05': 'cf-featured-collection-05' }],
-    ['trust', 'trust', { '02': 'cf-trust-badges-02', '03': 'cf-trust-badges-03', '04': 'cf-trust-badges-04', '05': 'cf-trust-badges-05' }],
+    ['header', 'header', { '02': 'cf-header-02', '03': 'cf-header-03', '04': 'cf-header-04', '05': 'cf-header-05', '06': 'cf-header-06' }],
+    ['marquee', 'marquee', { '02': 'cf-marquee-02', '03': 'cf-marquee-03', '04': 'cf-marquee-04', '05': 'cf-marquee-05', '06': 'cf-marquee-06' }],
+    ['promo', 'promo', { '02': 'cf-promo-02', '03': 'cf-promo-03', '04': 'cf-promo-04', '05': 'cf-promo-05', '06': 'cf-promo-06' }],
+    ['snack', 'snack', { '02': 'cf-promo-snack-02', '03': 'cf-promo-snack-03', '04': 'cf-promo-snack-04', '05': 'cf-promo-snack-05', '06': 'cf-promo-snack-06' }],
+    ['cat', 'category', { '02': 'cf-category-02', '03': 'cf-category-grid-03', '04': 'cf-category-04', '05': 'cf-category-05', '06': 'cf-category-grid-06' }],
+    ['feat', 'feature', { '02': 'cf-featured-collection-02', '03': 'cf-featured-collection-03', '04': 'cf-featured-collection-04', '05': 'cf-featured-collection-05', '06': 'cf-featured-collection-06' }],
+    ['trust', 'trust', { '02': 'cf-trust-badges-02', '03': 'cf-trust-badges-03', '04': 'cf-trust-badges-04', '05': 'cf-trust-badges-05', '06': 'cf-trust-badge-06' }],
 ];
 const COMP_LABELS = { header: 'Header', marquee: 'Marquee', promo: 'Promo', snack: 'Snack', cat: 'Category', feat: 'Featured', trust: 'Trust' };
 
