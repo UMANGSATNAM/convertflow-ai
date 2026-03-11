@@ -28,6 +28,9 @@ export function ThemeEditorProvider({ children }) {
     // Form State for Active Block
     const [settings, setSettings] = useState({});
 
+    // Timestamp bumped on every successful server action → triggers Canvas re-fetch
+    const [lastSavedAt, setLastSavedAt] = useState(null);
+
     // Helper mapping
     const activeBlock = blocks.find(b => b.id === selectedBlockId);
 
@@ -40,6 +43,8 @@ export function ThemeEditorProvider({ children }) {
             if (fetcher.data.newBlockId) {
                 setSelectedBlockId(fetcher.data.newBlockId);
             }
+            // Bump timestamp → Canvas will auto-reload the live preview
+            setLastSavedAt(Date.now());
             shopify.toast.show(fetcher.data.message || 'Theme updated');
         } else if (fetcher.state === 'idle' && fetcher.data?.error) {
             shopify.toast.show(fetcher.data.error, { isError: true });
@@ -127,7 +132,8 @@ export function ThemeEditorProvider({ children }) {
             activeBlock,
             addSection, insertSection, swapSection, applyTitan,
             removeSection, reorderSections,
-            fetcher, categories, themeId, shop, themeName
+            fetcher, categories, themeId, shop, themeName,
+            lastSavedAt
         }}>
             {children}
         </ThemeEditorContext.Provider>
