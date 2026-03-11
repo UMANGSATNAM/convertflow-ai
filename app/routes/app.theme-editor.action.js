@@ -1,8 +1,11 @@
-﻿import { json } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import { getActiveTheme, getThemeAsset, uploadAsset, readSectionFile } from "../lib/shopify.server";
 import { removeSchemaTranslations } from "../lib/schema-fixer.server";
 import { SECTION_FILES } from "../lib/constants";
+import { PAGE_TEMPLATES } from "../lib/page-templates";
+
+// ─── Helpers ────────────────────────────────────────────────────
 
 function isValidShopifyUrl(v) {
     if (!v || typeof v !== 'string') return false;
@@ -26,6 +29,31 @@ function sanitizeSettingsForTheme(settings) {
     return clean;
 }
 
+/** Upload a CF section's .liquid file to the Shopify theme */
+async function ensureSectionAsset(shop, accessToken, themeId, sectionId) {
+    const meta = SECTION_FILES[sectionId];
+    if (!meta) return false;
+    let liquid = readSectionFile(meta.file);
+    if (!liquid) return false;
+    liquid = removeSchemaTranslations(liquid);
+    await uploadAsset(shop, accessToken, themeId, `sections/${sectionId}.liquid`, liquid);
+    return true;
+}
+
+/** Build a pageBlocks array from an index/product JSON structure */
+function buildPageBlocks(idx) {
+    const sections = idx.sections || {};
+    const order = idx.order || Object.keys(sections);
+    return order.map(id => ({
+        id,
+        type: sections[id]?.type || id,
+        settings: sections[id]?.settings || {},
+        isCf: id.startsWith('cf_'),
+    }));
+}
+
+// ─── Main Action ────────────────────────────────────────────────
+
 export const action = async ({ request }) => {
     const { session } = await authenticate.admin(request);
     const { shop, accessToken } = session;
@@ -35,15 +63,18 @@ export const action = async ({ request }) => {
     const theme = await getActiveTheme(shop, accessToken);
     if (!theme) return json({ ok: false, error: "No active theme" });
 
-    const getIndex = async () => {
-        const str = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
-        const json = str ? JSON.parse(str) : { sections: {}, order: [] };
-        json.sections = json.sections || {};
-        json.order = json.order || Object.keys(json.sections);
-        return json;
+    // Determine which template file we're editing
+    const templateFile = fd.get("templateFile") || "templates/index.json";
+
+    const getTemplate = async () => {
+        const str = await getThemeAsset(shop, accessToken, theme.id, templateFile);
+        const parsed = str ? JSON.parse(str) : { sections: {}, order: [] };
+        parsed.sections = parsed.sections || {};
+        parsed.order = parsed.order || Object.keys(parsed.sections);
+        return parsed;
     };
 
-    const saveIndex = async (idx) => {
+    const saveTemplate = async (idx) => {
         idx.sections = idx.sections || {};
         idx.order = idx.order || [];
         idx.order = idx.order.filter(id => !!idx.sections[id]);
@@ -63,35 +94,25 @@ export const action = async ({ request }) => {
         if (payload.length > 500000) {
             throw new Error('Template is too large for Shopify limits.');
         }
-        await uploadAsset(shop, accessToken, theme.id, 'templates/index.json', payload);
+        await uploadAsset(shop, accessToken, theme.id, templateFile, payload);
     };
 
     try {
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: inject_section (original — adds to top/bottom)
+        // ═══════════════════════════════════════════════════════════
         if (intent === "inject_section") {
             const sectionId = fd.get("sectionId");
             const settings = JSON.parse(fd.get("settings") || "{}");
             const placement = fd.get("placement") || "bottom";
             const trustedOrder = JSON.parse(fd.get("trustedOrder") || "[]");
 
-            const meta = SECTION_FILES[sectionId];
-            if (!meta) return json({ ok: false, error: "Unknown section" });
+            const ok = await ensureSectionAsset(shop, accessToken, theme.id, sectionId);
+            if (!ok) return json({ ok: false, error: "Section file missing" });
 
-            let liquid = readSectionFile(meta.file);
-            if (!liquid) return json({ ok: false, error: "Section file missing" });
-            liquid = removeSchemaTranslations(liquid);
+            await new Promise(r => setTimeout(r, 300));
 
-            const assetKey = `sections/${sectionId}.liquid`;
-            await uploadAsset(shop, accessToken, theme.id, assetKey, liquid);
-
-            const verifyRes = await fetch(
-                `https://${shop}/admin/api/2025-01/themes/${theme.id}/assets.json?asset[key]=${assetKey}`,
-                { headers: { 'X-Shopify-Access-Token': accessToken } }
-            );
-            if (!verifyRes.ok) return json({ ok: false, error: `Upload failed.` });
-
-            await new Promise(r => setTimeout(r, 500));
-
-            const idx = await getIndex();
+            const idx = await getTemplate();
             if (trustedOrder.length >= idx.order.length) idx.order = trustedOrder;
 
             const blockId = `cf_${sectionId}_${Date.now().toString(36)}`;
@@ -106,48 +127,159 @@ export const action = async ({ request }) => {
             }
 
             idx.order.forEach(id => {
-                if (!idx.sections[id]) idx.sections[id] = { type: id.replace('cf_', ''), settings: {} };
+                if (!idx.sections[id]) idx.sections[id] = { type: id, settings: {} };
             });
 
-            await saveIndex(idx);
-
-            const newBlocks = idx.order.map(id => ({
-                id, type: idx.sections[id]?.type || id,
-                settings: idx.sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-            return json({ ok: true, message: `${meta.name} injected!`, pageBlocks: newBlocks, newBlockId: blockId });
+            await saveTemplate(idx);
+            const meta = SECTION_FILES[sectionId];
+            return json({ ok: true, message: `${meta?.name || sectionId} injected!`, pageBlocks: buildPageBlocks(idx), newBlockId: blockId });
         }
 
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: insert_at (NEW — insert AFTER a specific block)
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "insert_at") {
+            const sectionId = fd.get("sectionId");
+            const afterBlockId = fd.get("afterBlockId"); // insert after this block
+            const settings = JSON.parse(fd.get("settings") || "{}");
+
+            const ok = await ensureSectionAsset(shop, accessToken, theme.id, sectionId);
+            if (!ok) return json({ ok: false, error: "Section file missing" });
+
+            await new Promise(r => setTimeout(r, 300));
+
+            const idx = await getTemplate();
+            const blockId = `cf_${sectionId}_${Date.now().toString(36)}`;
+            idx.sections[blockId] = { type: sectionId, settings: sanitizeSettingsForTheme(settings) };
+
+            // Find the target position
+            const targetIdx = idx.order.indexOf(afterBlockId);
+            if (targetIdx !== -1) {
+                idx.order.splice(targetIdx + 1, 0, blockId);
+            } else {
+                // Fallback: insert before footer
+                const fi = idx.order.findIndex(id => id.toLowerCase().includes("footer"));
+                fi !== -1 ? idx.order.splice(fi, 0, blockId) : idx.order.push(blockId);
+            }
+
+            await saveTemplate(idx);
+            const meta = SECTION_FILES[sectionId];
+            return json({ ok: true, message: `${meta?.name || sectionId} inserted!`, pageBlocks: buildPageBlocks(idx), newBlockId: blockId });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: swap_section (NEW — replace in-place)
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "swap_section") {
+            const targetBlockId = fd.get("targetBlockId"); // the block to replace
+            const newSectionId = fd.get("newSectionId");   // the CF section to swap in
+
+            const ok = await ensureSectionAsset(shop, accessToken, theme.id, newSectionId);
+            if (!ok) return json({ ok: false, error: "Section file missing" });
+
+            await new Promise(r => setTimeout(r, 300));
+
+            const idx = await getTemplate();
+
+            // Find position in order
+            const posIdx = idx.order.indexOf(targetBlockId);
+            if (posIdx === -1) return json({ ok: false, error: "Target block not found in template" });
+
+            // Remove old block
+            delete idx.sections[targetBlockId];
+
+            // Create new block at the same position
+            const blockId = `cf_${newSectionId}_${Date.now().toString(36)}`;
+            idx.sections[blockId] = { type: newSectionId, settings: {} };
+            idx.order[posIdx] = blockId;
+
+            await saveTemplate(idx);
+            const meta = SECTION_FILES[newSectionId];
+            return json({ ok: true, message: `Swapped to ${meta?.name || newSectionId}!`, pageBlocks: buildPageBlocks(idx), newBlockId: blockId });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: apply_titan (NEW — full page template replacement)
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "apply_titan") {
+            const titanId = fd.get("titanId");
+            const titan = PAGE_TEMPLATES.find(t => t.id === titanId);
+            if (!titan) return json({ ok: false, error: "Titan template not found" });
+
+            // Upload all required section assets
+            for (const sectionId of titan.sections) {
+                await ensureSectionAsset(shop, accessToken, theme.id, sectionId);
+            }
+
+            const idx = await getTemplate();
+
+            // Identify header and footer blocks to preserve
+            const headerBlocks = [];
+            const footerBlocks = [];
+            for (const id of idx.order) {
+                const t = (idx.sections[id]?.type || id).toLowerCase();
+                if (t.includes('header') || t.includes('announcement')) {
+                    headerBlocks.push(id);
+                } else if (t.includes('footer')) {
+                    footerBlocks.push(id);
+                }
+            }
+
+            // Remove all middle sections (everything except header/footer)
+            const preserveIds = new Set([...headerBlocks, ...footerBlocks]);
+            for (const id of idx.order) {
+                if (!preserveIds.has(id)) delete idx.sections[id];
+            }
+
+            // Build new middle section from Titan template
+            const newMiddleIds = [];
+            for (let i = 0; i < titan.sections.length; i++) {
+                const sectionId = titan.sections[i];
+                const blockId = `cf_${sectionId.replace(/^cf-cro-/, '')}_${i}`;
+                idx.sections[blockId] = { type: sectionId, settings: {} };
+                newMiddleIds.push(blockId);
+            }
+
+            // Reconstruct order: header → titan sections → footer
+            idx.order = [...headerBlocks, ...newMiddleIds, ...footerBlocks];
+
+            await saveTemplate(idx);
+            return json({ ok: true, message: `Titan "${titan.name}" applied!`, pageBlocks: buildPageBlocks(idx) });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: remove_section (existing)
+        // ═══════════════════════════════════════════════════════════
         if (intent === "remove_section") {
             const blockId = fd.get("blockId");
-            const idx = await getIndex();
+            const idx = await getTemplate();
             delete idx.sections[blockId];
             idx.order = idx.order.filter(id => id !== blockId);
-            await saveIndex(idx);
-            const newBlocks = idx.order.map(id => ({
-                id, type: idx.sections[id]?.type || id,
-                settings: idx.sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-            return json({ ok: true, pageBlocks: newBlocks });
+            await saveTemplate(idx);
+            return json({ ok: true, pageBlocks: buildPageBlocks(idx) });
         }
 
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: update_settings (existing)
+        // ═══════════════════════════════════════════════════════════
         if (intent === "update_settings") {
             const blockId = fd.get("blockId");
             const settings = JSON.parse(fd.get("settings") || "{}");
-            const idx = await getIndex();
+            const idx = await getTemplate();
             if (idx.sections[blockId]) idx.sections[blockId].settings = sanitizeSettingsForTheme(settings);
-            await saveIndex(idx);
+            await saveTemplate(idx);
             return json({ ok: true, message: "Settings saved to theme!" });
         }
 
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: reorder (existing)
+        // ═══════════════════════════════════════════════════════════
         if (intent === "reorder") {
             const newOrder = JSON.parse(fd.get("order") || "[]");
-            const idx = await getIndex();
+            const idx = await getTemplate();
             idx.order = newOrder;
-            await saveIndex(idx);
-            return json({ ok: true, message: "Sections reordered successfully!" });
+            await saveTemplate(idx);
+            return json({ ok: true, message: "Sections reordered!" });
         }
 
         return json({ ok: false, error: "Unknown intent" });

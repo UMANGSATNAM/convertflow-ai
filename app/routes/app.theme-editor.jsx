@@ -18,13 +18,18 @@ export const loader = async ({ request }) => {
     const theme = await getActiveTheme(shop, accessToken);
     if (!theme) return json({ error: "No active theme found" });
 
+    // Determine which template to load (default: index.json)
+    const url = new URL(request.url);
+    const templateParam = url.searchParams.get('template') || 'index';
+    const templateFile = templateParam === 'product' ? 'templates/product.json' : 'templates/index.json';
+
     let pageBlocks = [];
     try {
-        const indexJsonStr = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
-        if (indexJsonStr) {
-            const indexJson = JSON.parse(indexJsonStr);
-            const sections = indexJson.sections || {};
-            const order = indexJson.order || Object.keys(sections);
+        const templateStr = await getThemeAsset(shop, accessToken, theme.id, templateFile);
+        if (templateStr) {
+            const templateJson = JSON.parse(templateStr);
+            const sections = templateJson.sections || {};
+            const order = templateJson.order || Object.keys(sections);
             pageBlocks = order.map(id => ({
                 id,
                 type: sections[id]?.type || id,
@@ -35,7 +40,14 @@ export const loader = async ({ request }) => {
     } catch (e) { /* continue */ }
 
     const categories = getCategoriesWithCounts();
-    return json({ themeId: theme.id, shop, pageBlocks, categories });
+    return json({
+        themeId: theme.id,
+        shop,
+        pageBlocks,
+        categories,
+        templateFile,
+        themeName: theme.name || 'Dawn',
+    });
 };
 
 // --- ACTION ---
@@ -56,7 +68,7 @@ export default function ThemeEditorV2Shell() {
 }
 
 function ThemeEditorApp() {
-    const { device, setDevice, saveSettings, selectedBlockId, activeBlock } = useThemeEditor();
+    const { device, setDevice, saveSettings, selectedBlockId, activeBlock, themeName } = useThemeEditor();
     const navigate = useNavigate();
 
     const handleSave = () => {
@@ -91,7 +103,7 @@ function ThemeEditorApp() {
                     </button>
                     <div className="h-6 w-px bg-white/20 mx-1"></div>
                     <div className="flex items-center gap-2 text-white/90">
-                        <span className="text-xs font-semibold uppercase tracking-wider">Dawn</span>
+                        <span className="text-xs font-semibold uppercase tracking-wider">{themeName || 'Dawn'}</span>
                         <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded">Live</span>
                     </div>
                 </div>
