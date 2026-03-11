@@ -63,33 +63,8 @@ function ThemeEditorApp() {
     return (
         <ThemeEditorProvider>
             <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden h-screen flex flex-col font-display">
-                <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
                 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
                 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-                <script dangerouslySetInnerHTML={{
-                    __html: `
-                    tailwind.config = {
-                        darkMode: "class",
-                        theme: {
-                            extend: {
-                                colors: {
-                                    "primary": "#35e212",
-                                    "background-light": "#f6f8f6",
-                                    "background-dark": "#132210",
-                                    "polaris-bg": "#F4F6F8",
-                                    "polaris-border": "#DFE3E8",
-                                    "polaris-text": "#202223",
-                                    "polaris-subdued": "#6D7175",
-                                    "polaris-nav": "#1a1a1a"
-                                },
-                                fontFamily: {
-                                    "display": ["Inter", "sans-serif"]
-                                },
-                            },
-                        },
-                    }
-                    `
-                }}></script>
                 <style dangerouslySetInnerHTML={{
                     __html: `
                     .sidebar-scroll::-webkit-scrollbar { width: 4px; }

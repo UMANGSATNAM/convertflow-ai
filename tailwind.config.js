@@ -10,6 +10,14 @@ export default {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
+        "primary": "#35e212",
+        "background-light": "#f6f8f6",
+        "background-dark": "#132210",
+        "polaris-bg": "#F4F6F8",
+        "polaris-border": "#DFE3E8",
+        "polaris-text": "#202223",
+        "polaris-subdued": "#6D7175",
+        "polaris-nav": "#1a1a1a",
         // Premium neutral palette
         surface: {
           DEFAULT: '#ffffff',
