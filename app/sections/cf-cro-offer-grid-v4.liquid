@@ -1,0 +1,126 @@
+<style>
+.cf-cro-og4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-og4-inner{max-width:1000px;margin:0 auto}
+.cf-cro-og4-head{text-align:center;margin-bottom:48px}
+.cf-cro-og4 h2{font-size:clamp(28px,4vw,42px);font-weight:900;color:{{ section.settings.text_color }};margin:0 0 16px;letter-spacing:-0.02em}
+.cf-cro-og4-sub{font-size:18px;color:{{ section.settings.text_color }};opacity:0.7}
+.cf-cro-og4-grid{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:20px;align-items:center}
+.cf-cro-og4-card{background:#fff;border:1px solid {{ section.settings.text_color }}10;border-radius:24px;padding:32px;display:flex;flex-direction:column;position:relative;transition:0.3s}
+.cf-cro-og4-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.06)}
+.cf-cro-og4-card.featured{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};z-index:2;box-shadow:0 24px 50px rgba(0,0,0,0.15)}
+.cf-cro-og4-tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:{{ section.settings.accent_color }};color:#fff;padding:6px 16px;border-radius:100px;font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap}
+.cf-cro-og4-name{font-size:20px;font-weight:700;margin-bottom:8px;color:inherit}
+.cf-cro-og4-card:not(.featured) .cf-cro-og4-name{color:{{ section.settings.text_color }}}
+.cf-cro-og4-desc{font-size:14px;opacity:0.7;margin-bottom:24px;line-height:1.5;min-height:42px}
+.cf-cro-og4-price-wrap{margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid {{ section.settings.text_color }}15}
+.cf-cro-og4-card.featured .cf-cro-og4-price-wrap{border-color:{{ section.settings.bg_color }}15}
+.cf-cro-og4-sale{font-size:14px;font-weight:700;color:{{ section.settings.accent_color }};margin-bottom:4px}
+.cf-cro-og4-card.featured .cf-cro-og4-sale{color:{{ section.settings.accent_color }}}
+.cf-cro-og4-price i{font-size:24px;font-style:normal;font-weight:600}
+.cf-cro-og4-price{font-size:48px;font-weight:900;line-height:1;margin-bottom:8px}
+.cf-cro-og4-orig{font-size:16px;opacity:0.4;text-decoration:line-through}
+.cf-cro-og4-list{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.cf-cro-og4-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;opacity:0.9}
+.cf-cro-og4-item svg{width:18px;height:18px;color:{{ section.settings.accent_color }};flex-shrink:0;margin-top:2px}
+.cf-cro-og4-card.featured .cf-cro-og4-item svg{color:{{ section.settings.accent_color }}}
+.cf-cro-og4-btn{display:block;width:100%;padding:16px;text-align:center;border-radius:12px;font-size:16px;font-weight:800;text-decoration:none;transition:0.2s}
+.cf-cro-og4-card:not(.featured) .cf-cro-og4-btn{background:{{ section.settings.text_color }}08;color:{{ section.settings.text_color }}}
+.cf-cro-og4-card:not(.featured) .cf-cro-og4-btn:hover{background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }}}
+.cf-cro-og4-card.featured .cf-cro-og4-btn{background:{{ section.settings.accent_color }};color:#fff}
+.cf-cro-og4-card.featured .cf-cro-og4-btn:hover{opacity:0.9;transform:scale(1.02)}
+@media(max-width:900px){.cf-cro-og4-grid{grid-template-columns:1fr;gap:40px}}
+</style>
+
+<div class="cf-cro-og4">
+  <div class="cf-cro-og4-inner">
+    <div class="cf-cro-og4-head">
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="cf-cro-og4-sub">{{ section.settings.subheading }}</p>
+    </div>
+    <div class="cf-cro-og4-grid">
+      <!-- Plan 1 -->
+      <div class="cf-cro-og4-card">
+        <div class="cf-cro-og4-name">{{ section.settings.opt1_name }}</div>
+        <div class="cf-cro-og4-desc">{{ section.settings.opt1_desc }}</div>
+        <div class="cf-cro-og4-price-wrap">
+          <div class="cf-cro-og4-price"><i>$</i>{{ section.settings.opt1_price | replace: '$', '' }}</div>
+          <div class="cf-cro-og4-orig">Value: {{ section.settings.opt1_orig }}</div>
+        </div>
+        <div class="cf-cro-og4-list">
+          {% assign items1 = section.settings.opt1_list | split: '|' %}
+          {% for item in items1 %}<div class="cf-cro-og4-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> {{ item }}</div>{% endfor %}
+        </div>
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-og4-btn">{{ section.settings.opt1_cta }}</a>
+      </div>
+      <!-- Plan 2 -->
+      <div class="cf-cro-og4-card featured">
+        <div class="cf-cro-og4-tag">{{ section.settings.opt2_tag }}</div>
+        <div class="cf-cro-og4-name">{{ section.settings.opt2_name }}</div>
+        <div class="cf-cro-og4-desc">{{ section.settings.opt2_desc }}</div>
+        <div class="cf-cro-og4-price-wrap">
+          <div class="cf-cro-og4-sale">SAVE {{ section.settings.opt2_save }}</div>
+          <div class="cf-cro-og4-price"><i>$</i>{{ section.settings.opt2_price | replace: '$', '' }}</div>
+          <div class="cf-cro-og4-orig">Value: {{ section.settings.opt2_orig }}</div>
+        </div>
+        <div class="cf-cro-og4-list">
+          {% assign items2 = section.settings.opt2_list | split: '|' %}
+          {% for item in items2 %}<div class="cf-cro-og4-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> {{ item }}</div>{% endfor %}
+        </div>
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-og4-btn">{{ section.settings.opt2_cta }}</a>
+      </div>
+      <!-- Plan 3 -->
+      <div class="cf-cro-og4-card">
+        <div class="cf-cro-og4-name">{{ section.settings.opt3_name }}</div>
+        <div class="cf-cro-og4-desc">{{ section.settings.opt3_desc }}</div>
+        <div class="cf-cro-og4-price-wrap">
+          <div class="cf-cro-og4-price"><i>$</i>{{ section.settings.opt3_price | replace: '$', '' }}</div>
+          <div class="cf-cro-og4-orig">Value: {{ section.settings.opt3_orig }}</div>
+        </div>
+        <div class="cf-cro-og4-list">
+          {% assign items3 = section.settings.opt3_list | split: '|' %}
+          {% for item in items3 %}<div class="cf-cro-og4-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> {{ item }}</div>{% endfor %}
+        </div>
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-og4-btn">{{ section.settings.opt3_cta }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Pro Pricing v4",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Transparent Pricing"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"No hidden fees. Cancel anytime."},
+    {"type":"text","id":"cta_link","label":"Checkout Link","default":"/cart"},
+    {"type":"header","content":"Option 1 (Basic)"},
+    {"type":"text","id":"opt1_name","label":"Name","default":"Starter Pack"},
+    {"type":"textarea","id":"opt1_desc","label":"Desc","default":"Perfect for individuals trying us out."},
+    {"type":"text","id":"opt1_price","label":"Price","default":"29"},
+    {"type":"text","id":"opt1_orig","label":"Original","default":"$49"},
+    {"type":"textarea","id":"opt1_list","label":"Checklist (|)","default":"1 Product|Standard Shipping|30-Day Guarantee"},
+    {"type":"text","id":"opt1_cta","label":"CTA","default":"Get Started"},
+    {"type":"header","content":"Option 2 (Featured)"},
+    {"type":"text","id":"opt2_tag","label":"Tag","default":"Most Popular"},
+    {"type":"text","id":"opt2_name","label":"Name","default":"Pro Bundle"},
+    {"type":"textarea","id":"opt2_desc","label":"Desc","default":"Everything you need to see massive results."},
+    {"type":"text","id":"opt2_save","label":"Savings Text","default":"40% OFF + FREE SHIPPING"},
+    {"type":"text","id":"opt2_price","label":"Price","default":"59"},
+    {"type":"text","id":"opt2_orig","label":"Original","default":"$129"},
+    {"type":"textarea","id":"opt2_list","label":"Checklist (|)","default":"3 Products|Fast Free Shipping|Bonus Guide Included|60-Day Guarantee"},
+    {"type":"text","id":"opt2_cta","label":"CTA","default":"Claim My Bundle"},
+    {"type":"header","content":"Option 3 (Max)"},
+    {"type":"text","id":"opt3_name","label":"Name","default":"Family Pack"},
+    {"type":"textarea","id":"opt3_desc","label":"Desc","default":"The ultimate value for power users."},
+    {"type":"text","id":"opt3_price","label":"Price","default":"99"},
+    {"type":"text","id":"opt3_orig","label":"Original","default":"$249"},
+    {"type":"textarea","id":"opt3_list","label":"Checklist (|)","default":"6 Products|Vip Next-Day Shipping|3 Free Gifts Included|Lifetime Guarantee"},
+    {"type":"text","id":"opt3_cta","label":"CTA","default":"Get Max Value"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F8FAFC"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0F172A"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#3B82F6"},
+    {"type":"range","id":"padding_y","label":"Top/Bottom Padding","min":20,"max":120,"step":10,"default":80}
+  ],
+  "presets": [{"name":"CRO · Pro Pricing v4"}]
+}
+{% endschema %}

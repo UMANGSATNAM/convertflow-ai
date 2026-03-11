@@ -1,0 +1,65 @@
+<style>
+.cf-cro-ben4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-ben4-inner{max-width:1200px;margin:0 auto}
+.cf-cro-ben4-head{text-align:center;margin-bottom:60px}
+.cf-cro-ben4-lbl{display:inline-block;padding:6px 16px;background:{{ section.settings.text_color }}08;color:{{ section.settings.text_color }};border-radius:100px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:20px}
+.cf-cro-ben4 h2{font-size:clamp(32px,5vw,48px);font-weight:900;color:{{ section.settings.text_color }};margin:0 0 16px;letter-spacing:-0.02em;line-height:1.1}
+.cf-cro-ben4 h2 span{color:{{ section.settings.accent_color }}}
+.cf-cro-ben4-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.cf-cro-ben4-card{text-align:center;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.cf-cro-ben4-icon{width:80px;height:80px;border-radius:50%;background:{{ section.settings.accent_color }}10;color:{{ section.settings.accent_color }};display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:8px;position:relative}
+.cf-cro-ben4-icon::after{content:'';position:absolute;inset:-8px;border:1px dashed {{ section.settings.accent_color }}40;border-radius:50%;transition:transform 0.5s ease}
+.cf-cro-ben4-card:hover .cf-cro-ben4-icon::after{transform:rotate(45deg)}
+.cf-cro-ben4-title{font-size:18px;font-weight:800;color:{{ section.settings.text_color }}}
+.cf-cro-ben4-desc{font-size:15px;color:{{ section.settings.text_color }};opacity:0.7;line-height:1.6}
+@media(max-width:900px){.cf-cro-ben4-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.cf-cro-ben4-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cro-ben4">
+  <div class="cf-cro-ben4-inner">
+    <div class="cf-cro-ben4-head">
+      <div class="cf-cro-ben4-lbl">{{ section.settings.label }}</div>
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+    <div class="cf-cro-ben4-grid">
+      {%- for i in (1..4) -%}
+        {%- assign ic = 'icon_' | append: i -%}
+        {%- assign ti = 'title_' | append: i -%}
+        {%- assign de = 'desc_' | append: i -%}
+        <div class="cf-cro-ben4-card">
+          <div class="cf-cro-ben4-icon">{{ section.settings[ic] }}</div>
+          <div class="cf-cro-ben4-title">{{ section.settings[ti] }}</div>
+          <div class="cf-cro-ben4-desc">{{ section.settings[de] }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Feature Circle v4",
+  "settings": [
+    {"type":"text","id":"label","label":"Eyebrow Label","default":"THE DIFFERENCE"},
+    {"type":"html","id":"heading","label":"Heading","default":"Why we're the <span>industry standard.</span>"},
+    {"type":"text","id":"icon_1","label":"Icon 1","default":"🔬"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"Lab Tested"},
+    {"type":"textarea","id":"desc_1","label":"Desc 1","default":"Every batch is independently tested for purity and potency."},
+    {"type":"text","id":"icon_2","label":"Icon 2","default":"🌱"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"100% Organic"},
+    {"type":"textarea","id":"desc_2","label":"Desc 2","default":"Sourced directly from sustainable, organic farms."},
+    {"type":"text","id":"icon_3","label":"Icon 3","default":"⚡"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"Fast Acting"},
+    {"type":"textarea","id":"desc_3","label":"Desc 3","default":"Our patented formula absorbs 3x faster than alternatives."},
+    {"type":"text","id":"icon_4","label":"Icon 4","default":"🛡️"},
+    {"type":"text","id":"title_4","label":"Title 4","default":"Ironclad Guarantee"},
+    {"type":"textarea","id":"desc_4","label":"Desc 4","default":"Try it for 60 days. If you don't love it, it's free."},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#16A34A"},
+    {"type":"range","id":"padding_y","label":"Top/Bottom Padding","min":20,"max":120,"step":10,"default":80}
+  ],
+  "presets": [{"name":"CRO · Feature Circle v4"}]
+}
+{% endschema %}

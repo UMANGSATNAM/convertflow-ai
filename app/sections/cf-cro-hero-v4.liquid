@@ -1,0 +1,75 @@
+<style>
+.cf-cro-h4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-h4-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:60px;min-height:{{ section.settings.height }}px}
+.cf-cro-h4-content{flex:1;max-width:600px}
+.cf-cro-h4-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:{{ section.settings.text_color }}08;border-radius:100px;font-size:13px;font-weight:700;color:{{ section.settings.text_color }};margin-bottom:24px;letter-spacing:0.04em;text-transform:uppercase}
+.cf-cro-h4-eyebrow span{color:{{ section.settings.accent_color }}}
+.cf-cro-h4 h1{font-size:clamp(40px,5vw,{{ section.settings.title_size }}px);font-weight:900;color:{{ section.settings.text_color }};line-height:1.05;margin:0 0 24px;letter-spacing:-0.03em}
+.cf-cro-h4 h1 i{font-style:italic;color:{{ section.settings.accent_color }}}
+.cf-cro-h4-desc{font-size:18px;line-height:1.6;color:{{ section.settings.text_color }};opacity:0.7;margin-bottom:40px;max-width:540px}
+.cf-cro-h4-ctas{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.cf-cro-h4-btn1{padding:18px 40px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};border-radius:100px;font-size:16px;font-weight:700;text-decoration:none;transition:0.3s}
+.cf-cro-h4-btn1:hover{transform:translateY(-2px);box-shadow:0 8px 24px {{ section.settings.text_color }}30}
+.cf-cro-h4-btn2{padding:18px 0;color:{{ section.settings.text_color }};font-size:16px;font-weight:700;text-decoration:none;transition:0.3s;display:flex;align-items:center;gap:8px}
+.cf-cro-h4-btn2:hover{color:{{ section.settings.accent_color }}}
+.cf-cro-h4-image{flex:1;position:relative;border-radius:24px;overflow:hidden;height:100%}
+.cf-cro-h4-image img{width:100%;height:100%;object-fit:cover;min-height:600px}
+.cf-cro-h4-trust{position:absolute;bottom:24px;left:24px;right:24px;background:rgba(255,255,255,0.9);backdrop-filter:blur(10px);padding:16px 24px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 10px 40px rgba(0,0,0,0.1)}
+.cf-cro-h4-trust-l{display:flex;align-items:center;gap:12px}
+.cf-cro-h4-avatar{display:flex}
+.cf-cro-h4-avatar img{width:40px;height:40px;border-radius:50%;border:2px solid #fff;margin-left:-12px;min-height:auto}
+.cf-cro-h4-avatar img:first-child{margin-left:0}
+.cf-cro-h4-trust-tt{font-size:13px;font-weight:700;color:#111}
+.cf-cro-h4-trust-r{color:#F59E0B;font-size:16px;letter-spacing:2px}
+@media(max-width:992px){.cf-cro-h4-inner{flex-direction:column;text-align:center;gap:40px}.cf-cro-h4-content{max-width:100%}.cf-cro-h4-desc{margin:0 auto 32px}.cf-cro-h4-ctas{justify-content:center}.cf-cro-h4-image{width:100%}}
+</style>
+
+<div class="cf-cro-h4">
+  <div class="cf-cro-h4-inner">
+    <div class="cf-cro-h4-content">
+      <div class="cf-cro-h4-eyebrow"><span>●</span> {{ section.settings.label }}</div>
+      <h1>{{ section.settings.title }}</h1>
+      <p class="cf-cro-h4-desc">{{ section.settings.description }}</p>
+      <div class="cf-cro-h4-ctas">
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-h4-btn1">{{ section.settings.cta_text }}</a>
+        {% if section.settings.cta2_text != blank %}<a href="{{ section.settings.cta2_link }}" class="cf-cro-h4-btn2">{{ section.settings.cta2_text }} →</a>{% endif %}
+      </div>
+    </div>
+    <div class="cf-cro-h4-image">
+      {% if section.settings.image != blank %}<img src="{{ section.settings.image | image_url: width: 1200 }}" alt="" loading="lazy">{% else %}<div style="width:100%;height:600px;background:{{ section.settings.text_color }}10" class="ph"></div>{% endif %}
+      <div class="cf-cro-h4-trust">
+        <div class="cf-cro-h4-trust-l">
+          <div class="cf-cro-h4-avatar">
+            <img src="https://i.pravatar.cc/100?img=1" alt=""><img src="https://i.pravatar.cc/100?img=2" alt=""><img src="https://i.pravatar.cc/100?img=3" alt="">
+          </div>
+          <div class="cf-cro-h4-trust-tt">Over {{ section.settings.users }} happy users</div>
+        </div>
+        <div class="cf-cro-h4-trust-r">★★★★★</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Split Trust Hero v4",
+  "settings": [
+    {"type":"text","id":"label","label":"Label","default":"Voted #1 in 2024"},
+    {"type":"html","id":"title","label":"Title","default":"The last pair of <i>shoes</i> you'll ever need."},
+    {"type":"textarea","id":"description","label":"Description","default":"We spent 2 years rethinking comfort from the ground up. Try them risk-free for 30 days."},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"Shop the Collection"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/all"},
+    {"type":"text","id":"cta2_text","label":"Secondary CTA","default":"See How It Works"},
+    {"type":"text","id":"cta2_link","label":"Secondary Link","default":"#video"},
+    {"type":"image_picker","id":"image","label":"Hero Image"},
+    {"type":"text","id":"users","label":"Social Proof Number","default":"10,000+"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f9fa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0a0a0a"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#2563EB"},
+    {"type":"range","id":"title_size","label":"Title Size","min":36,"max":96,"step":2,"default":64},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":900,"step":50,"default":700},
+    {"type":"range","id":"padding_y","label":"Top/Bottom Padding","min":20,"max":120,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Split Trust Hero v4"}]
+}
+{% endschema %}

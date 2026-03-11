@@ -1,0 +1,91 @@
+<style>
+.cf-cro-sp4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}
+.cf-cro-sp4-inner{max-width:1400px;margin:0 auto}
+.cf-cro-sp4-head{text-align:center;margin-bottom:60px}
+.cf-cro-sp4-head h2{font-size:clamp(32px,5vw,48px);font-weight:900;color:{{ section.settings.text_color }};margin:0 0 16px;line-height:1.1;letter-spacing:-0.02em}
+.cf-cro-sp4-head span{color:{{ section.settings.accent_color }}}
+.cf-cro-sp4-masonry{column-count:3;column-gap:24px}
+.cf-cro-sp4-card{background:#fff;border-radius:20px;padding:32px;margin-bottom:24px;break-inside:avoid;box-shadow:0 10px 30px rgba(0,0,0,0.04);border:1px solid {{ section.settings.text_color }}08;transition:0.3s}
+.cf-cro-sp4-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.08)}
+.cf-cro-sp4-stars{display:flex;gap:4px;color:#F59E0B;margin-bottom:16px}
+.cf-cro-sp4-stars svg{width:20px;height:20px}
+.cf-cro-sp4-title{font-size:18px;font-weight:800;color:{{ section.settings.text_color }};margin-bottom:12px;line-height:1.4}
+.cf-cro-sp4-text{font-size:15px;line-height:1.6;color:{{ section.settings.text_color }};opacity:0.7;margin-bottom:24px}
+.cf-cro-sp4-user{display:flex;align-items:center;gap:12px;padding-top:20px;border-top:1px solid {{ section.settings.text_color }}10}
+.cf-cro-sp4-av{width:44px;height:44px;border-radius:50%;background:{{ section.settings.accent_color }}15;color:{{ section.settings.accent_color }};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px}
+.cf-cro-sp4-name{font-size:14px;font-weight:700;color:{{ section.settings.text_color }}}
+.cf-cro-sp4-verify{font-size:12px;color:#10B981;display:flex;align-items:center;gap:4px;font-weight:600;margin-top:2px}
+.cf-cro-sp4-verify svg{width:12px;height:12px}
+.cf-cro-sp4-cta{text-align:center;margin-top:40px}
+.cf-cro-sp4-btn{display:inline-flex;padding:16px 40px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};border-radius:100px;font-size:16px;font-weight:700;text-decoration:none;transition:0.3s}
+.cf-cro-sp4-btn:hover{background:{{ section.settings.accent_color }};color:#fff;transform:translateY(-2px)}
+@media(max-width:900px){.cf-cro-sp4-masonry{column-count:2}}
+@media(max-width:600px){.cf-cro-sp4-masonry{column-count:1}}
+</style>
+
+<div class="cf-cro-sp4">
+  <div class="cf-cro-sp4-inner">
+    <div class="cf-cro-sp4-head">
+      <h2>Don't take <span>our word</span> for it.</h2>
+      <p style="font-size:18px;opacity:0.6;color:{{ section.settings.text_color }}">Join 50,000+ customers who have leveled up.</p>
+    </div>
+    <div class="cf-cro-sp4-masonry">
+      {%- for i in (1..6) -%}
+        {%- assign t = 'title_' | append: i -%}
+        {%- assign x = 'text_' | append: i -%}
+        {%- assign n = 'name_' | append: i -%}
+        {% if section.settings[t] != blank %}
+        <div class="cf-cro-sp4-card">
+          <div class="cf-cro-sp4-stars">
+            {% for j in (1..5) %}<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>{% endfor %}
+          </div>
+          <div class="cf-cro-sp4-title">"{{ section.settings[t] }}"</div>
+          <div class="cf-cro-sp4-text">{{ section.settings[x] }}</div>
+          <div class="cf-cro-sp4-user">
+            <div class="cf-cro-sp4-av">{{ section.settings[n] | slice: 0 }}</div>
+            <div>
+              <div class="cf-cro-sp4-name">{{ section.settings[n] }}</div>
+              <div class="cf-cro-sp4-verify"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Verified Buyer</div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      {%- endfor -%}
+    </div>
+    <div class="cf-cro-sp4-cta">
+      <a href="{{ section.settings.cta_link }}" class="cf-cro-sp4-btn">Try It Risk-Free for 30 Days</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Masonry Reviews v4",
+  "settings": [
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/all"},
+    {"type":"text","id":"title_1","label":"Review 1 Title","default":"Absolutely life changing"},
+    {"type":"textarea","id":"text_1","label":"Review 1 Text","default":"I was skeptical at first, but after 3 days I could feel the difference. Fast shipping and the quality is incredible."},
+    {"type":"text","id":"name_1","label":"Name 1","default":"Michael T."},
+    {"type":"text","id":"title_2","label":"Review 2 Title","default":"Worth every single penny"},
+    {"type":"textarea","id":"text_2","label":"Review 2 Text","default":"Finally a brand that actually delivers on its promises. I've thrown away all my alternatives. This is the only one I use now."},
+    {"type":"text","id":"name_2","label":"Name 2","default":"Jessica R."},
+    {"type":"text","id":"title_3","label":"Review 3 Title","default":"Best gift I've bought"},
+    {"type":"textarea","id":"text_3","label":"Review 3 Text","default":"Got this for my husband and he hasn't stopped talking about it. The packaging was beautiful too."},
+    {"type":"text","id":"name_3","label":"Name 3","default":"Sarah W."},
+    {"type":"text","id":"title_4","label":"Review 4 Title","default":"The quality is unmatched"},
+    {"type":"textarea","id":"text_4","label":"Review 4 Text","default":"I'm incredibly picky. I inspect everything. The craftsmanship here is flawless. 10/10."},
+    {"type":"text","id":"name_4","label":"Name 4","default":"David K."},
+    {"type":"text","id":"title_5","label":"Review 5 Title","default":"Fast shipping, great support"},
+    {"type":"textarea","id":"text_5","label":"Review 5 Text","default":"Had a question about sizing and their team got back to me in 5 minutes. The product fits perfectly."},
+    {"type":"text","id":"name_5","label":"Name 5","default":"Amanda L."},
+    {"type":"text","id":"title_6","label":"Review 6 Title","default":"I'm buying more right now"},
+    {"type":"textarea","id":"text_6","label":"Review 6 Text","default":"Never writing a review before but had to for this. Amazing experience from start to finish."},
+    {"type":"text","id":"name_6","label":"Name 6","default":"James B."},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F8FAFC"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0F172A"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#6366F1"},
+    {"type":"range","id":"padding_y","label":"Top/Bottom Padding","min":20,"max":120,"step":10,"default":80}
+  ],
+  "presets": [{"name":"CRO · Masonry Reviews v4"}]
+}
+{% endschema %}
