@@ -17,6 +17,7 @@ export function SidebarRight() {
         settings,
         updateSettings,
         saveSettings,
+        removeSection,
         fetcher
     } = useThemeEditor();
 
@@ -41,30 +42,33 @@ export function SidebarRight() {
 
     if (!activeBlock) {
         return (
-            <aside style={{ width: 300, background: '#fff', borderLeft: '1px solid var(--p-color-border)' }}>
-                {/* Render Empty State (Select an element to edit) */}
+            <aside className="w-80 bg-white border-l border-polaris-border flex flex-col justify-center items-center p-6 text-center">
+                <span className="material-symbols-outlined text-4xl text-polaris-subdued mb-2">touch_app</span>
+                <Text variant="bodyMd" tone="subdued">Select a section or block from the preview to edit its settings.</Text>
             </aside>
         );
     }
 
     return (
-        <aside style={{ width: 300, background: '#fff', borderLeft: '1px solid var(--p-color-border)', display: 'flex', flexDirection: 'column' }}>
+        <aside className="w-80 bg-white border-l border-polaris-border flex flex-col">
 
             {/* Header */}
-            <div style={{ padding: '16px', borderBottom: '1px solid var(--p-color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Button variant="plain" icon={XIcon} onClick={() => setSelectedBlockId(null)} />
-                    <Text variant="headingMd" as="h3">{schema.name}</Text>
+            <div className="p-4 border-b border-polaris-border">
+                <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-base font-semibold text-polaris-text">{schema.name}</h2>
+                    <button className="text-polaris-subdued hover:text-polaris-text" onClick={() => setSelectedBlockId(null)}>
+                        <span className="material-symbols-outlined">close</span>
+                    </button>
                 </div>
-                <Button size="micro" variant="primary" onClick={saveSettings} loading={fetcher.state !== 'idle'}>Save</Button>
+                <p className="text-xs text-polaris-subdued">Edit the configuration of this element natively.</p>
             </div>
 
             {/* Settings Scroll Area */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+            <div className="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-6">
                 {loading ? (
                     <Text color="subdued">Loading parameters...</Text>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                    <div className="space-y-6">
                         {schema.settings.map(s => (
                             <SettingRenderer
                                 key={s.id}
@@ -75,6 +79,16 @@ export function SidebarRight() {
                         ))}
                     </div>
                 )}
+            </div>
+
+            {/* Footer / Remove Button */}
+            <div className="p-4 border-t border-polaris-border bg-white">
+                <button 
+                    onClick={() => removeSection(selectedBlockId)}
+                    className="w-full text-red-600 border border-polaris-border py-2 text-sm font-semibold hover:bg-red-50 rounded-lg transition-colors"
+                >
+                    Remove section
+                </button>
             </div>
 
         </aside>

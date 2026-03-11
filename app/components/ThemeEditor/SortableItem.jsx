@@ -22,7 +22,7 @@ export function SortableItem(props) {
         boxShadow: isDragging ? '0 0px 8px rgba(0,0,0,0.1)' : 'none',
     };
 
-    // 1:1 Polaris specific row styling
+    // 1:1 Shopify Editor row styling
     const isActive = props.isActive;
 
     return (
@@ -31,30 +31,22 @@ export function SortableItem(props) {
             style={style}
             {...attributes}
             onClick={props.onClick}
-            className={`te-sortable-row ${isActive ? 'active' : ''}`}
+            className={`flex items-center justify-between p-2 rounded-r-lg group cursor-pointer transition-colors ${
+                isActive ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-polaris-bg border-l-2 border-transparent hover:border-polaris-border'
+            }`}
         >
-            <div
-                {...listeners}
-                style={{
-                    cursor: isDragging ? 'grabbing' : 'grab',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'var(--p-color-icon-secondary)'
-                }}
-            >
-                <Icon source={DragDropIcon} />
-            </div>
-
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flex: 1, overflow: 'hidden' }}>
-                <Icon source={AppsIcon} color={isActive ? "interactive" : "base"} />
-                <Text variant="bodyMd" as="span" truncate tone={isActive ? "interactive" : "base"}>
+            <div className="flex items-center gap-2" {...listeners} style={{ cursor: isDragging ? 'grabbing' : 'grab' }}>
+                <span className="material-symbols-outlined text-polaris-subdued">drag_indicator</span>
+                <span className={`material-symbols-outlined ${isActive ? 'text-primary' : 'text-polaris-subdued'}`}>
+                    grid_view
+                </span>
+                <span className={`text-sm font-medium ${isActive ? 'text-polaris-text font-semibold' : 'text-polaris-text'}`}>
                     {props.title}
-                </Text>
+                </span>
             </div>
-
-            {isActive && (
-                <div style={{ width: 4, height: 16, background: 'var(--p-color-bg-interactive)', borderRadius: 2 }} />
-            )}
+            <span className={`material-symbols-outlined text-polaris-subdued transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                visibility
+            </span>
         </div>
     );
 }

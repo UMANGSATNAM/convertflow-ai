@@ -72,36 +72,19 @@ export function Canvas() {
     }, [blocks, settings, activeBlock, previewTemplateId]);
 
     return (
-        <main style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            background: 'var(--p-color-bg-surface-secondary)',
-            padding: '24px',
-            overflow: 'hidden'
-        }}>
-            <div style={{ paddingBottom: '8px', width: device === 'mobile' ? 400 : '100%', maxWidth: 1200 }}>
+        <section className="flex-1 bg-polaris-bg p-6 overflow-hidden flex flex-col">
+            
+            <div className="pb-2 w-full max-w-5xl mx-auto flex items-center justify-between">
                 <Text variant="bodySm" tone="subdued">
-                    {activeBlock ? activeBlock.type : (previewTemplateId ? 'Previewing template' : 'No element selected')}
+                    {activeBlock ? `Editing: ${activeBlock.type}` : (previewTemplateId ? 'Previewing template' : 'Live Preview')}
                 </Text>
             </div>
 
-            <div style={{
-                flex: 1,
-                width: device === 'mobile' ? 400 : '100%',
-                maxWidth: 1200,
-                background: '#fff',
-                borderRadius: '8px',
-                boxShadow: 'var(--p-shadow-md)',
-                border: '1px solid var(--p-color-border)',
-                position: 'relative',
-                overflow: 'hidden',
-                transition: 'width 0.3s ease'
-            }}>
-
+            <div 
+                className={`flex-1 bg-white rounded-xl shadow-lg border border-polaris-border overflow-hidden relative mx-auto transition-all duration-300 ease-in-out ${device === 'mobile' ? 'w-[400px]' : 'w-full max-w-5xl'}`}
+            >
                 {loading && (
-                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
+                    <div className="absolute inset-0 bg-white/40 backdrop-blur-sm flex items-center justify-center z-10">
                         <Spinner size="large" />
                     </div>
                 )}
@@ -110,16 +93,15 @@ export function Canvas() {
                     <iframe
                         ref={iframeRef}
                         srcDoc={html}
-                        style={{ width: '100%', height: '100%', border: 'none' }}
-                        sandbox="allow-scripts allow-same-origin"
+                        className="w-full h-full border-none"
+                        sandbox="allow-scripts allow-same-origin allow-popups"
                     />
                 ) : (
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="absolute inset-0 flex items-center justify-center bg-polaris-bg">
                         <Spinner size="large" />
                     </div>
                 )}
-
             </div>
-        </main>
+        </section>
     );
 }
