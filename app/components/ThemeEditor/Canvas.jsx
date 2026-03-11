@@ -89,6 +89,21 @@ export function Canvas() {
         return () => { if (abortRef.current) abortRef.current.abort(); };
     }, [templateFile]);
 
+    // ── 4. Listen for iframe auto-submit events ─────────────────────────
+    // When the password page auto-submits, the iframe navigates to /
+    // The iframe's onLoad fires → Canvas re-fetches the now-authenticated page
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (!event.data || !event.data.type) return;
+            if (event.data.type === 'CF_RELOAD_CANVAS') {
+                // Wait a moment for browser cookie to be set, then re-fetch
+                setTimeout(fetchPreview, 800);
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, [fetchPreview]);
+
     // ── 4. Section select sync → postMessage ────────────────────────────
     useEffect(() => {
         if (!iframeReadyRef.current) return;
