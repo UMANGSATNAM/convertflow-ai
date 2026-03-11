@@ -45,6 +45,7 @@ export default function App() {
     <AppProvider isEmbeddedApp apiKey={apiKey}>
       <NavMenu>
         <Link to="/app" rel="home">Section Library</Link>
+        <Link to="/app/cro-sections">CRO Library</Link>
         <Link to="/app/theme-editor">Theme Editor</Link>
       </NavMenu>
       <Outlet />
