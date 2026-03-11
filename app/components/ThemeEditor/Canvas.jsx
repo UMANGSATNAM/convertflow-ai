@@ -1,8 +1,18 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useThemeEditor } from './ThemeEditorContext';
 import { useIframeBridge } from './useIframeBridge';
 import { Spinner } from '@shopify/polaris';
 
+/**
+ * Canvas – renders the live Shopify storefront inside an iframe via the
+ * server-side storefront proxy. The proxy:
+ *   1. Fetches the real storefront HTML (Dawn, etc.)
+ *   2. Rewrites asset URLs to absolute
+ *   3. Injects the ConvertFlow editor bridge script
+ *
+ * CF sections are injected/removed/reordered by posting messages TO the
+ * iframe via useIframeBridge (same as before).
+ */
 export function Canvas() {
     const {
         blocks,
@@ -11,16 +21,18 @@ export function Canvas() {
         selectedBlockId,
         setSelectedBlockId,
         previewTemplateId,
-        device
+        device,
+        shop,
+        templateFile,
     } = useThemeEditor();
 
     const iframeRef = useRef(null);
-    const [html, setHtml] = useState('');
-    const [loading, setLoading] = useState(false);
-    const prevSelectedRef = useRef(null);
+    const [loading, setLoading] = useState(true);
+    const [proxyUrl, setProxyUrl] = useState('');
     const iframeReadyRef = useRef(false);
+    const prevSelectedRef = useRef(null);
 
-    // ── 1. Setup OS 2.0 Iframe Bridge ──────────────────────────
+    // ── 1. Setup OS 2.0 Iframe Bridge ─────────────────────────────────
     const handleIframeClick = useCallback((blockId) => {
         setSelectedBlockId(blockId);
     }, [setSelectedBlockId]);
@@ -36,91 +48,43 @@ export function Canvas() {
         selectSection,
         deselectSection,
         reorderSections: reorderIframe,
+        loadSection: injectSection,
+        removeSection,
     } = useIframeBridge(iframeRef, handleIframeClick, handleIframeReady);
 
-    // ── 2. Create a stable key from blocks to detect ANY change ──
-    const blocksKey = useMemo(() => 
-        blocks.map(b => `${b.id}:${b.type}`).join('|'),
-        [blocks]
-    );
-
-    // ── 3. Full HTML Preview Fetch ─────────────────────────────
-    // Triggers on: mount, blocks change, preview template change
+    // ── 2. Build the proxy URL ─────────────────────────────────────────
     useEffect(() => {
+        // Map templateFile to page param
+        const pageParam = templateFile?.includes('product') ? 'product' : 'home';
+        const url = `/app/api/storefront-proxy?page=${pageParam}&t=${Date.now()}`;
+        setProxyUrl(url);
         setLoading(true);
+        iframeReadyRef.current = false;
+    }, [templateFile]);
 
-        let blocksToSend = [...blocks];
+    // ── 3. When iframe loads → inject CF sections on top ──────────────
+    const handleLoad = useCallback(() => {
+        setLoading(false);
+        iframeReadyRef.current = true;
 
-        // Merge live settings for the active block
-        if (activeBlock && settings && Object.keys(settings).length > 0) {
-            const idx = blocksToSend.findIndex(b => b.id === activeBlock.id);
-            if (idx !== -1) {
-                blocksToSend[idx] = { ...blocksToSend[idx], settings: { ...blocksToSend[idx].settings, ...settings } };
-            }
-        }
-
-        // Insert preview template if browsing library
-        if (previewTemplateId && !activeBlock) {
-            blocksToSend.push({
-                id: 'preview-insert',
-                type: previewTemplateId,
-                settings: {}
+        // Inject all CF blocks that are in the current blocks list
+        // (native Dawn sections are already in the live HTML)
+        if (iframeRef.current) {
+            blocks.forEach(block => {
+                if (block.isCf && block.cfHtml) {
+                    injectSection?.(block.id, block.cfHtml);
+                }
             });
         }
 
-        const form = new FormData();
-        form.append("blocks", JSON.stringify(blocksToSend));
-        if (activeBlock) form.append("activeBlockId", activeBlock.id);
-        else if (previewTemplateId) form.append("activeBlockId", "preview-insert");
+        if (selectedBlockId) {
+            selectSection(selectedBlockId);
+        }
+    }, [blocks, injectSection, selectSection, selectedBlockId]);
 
-        fetch('/app/api/template-preview', { method: 'POST', body: form })
-            .then(res => res.json())
-            .then(data => {
-                if (data.html) {
-                    setHtml(data.html);
-                    iframeReadyRef.current = false;
-                }
-            })
-            .catch(err => console.error('Preview fetch error:', err))
-            .finally(() => setLoading(false));
-    }, [blocksKey, previewTemplateId]); // blocksKey = stable serialized key of all blocks
-
-    // ── 4. Debounced setting changes → re-fetch ────────────────
-    useEffect(() => {
-        if (!activeBlock || !settings || Object.keys(settings).length === 0) return;
-
-        const timer = setTimeout(() => {
-            setLoading(true);
-            const blocksToSend = blocks.map(b => {
-                if (b.id === activeBlock.id) {
-                    return { ...b, settings: { ...b.settings, ...settings } };
-                }
-                return b;
-            });
-
-            const form = new FormData();
-            form.append("blocks", JSON.stringify(blocksToSend));
-            form.append("activeBlockId", activeBlock.id);
-
-            fetch('/app/api/template-preview', { method: 'POST', body: form })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.html) {
-                        setHtml(data.html);
-                        iframeReadyRef.current = false;
-                    }
-                })
-                .catch(err => console.error('Settings preview error:', err))
-                .finally(() => setLoading(false));
-        }, 400);
-
-        return () => clearTimeout(timer);
-    }, [settings]);
-
-    // ── 5. Section select sync → postMessage to iframe ─────────
+    // ── 4. Section select sync → postMessage to iframe ─────────────────
     useEffect(() => {
         if (!iframeReadyRef.current) return;
-        
         if (selectedBlockId && selectedBlockId !== prevSelectedRef.current) {
             selectSection(selectedBlockId);
         } else if (!selectedBlockId && prevSelectedRef.current) {
@@ -129,35 +93,45 @@ export function Canvas() {
         prevSelectedRef.current = selectedBlockId;
     }, [selectedBlockId, selectSection, deselectSection]);
 
-    // ── Render ─────────────────────────────────────────────────
+    // ── Render ─────────────────────────────────────────────────────────
     return (
-        <section className="flex-1 bg-polaris-bg p-6 overflow-hidden flex flex-col">
+        <section className="flex-1 bg-polaris-bg p-4 overflow-hidden flex flex-col">
             <div className="pb-2 w-full max-w-5xl mx-auto flex items-center justify-between">
                 <span className="text-xs text-polaris-subdued">
-                    {activeBlock ? `Editing: ${activeBlock.type}` : (previewTemplateId ? 'Previewing template' : 'Live Preview')}
+                    {activeBlock
+                        ? `Editing: ${activeBlock.type}`
+                        : previewTemplateId
+                            ? 'Previewing template'
+                            : 'Live Preview — ' + (shop || 'your store')}
                 </span>
+                {loading && (
+                    <span className="text-xs text-polaris-subdued flex items-center gap-1">
+                        <Spinner size="small" /> Loading...
+                    </span>
+                )}
             </div>
 
-            <div 
+            <div
                 className={`flex-1 bg-white rounded-xl shadow-lg border border-polaris-border overflow-hidden relative mx-auto transition-all duration-300 ease-in-out ${device === 'mobile' ? 'w-[400px]' : 'w-full max-w-5xl'}`}
             >
                 {loading && (
-                    <div className="absolute inset-0 bg-white/40 backdrop-blur-sm flex items-center justify-center z-10">
+                    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center z-10 gap-3">
                         <Spinner size="large" />
+                        <span className="text-sm text-slate-500">Loading live theme preview…</span>
                     </div>
                 )}
 
-                {html ? (
+                {proxyUrl && (
                     <iframe
+                        key={proxyUrl}
                         ref={iframeRef}
-                        srcDoc={html}
+                        src={proxyUrl}
                         className="w-full h-full border-none"
-                        sandbox="allow-scripts allow-same-origin allow-popups"
+                        onLoad={handleLoad}
+                        // allow-same-origin + allow-scripts needed for postMessage bridge
+                        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                        title="Live theme preview"
                     />
-                ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-polaris-bg">
-                        <Spinner size="large" />
-                    </div>
                 )}
             </div>
         </section>
