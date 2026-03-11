@@ -27,7 +27,7 @@ export function TemplatePicker() {
                     <Text tone="subdued">Select a template below to add it to your theme.</Text>
                     {/* Note: In a fully wired environment, this maps over the category templates */}
                     <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {activeCategory.sections.map(sec => (
+                        {(activeCategory?.sections || []).map(sec => (
                             <Button key={sec.file} fullWidth onClick={() => handleAddSection(sec.file)} textAlign="left">
                                 {sec.name}
                             </Button>
