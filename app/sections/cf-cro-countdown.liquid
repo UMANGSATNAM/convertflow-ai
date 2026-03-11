@@ -20,7 +20,7 @@
 
 <div class="cf-cro-cd">
   <div class="cf-cro-cd-inner">
-    <div class="cf-cro-cd-badge">🔥 {{ section.settings.badge }}</div>
+    <div class="cf-cro-cd-badge"><svg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\'><path d=\'M8.5 14.5A2.5 2.5 0 0 0 11 12c-2.2 0-4-1.8-4-4a8 8 0 0 1 12 6.5 6 6 0 1 1-12 0\'/></svg> {{ section.settings.badge }}</div>
     <h2>{{ section.settings.heading }}</h2>
     <p class="cf-cro-cd-sub">{{ section.settings.subheading }}</p>
     <div class="cf-cro-cd-timer" id="cf-cd-{{ section.id }}">
@@ -35,7 +35,7 @@
     <div class="cf-cro-cd-bar"><div class="cf-cro-cd-bar-fill" style="width:{{ section.settings.bar_pct }}%"></div></div>
     <a href="{{ section.settings.cta_link }}" class="cf-cro-cd-cta">{{ section.settings.cta_text }} →</a>
     {% if section.settings.urgency_text != blank %}
-      <p class="cf-cro-cd-urgency">⚡ {{ section.settings.urgency_text }}</p>
+      <p class="cf-cro-cd-urgency"><svg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polygon points=\'13 2 3 14 12 14 11 22 21 10 12 10 13 2\'></polygon></svg> {{ section.settings.urgency_text }}</p>
     {% endif %}
   </div>
 </div>

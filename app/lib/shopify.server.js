@@ -335,3 +335,45 @@ export async function installAllDeps(shop, accessToken) {
     results.totalFiles = results.snippets + results.locales + (results.config ? 1 : 0);
     return results;
 }
+
+/**
+ * Publishes a FULL JSON Page Template to the theme containing all requested sections.
+ * This uploads to `templates/page.{id}.json` or `templates/product.{id}.json`.
+ */
+export async function publishPageTemplate(shop, accessToken, template) {
+    const theme = await getActiveTheme(shop, accessToken);
+    if (!theme) throw new Error('No active theme found');
+
+    const pageJson = {
+      "sections": {},
+      "order": []
+    };
+
+    // Auto-populate the template with the configured sections
+    for (let idx = 0; idx < template.sections.length; idx++) {
+      const sectionFile = template.sections[idx];
+      const blockId = `cf_${sectionFile.replace(/^cf-cro-/, '')}_${idx}`;
+      
+      pageJson.sections[blockId] = {
+        type: sectionFile,
+        settings: {}
+      };
+      pageJson.order.push(blockId);
+      
+      // Before creating the template, we must ensure the individual sections exist!
+      // In a real flow, the user might not have injected the sections individually.
+      // We will upload each required section on the fly.
+      const rawLiquid = readSectionFile(sectionFile + '.liquid');
+      if (rawLiquid) {
+          const fixedLiquid = removeSchemaTranslations(rawLiquid);
+          await uploadAsset(shop, accessToken, theme.id, `sections/${sectionFile}.liquid`, fixedLiquid);
+      }
+    }
+
+    const prefix = template.type === 'product' ? 'product' : 'page';
+    const assetKey = `templates/${prefix}.${template.id}.json`;
+    
+    await uploadAsset(shop, accessToken, theme.id, assetKey, JSON.stringify(pageJson, null, 2));
+    
+    return { success: true, assetKey, templateId: template.id };
+}
