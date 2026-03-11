@@ -57,7 +57,7 @@ export function SidebarLeft() {
     // Pure representation of the draggable section items
     // Separating headers/footers in the future via block types
     return (
-        <aside className="w-72 bg-white border-r border-polaris-border flex flex-col">
+        <aside className="w-72 h-full bg-white border-r border-polaris-border flex flex-col">
             <div className="p-3 border-b border-polaris-border bg-white sticky top-0">
                 <div className="relative">
                     <select className="w-full bg-white border border-polaris-border rounded-lg py-1.5 pl-3 pr-8 text-sm font-medium focus:ring-1 focus:ring-primary appearance-none outline-none">

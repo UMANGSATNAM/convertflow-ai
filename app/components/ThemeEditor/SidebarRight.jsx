@@ -42,7 +42,7 @@ export function SidebarRight() {
 
     if (!activeBlock) {
         return (
-            <aside className="w-80 bg-white border-l border-polaris-border flex flex-col justify-center items-center p-6 text-center">
+            <aside className="w-80 h-full bg-white border-l border-polaris-border flex flex-col justify-center items-center p-6 text-center">
                 <span className="material-symbols-outlined text-4xl text-polaris-subdued mb-2">touch_app</span>
                 <Text variant="bodyMd" tone="subdued">Select a section or block from the preview to edit its settings.</Text>
             </aside>
@@ -50,7 +50,7 @@ export function SidebarRight() {
     }
 
     return (
-        <aside className="w-80 bg-white border-l border-polaris-border flex flex-col">
+        <aside className="w-80 h-full bg-white border-l border-polaris-border flex flex-col">
 
             {/* Header */}
             <div className="p-4 border-b border-polaris-border">
@@ -69,7 +69,7 @@ export function SidebarRight() {
                     <Text color="subdued">Loading parameters...</Text>
                 ) : (
                     <div className="space-y-6">
-                        {schema.settings.map(s => (
+                        {(schema.settings || []).map(s => (
                             <SettingRenderer
                                 key={s.id}
                                 setting={s}
