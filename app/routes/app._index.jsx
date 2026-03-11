@@ -110,63 +110,100 @@ export default function AppIndex() {
 
   return (
     <div style={S.page}>
+      <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+      <script dangerouslySetInnerHTML={{__html: `tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:'#2525f4','background-dark':'#06060e'},fontFamily:{display:['Inter','sans-serif']}}}}`}} />
       <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-                * { box-sizing: border-box; }
-                .cat-card:hover { border-color: #818cf8 !important; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79,70,229,0.08) !important; }
-                .sec-card:hover { border-color: #c7d2fe !important; }
-                .pub-btn:hover { background: #4338ca !important; }
-                @keyframes spin { to { transform: rotate(360deg); } }
-                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-                @keyframes progress { 0% { width: 5%; } 50% { width: 60%; } 100% { width: 95%; } }
-            `}</style>
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, rgba(37, 37, 244, 0.15) 0%, rgba(6, 6, 14, 0) 60%); }
+        .bento-inner-shadow { box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        * { box-sizing: border-box; }
+        .cat-card:hover { border-color: #818cf8 !important; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79,70,229,0.08) !important; }
+        .sec-card:hover { border-color: #c7d2fe !important; }
+        .pub-btn:hover { background: #4338ca !important; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes progress { 0% { width: 5%; } 50% { width: 60%; } 100% { width: 95%; } }
+      `}</style>
 
       <div style={S.container}>
-        {/* ──── HERO: THEME EDITOR LAUNCH CARD ──── */}
-        <div style={S.editorHero}>
-          <div style={S.editorHeroLeft}>
-            <div style={S.editorHeroBadge}>NEW ✦ Visual Theme Editor</div>
-            <h2 style={S.editorHeroTitle}>Build your store like a Pro</h2>
-            <p style={S.editorHeroDesc}>
-              Our Shopify-style Theme Editor lets you pick from pre-made sections,
-              customize every setting, see a live preview, and inject directly into your
-              live theme — all in one place.
-            </p>
-            <a href="/app/theme-editor" style={S.editorHeroCta}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
-              Open Theme Editor
-            </a>
-          </div>
-          <div style={S.editorHeroRight}>
-            <div style={S.editorMock}>
-              <div style={S.editorMockTopbar}>
-                <span style={S.editorMockDot} />
-                <span style={{ ...S.editorMockDot, background: 'rgba(255,255,255,0.4)' }} />
-                <span style={{ ...S.editorMockDot, background: 'rgba(255,255,255,0.2)' }} />
-                <div style={S.editorMockTitle}>Theme Editor</div>
-              </div>
-              <div style={S.editorMockBody}>
-                <div style={S.editorMockLeft}>
-                  {['Header', 'Announcement', 'Hero Section', 'Products'].map((s, i) => (
-                    <div key={s} style={{ ...S.editorMockSection, opacity: i === 1 ? 1 : 0.5, borderLeft: i === 1 ? '3px solid #818cf8' : '3px solid transparent' }}>
-                      {i === 1 && <span style={{ color: '#818cf8', fontSize: 8, fontWeight: 800, marginRight: 4 }}>CF</span>}
-                      {s}
+        {/* ------------- STITCH BENTO LANDING PAGE ------------- */}
+        <div className="dark mb-10 w-full rounded-2xl overflow-hidden shadow-2xl" style={{ isolation: 'isolate' }}>
+            <main className="relative pt-20 pb-20 overflow-hidden bg-[#06060e] font-display text-slate-100 selection:bg-primary/30 w-full" style={{ fontFamily: 'Inter' }}>
+                <section className="relative z-10 max-w-7xl mx-auto px-6 text-center hero-gradient">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-8">
+                        <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                                        New: AI Theme Editor V2
+                                    </div>
+                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent">
+                                        Supercharge Your <br/> Shopify Store
+                                    </h1>
+                    <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-light leading-relaxed mb-10">
+                                        Experience the future of e-commerce design. Generate high-converting sections in seconds natively in your Theme Editor.
+                                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <Link to="/app/theme-editor" className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-2xl shadow-primary/40 flex items-center justify-center gap-2" style={{ textDecoration: 'none' }}>
+                                            Launch Theme Editor <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+                    </Link>
                     </div>
-                  ))}
-                </div>
-                <div style={S.editorMockCenter}>
-                  <div style={{ width: '100%', height: 18, background: 'rgba(255,255,255,0.15)', borderRadius: 3, marginBottom: 6 }} />
-                  <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 3, marginBottom: 4 }} />
-                  <div style={{ width: '70%', height: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 3 }} />
-                </div>
-                <div style={S.editorMockRight}>
-                  <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.15)', borderRadius: 3, marginBottom: 8 }} />
-                  {[1, 2, 3].map(i => <div key={i} style={{ width: '100%', height: 28, background: 'rgba(255,255,255,0.07)', borderRadius: 4, marginBottom: 4 }} />)}
-                  <div style={{ ...S.editorMockInjectBtn }}>🚀 Inject</div>
-                </div>
-              </div>
-            </div>
-          </div>
+                </section>
+                
+                <section className="max-w-7xl mx-auto px-6 mt-20">
+                    <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 grid-rows-2 gap-4 h-auto md:h-[800px]">
+                    <div className="md:col-span-2 lg:col-span-3 row-span-1 glass rounded-2xl p-8 flex flex-col justify-between overflow-hidden relative group">
+                        <div className="relative z-10">
+                        <h3 className="text-2xl font-bold mb-2 text-white">100+ Premium Sections</h3>
+                        <p className="text-slate-400 text-sm max-w-[240px]">High-converting UI components ready for your store.</p>
+                        </div>
+                        <div className="absolute -bottom-10 -right-10 flex gap-4 rotate-[-12deg] group-hover:rotate-[-8deg] transition-transform duration-500">
+                        <div className="w-40 h-56 bg-primary/20 rounded-xl border border-white/10 p-2 shadow-2xl flex flex-col gap-2">
+                            <div className="w-full h-24 bg-primary/40 rounded-lg"></div>
+                            <div className="h-2 w-3/4 bg-white/20 rounded"></div>
+                            <div className="h-2 w-1/2 bg-white/20 rounded"></div>
+                            <div className="mt-auto h-8 w-full bg-primary rounded-md"></div>
+                        </div>
+                        <div className="w-40 h-56 bg-slate-800 rounded-xl border border-white/10 p-2 shadow-2xl flex flex-col gap-2">
+                        <div className="w-full h-24 bg-slate-700 rounded-lg"></div>
+                        <div className="h-2 w-3/4 bg-white/20 rounded"></div>
+                        <div className="mt-auto h-8 w-full bg-white/10 rounded-md"></div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div className="md:col-span-2 lg:col-span-3 row-span-2 glass rounded-2xl p-8 overflow-hidden relative group">
+                        <div className="relative z-10">
+                        <h3 className="text-2xl font-bold mb-2 text-white">Visual Theme Editor</h3>
+                        <p className="text-slate-400 text-sm mb-8">Click <b>Launch Theme Editor</b> to design without limits.</p>
+                        </div>
+                        <div className="mt-4 bg-[#0f172a]/50 rounded-xl border border-white/10 h-full p-4 flex flex-col gap-4 shadow-inner">
+                        <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                        <div className="flex gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
+                        <div className="w-3 h-3 rounded-full bg-amber-500/50"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
+                        </div>
+                        <div className="h-4 w-32 bg-white/5 rounded"></div>
+                        </div>
+                        <div className="flex gap-4 h-full">
+                        <div className="w-24 shrink-0 flex flex-col gap-2">
+                        <div className="h-6 w-full bg-primary/20 rounded border border-primary/30"></div>
+                        <div className="h-6 w-full bg-white/5 rounded"></div>
+                        <div className="h-6 w-full bg-white/5 rounded"></div>
+                        </div>
+                        <div className="flex-1 bg-white/5 rounded-lg border border-white/10 p-4 flex flex-col items-center justify-center text-center gap-3">
+                        <div className="h-2 w-32 bg-white/20 rounded"></div>
+                        <div className="h-2 w-24 bg-white/10 rounded"></div>
+                        <div className="mt-4 w-full h-10 bg-primary rounded-lg"></div>
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+            </main>
         </div>
 
         {/* Quick Actions Banner */}
@@ -241,89 +278,7 @@ export default function AppIndex() {
           )
         }
 
-        {/* Hero Section (Bento Grid) */}
-        {
-          !activeCategory && !isSettingUp && (
-            <div style={S.heroContainer}>
-              <div style={S.heroHeader}>
-                <h2 style={S.heroTitle}>Build High-Converting Pages Faster</h2>
-                <p style={S.heroSubtitle}>Premium sections designed for clarity, conversion, and perfect mobile responsiveness.</p>
-              </div>
-
-              <div style={S.bentoGrid}>
-                {/* Feature 1 (Wide) */}
-                <div style={S.bentoCardWide}>
-                  <div style={S.bentoContent}>
-                    <h3 style={S.bentoTitle}>Full Structural Control for Conversion</h3>
-                    <p style={S.bentoDesc}><strong>ConvertFlow AI</strong> lets you control add-to-cart visibility, trust badge placement, product information hierarchy, and CTA prominence seamlessly.</p>
-                  </div>
-                  <div style={S.bentoImageMock}>
-                    <div style={S.mockWindow}>
-                      <div style={S.mockHeader}>
-                        <span style={S.mockDotRed} />
-                        <span style={S.mockDotYellow} />
-                        <span style={S.mockDotGreen} />
-                      </div>
-                      <div style={S.mockBody}>
-                        <div style={S.mockSidebar}>
-                          <div style={S.mockBlock} /><div style={S.mockBlock} /><div style={S.mockBlock} />
-                        </div>
-                        <div style={S.mockCanvas}>
-                          <div style={S.mockHero} />
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                            <div style={S.mockSectionHalf} /><div style={S.mockSectionHalf} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Feature 2 (Square) */}
-                <div style={S.bentoCardSquare1}>
-                  <h3 style={S.bentoTitle}>Built to Work With Shopify's Ecosystem</h3>
-                  <p style={S.bentoDesc}>Seamlessly integrate with Shopify themes and apps without slowing down performance. 100% native Liquid blocks.</p>
-                  <div style={S.mockIntegrations}>
-                    <div style={S.mockTag}><I.Zap width={12} height={12} /> Live App Block</div>
-                    <div style={S.mockTag}><I.Layout width={12} height={12} /> Theme Editor</div>
-                  </div>
-                </div>
-
-                {/* Bottom Row */}
-                <div style={S.bentoCardTall}>
-                  <h3 style={S.bentoTitle}>Customize for Clarity, Not Just Design</h3>
-                  <p style={S.bentoDesc}>Structure product information to reduce confusion and increase purchase confidence.</p>
-                  <ul style={S.bentoList}>
-                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Parameter for almost every style</li>
-                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Global styles</li>
-                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Option Swatches</li>
-                    <li><I.Check width={12} height={12} style={{ color: '#6366f1' }} /> Custom Code Editor</li>
-                  </ul>
-                </div>
-
-                <div style={S.bentoCardTallAI}>
-                  <div style={S.aiBadge}><span style={{ fontSize: 14 }}>✨</span> New: AI Sales Page</div>
-                  <p style={S.bentoDesc}>Build personalized sales pages designed to improve add-to-cart rate by aligning content with visitor intent.</p>
-                  <div style={S.mockAiBox}>
-                    <div style={S.mockAiLine} />
-                    <div style={S.mockAiLine} />
-                    <div style={{ ...S.mockAiLine, width: '60%' }} />
-                  </div>
-                </div>
-
-                <div style={S.bentoCardTallLight}>
-                  <h3 style={S.bentoTitle}>Responsive for Mobile Conversion</h3>
-                  <p style={S.bentoDesc}>Ensure your key conversion elements remain visible and optimized across devices.</p>
-                  <div style={S.mockDevices}>
-                    <I.Layout width={16} height={16} />
-                    <I.Grid width={16} height={16} />
-                    <I.Image width={16} height={16} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        }
+            <div style={{ paddingBottom: 20 }} />
 
         {/* Category Grid */}
         {
