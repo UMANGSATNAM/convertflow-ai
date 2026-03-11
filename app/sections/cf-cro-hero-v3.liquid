@@ -1,0 +1,58 @@
+<style>
+.cf-cro-h3{width:100%;background:{{ section.settings.bg_color }};padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative;min-height:{{ section.settings.height }}px;display:flex;align-items:center}
+.cf-cro-h3-bg{position:absolute;inset:0;z-index:0}
+.cf-cro-h3-bg img{width:100%;height:100%;object-fit:cover}
+.cf-cro-h3-overlay{position:absolute;inset:0;background:linear-gradient(90deg,{{ section.settings.bg_color }} 40%,transparent 80%);z-index:1}
+.cf-cro-h3-inner{max-width:1200px;margin:0 auto;padding:80px 48px;position:relative;z-index:2;width:100%}
+.cf-cro-h3-content{max-width:520px;display:flex;flex-direction:column;gap:20px}
+.cf-cro-h3-label{font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:{{ section.settings.accent_color }};font-weight:700}
+.cf-cro-h3 h1{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);font-weight:900;color:{{ section.settings.text_color }};line-height:1.08;margin:0;letter-spacing:-0.03em}
+.cf-cro-h3-desc{font-size:17px;line-height:1.7;color:{{ section.settings.text_color }};opacity:0.7}
+.cf-cro-h3-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.cf-cro-h3-btn1{padding:16px 36px;background:{{ section.settings.accent_color }};color:#fff;border-radius:{{ section.settings.btn_radius }}px;font-size:16px;font-weight:700;text-decoration:none;transition:0.2s;box-shadow:0 4px 16px {{ section.settings.accent_color }}50}
+.cf-cro-h3-btn1:hover{transform:translateY(-2px)}
+.cf-cro-h3-btn2{padding:16px 36px;border:2px solid {{ section.settings.text_color }}25;color:{{ section.settings.text_color }};border-radius:{{ section.settings.btn_radius }}px;font-size:15px;font-weight:600;text-decoration:none;transition:0.2s}
+.cf-cro-h3-btn2:hover{border-color:{{ section.settings.accent_color }}}
+@media(max-width:768px){.cf-cro-h3-inner{padding:60px 24px}.cf-cro-h3-overlay{background:{{ section.settings.bg_color }}E6}}
+</style>
+
+<div class="cf-cro-h3">
+  <div class="cf-cro-h3-bg">
+    {% if section.settings.bg_image != blank %}<img src="{{ section.settings.bg_image | image_url: width: 2000 }}" alt="" loading="lazy">{% endif %}
+  </div>
+  <div class="cf-cro-h3-overlay"></div>
+  <div class="cf-cro-h3-inner">
+    <div class="cf-cro-h3-content">
+      <div class="cf-cro-h3-label">{{ section.settings.label }}</div>
+      <h1>{{ section.settings.title }}</h1>
+      <p class="cf-cro-h3-desc">{{ section.settings.description }}</p>
+      <div class="cf-cro-h3-ctas">
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-h3-btn1">{{ section.settings.cta_text }}</a>
+        {% if section.settings.cta2_text != blank %}<a href="{{ section.settings.cta2_link }}" class="cf-cro-h3-btn2">{{ section.settings.cta2_text }}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Dark Image Hero v3",
+  "settings": [
+    {"type":"image_picker","id":"bg_image","label":"Background Image"},
+    {"type":"text","id":"label","label":"Label","default":"NEW COLLECTION"},
+    {"type":"text","id":"title","label":"Title","default":"Bold. Beautiful. Unbreakable."},
+    {"type":"textarea","id":"description","label":"Description","default":"Engineered for those who refuse to settle. Premium materials, unmatched performance, zero compromise."},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"Shop the Collection →"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/all"},
+    {"type":"text","id":"cta2_text","label":"Secondary CTA","default":"Watch Film"},
+    {"type":"text","id":"cta2_link","label":"Secondary Link","default":"#video"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#0a0a0a"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#F59E0B"},
+    {"type":"range","id":"title_size","label":"Title Size","min":36,"max":80,"step":2,"default":56},
+    {"type":"range","id":"height","label":"Min Height","min":400,"max":800,"step":50,"default":600},
+    {"type":"range","id":"btn_radius","label":"Button Radius","min":0,"max":50,"step":2,"default":8}
+  ],
+  "presets": [{"name":"CRO · Dark Image Hero v3"}]
+}
+{% endschema %}

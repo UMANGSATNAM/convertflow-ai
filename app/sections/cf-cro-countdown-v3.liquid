@@ -1,0 +1,71 @@
+<style>
+.cf-cro-cd3{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-cd3-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.cf-cro-cd3-left h2{font-size:clamp(28px,3vw,42px);font-weight:900;color:{{ section.settings.text_color }};margin:0 0 12px;line-height:1.1}
+.cf-cro-cd3-left p{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6;line-height:1.7;margin-bottom:24px}
+.cf-cro-cd3-timer{display:flex;gap:12px;margin-bottom:24px}
+.cf-cro-cd3-unit{text-align:center}
+.cf-cro-cd3-num{width:64px;height:64px;background:{{ section.settings.accent_color }}12;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:{{ section.settings.accent_color }};margin-bottom:4px}
+.cf-cro-cd3-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:{{ section.settings.text_color }};opacity:0.4}
+.cf-cro-cd3-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:{{ section.settings.accent_color }};color:#fff;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;transition:0.2s;box-shadow:0 4px 14px {{ section.settings.accent_color }}40}
+.cf-cro-cd3-btn:hover{transform:translateY(-2px)}
+.cf-cro-cd3-right{background:{{ section.settings.accent_color }}08;border:1px solid {{ section.settings.accent_color }}15;border-radius:24px;padding:40px;display:flex;flex-direction:column;gap:16px}
+.cf-cro-cd3-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid {{ section.settings.text_color }}06}
+.cf-cro-cd3-item:last-child{border:none}
+.cf-cro-cd3-item-icon{font-size:20px;flex-shrink:0}
+.cf-cro-cd3-item b{font-size:14px;color:{{ section.settings.text_color }};display:block}
+.cf-cro-cd3-item small{font-size:12px;color:{{ section.settings.text_color }};opacity:0.5}
+@media(max-width:768px){.cf-cro-cd3-inner{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cro-cd3">
+  <div class="cf-cro-cd3-inner">
+    <div class="cf-cro-cd3-left">
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.subheading }}</p>
+      <div class="cf-cro-cd3-timer" id="cf-cd3-{{ section.id }}">
+        <div class="cf-cro-cd3-unit"><div class="cf-cro-cd3-num" data-u="d">{{ section.settings.days }}</div><div class="cf-cro-cd3-label">Days</div></div>
+        <div class="cf-cro-cd3-unit"><div class="cf-cro-cd3-num" data-u="h">{{ section.settings.hours }}</div><div class="cf-cro-cd3-label">Hours</div></div>
+        <div class="cf-cro-cd3-unit"><div class="cf-cro-cd3-num" data-u="m">{{ section.settings.minutes }}</div><div class="cf-cro-cd3-label">Mins</div></div>
+        <div class="cf-cro-cd3-unit"><div class="cf-cro-cd3-num" data-u="s">00</div><div class="cf-cro-cd3-label">Secs</div></div>
+      </div>
+      <a href="{{ section.settings.cta_link }}" class="cf-cro-cd3-btn">{{ section.settings.cta_text }} →</a>
+    </div>
+    <div class="cf-cro-cd3-right">
+      {%- assign perks = section.settings.perks | split: '|' -%}
+      {%- assign icons = section.settings.perk_icons | split: '|' -%}
+      {%- for perk in perks -%}
+        <div class="cf-cro-cd3-item">
+          <div class="cf-cro-cd3-item-icon">{{ icons[forloop.index0] | default: '✓' }}</div>
+          <div><b>{{ perk | strip }}</b></div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){var e=document.getElementById('cf-cd3-{{ section.id }}');if(!e)return;var t=parseInt('{{ section.settings.days }}')*86400+parseInt('{{ section.settings.hours }}')*3600+parseInt('{{ section.settings.minutes }}')*60;function p(n){return n<10?'0'+n:''+n}setInterval(function(){if(t<=0)return;t--;var n=e.querySelectorAll('.cf-cro-cd3-num');n[0].textContent=p(Math.floor(t/86400));n[1].textContent=p(Math.floor((t%86400)/3600));n[2].textContent=p(Math.floor((t%3600)/60));n[3].textContent=p(t%60)},1000)})();
+</script>
+
+{% schema %}
+{
+  "name": "CRO · Split Countdown v3",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Members-Only Flash Sale"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"Exclusive pricing for our VIP community. Once it's gone, it's gone."},
+    {"type":"range","id":"days","label":"Days","min":0,"max":7,"step":1,"default":0},
+    {"type":"range","id":"hours","label":"Hours","min":0,"max":23,"step":1,"default":8},
+    {"type":"range","id":"minutes","label":"Minutes","min":0,"max":59,"step":1,"default":15},
+    {"type":"text","id":"cta_text","label":"CTA","default":"Claim Your Deal"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/sale"},
+    {"type":"textarea","id":"perks","label":"Sale Perks (|)","default":"40% off everything — no code needed|Free express shipping on all orders|Exclusive VIP gift with purchase|Double loyalty points this weekend|Early access to new arrivals"},
+    {"type":"textarea","id":"perk_icons","label":"Perk Icons (|)","default":"🏷️|🚀|🎁|⭐|🔓"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#E53E3E"},
+    {"type":"range","id":"padding_y","label":"Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Split Countdown v3"}]
+}
+{% endschema %}

@@ -1,0 +1,59 @@
+<style>
+.cf-cro-ben3{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-ben3-inner{max-width:1200px;margin:0 auto}
+.cf-cro-ben3-head{text-align:center;margin-bottom:40px}
+.cf-cro-ben3 h2{font-size:clamp(24px,3vw,36px);font-weight:800;color:{{ section.settings.text_color }};margin:0 0 8px}
+.cf-cro-ben3-sub{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6}
+.cf-cro-ben3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cf-cro-ben3-card{background:#fff;border:1px solid {{ section.settings.text_color }}08;border-radius:20px;padding:32px 24px;text-align:center;transition:0.3s;display:flex;flex-direction:column;align-items:center;gap:16px}
+.cf-cro-ben3-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.06)}
+.cf-cro-ben3-icon{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,{{ section.settings.accent_color }}20,{{ section.settings.accent_color }}05);display:flex;align-items:center;justify-content:center;font-size:32px}
+.cf-cro-ben3-title{font-size:17px;font-weight:700;color:{{ section.settings.text_color }}}
+.cf-cro-ben3-desc{font-size:14px;color:{{ section.settings.text_color }};opacity:0.6;line-height:1.6}
+@media(max-width:768px){.cf-cro-ben3-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cro-ben3">
+  <div class="cf-cro-ben3-inner">
+    <div class="cf-cro-ben3-head">
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="cf-cro-ben3-sub">{{ section.settings.subheading }}</p>
+    </div>
+    <div class="cf-cro-ben3-grid">
+      {%- for i in (1..3) -%}
+        {%- assign ic = 'icon_' | append: i -%}
+        {%- assign ti = 'title_' | append: i -%}
+        {%- assign de = 'desc_' | append: i -%}
+        <div class="cf-cro-ben3-card">
+          <div class="cf-cro-ben3-icon">{{ section.settings[ic] }}</div>
+          <div class="cf-cro-ben3-title">{{ section.settings[ti] }}</div>
+          <div class="cf-cro-ben3-desc">{{ section.settings[de] }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Benefit Cards v3",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Why Customers Love Us"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"Built different. Here's proof."},
+    {"type":"text","id":"icon_1","label":"Icon 1","default":"🧪"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"Science-Backed Formula"},
+    {"type":"textarea","id":"desc_1","label":"Desc 1","default":"Every ingredient is clinically tested and dermatologist approved. No fillers, no shortcuts."},
+    {"type":"text","id":"icon_2","label":"Icon 2","default":"🌿"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"100% Clean Ingredients"},
+    {"type":"textarea","id":"desc_2","label":"Desc 2","default":"Sustainably sourced, cruelty-free, and free from harmful chemicals. Good for you, good for the planet."},
+    {"type":"text","id":"icon_3","label":"Icon 3","default":"⚡"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"Results in 14 Days"},
+    {"type":"textarea","id":"desc_3","label":"Desc 3","default":"See visible results in just 2 weeks or your money back. That's our guarantee."},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f9fa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#16A34A"},
+    {"type":"range","id":"padding_y","label":"Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Benefit Cards v3"}]
+}
+{% endschema %}

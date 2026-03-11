@@ -1,0 +1,95 @@
+<style>
+.cf-cro-sp3{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-sp3-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.cf-cro-sp3-left h2{font-size:clamp(28px,4vw,44px);font-weight:900;color:{{ section.settings.text_color }};margin:0 0 12px;line-height:1.1}
+.cf-cro-sp3-left p{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6;line-height:1.7;margin-bottom:24px}
+.cf-cro-sp3-big{background:#fff;border:1px solid {{ section.settings.text_color }}08;border-radius:20px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+.cf-cro-sp3-big-stars{color:#F59E0B;font-size:20px;letter-spacing:2px;margin-bottom:16px}
+.cf-cro-sp3-big-quote{font-size:20px;font-weight:600;line-height:1.6;color:{{ section.settings.text_color }};margin-bottom:20px;font-style:italic}
+.cf-cro-sp3-big-author{display:flex;align-items:center;gap:12px}
+.cf-cro-sp3-big-av{width:48px;height:48px;border-radius:50%;background:{{ section.settings.accent_color }}20;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:{{ section.settings.accent_color }}}
+.cf-cro-sp3-big-name{font-size:15px;font-weight:700;color:{{ section.settings.text_color }}}
+.cf-cro-sp3-big-ver{font-size:12px;color:{{ section.settings.accent_color }}}
+.cf-cro-sp3-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.cf-cro-sp3-stat{text-align:center;padding:16px;background:{{ section.settings.accent_color }}08;border-radius:12px}
+.cf-cro-sp3-stat b{font-size:24px;color:{{ section.settings.accent_color }};display:block}
+.cf-cro-sp3-stat span{font-size:12px;color:{{ section.settings.text_color }};opacity:0.5}
+.cf-cro-sp3-right{display:flex;flex-direction:column;gap:16px}
+.cf-cro-sp3-mini{background:#fff;border:1px solid {{ section.settings.text_color }}08;border-radius:16px;padding:24px;transition:0.3s}
+.cf-cro-sp3-mini:hover{box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+.cf-cro-sp3-mini-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cf-cro-sp3-mini-stars{color:#F59E0B;font-size:14px}
+.cf-cro-sp3-mini-date{font-size:11px;color:{{ section.settings.text_color }};opacity:0.35}
+.cf-cro-sp3-mini-text{font-size:14px;line-height:1.6;color:{{ section.settings.text_color }};opacity:0.8;margin-bottom:8px}
+.cf-cro-sp3-mini-name{font-size:13px;font-weight:700;color:{{ section.settings.text_color }}}
+@media(max-width:768px){.cf-cro-sp3-inner{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cro-sp3">
+  <div class="cf-cro-sp3-inner">
+    <div class="cf-cro-sp3-left">
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.subheading }}</p>
+      <div class="cf-cro-sp3-big">
+        <div class="cf-cro-sp3-big-stars">★★★★★</div>
+        <div class="cf-cro-sp3-big-quote">"{{ section.settings.featured_text }}"</div>
+        <div class="cf-cro-sp3-big-author">
+          <div class="cf-cro-sp3-big-av">{{ section.settings.featured_name | slice: 0 }}</div>
+          <div><div class="cf-cro-sp3-big-name">{{ section.settings.featured_name }}</div><div class="cf-cro-sp3-big-ver">✓ Verified Buyer</div></div>
+        </div>
+      </div>
+      <div class="cf-cro-sp3-stats">
+        <div class="cf-cro-sp3-stat"><b>{{ section.settings.stat1 }}</b><span>{{ section.settings.stat1_label }}</span></div>
+        <div class="cf-cro-sp3-stat"><b>{{ section.settings.stat2 }}</b><span>{{ section.settings.stat2_label }}</span></div>
+        <div class="cf-cro-sp3-stat"><b>{{ section.settings.stat3 }}</b><span>{{ section.settings.stat3_label }}</span></div>
+      </div>
+    </div>
+    <div class="cf-cro-sp3-right">
+      {%- for i in (1..4) -%}
+        {%- assign rn = 'rev_name_' | append: i -%}
+        {%- assign rt = 'rev_text_' | append: i -%}
+        {%- assign rd = 'rev_date_' | append: i -%}
+        <div class="cf-cro-sp3-mini">
+          <div class="cf-cro-sp3-mini-top"><span class="cf-cro-sp3-mini-stars">★★★★★</span><span class="cf-cro-sp3-mini-date">{{ section.settings[rd] }}</span></div>
+          <div class="cf-cro-sp3-mini-text">"{{ section.settings[rt] }}"</div>
+          <div class="cf-cro-sp3-mini-name">— {{ section.settings[rn] }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Featured Review v3",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"12,000+ Happy Customers"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"See why our customers are obsessed"},
+    {"type":"textarea","id":"featured_text","label":"Featured Review","default":"I've tried dozens of brands over the years and nothing comes close. The quality, the packaging, the results — everything is next level. I'm a customer for life."},
+    {"type":"text","id":"featured_name","label":"Featured Reviewer","default":"Sarah M."},
+    {"type":"text","id":"stat1","label":"Stat 1","default":"4.9/5"},
+    {"type":"text","id":"stat1_label","label":"Stat 1 Label","default":"Rating"},
+    {"type":"text","id":"stat2","label":"Stat 2","default":"12K+"},
+    {"type":"text","id":"stat2_label","label":"Stat 2 Label","default":"Reviews"},
+    {"type":"text","id":"stat3","label":"Stat 3","default":"98%"},
+    {"type":"text","id":"stat3_label","label":"Stat 3 Label","default":"Recommend"},
+    {"type":"text","id":"rev_name_1","label":"Review 1 Name","default":"James K."},
+    {"type":"text","id":"rev_date_1","label":"Review 1 Date","default":"3 days ago"},
+    {"type":"textarea","id":"rev_text_1","label":"Review 1","default":"Exceeded expectations. The fit is perfect."},
+    {"type":"text","id":"rev_name_2","label":"Review 2 Name","default":"Priya R."},
+    {"type":"text","id":"rev_date_2","label":"Review 2 Date","default":"1 week ago"},
+    {"type":"textarea","id":"rev_text_2","label":"Review 2","default":"Best purchase I've made this year."},
+    {"type":"text","id":"rev_name_3","label":"Review 3 Name","default":"Alex T."},
+    {"type":"text","id":"rev_date_3","label":"Review 3 Date","default":"5 days ago"},
+    {"type":"textarea","id":"rev_text_3","label":"Review 3","default":"Fast shipping and gorgeous packaging!"},
+    {"type":"text","id":"rev_name_4","label":"Review 4 Name","default":"Maya S."},
+    {"type":"text","id":"rev_date_4","label":"Review 4 Date","default":"2 days ago"},
+    {"type":"textarea","id":"rev_text_4","label":"Review 4","default":"Worth every penny. Already ordering more."},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f9fa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#7C3AED"},
+    {"type":"range","id":"padding_y","label":"Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Featured Review v3"}]
+}
+{% endschema %}
