@@ -1,0 +1,97 @@
+<style>
+.cf-cro-og2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-og2-inner{max-width:1200px;margin:0 auto}
+.cf-cro-og2-head{text-align:center;margin-bottom:40px}
+.cf-cro-og2 h2{font-size:clamp(24px,3vw,40px);font-weight:800;color:{{ section.settings.text_color }};margin:0 0 8px}
+.cf-cro-og2-sub{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6}
+.cf-cro-og2-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cf-cro-og2-card{background:linear-gradient(145deg,{{ section.settings.accent_color }}08,{{ section.settings.accent_color }}02);border:1px solid {{ section.settings.accent_color }}15;border-radius:20px;padding:0;overflow:hidden;transition:0.3s}
+.cf-cro-og2-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
+.cf-cro-og2-card.best{border:2px solid {{ section.settings.accent_color }};box-shadow:0 8px 30px {{ section.settings.accent_color }}20}
+.cf-cro-og2-tier{background:{{ section.settings.accent_color }};color:#fff;padding:12px;text-align:center;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.cf-cro-og2-body{padding:32px 24px;text-align:center}
+.cf-cro-og2-label{font-size:13px;text-transform:uppercase;letter-spacing:0.1em;color:{{ section.settings.text_color }};opacity:0.5;margin-bottom:8px}
+.cf-cro-og2-price{font-size:44px;font-weight:900;color:{{ section.settings.text_color }};margin-bottom:4px}
+.cf-cro-og2-orig{font-size:16px;color:{{ section.settings.text_color }};opacity:0.4;text-decoration:line-through;margin-bottom:16px}
+.cf-cro-og2-features{list-style:none;padding:0;margin:0 0 24px;text-align:left}
+.cf-cro-og2-features li{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:14px;color:{{ section.settings.text_color }};border-bottom:1px solid {{ section.settings.text_color }}06}
+.cf-cro-og2-features li::before{content:'✓';color:{{ section.settings.accent_color }};font-weight:700}
+.cf-cro-og2-btn{display:block;width:100%;padding:14px;background:{{ section.settings.accent_color }};color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;transition:0.2s}
+.cf-cro-og2-btn:hover{opacity:0.9}
+.cf-cro-og2-card:not(.best) .cf-cro-og2-tier{background:{{ section.settings.text_color }}08;color:{{ section.settings.text_color }}}
+.cf-cro-og2-card:not(.best) .cf-cro-og2-btn{background:{{ section.settings.text_color }}10;color:{{ section.settings.text_color }}}
+@media(max-width:768px){.cf-cro-og2-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}}
+</style>
+
+<div class="cf-cro-og2">
+  <div class="cf-cro-og2-inner">
+    <div class="cf-cro-og2-head">
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="cf-cro-og2-sub">{{ section.settings.subheading }}</p>
+    </div>
+    <div class="cf-cro-og2-grid">
+      <div class="cf-cro-og2-card">
+        <div class="cf-cro-og2-tier">{{ section.settings.tier1_name }}</div>
+        <div class="cf-cro-og2-body">
+          <div class="cf-cro-og2-label">Starting at</div>
+          <div class="cf-cro-og2-price">{{ section.settings.tier1_price }}</div>
+          <div class="cf-cro-og2-orig">{{ section.settings.tier1_orig }}</div>
+          {%- assign feats1 = section.settings.tier1_features | split: '|' -%}
+          <ul class="cf-cro-og2-features">{%- for f in feats1 -%}<li>{{ f | strip }}</li>{%- endfor -%}</ul>
+          <a href="{{ section.settings.cta_link }}" class="cf-cro-og2-btn">{{ section.settings.cta_text }}</a>
+        </div>
+      </div>
+      <div class="cf-cro-og2-card best">
+        <div class="cf-cro-og2-tier">⭐ {{ section.settings.tier2_name }}</div>
+        <div class="cf-cro-og2-body">
+          <div class="cf-cro-og2-label">Best Value</div>
+          <div class="cf-cro-og2-price">{{ section.settings.tier2_price }}</div>
+          <div class="cf-cro-og2-orig">{{ section.settings.tier2_orig }}</div>
+          {%- assign feats2 = section.settings.tier2_features | split: '|' -%}
+          <ul class="cf-cro-og2-features">{%- for f in feats2 -%}<li>{{ f | strip }}</li>{%- endfor -%}</ul>
+          <a href="{{ section.settings.cta_link }}" class="cf-cro-og2-btn">{{ section.settings.cta_text }}</a>
+        </div>
+      </div>
+      <div class="cf-cro-og2-card">
+        <div class="cf-cro-og2-tier">{{ section.settings.tier3_name }}</div>
+        <div class="cf-cro-og2-body">
+          <div class="cf-cro-og2-label">Maximum Savings</div>
+          <div class="cf-cro-og2-price">{{ section.settings.tier3_price }}</div>
+          <div class="cf-cro-og2-orig">{{ section.settings.tier3_orig }}</div>
+          {%- assign feats3 = section.settings.tier3_features | split: '|' -%}
+          <ul class="cf-cro-og2-features">{%- for f in feats3 -%}<li>{{ f | strip }}</li>{%- endfor -%}</ul>
+          <a href="{{ section.settings.cta_link }}" class="cf-cro-og2-btn">{{ section.settings.cta_text }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Pricing Tiers v2",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Choose Your Perfect Plan"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"All plans include free shipping + 30-day guarantee"},
+    {"type":"text","id":"tier1_name","label":"Tier 1 Name","default":"Starter"},
+    {"type":"text","id":"tier1_price","label":"Tier 1 Price","default":"$29"},
+    {"type":"text","id":"tier1_orig","label":"Tier 1 Original","default":"$49"},
+    {"type":"textarea","id":"tier1_features","label":"Tier 1 Features (|)","default":"1 month supply|Free shipping|Email support"},
+    {"type":"text","id":"tier2_name","label":"Tier 2 Name","default":"Most Popular"},
+    {"type":"text","id":"tier2_price","label":"Tier 2 Price","default":"$49"},
+    {"type":"text","id":"tier2_orig","label":"Tier 2 Original","default":"$98"},
+    {"type":"textarea","id":"tier2_features","label":"Tier 2 Features (|)","default":"3 month supply|Free express shipping|Priority support|Bonus travel size"},
+    {"type":"text","id":"tier3_name","label":"Tier 3 Name","default":"Best Value"},
+    {"type":"text","id":"tier3_price","label":"Tier 3 Price","default":"$79"},
+    {"type":"text","id":"tier3_orig","label":"Tier 3 Original","default":"$147"},
+    {"type":"textarea","id":"tier3_features","label":"Tier 3 Features (|)","default":"6 month supply|Free express shipping|VIP support|3 bonus gifts|Exclusive member perks"},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"Get Started"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#7C3AED"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Pricing Tiers v2"}]
+}
+{% endschema %}

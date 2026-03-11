@@ -1,0 +1,63 @@
+<style>
+.cf-cro-h2{width:100%;background:{{ section.settings.bg_color }};overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;position:relative}
+.cf-cro-h2-bg{position:absolute;inset:0;background:linear-gradient(135deg,{{ section.settings.accent_color }}15,transparent 50%)}
+.cf-cro-h2-inner{max-width:900px;margin:0 auto;text-align:center;padding:80px 24px;position:relative;z-index:1}
+.cf-cro-h2-eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid {{ section.settings.text_color }}12;padding:8px 20px;border-radius:100px;font-size:13px;font-weight:600;color:{{ section.settings.text_color }};margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.cf-cro-h2-eyebrow .dot{width:8px;height:8px;border-radius:50%;background:{{ section.settings.accent_color }};animation:cf-pulse 1.5s infinite}
+@keyframes cf-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.cf-cro-h2-title{font-size:clamp(32px,5vw,{{ section.settings.title_size }}px);font-weight:900;color:{{ section.settings.text_color }};line-height:1.1;margin-bottom:20px;letter-spacing:-0.03em}
+.cf-cro-h2-title em{font-style:normal;background:linear-gradient(135deg,{{ section.settings.accent_color }},{{ section.settings.accent_color }}AA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cf-cro-h2-desc{font-size:18px;color:{{ section.settings.text_color }};opacity:0.65;line-height:1.7;max-width:600px;margin:0 auto 32px}
+.cf-cro-h2-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.cf-cro-h2-btn1{padding:16px 36px;background:{{ section.settings.accent_color }};color:#fff;border-radius:100px;font-size:16px;font-weight:700;text-decoration:none;transition:0.2s;box-shadow:0 4px 16px {{ section.settings.accent_color }}40}
+.cf-cro-h2-btn1:hover{transform:translateY(-2px);box-shadow:0 8px 24px {{ section.settings.accent_color }}50}
+.cf-cro-h2-btn2{padding:16px 36px;background:transparent;border:2px solid {{ section.settings.text_color }}15;color:{{ section.settings.text_color }};border-radius:100px;font-size:16px;font-weight:600;text-decoration:none;transition:0.2s}
+.cf-cro-h2-btn2:hover{border-color:{{ section.settings.accent_color }};color:{{ section.settings.accent_color }}}
+.cf-cro-h2-logos{display:flex;align-items:center;justify-content:center;gap:32px;opacity:0.3}
+.cf-cro-h2-logos span{font-size:14px;font-weight:700;letter-spacing:0.05em;color:{{ section.settings.text_color }}}
+.cf-cro-h2-logos-label{font-size:12px;color:{{ section.settings.text_color }};opacity:0.5;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px}
+</style>
+
+<div class="cf-cro-h2">
+  <div class="cf-cro-h2-bg"></div>
+  <div class="cf-cro-h2-inner">
+    <div class="cf-cro-h2-eyebrow"><span class="dot"></span> {{ section.settings.eyebrow }}</div>
+    <h1 class="cf-cro-h2-title">{{ section.settings.title_1 }} <em>{{ section.settings.title_highlight }}</em> {{ section.settings.title_2 }}</h1>
+    <p class="cf-cro-h2-desc">{{ section.settings.description }}</p>
+    <div class="cf-cro-h2-ctas">
+      <a href="{{ section.settings.cta_link }}" class="cf-cro-h2-btn1">{{ section.settings.cta_text }}</a>
+      {% if section.settings.cta2_text != blank %}
+        <a href="{{ section.settings.cta2_link }}" class="cf-cro-h2-btn2">{{ section.settings.cta2_text }}</a>
+      {% endif %}
+    </div>
+    <div class="cf-cro-h2-logos-label">{{ section.settings.press_label }}</div>
+    <div class="cf-cro-h2-logos">
+      {%- assign logos = section.settings.press_names | split: '|' -%}
+      {%- for logo in logos -%}<span>{{ logo | strip }}</span>{%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Centered Hero v2",
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Eyebrow Badge","default":"New Launch — Now Available"},
+    {"type":"text","id":"title_1","label":"Title Part 1","default":"The future of skincare is"},
+    {"type":"text","id":"title_highlight","label":"Title Highlight","default":"here."},
+    {"type":"text","id":"title_2","label":"Title Part 2","default":""},
+    {"type":"textarea","id":"description","label":"Description","default":"Clinically proven. Dermatologist recommended. Join 100,000+ customers who've transformed their skin routine with our award-winning formula."},
+    {"type":"text","id":"cta_text","label":"Primary CTA","default":"Start Your Glow-Up →"},
+    {"type":"text","id":"cta_link","label":"Primary Link","default":"/collections/all"},
+    {"type":"text","id":"cta2_text","label":"Secondary CTA","default":"Watch the Science"},
+    {"type":"text","id":"cta2_link","label":"Secondary Link","default":"#science"},
+    {"type":"text","id":"press_label","label":"Press Label","default":"AS FEATURED IN"},
+    {"type":"text","id":"press_names","label":"Press Names (| separated)","default":"VOGUE | ELLE | GQ | FORBES | COSMOPOLITAN"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#fafafa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#E11D48"},
+    {"type":"range","id":"title_size","label":"Title Size","min":36,"max":80,"step":2,"default":64}
+  ],
+  "presets": [{"name":"CRO · Centered Hero v2"}]
+}
+{% endschema %}

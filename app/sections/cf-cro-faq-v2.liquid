@@ -1,0 +1,72 @@
+<style>
+.cf-cro-faq2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-faq2-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.5fr;gap:48px;align-items:start}
+.cf-cro-faq2-left{position:sticky;top:40px}
+.cf-cro-faq2 h2{font-size:clamp(24px,3vw,36px);font-weight:800;color:{{ section.settings.text_color }};margin:0 0 12px}
+.cf-cro-faq2-sub{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6;line-height:1.7;margin-bottom:24px}
+.cf-cro-faq2-contact{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:{{ section.settings.accent_color }};color:#fff;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;transition:0.2s}
+.cf-cro-faq2-contact:hover{opacity:0.9;transform:translateY(-2px)}
+.cf-cro-faq2-list{display:flex;flex-direction:column;gap:0}
+.cf-cro-faq2-item{border-bottom:1px solid {{ section.settings.text_color }}08}
+.cf-cro-faq2-q{display:flex;align-items:center;justify-content:space-between;padding:20px 0;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-size:16px;font-weight:600;color:{{ section.settings.text_color }};gap:16px}
+.cf-cro-faq2-q .cf-icon{width:28px;height:28px;border-radius:50%;background:{{ section.settings.accent_color }}10;display:flex;align-items:center;justify-content:center;font-size:16px;color:{{ section.settings.accent_color }};transition:0.3s;flex-shrink:0}
+.cf-cro-faq2-item.open .cf-icon{background:{{ section.settings.accent_color }};color:#fff;transform:rotate(45deg)}
+.cf-cro-faq2-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+.cf-cro-faq2-item.open .cf-cro-faq2-a{max-height:300px}
+.cf-cro-faq2-a p{font-size:15px;line-height:1.7;color:{{ section.settings.text_color }};opacity:0.7;margin:0;padding:0 0 20px}
+@media(max-width:768px){.cf-cro-faq2-inner{grid-template-columns:1fr}.cf-cro-faq2-left{position:static}}
+</style>
+
+<div class="cf-cro-faq2">
+  <div class="cf-cro-faq2-inner">
+    <div class="cf-cro-faq2-left">
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="cf-cro-faq2-sub">{{ section.settings.subheading }}</p>
+      <a href="{{ section.settings.contact_link }}" class="cf-cro-faq2-contact">💬 {{ section.settings.contact_text }}</a>
+    </div>
+    <div class="cf-cro-faq2-list">
+      {%- for i in (1..6) -%}
+        {%- assign q_key = 'q_' | append: i -%}
+        {%- assign a_key = 'a_' | append: i -%}
+        {% if section.settings[q_key] != blank %}
+          <div class="cf-cro-faq2-item{% if i == 1 %} open{% endif %}">
+            <button class="cf-cro-faq2-q" onclick="this.parentElement.classList.toggle('open')">
+              {{ section.settings[q_key] }}
+              <span class="cf-icon">+</span>
+            </button>
+            <div class="cf-cro-faq2-a"><p>{{ section.settings[a_key] }}</p></div>
+          </div>
+        {% endif %}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · FAQ Split Layout v2",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Got Questions?"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"We've got answers. If you can't find what you're looking for, our support team is here 24/7."},
+    {"type":"text","id":"contact_text","label":"Contact CTA","default":"Chat with Us"},
+    {"type":"text","id":"contact_link","label":"Contact Link","default":"/pages/contact"},
+    {"type":"text","id":"q_1","label":"Q1","default":"How long does shipping take?"},
+    {"type":"textarea","id":"a_1","label":"A1","default":"Standard shipping is 3-5 business days (free over $50). Express is 1-2 days for $9.99. We ship to 40+ countries worldwide."},
+    {"type":"text","id":"q_2","label":"Q2","default":"What if it doesn't fit me?"},
+    {"type":"textarea","id":"a_2","label":"A2","default":"No worries! We offer free exchanges on all orders. Use our detailed size guide, and if it's still not right, we'll make it right."},
+    {"type":"text","id":"q_3","label":"Q3","default":"Is there a money-back guarantee?"},
+    {"type":"textarea","id":"a_3","label":"A3","default":"Absolutely. We offer a 30-day, no-questions-asked money-back guarantee. If you're not in love with it, you get a full refund."},
+    {"type":"text","id":"q_4","label":"Q4","default":"How is the quality compared to X brand?"},
+    {"type":"textarea","id":"a_4","label":"A4","default":"We use the same premium materials as brands 3x our price. Check our comparison section and 12,000+ 5-star reviews for proof."},
+    {"type":"text","id":"q_5","label":"Q5","default":"Can I cancel or modify my order?"},
+    {"type":"textarea","id":"a_5","label":"A5","default":"Yes! You can cancel or modify within 2 hours of placing your order. After that, just reach out to support and we'll help."},
+    {"type":"text","id":"q_6","label":"Q6","default":"Do you offer subscription/auto-ship?"},
+    {"type":"textarea","id":"a_6","label":"A6","default":"Yes — save an extra 15% with our Subscribe & Save option. Cancel anytime with no penalty. It's the smartest way to shop."},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#6C3CE1"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · FAQ Split Layout v2"}]
+}
+{% endschema %}

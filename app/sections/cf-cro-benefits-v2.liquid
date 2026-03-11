@@ -1,0 +1,44 @@
+<style>
+@keyframes cf-ben2-slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.cf-cro-ben2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden}
+.cf-cro-ben2-track{display:flex;gap:0;width:max-content;animation:cf-ben2-slide {{ section.settings.speed }}s linear infinite}
+.cf-cro-ben2-item{display:flex;align-items:center;gap:10px;padding:0 40px;white-space:nowrap;font-size:14px;font-weight:600;color:{{ section.settings.text_color }}}
+.cf-cro-ben2-icon{font-size:20px}
+.cf-cro-ben2-sep{color:{{ section.settings.accent_color }};opacity:0.3;font-size:16px}
+</style>
+
+<div class="cf-cro-ben2">
+  <div class="cf-cro-ben2-track">
+    {%- for r in (1..3) -%}
+      <div class="cf-cro-ben2-item"><span class="cf-cro-ben2-icon">{{ section.settings.icon_1 }}</span>{{ section.settings.text_1 }}<span class="cf-cro-ben2-sep">✦</span></div>
+      <div class="cf-cro-ben2-item"><span class="cf-cro-ben2-icon">{{ section.settings.icon_2 }}</span>{{ section.settings.text_2 }}<span class="cf-cro-ben2-sep">✦</span></div>
+      <div class="cf-cro-ben2-item"><span class="cf-cro-ben2-icon">{{ section.settings.icon_3 }}</span>{{ section.settings.text_3 }}<span class="cf-cro-ben2-sep">✦</span></div>
+      <div class="cf-cro-ben2-item"><span class="cf-cro-ben2-icon">{{ section.settings.icon_4 }}</span>{{ section.settings.text_4 }}<span class="cf-cro-ben2-sep">✦</span></div>
+      <div class="cf-cro-ben2-item"><span class="cf-cro-ben2-icon">{{ section.settings.icon_5 }}</span>{{ section.settings.text_5 }}<span class="cf-cro-ben2-sep">✦</span></div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Scrolling Trust Bar v2",
+  "settings": [
+    {"type":"text","id":"icon_1","label":"Icon 1","default":"🚚"},
+    {"type":"text","id":"text_1","label":"Text 1","default":"FREE SHIPPING OVER $50"},
+    {"type":"text","id":"icon_2","label":"Icon 2","default":"⭐"},
+    {"type":"text","id":"text_2","label":"Text 2","default":"4.9/5 STAR RATED"},
+    {"type":"text","id":"icon_3","label":"Icon 3","default":"🔒"},
+    {"type":"text","id":"text_3","label":"Text 3","default":"SECURE CHECKOUT"},
+    {"type":"text","id":"icon_4","label":"Icon 4","default":"♻️"},
+    {"type":"text","id":"text_4","label":"Text 4","default":"SUSTAINABLY MADE"},
+    {"type":"text","id":"icon_5","label":"Icon 5","default":"💯"},
+    {"type":"text","id":"text_5","label":"Text 5","default":"30-DAY GUARANTEE"},
+    {"type":"range","id":"speed","label":"Scroll Speed (sec)","min":10,"max":60,"step":5,"default":25},
+    {"type":"color","id":"bg_color","label":"Background","default":"#111111"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#F59E0B"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":4,"max":24,"step":2,"default":12}
+  ],
+  "presets": [{"name":"CRO · Scrolling Trust Bar v2"}]
+}
+{% endschema %}

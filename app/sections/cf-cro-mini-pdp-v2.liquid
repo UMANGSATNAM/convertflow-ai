@@ -1,0 +1,104 @@
+<style>
+.cf-cro-pdp2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-pdp2-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+.cf-cro-pdp2-gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-radius:20px;overflow:hidden}
+.cf-cro-pdp2-gallery img{width:100%;aspect-ratio:1;object-fit:cover}
+.cf-cro-pdp2-gallery div{width:100%;aspect-ratio:1;background:{{ section.settings.text_color }}05;display:flex;align-items:center;justify-content:center;font-size:40px}
+.cf-cro-pdp2-info{display:flex;flex-direction:column;gap:14px}
+.cf-cro-pdp2-badge{display:inline-flex;align-items:center;gap:6px;background:{{ section.settings.accent_color }};color:#fff;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;width:fit-content}
+.cf-cro-pdp2-name{font-size:clamp(22px,3vw,32px);font-weight:800;color:{{ section.settings.text_color }};line-height:1.2}
+.cf-cro-pdp2-rating{display:flex;align-items:center;gap:8px}
+.cf-cro-pdp2-stars{color:#F59E0B;font-size:18px}
+.cf-cro-pdp2-review-text{font-size:14px;color:{{ section.settings.text_color }};opacity:0.6}
+.cf-cro-pdp2-price{display:flex;align-items:baseline;gap:12px;padding:12px 0;border-top:1px solid {{ section.settings.text_color }}08;border-bottom:1px solid {{ section.settings.text_color }}08}
+.cf-cro-pdp2-price b{font-size:30px;color:{{ section.settings.accent_color }};font-weight:900}
+.cf-cro-pdp2-price s{font-size:18px;color:{{ section.settings.text_color }};opacity:0.35}
+.cf-cro-pdp2-price .cf-save{background:#FEF2F2;color:#E53E3E;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700}
+.cf-cro-pdp2-variant{display:flex;flex-direction:column;gap:8px}
+.cf-cro-pdp2-variant-label{font-size:13px;font-weight:600;color:{{ section.settings.text_color }}}
+.cf-cro-pdp2-swatches{display:flex;gap:8px;flex-wrap:wrap}
+.cf-cro-pdp2-swatch{width:40px;height:40px;border-radius:10px;border:2px solid transparent;cursor:pointer;transition:0.2s;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:{{ section.settings.text_color }}08;color:{{ section.settings.text_color }}}
+.cf-cro-pdp2-swatch:hover,.cf-cro-pdp2-swatch.active{border-color:{{ section.settings.accent_color }};background:{{ section.settings.accent_color }}10}
+.cf-cro-pdp2-stock{font-size:13px;color:#E53E3E;font-weight:600;display:flex;align-items:center;gap:4px}
+.cf-cro-pdp2-stock::before{content:'';width:8px;height:8px;border-radius:50%;background:#E53E3E;animation:cf-pulse 1.5s infinite}
+.cf-cro-pdp2-actions{display:flex;gap:10px}
+.cf-cro-pdp2-atc{flex:1;padding:16px;background:{{ section.settings.accent_color }};color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:0.2s;box-shadow:0 4px 14px {{ section.settings.accent_color }}40}
+.cf-cro-pdp2-atc:hover{transform:translateY(-2px)}
+.cf-cro-pdp2-wish{width:52px;height:52px;display:flex;align-items:center;justify-content:center;border:2px solid {{ section.settings.text_color }}12;border-radius:12px;font-size:20px;cursor:pointer;transition:0.2s;background:transparent}
+.cf-cro-pdp2-wish:hover{border-color:{{ section.settings.accent_color }};color:{{ section.settings.accent_color }}}
+.cf-cro-pdp2-trust{display:flex;gap:24px;flex-wrap:wrap;padding-top:8px}
+.cf-cro-pdp2-trust span{font-size:12px;color:{{ section.settings.text_color }};opacity:0.45;display:flex;align-items:center;gap:4px}
+@media(max-width:768px){.cf-cro-pdp2-inner{grid-template-columns:1fr}.cf-cro-pdp2-gallery{grid-template-columns:1fr 1fr}}
+</style>
+
+<div class="cf-cro-pdp2">
+  <div class="cf-cro-pdp2-inner">
+    <div class="cf-cro-pdp2-gallery">
+      {% if section.settings.image_1 != blank %}<img src="{{ section.settings.image_1 | image_url: width: 600 }}" alt="" loading="lazy">{% else %}<div>📸</div>{% endif %}
+      {% if section.settings.image_2 != blank %}<img src="{{ section.settings.image_2 | image_url: width: 600 }}" alt="" loading="lazy">{% else %}<div>📸</div>{% endif %}
+      {% if section.settings.image_3 != blank %}<img src="{{ section.settings.image_3 | image_url: width: 600 }}" alt="" loading="lazy">{% else %}<div>📸</div>{% endif %}
+      {% if section.settings.image_4 != blank %}<img src="{{ section.settings.image_4 | image_url: width: 600 }}" alt="" loading="lazy">{% else %}<div>📸</div>{% endif %}
+    </div>
+    <div class="cf-cro-pdp2-info">
+      <div class="cf-cro-pdp2-badge">{{ section.settings.badge }}</div>
+      <div class="cf-cro-pdp2-name">{{ section.settings.product_name }}</div>
+      <div class="cf-cro-pdp2-rating">
+        <span class="cf-cro-pdp2-stars">★★★★★</span>
+        <span class="cf-cro-pdp2-review-text">{{ section.settings.rating }} · {{ section.settings.review_count }} reviews</span>
+      </div>
+      <div class="cf-cro-pdp2-price">
+        <b>{{ section.settings.price }}</b>
+        {% if section.settings.compare_price != blank %}<s>{{ section.settings.compare_price }}</s>{% endif %}
+        {% if section.settings.save_text != blank %}<span class="cf-save">{{ section.settings.save_text }}</span>{% endif %}
+      </div>
+      <div class="cf-cro-pdp2-variant">
+        <div class="cf-cro-pdp2-variant-label">Size</div>
+        <div class="cf-cro-pdp2-swatches">
+          {%- assign sizes = section.settings.sizes | split: '|' -%}
+          {%- for size in sizes -%}
+            <div class="cf-cro-pdp2-swatch{% if forloop.first %} active{% endif %}">{{ size | strip }}</div>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="cf-cro-pdp2-stock">Only {{ section.settings.stock_count }} left in stock!</div>
+      <div class="cf-cro-pdp2-actions">
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-pdp2-atc">{{ section.settings.cta_text }}</a>
+        <button class="cf-cro-pdp2-wish">♡</button>
+      </div>
+      <div class="cf-cro-pdp2-trust">
+        <span>🔒 Secure Checkout</span>
+        <span>🚚 Free Shipping</span>
+        <span>↩ Easy Returns</span>
+        <span>💎 Authentic Product</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Product Gallery v2",
+  "settings": [
+    {"type":"image_picker","id":"image_1","label":"Image 1"},
+    {"type":"image_picker","id":"image_2","label":"Image 2"},
+    {"type":"image_picker","id":"image_3","label":"Image 3"},
+    {"type":"image_picker","id":"image_4","label":"Image 4"},
+    {"type":"text","id":"badge","label":"Badge","default":"🔥 TRENDING NOW"},
+    {"type":"text","id":"product_name","label":"Product Name","default":"Premium Performance Hoodie"},
+    {"type":"text","id":"rating","label":"Rating","default":"4.9/5"},
+    {"type":"text","id":"review_count","label":"Reviews","default":"3,200+"},
+    {"type":"text","id":"price","label":"Price","default":"$59.99"},
+    {"type":"text","id":"compare_price","label":"Compare Price","default":"$99.99"},
+    {"type":"text","id":"save_text","label":"Save Badge","default":"Save 40%"},
+    {"type":"text","id":"sizes","label":"Sizes (| separated)","default":"S|M|L|XL|XXL"},
+    {"type":"text","id":"stock_count","label":"Stock Count","default":"7"},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"Add to Cart"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/cart/add"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#111111"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Product Gallery v2"}]
+}
+{% endschema %}

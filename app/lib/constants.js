@@ -354,16 +354,25 @@ export const SECTION_FILES = {
 
     // ── CRO Home Sections ────────────────────────────────────────
     'cf-cro-hero': { category: 'cro-home', name: 'CRO · Problem/Solution Hero', file: 'cf-cro-hero.liquid' },
+    'cf-cro-hero-v2': { category: 'cro-home', name: 'CRO · Centered Hero v2', file: 'cf-cro-hero-v2.liquid' },
     'cf-cro-offer-grid': { category: 'cro-home', name: 'CRO · Buy More Save More', file: 'cf-cro-offer-grid.liquid' },
+    'cf-cro-offer-grid-v2': { category: 'cro-home', name: 'CRO · Pricing Tiers v2', file: 'cf-cro-offer-grid-v2.liquid' },
     'cf-cro-social-proof': { category: 'cro-home', name: 'CRO · Social Proof', file: 'cf-cro-social-proof.liquid' },
+    'cf-cro-social-proof-v2': { category: 'cro-home', name: 'CRO · Reviews Carousel v2', file: 'cf-cro-social-proof-v2.liquid' },
     'cf-cro-benefits': { category: 'cro-home', name: 'CRO · Trust Benefits Bar', file: 'cf-cro-benefits.liquid' },
+    'cf-cro-benefits-v2': { category: 'cro-home', name: 'CRO · Scrolling Trust Bar v2', file: 'cf-cro-benefits-v2.liquid' },
     'cf-cro-countdown': { category: 'cro-home', name: 'CRO · Countdown Timer', file: 'cf-cro-countdown.liquid' },
+    'cf-cro-countdown-v2': { category: 'cro-home', name: 'CRO · Gradient Countdown v2', file: 'cf-cro-countdown-v2.liquid' },
 
     // ── CRO Product Sections ──────────────────────────────────────
     'cf-cro-mini-pdp': { category: 'cro-product', name: 'CRO · Featured Product', file: 'cf-cro-mini-pdp.liquid' },
+    'cf-cro-mini-pdp-v2': { category: 'cro-product', name: 'CRO · Product Gallery v2', file: 'cf-cro-mini-pdp-v2.liquid' },
     'cf-cro-faq': { category: 'cro-product', name: 'CRO · FAQ Accordion', file: 'cf-cro-faq.liquid' },
+    'cf-cro-faq-v2': { category: 'cro-product', name: 'CRO · FAQ Split Layout v2', file: 'cf-cro-faq-v2.liquid' },
     'cf-cro-comparison': { category: 'cro-product', name: 'CRO · Us vs Them', file: 'cf-cro-comparison.liquid' },
+    'cf-cro-comparison-v2': { category: 'cro-product', name: 'CRO · Side-by-Side Cards v2', file: 'cf-cro-comparison-v2.liquid' },
     'cf-cro-bundle': { category: 'cro-product', name: 'CRO · Bundle Upsell', file: 'cf-cro-bundle.liquid' },
+    'cf-cro-bundle-v2': { category: 'cro-product', name: 'CRO · Bundle Split v2', file: 'cf-cro-bundle-v2.liquid' },
 };
 
 export function getSectionsByCategory(categoryId) {

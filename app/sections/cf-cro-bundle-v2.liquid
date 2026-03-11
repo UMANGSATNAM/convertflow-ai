@@ -1,0 +1,85 @@
+<style>
+.cf-cro-bun2{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-bun2-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:center}
+.cf-cro-bun2-visual{display:flex;align-items:center;justify-content:center;gap:-20px;position:relative}
+.cf-cro-bun2-product{width:140px;text-align:center}
+.cf-cro-bun2-product img{width:120px;height:120px;border-radius:16px;object-fit:cover;border:3px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.cf-cro-bun2-product div{width:120px;height:120px;border-radius:16px;background:{{ section.settings.text_color }}05;display:flex;align-items:center;justify-content:center;font-size:36px;border:3px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.cf-cro-bun2-product span{font-size:13px;font-weight:600;color:{{ section.settings.text_color }};margin-top:8px;display:block}
+.cf-cro-bun2-product small{font-size:12px;color:{{ section.settings.text_color }};opacity:0.4;text-decoration:line-through}
+.cf-cro-bun2-plus{font-size:28px;color:{{ section.settings.accent_color }};font-weight:300;margin:0 -8px}
+.cf-cro-bun2-info{display:flex;flex-direction:column;gap:16px}
+.cf-cro-bun2-tag{display:inline-flex;align-items:center;gap:6px;background:{{ section.settings.accent_color }}15;color:{{ section.settings.accent_color }};padding:6px 16px;border-radius:100px;font-size:12px;font-weight:700;width:fit-content}
+.cf-cro-bun2 h2{font-size:clamp(22px,3vw,32px);font-weight:800;color:{{ section.settings.text_color }};margin:0;line-height:1.2}
+.cf-cro-bun2-desc{font-size:15px;color:{{ section.settings.text_color }};opacity:0.65;line-height:1.7}
+.cf-cro-bun2-pricing{display:flex;align-items:center;gap:16px;padding:16px 20px;background:{{ section.settings.accent_color }}08;border-radius:12px}
+.cf-cro-bun2-pricing b{font-size:32px;font-weight:900;color:{{ section.settings.accent_color }}}
+.cf-cro-bun2-pricing s{font-size:18px;color:{{ section.settings.text_color }};opacity:0.35}
+.cf-cro-bun2-pricing .save{background:{{ section.settings.accent_color }};color:#fff;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:700}
+.cf-cro-bun2-btn{display:block;padding:16px 32px;background:{{ section.settings.accent_color }};color:#fff;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;text-align:center;transition:0.2s;box-shadow:0 4px 14px {{ section.settings.accent_color }}30}
+.cf-cro-bun2-btn:hover{transform:translateY(-2px)}
+.cf-cro-bun2-meta{font-size:12px;color:{{ section.settings.text_color }};opacity:0.4;text-align:center}
+@media(max-width:768px){.cf-cro-bun2-inner{grid-template-columns:1fr}.cf-cro-bun2-visual{flex-wrap:wrap;justify-content:center}}
+</style>
+
+<div class="cf-cro-bun2">
+  <div class="cf-cro-bun2-inner">
+    <div class="cf-cro-bun2-visual">
+      <div class="cf-cro-bun2-product">
+        {% if section.settings.img_1 != blank %}<img src="{{ section.settings.img_1 | image_url: width: 240 }}" alt="">{% else %}<div>📦</div>{% endif %}
+        <span>{{ section.settings.item_1 }}</span><small>{{ section.settings.item_price_1 }}</small>
+      </div>
+      <span class="cf-cro-bun2-plus">+</span>
+      <div class="cf-cro-bun2-product">
+        {% if section.settings.img_2 != blank %}<img src="{{ section.settings.img_2 | image_url: width: 240 }}" alt="">{% else %}<div>📦</div>{% endif %}
+        <span>{{ section.settings.item_2 }}</span><small>{{ section.settings.item_price_2 }}</small>
+      </div>
+      <span class="cf-cro-bun2-plus">+</span>
+      <div class="cf-cro-bun2-product">
+        {% if section.settings.img_3 != blank %}<img src="{{ section.settings.img_3 | image_url: width: 240 }}" alt="">{% else %}<div>📦</div>{% endif %}
+        <span>{{ section.settings.item_3 }}</span><small>{{ section.settings.item_price_3 }}</small>
+      </div>
+    </div>
+    <div class="cf-cro-bun2-info">
+      <div class="cf-cro-bun2-tag">🎁 BUNDLE & SAVE</div>
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="cf-cro-bun2-desc">{{ section.settings.description }}</p>
+      <div class="cf-cro-bun2-pricing">
+        <b>{{ section.settings.bundle_price }}</b>
+        <s>{{ section.settings.orig_price }}</s>
+        <span class="save">SAVE {{ section.settings.save_pct }}</span>
+      </div>
+      <a href="{{ section.settings.cta_link }}" class="cf-cro-bun2-btn">{{ section.settings.cta_text }}</a>
+      <p class="cf-cro-bun2-meta">Free shipping · 30-day guarantee · Instant savings applied</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Bundle Split v2",
+  "settings": [
+    {"type":"image_picker","id":"img_1","label":"Product 1 Image"},
+    {"type":"text","id":"item_1","label":"Product 1","default":"Daily Cleanser"},
+    {"type":"text","id":"item_price_1","label":"Price 1","default":"$34.99"},
+    {"type":"image_picker","id":"img_2","label":"Product 2 Image"},
+    {"type":"text","id":"item_2","label":"Product 2","default":"Hydra Serum"},
+    {"type":"text","id":"item_price_2","label":"Price 2","default":"$49.99"},
+    {"type":"image_picker","id":"img_3","label":"Product 3 Image"},
+    {"type":"text","id":"item_3","label":"Product 3","default":"Night Cream"},
+    {"type":"text","id":"item_price_3","label":"Price 3","default":"$44.99"},
+    {"type":"text","id":"heading","label":"Heading","default":"The Complete Routine Bundle"},
+    {"type":"textarea","id":"description","label":"Description","default":"Everything you need for the perfect morning-to-night routine. Our best-selling trio, together at an unbeatable price."},
+    {"type":"text","id":"bundle_price","label":"Bundle Price","default":"$89.99"},
+    {"type":"text","id":"orig_price","label":"Original Total","default":"$129.97"},
+    {"type":"text","id":"save_pct","label":"Save %","default":"31%"},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"🛒 Add Bundle to Cart"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/cart"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f9fa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#E53E3E"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Bundle Split v2"}]
+}
+{% endschema %}
