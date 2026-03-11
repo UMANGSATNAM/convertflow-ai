@@ -1,0 +1,94 @@
+<style>
+.cf-cro-pdp{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-pdp-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.cf-cro-pdp-img{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:1;background:{{ section.settings.text_color }}05}
+.cf-cro-pdp-img img{width:100%;height:100%;object-fit:cover}
+.cf-cro-pdp-badge{position:absolute;top:16px;left:16px;background:{{ section.settings.accent_color }};color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:0.05em}
+.cf-cro-pdp-info{display:flex;flex-direction:column;gap:16px}
+.cf-cro-pdp-cat{font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:{{ section.settings.accent_color }};font-weight:600}
+.cf-cro-pdp-name{font-size:clamp(24px,3vw,36px);font-weight:800;color:{{ section.settings.text_color }};line-height:1.2}
+.cf-cro-pdp-stars{display:flex;align-items:center;gap:6px;font-size:14px}
+.cf-cro-pdp-stars span{color:#F59E0B}
+.cf-cro-pdp-stars small{color:{{ section.settings.text_color }};opacity:0.5}
+.cf-cro-pdp-price{display:flex;align-items:baseline;gap:10px}
+.cf-cro-pdp-price b{font-size:28px;color:{{ section.settings.text_color }}}
+.cf-cro-pdp-price s{font-size:18px;color:{{ section.settings.text_color }};opacity:0.4}
+.cf-cro-pdp-price .save{background:{{ section.settings.accent_color }}20;color:{{ section.settings.accent_color }};padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700}
+.cf-cro-pdp-desc{font-size:15px;line-height:1.7;color:{{ section.settings.text_color }};opacity:0.7}
+.cf-cro-pdp-benefits{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.cf-cro-pdp-benefits li{display:flex;align-items:center;gap:10px;font-size:14px;color:{{ section.settings.text_color }}}
+.cf-cro-pdp-benefits li::before{content:'✓';display:flex;align-items:center;justify-content:center;width:22px;height:22px;background:{{ section.settings.accent_color }}15;color:{{ section.settings.accent_color }};border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0}
+.cf-cro-pdp-btn{display:block;width:100%;padding:16px;background:{{ section.settings.accent_color }};color:#fff;border:none;border-radius:{{ section.settings.btn_radius }}px;font-size:17px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:0.2s;box-shadow:0 4px 14px {{ section.settings.accent_color }}40}
+.cf-cro-pdp-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px {{ section.settings.accent_color }}50}
+.cf-cro-pdp-trust{display:flex;gap:20px;justify-content:center;padding-top:8px}
+.cf-cro-pdp-trust span{font-size:12px;color:{{ section.settings.text_color }};opacity:0.5;display:flex;align-items:center;gap:4px}
+@media(max-width:768px){.cf-cro-pdp-inner{grid-template-columns:1fr;gap:24px}}
+</style>
+
+<div class="cf-cro-pdp">
+  <div class="cf-cro-pdp-inner">
+    <div class="cf-cro-pdp-img">
+      {% if section.settings.product_image != blank %}
+        <img src="{{ section.settings.product_image | image_url: width: 800 }}" alt="{{ section.settings.product_name }}" loading="lazy">
+      {% else %}
+        <div style="width:100%;height:100%;min-height:400px;background:linear-gradient(135deg,{{ section.settings.accent_color }}10,{{ section.settings.accent_color }}05)"></div>
+      {% endif %}
+      {% if section.settings.badge != blank %}
+        <div class="cf-cro-pdp-badge">{{ section.settings.badge }}</div>
+      {% endif %}
+    </div>
+    <div class="cf-cro-pdp-info">
+      <div class="cf-cro-pdp-cat">{{ section.settings.category }}</div>
+      <div class="cf-cro-pdp-name">{{ section.settings.product_name }}</div>
+      <div class="cf-cro-pdp-stars">
+        <span>★★★★★</span>
+        <small>{{ section.settings.rating }} ({{ section.settings.review_count }} reviews)</small>
+      </div>
+      <div class="cf-cro-pdp-price">
+        <b>{{ section.settings.price }}</b>
+        {% if section.settings.compare_price != blank %}<s>{{ section.settings.compare_price }}</s>{% endif %}
+        {% if section.settings.save_text != blank %}<span class="save">{{ section.settings.save_text }}</span>{% endif %}
+      </div>
+      <p class="cf-cro-pdp-desc">{{ section.settings.description }}</p>
+      {%- assign benefits = section.settings.benefits | split: '|' -%}
+      <ul class="cf-cro-pdp-benefits">
+        {%- for benefit in benefits -%}
+          <li>{{ benefit | strip }}</li>
+        {%- endfor -%}
+      </ul>
+      <a href="{{ section.settings.cta_link }}" class="cf-cro-pdp-btn">🛒 {{ section.settings.cta_text }}</a>
+      <div class="cf-cro-pdp-trust">
+        <span>🔒 Secure Checkout</span>
+        <span>🚚 Free Shipping</span>
+        <span>↩ 30-Day Returns</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Featured Product",
+  "settings": [
+    {"type":"image_picker","id":"product_image","label":"Product Image"},
+    {"type":"text","id":"badge","label":"Badge","default":"BEST SELLER"},
+    {"type":"text","id":"category","label":"Category","default":"PREMIUM COLLECTION"},
+    {"type":"text","id":"product_name","label":"Product Name","default":"Ultra-Soft Premium Tee"},
+    {"type":"text","id":"rating","label":"Rating","default":"4.9"},
+    {"type":"text","id":"review_count","label":"Review Count","default":"2,847"},
+    {"type":"text","id":"price","label":"Price","default":"$39.99"},
+    {"type":"text","id":"compare_price","label":"Compare Price","default":"$69.99"},
+    {"type":"text","id":"save_text","label":"Save Badge","default":"Save 43%"},
+    {"type":"textarea","id":"description","label":"Description","default":"Crafted from 100% organic cotton. Feels like a second skin while looking effortlessly sharp."},
+    {"type":"textarea","id":"benefits","label":"Benefits (separate by |)","default":"Feels like a second skin — ultra-soft organic cotton|Looks sharp all day — wrinkle-resistant fabric|Built to last — double-stitched seams|Earth-friendly — sustainable sourcing"},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"Add to Cart — $39.99"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/cart/add"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#16A34A"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60},
+    {"type":"range","id":"btn_radius","label":"Button Radius","min":0,"max":50,"step":2,"default":12}
+  ],
+  "presets": [{"name":"CRO · Featured Product"}]
+}
+{% endschema %}

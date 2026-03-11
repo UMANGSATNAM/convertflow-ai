@@ -1,0 +1,82 @@
+<style>
+@keyframes cf-pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.cf-cro-cd{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-cd-inner{max-width:800px;margin:0 auto;text-align:center}
+.cf-cro-cd-badge{display:inline-block;background:{{ section.settings.accent_color }}15;color:{{ section.settings.accent_color }};padding:8px 20px;border-radius:100px;font-size:13px;font-weight:700;letter-spacing:0.05em;margin-bottom:20px;animation:cf-pulse 2s infinite}
+.cf-cro-cd h2{font-size:clamp(24px,3vw,40px);font-weight:800;color:{{ section.settings.text_color }};margin:0 0 8px}
+.cf-cro-cd-sub{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6;margin-bottom:32px}
+.cf-cro-cd-timer{display:flex;justify-content:center;gap:16px;margin-bottom:28px}
+.cf-cro-cd-unit{display:flex;flex-direction:column;align-items:center;gap:4px}
+.cf-cro-cd-num{width:80px;height:80px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:{{ section.settings.text_color }};background:#fff;border:2px solid {{ section.settings.text_color }}10;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.cf-cro-cd-label{font-size:12px;color:{{ section.settings.text_color }};opacity:0.5;text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+.cf-cro-cd-sep{font-size:32px;font-weight:300;color:{{ section.settings.text_color }};opacity:0.2;line-height:80px}
+.cf-cro-cd-bar{width:100%;height:8px;background:{{ section.settings.text_color }}08;border-radius:100px;overflow:hidden;margin-bottom:28px}
+.cf-cro-cd-bar-fill{height:100%;background:linear-gradient(90deg,{{ section.settings.accent_color }},{{ section.settings.accent_color }}CC);border-radius:100px;transition:width 1s ease}
+.cf-cro-cd-cta{display:inline-flex;align-items:center;gap:8px;padding:16px 40px;background:{{ section.settings.accent_color }};color:#fff;border-radius:12px;font-size:17px;font-weight:700;text-decoration:none;transition:0.2s;box-shadow:0 4px 14px {{ section.settings.accent_color }}40}
+.cf-cro-cd-cta:hover{transform:translateY(-2px);box-shadow:0 8px 20px {{ section.settings.accent_color }}50}
+.cf-cro-cd-urgency{font-size:14px;color:{{ section.settings.accent_color }};font-weight:600;margin-top:16px}
+@media(max-width:480px){.cf-cro-cd-num{width:60px;height:60px;font-size:26px}.cf-cro-cd-timer{gap:8px}}
+</style>
+
+<div class="cf-cro-cd">
+  <div class="cf-cro-cd-inner">
+    <div class="cf-cro-cd-badge">🔥 {{ section.settings.badge }}</div>
+    <h2>{{ section.settings.heading }}</h2>
+    <p class="cf-cro-cd-sub">{{ section.settings.subheading }}</p>
+    <div class="cf-cro-cd-timer" id="cf-cd-{{ section.id }}">
+      <div class="cf-cro-cd-unit"><div class="cf-cro-cd-num" data-unit="days">{{ section.settings.days }}</div><div class="cf-cro-cd-label">Days</div></div>
+      <span class="cf-cro-cd-sep">:</span>
+      <div class="cf-cro-cd-unit"><div class="cf-cro-cd-num" data-unit="hours">{{ section.settings.hours }}</div><div class="cf-cro-cd-label">Hours</div></div>
+      <span class="cf-cro-cd-sep">:</span>
+      <div class="cf-cro-cd-unit"><div class="cf-cro-cd-num" data-unit="mins">{{ section.settings.minutes }}</div><div class="cf-cro-cd-label">Minutes</div></div>
+      <span class="cf-cro-cd-sep">:</span>
+      <div class="cf-cro-cd-unit"><div class="cf-cro-cd-num" data-unit="secs">00</div><div class="cf-cro-cd-label">Seconds</div></div>
+    </div>
+    <div class="cf-cro-cd-bar"><div class="cf-cro-cd-bar-fill" style="width:{{ section.settings.bar_pct }}%"></div></div>
+    <a href="{{ section.settings.cta_link }}" class="cf-cro-cd-cta">{{ section.settings.cta_text }} →</a>
+    {% if section.settings.urgency_text != blank %}
+      <p class="cf-cro-cd-urgency">⚡ {{ section.settings.urgency_text }}</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+(function(){
+  var el = document.getElementById('cf-cd-{{ section.id }}');
+  if(!el) return;
+  var d=parseInt('{{ section.settings.days }}')||0, h=parseInt('{{ section.settings.hours }}')||0, m=parseInt('{{ section.settings.minutes }}')||0;
+  var total = d*86400 + h*3600 + m*60;
+  function pad(n){return n<10?'0'+n:''+n}
+  function tick(){
+    if(total<=0) return;
+    total--;
+    var dd=Math.floor(total/86400), hh=Math.floor((total%86400)/3600), mm=Math.floor((total%3600)/60), ss=total%60;
+    var nums = el.querySelectorAll('.cf-cro-cd-num');
+    nums[0].textContent=pad(dd); nums[1].textContent=pad(hh); nums[2].textContent=pad(mm); nums[3].textContent=pad(ss);
+  }
+  setInterval(tick, 1000);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "CRO · Countdown Timer",
+  "settings": [
+    {"type":"text","id":"badge","label":"Badge","default":"LIMITED TIME OFFER"},
+    {"type":"text","id":"heading","label":"Heading","default":"Flash Sale Ends Tonight"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"Get 40% off everything — don't miss out!"},
+    {"type":"range","id":"days","label":"Days","min":0,"max":30,"step":1,"default":0},
+    {"type":"range","id":"hours","label":"Hours","min":0,"max":23,"step":1,"default":6},
+    {"type":"range","id":"minutes","label":"Minutes","min":0,"max":59,"step":1,"default":42},
+    {"type":"range","id":"bar_pct","label":"Progress Bar %","min":10,"max":95,"step":5,"default":72},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"Shop the Sale"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/sale"},
+    {"type":"text","id":"urgency_text","label":"Urgency Text","default":"Only 23 items left at this price!"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#0f0f0f"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#F59E0B"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Countdown Timer"}]
+}
+{% endschema %}

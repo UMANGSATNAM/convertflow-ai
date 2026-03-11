@@ -1,0 +1,64 @@
+<style>
+.cf-cro-ben{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-ben-inner{max-width:1200px;margin:0 auto}
+.cf-cro-ben-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid {{ section.settings.text_color }}10;border-radius:16px;overflow:hidden;background:#fff}
+.cf-cro-ben-item{display:flex;flex-direction:column;align-items:center;text-align:center;padding:32px 20px;gap:12px;position:relative}
+.cf-cro-ben-item:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:{{ section.settings.text_color }}10}
+.cf-cro-ben-icon{width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:16px;background:{{ section.settings.accent_color }}10;font-size:28px}
+.cf-cro-ben-title{font-size:15px;font-weight:700;color:{{ section.settings.text_color }}}
+.cf-cro-ben-desc{font-size:13px;color:{{ section.settings.text_color }};opacity:0.6;line-height:1.5}
+@media(max-width:768px){.cf-cro-ben-grid{grid-template-columns:repeat(2,1fr)}.cf-cro-ben-item:not(:last-child)::after{display:none}.cf-cro-ben-item{border-bottom:1px solid {{ section.settings.text_color }}08}}
+@media(max-width:480px){.cf-cro-ben-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cro-ben">
+  <div class="cf-cro-ben-inner">
+    <div class="cf-cro-ben-grid">
+      <div class="cf-cro-ben-item">
+        <div class="cf-cro-ben-icon">{{ section.settings.icon_1 }}</div>
+        <div class="cf-cro-ben-title">{{ section.settings.title_1 }}</div>
+        <div class="cf-cro-ben-desc">{{ section.settings.desc_1 }}</div>
+      </div>
+      <div class="cf-cro-ben-item">
+        <div class="cf-cro-ben-icon">{{ section.settings.icon_2 }}</div>
+        <div class="cf-cro-ben-title">{{ section.settings.title_2 }}</div>
+        <div class="cf-cro-ben-desc">{{ section.settings.desc_2 }}</div>
+      </div>
+      <div class="cf-cro-ben-item">
+        <div class="cf-cro-ben-icon">{{ section.settings.icon_3 }}</div>
+        <div class="cf-cro-ben-title">{{ section.settings.title_3 }}</div>
+        <div class="cf-cro-ben-desc">{{ section.settings.desc_3 }}</div>
+      </div>
+      <div class="cf-cro-ben-item">
+        <div class="cf-cro-ben-icon">{{ section.settings.icon_4 }}</div>
+        <div class="cf-cro-ben-title">{{ section.settings.title_4 }}</div>
+        <div class="cf-cro-ben-desc">{{ section.settings.desc_4 }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Trust Benefits Bar",
+  "settings": [
+    {"type":"text","id":"icon_1","label":"Icon 1","default":"🚚"},
+    {"type":"text","id":"title_1","label":"Title 1","default":"Free Shipping"},
+    {"type":"text","id":"desc_1","label":"Desc 1","default":"On all orders over $50"},
+    {"type":"text","id":"icon_2","label":"Icon 2","default":"🔄"},
+    {"type":"text","id":"title_2","label":"Title 2","default":"30-Day Returns"},
+    {"type":"text","id":"desc_2","label":"Desc 2","default":"No questions asked"},
+    {"type":"text","id":"icon_3","label":"Icon 3","default":"🔒"},
+    {"type":"text","id":"title_3","label":"Title 3","default":"Secure Payment"},
+    {"type":"text","id":"desc_3","label":"Desc 3","default":"256-bit SSL encryption"},
+    {"type":"text","id":"icon_4","label":"Icon 4","default":"💎"},
+    {"type":"text","id":"title_4","label":"Title 4","default":"Premium Quality"},
+    {"type":"text","id":"desc_4","label":"Desc 4","default":"Money-back guarantee"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f9fa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#6C3CE1"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":20}
+  ],
+  "presets": [{"name":"CRO · Trust Benefits Bar"}]
+}
+{% endschema %}

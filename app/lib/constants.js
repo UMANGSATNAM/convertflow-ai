@@ -1,4 +1,6 @@
 export const SECTION_CATEGORIES = [
+    { id: 'cro-home', name: '🎯 CRO Home Sections', description: 'High-converting home page sections (20-40% CR lift)', icon: 'Target' },
+    { id: 'cro-product', name: '🛒 CRO Product Sections', description: 'Product page sections for maximum conversions', icon: 'ShoppingCart' },
     { id: 'header', name: 'Header', description: 'Navigation bars and branding', icon: 'Layout' },
     { id: 'marquee', name: 'Marquee / Tickers', description: 'Infinite scrolling announcement bands', icon: 'Type' },
     { id: 'promo', name: 'Promo Posters', description: 'Large format promotional banners', icon: 'Image' },
@@ -349,6 +351,19 @@ export const SECTION_FILES = {
     'cf-trust-13-v7': { category: 'trust', name: '13 · Brand Trust (v7)', file: 'cf-trust-13-v7.liquid' },
     'cf-trust-13-v8': { category: 'trust', name: '13 · Brand Trust (v8)', file: 'cf-trust-13-v8.liquid' },
     'cf-trust-13-v9': { category: 'trust', name: '13 · Brand Trust (v9)', file: 'cf-trust-13-v9.liquid' },
+
+    // ── CRO Home Sections ────────────────────────────────────────
+    'cf-cro-hero': { category: 'cro-home', name: 'CRO · Problem/Solution Hero', file: 'cf-cro-hero.liquid' },
+    'cf-cro-offer-grid': { category: 'cro-home', name: 'CRO · Buy More Save More', file: 'cf-cro-offer-grid.liquid' },
+    'cf-cro-social-proof': { category: 'cro-home', name: 'CRO · Social Proof', file: 'cf-cro-social-proof.liquid' },
+    'cf-cro-benefits': { category: 'cro-home', name: 'CRO · Trust Benefits Bar', file: 'cf-cro-benefits.liquid' },
+    'cf-cro-countdown': { category: 'cro-home', name: 'CRO · Countdown Timer', file: 'cf-cro-countdown.liquid' },
+
+    // ── CRO Product Sections ──────────────────────────────────────
+    'cf-cro-mini-pdp': { category: 'cro-product', name: 'CRO · Featured Product', file: 'cf-cro-mini-pdp.liquid' },
+    'cf-cro-faq': { category: 'cro-product', name: 'CRO · FAQ Accordion', file: 'cf-cro-faq.liquid' },
+    'cf-cro-comparison': { category: 'cro-product', name: 'CRO · Us vs Them', file: 'cf-cro-comparison.liquid' },
+    'cf-cro-bundle': { category: 'cro-product', name: 'CRO · Bundle Upsell', file: 'cf-cro-bundle.liquid' },
 };
 
 export function getSectionsByCategory(categoryId) {

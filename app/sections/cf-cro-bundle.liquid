@@ -1,0 +1,97 @@
+<style>
+.cf-cro-bun{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-bun-inner{max-width:900px;margin:0 auto}
+.cf-cro-bun-head{text-align:center;margin-bottom:32px}
+.cf-cro-bun h2{font-size:clamp(24px,3vw,36px);font-weight:800;color:{{ section.settings.text_color }};margin:0 0 8px}
+.cf-cro-bun-sub{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6}
+.cf-cro-bun-box{background:#fff;border:2px solid {{ section.settings.accent_color }}20;border-radius:20px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,0.06)}
+.cf-cro-bun-items{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.cf-cro-bun-item{text-align:center;flex:0 0 160px}
+.cf-cro-bun-item-img{width:120px;height:120px;border-radius:12px;background:{{ section.settings.text_color }}05;margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.cf-cro-bun-item-img img{width:100%;height:100%;object-fit:cover}
+.cf-cro-bun-item-name{font-size:13px;font-weight:600;color:{{ section.settings.text_color }};margin-bottom:4px}
+.cf-cro-bun-item-price{font-size:12px;color:{{ section.settings.text_color }};opacity:0.5}
+.cf-cro-bun-plus{font-size:28px;font-weight:300;color:{{ section.settings.accent_color }};flex-shrink:0}
+.cf-cro-bun-equals{font-size:28px;font-weight:300;color:{{ section.settings.text_color }};opacity:0.3;flex-shrink:0}
+.cf-cro-bun-total{display:flex;align-items:center;justify-content:center;gap:16px;padding:20px;background:{{ section.settings.accent_color }}08;border-radius:12px;margin-bottom:20px}
+.cf-cro-bun-total-price{display:flex;align-items:baseline;gap:8px}
+.cf-cro-bun-total-price b{font-size:32px;font-weight:900;color:{{ section.settings.accent_color }}}
+.cf-cro-bun-total-price s{font-size:18px;color:{{ section.settings.text_color }};opacity:0.4}
+.cf-cro-bun-save{display:inline-block;background:{{ section.settings.accent_color }};color:#fff;padding:6px 14px;border-radius:100px;font-size:13px;font-weight:700}
+.cf-cro-bun-btn{display:block;width:100%;padding:18px;background:{{ section.settings.accent_color }};color:#fff;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:0.2s;box-shadow:0 4px 14px {{ section.settings.accent_color }}40}
+.cf-cro-bun-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px {{ section.settings.accent_color }}50}
+@media(max-width:600px){.cf-cro-bun-items{flex-direction:column}.cf-cro-bun-plus,.cf-cro-bun-equals{transform:rotate(90deg)}}
+</style>
+
+<div class="cf-cro-bun">
+  <div class="cf-cro-bun-inner">
+    <div class="cf-cro-bun-head">
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="cf-cro-bun-sub">{{ section.settings.subheading }}</p>
+    </div>
+    <div class="cf-cro-bun-box">
+      <div class="cf-cro-bun-items">
+        <div class="cf-cro-bun-item">
+          <div class="cf-cro-bun-item-img">
+            {% if section.settings.image_1 != blank %}<img src="{{ section.settings.image_1 | image_url: width: 240 }}" alt="{{ section.settings.name_1 }}" loading="lazy">{% else %}📦{% endif %}
+          </div>
+          <div class="cf-cro-bun-item-name">{{ section.settings.name_1 }}</div>
+          <div class="cf-cro-bun-item-price">{{ section.settings.item_price_1 }}</div>
+        </div>
+        <span class="cf-cro-bun-plus">+</span>
+        <div class="cf-cro-bun-item">
+          <div class="cf-cro-bun-item-img">
+            {% if section.settings.image_2 != blank %}<img src="{{ section.settings.image_2 | image_url: width: 240 }}" alt="{{ section.settings.name_2 }}" loading="lazy">{% else %}📦{% endif %}
+          </div>
+          <div class="cf-cro-bun-item-name">{{ section.settings.name_2 }}</div>
+          <div class="cf-cro-bun-item-price">{{ section.settings.item_price_2 }}</div>
+        </div>
+        <span class="cf-cro-bun-plus">+</span>
+        <div class="cf-cro-bun-item">
+          <div class="cf-cro-bun-item-img">
+            {% if section.settings.image_3 != blank %}<img src="{{ section.settings.image_3 | image_url: width: 240 }}" alt="{{ section.settings.name_3 }}" loading="lazy">{% else %}📦{% endif %}
+          </div>
+          <div class="cf-cro-bun-item-name">{{ section.settings.name_3 }}</div>
+          <div class="cf-cro-bun-item-price">{{ section.settings.item_price_3 }}</div>
+        </div>
+      </div>
+      <div class="cf-cro-bun-total">
+        <div class="cf-cro-bun-total-price">
+          <b>{{ section.settings.bundle_price }}</b>
+          <s>{{ section.settings.original_price }}</s>
+        </div>
+        <div class="cf-cro-bun-save">SAVE {{ section.settings.save_amount }}</div>
+      </div>
+      <a href="{{ section.settings.cta_link }}" class="cf-cro-bun-btn">{{ section.settings.cta_text }}</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Bundle Upsell",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Frequently Bought Together"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"Save big when you bundle — customers love these combos"},
+    {"type":"image_picker","id":"image_1","label":"Product 1 Image"},
+    {"type":"text","id":"name_1","label":"Product 1 Name","default":"Core Serum"},
+    {"type":"text","id":"item_price_1","label":"Product 1 Price","default":"$49.99"},
+    {"type":"image_picker","id":"image_2","label":"Product 2 Image"},
+    {"type":"text","id":"name_2","label":"Product 2 Name","default":"Day Cream"},
+    {"type":"text","id":"item_price_2","label":"Product 2 Price","default":"$39.99"},
+    {"type":"image_picker","id":"image_3","label":"Product 3 Image"},
+    {"type":"text","id":"name_3","label":"Product 3 Name","default":"Night Mask"},
+    {"type":"text","id":"item_price_3","label":"Product 3 Price","default":"$34.99"},
+    {"type":"text","id":"bundle_price","label":"Bundle Price","default":"$89.99"},
+    {"type":"text","id":"original_price","label":"Original Total","default":"$124.97"},
+    {"type":"text","id":"save_amount","label":"Save Amount","default":"$34.98 (28%)"},
+    {"type":"text","id":"cta_text","label":"CTA Text","default":"🎁 Add Bundle to Cart — Save 28%"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/cart"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#f8f9fa"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent Color","default":"#E53E3E"},
+    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Bundle Upsell"}]
+}
+{% endschema %}
