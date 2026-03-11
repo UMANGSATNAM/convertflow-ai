@@ -1,0 +1,100 @@
+<style>
+.cf-cro-cmp4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-cmp4-inner{max-width:1000px;margin:0 auto}
+.cf-cro-cmp4-head{text-align:center;margin-bottom:60px}
+.cf-cro-cmp4 h2{font-size:clamp(32px,4vw,48px);font-weight:900;color:{{ section.settings.text_color }};margin:0 0 16px;letter-spacing:-0.02em;line-height:1.1}
+.cf-cro-cmp4 h2 span{color:{{ section.settings.accent_color }}}
+.cf-cro-cmp4-table-wrap{background:#fff;border-radius:24px;border:1px solid {{ section.settings.text_color }}10;box-shadow:0 20px 50px rgba(0,0,0,0.06);overflow:hidden}
+.cf-cro-cmp4-table{width:100%;border-collapse:collapse}
+.cf-cro-cmp4-table th{padding:24px;text-align:left;font-size:18px;font-weight:800;color:{{ section.settings.text_color }};border-bottom:2px solid {{ section.settings.text_color }}08}
+.cf-cro-cmp4-table th:not(:first-child){text-align:center}
+.cf-cro-cmp4-table th.us{background:{{ section.settings.accent_color }}08;color:{{ section.settings.accent_color }}}
+.cf-cro-cmp4-table td{padding:20px 24px;border-bottom:1px solid {{ section.settings.text_color }}08;font-size:16px;font-weight:600;color:{{ section.settings.text_color }}}
+.cf-cro-cmp4-table td.us{background:{{ section.settings.accent_color }}04;text-align:center}
+.cf-cro-cmp4-table td.them{text-align:center;color:{{ section.settings.text_color }}60}
+.cf-cro-cmp4-table tr:last-child td{border-bottom:none}
+.cf-cro-cmp4-icon{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%}
+.cf-cro-cmp4-icon.check{background:{{ section.settings.accent_color }}15;color:{{ section.settings.accent_color }}}
+.cf-cro-cmp4-icon.cross{background:#FEE2E2;color:#EF4444}
+.cf-cro-cmp4-icon svg{width:16px;height:16px}
+.cf-cro-cmp4-bot{padding:24px;background:{{ section.settings.text_color }}03;text-align:center;border-top:1px solid {{ section.settings.text_color }}08}
+.cf-cro-cmp4-btn{display:inline-flex;padding:16px 40px;background:{{ section.settings.accent_color }};color:#fff;border-radius:100px;font-size:16px;font-weight:800;text-decoration:none;transition:0.3s}
+.cf-cro-cmp4-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px {{ section.settings.accent_color }}40}
+@media(max-width:768px){.cf-cro-cmp4-table th,.cf-cro-cmp4-table td{padding:16px 12px}.cf-cro-cmp4-table-wrap{border-radius:16px}}
+</style>
+
+<div class="cf-cro-cmp4">
+  <div class="cf-cro-cmp4-inner">
+    <div class="cf-cro-cmp4-head">
+      <h2>The choice is <span>clear.</span></h2>
+    </div>
+    <div class="cf-cro-cmp4-table-wrap">
+      <table class="cf-cro-cmp4-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="us">{{ section.settings.brand }}</th>
+            <th>{{ section.settings.competitor }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for i in (1..5) -%}
+            {%- assign f = 'f_' | append: i -%}
+            {%- assign u = 'u_' | append: i -%}
+            {%- assign t = 't_' | append: i -%}
+            {% if section.settings[f] != blank %}
+              <tr>
+                <td>{{ section.settings[f] }}</td>
+                <td class="us">
+                  {% if section.settings[u] == 'yes' %}<span class="cf-cro-cmp4-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  {% elsif section.settings[u] == 'no' %}<span class="cf-cro-cmp4-icon cross"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  {% else %}<span style="font-weight:800;color:{{ section.settings.accent_color }}">{{ section.settings[u] }}</span>{% endif %}
+                </td>
+                <td class="them">
+                  {% if section.settings[t] == 'yes' %}<span class="cf-cro-cmp4-icon check" style="background:#E5E7EB;color:#6B7280"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  {% elsif section.settings[t] == 'no' %}<span class="cf-cro-cmp4-icon cross" style="background:#E5E7EB;color:#6B7280"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>
+                  {% else %}{{ section.settings[t] }}{% endif %}
+                </td>
+              </tr>
+            {% endif %}
+          {%- endfor -%}
+        </tbody>
+      </table>
+      <div class="cf-cro-cmp4-bot">
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-cmp4-btn">{{ section.settings.cta_text }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Clean Table v4",
+  "settings": [
+    {"type":"text","id":"brand","label":"Your Brand","default":"Us"},
+    {"type":"text","id":"competitor","label":"Competitor","default":"Others"},
+    {"type":"text","id":"f_1","label":"Feature 1","default":"Clinical Strength Formula"},
+    {"type":"text","id":"u_1","label":"Us 1","default":"yes"},
+    {"type":"text","id":"t_1","label":"Them 1","default":"no"},
+    {"type":"text","id":"f_2","label":"Feature 2","default":"Quality Guarantee"},
+    {"type":"text","id":"u_2","label":"Us 2","default":"60 Days"},
+    {"type":"text","id":"t_2","label":"Them 2","default":"14 Days"},
+    {"type":"text","id":"f_3","label":"Feature 3","default":"No Artificial Fillers"},
+    {"type":"text","id":"u_3","label":"Us 3","default":"yes"},
+    {"type":"text","id":"t_3","label":"Them 3","default":"no"},
+    {"type":"text","id":"f_4","label":"Feature 4","default":"Free Shipping"},
+    {"type":"text","id":"u_4","label":"Us 4","default":"yes"},
+    {"type":"text","id":"t_4","label":"Them 4","default":"Over $100"},
+    {"type":"text","id":"f_5","label":"Feature 5","default":"Cost per dose"},
+    {"type":"text","id":"u_5","label":"Us 5","default":"$1.20"},
+    {"type":"text","id":"t_5","label":"Them 5","default":"$3.50"},
+    {"type":"text","id":"cta_text","label":"CTA","default":"Make the Switch"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F8FAFC"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0F172A"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#F59E0B"},
+    {"type":"range","id":"padding_y","label":"Top/Bottom Padding","min":20,"max":120,"step":10,"default":80}
+  ],
+  "presets": [{"name":"CRO · Clean Table v4"}]
+}
+{% endschema %}

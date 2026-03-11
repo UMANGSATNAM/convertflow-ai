@@ -378,15 +378,19 @@ export const SECTION_FILES = {
     'cf-cro-mini-pdp': { category: 'cro-product', name: 'CRO · Featured Product', file: 'cf-cro-mini-pdp.liquid' },
     'cf-cro-mini-pdp-v2': { category: 'cro-product', name: 'CRO · Product Gallery v2', file: 'cf-cro-mini-pdp-v2.liquid' },
     'cf-cro-mini-pdp-v3': { category: 'cro-product', name: 'CRO · Product Showcase v3', file: 'cf-cro-mini-pdp-v3.liquid' },
+    'cf-cro-mini-pdp-v4': { category: 'cro-product', name: 'CRO · Card Showcase v4', file: 'cf-cro-mini-pdp-v4.liquid' },
     'cf-cro-faq': { category: 'cro-product', name: 'CRO · FAQ Accordion', file: 'cf-cro-faq.liquid' },
     'cf-cro-faq-v2': { category: 'cro-product', name: 'CRO · FAQ Split Layout v2', file: 'cf-cro-faq-v2.liquid' },
     'cf-cro-faq-v3': { category: 'cro-product', name: 'CRO · Tabbed FAQ v3', file: 'cf-cro-faq-v3.liquid' },
+    'cf-cro-faq-v4': { category: 'cro-product', name: 'CRO · Grid FAQ v4', file: 'cf-cro-faq-v4.liquid' },
     'cf-cro-comparison': { category: 'cro-product', name: 'CRO · Us vs Them', file: 'cf-cro-comparison.liquid' },
     'cf-cro-comparison-v2': { category: 'cro-product', name: 'CRO · Side-by-Side Cards v2', file: 'cf-cro-comparison-v2.liquid' },
     'cf-cro-comparison-v3': { category: 'cro-product', name: 'CRO · Scorecard Compare v3', file: 'cf-cro-comparison-v3.liquid' },
+    'cf-cro-comparison-v4': { category: 'cro-product', name: 'CRO · Clean Table v4', file: 'cf-cro-comparison-v4.liquid' },
     'cf-cro-bundle': { category: 'cro-product', name: 'CRO · Bundle Upsell', file: 'cf-cro-bundle.liquid' },
     'cf-cro-bundle-v2': { category: 'cro-product', name: 'CRO · Bundle Split v2', file: 'cf-cro-bundle-v2.liquid' },
     'cf-cro-bundle-v3': { category: 'cro-product', name: 'CRO · Compact Bundle v3', file: 'cf-cro-bundle-v3.liquid' },
+    'cf-cro-bundle-v4': { category: 'cro-product', name: 'CRO · Premium Bundle v4', file: 'cf-cro-bundle-v4.liquid' },
 };
 
 export function getSectionsByCategory(categoryId) {

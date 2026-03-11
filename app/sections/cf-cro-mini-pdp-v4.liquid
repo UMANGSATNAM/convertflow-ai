@@ -1,0 +1,72 @@
+<style>
+.cf-cro-pdp4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-pdp4-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:60px;background:#fff;border-radius:24px;padding:12px;box-shadow:0 10px 40px rgba(0,0,0,0.04);border:1px solid {{ section.settings.text_color }}08}
+.cf-cro-pdp4-img{flex:1;position:relative;border-radius:16px;overflow:hidden;background:{{ section.settings.text_color }}04;display:flex;align-items:center;justify-content:center;aspect-ratio:1/1}
+.cf-cro-pdp4-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease}
+.cf-cro-pdp4-img:hover img{transform:scale(1.05)}
+.cf-cro-pdp4-badge{position:absolute;top:20px;left:20px;background:{{ section.settings.accent_color }};color:#fff;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;z-index:2;box-shadow:0 4px 12px {{ section.settings.accent_color }}40}
+.cf-cro-pdp4-content{flex:1;padding:40px 60px 40px 0}
+.cf-cro-pdp4-stars{display:flex;color:#F59E0B;font-size:14px;margin-bottom:12px}
+.cf-cro-pdp4-name{font-size:clamp(32px,4vw,48px);font-weight:900;color:{{ section.settings.text_color }};line-height:1.1;margin-bottom:16px;letter-spacing:-0.02em}
+.cf-cro-pdp4-price{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.cf-cro-pdp4-price b{font-size:32px;font-weight:800;color:{{ section.settings.text_color }}}
+.cf-cro-pdp4-price s{font-size:18px;color:{{ section.settings.text_color }};opacity:0.4;text-decoration:line-through}
+.cf-cro-pdp4-desc{font-size:16px;line-height:1.6;color:{{ section.settings.text_color }};opacity:0.7;margin-bottom:32px}
+.cf-cro-pdp4-list{display:flex;flex-direction:column;gap:12px;margin-bottom:40px}
+.cf-cro-pdp4-item{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;color:{{ section.settings.text_color }}}
+.cf-cro-pdp4-item svg{width:20px;height:20px;color:{{ section.settings.accent_color }}}
+.cf-cro-pdp4-buy{display:flex;gap:16px;align-items:center}
+.cf-cro-pdp4-btn{flex:1;padding:18px 24px;background:{{ section.settings.text_color }};color:{{ section.settings.bg_color }};border-radius:12px;font-size:16px;font-weight:800;text-decoration:none;transition:0.3s;text-align:center;border:none;cursor:pointer}
+.cf-cro-pdp4-btn:hover{background:{{ section.settings.accent_color }};color:#fff;transform:translateY(-2px);box-shadow:0 8px 20px {{ section.settings.accent_color }}30}
+@media(max-width:992px){.cf-cro-pdp4-inner{flex-direction:column;gap:32px;padding:24px}.cf-cro-pdp4-content{padding:0 12px}}
+@media(max-width:600px){.cf-cro-pdp4-buy{flex-direction:column}}
+</style>
+
+<div class="cf-cro-pdp4">
+  <div class="cf-cro-pdp4-inner">
+    <div class="cf-cro-pdp4-img">
+      <div class="cf-cro-pdp4-badge">{{ section.settings.badge }}</div>
+      {% if section.settings.image != blank %}<img src="{{ section.settings.image | image_url: width: 1000 }}" alt="{{ section.settings.product_name }}" loading="lazy">{% else %}<div style="font-size:48px;opacity:0.2">🖼️</div>{% endif %}
+    </div>
+    <div class="cf-cro-pdp4-content">
+      <div class="cf-cro-pdp4-stars">★★★★★ <span style="color:{{ section.settings.text_color }};opacity:0.5;margin-left:8px">({{ section.settings.reviews }} Reviews)</span></div>
+      <div class="cf-cro-pdp4-name">{{ section.settings.product_name }}</div>
+      <div class="cf-cro-pdp4-price"><b>{{ section.settings.price }}</b>{% if section.settings.compare != blank %}<s>{{ section.settings.compare }}</s>{% endif %}</div>
+      <p class="cf-cro-pdp4-desc">{{ section.settings.description }}</p>
+      
+      <div class="cf-cro-pdp4-list">
+        {% assign items = section.settings.benefits | split: '|' %}
+        {% for item in items %}<div class="cf-cro-pdp4-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> {{ item }}</div>{% endfor %}
+      </div>
+      
+      <div class="cf-cro-pdp4-buy">
+        <a href="{{ section.settings.cta_link }}" class="cf-cro-pdp4-btn">{{ section.settings.cta_text }}</a>
+        <div style="font-size:13px;color:{{ section.settings.text_color }};opacity:0.5;font-weight:600">{{ section.settings.urgency }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Card Showcase v4",
+  "settings": [
+    {"type":"image_picker","id":"image","label":"Product Image"},
+    {"type":"text","id":"badge","label":"Badge","default":"LIMITED EDITION"},
+    {"type":"text","id":"product_name","label":"Product Name","default":"The Essential Collection"},
+    {"type":"text","id":"price","label":"Price","default":"$149.00"},
+    {"type":"text","id":"compare","label":"Compare Price","default":"$250.00"},
+    {"type":"text","id":"reviews","label":"Reviews","default":"12,450"},
+    {"type":"textarea","id":"description","label":"Description","default":"Crafted from premium sustainable materials. Designed for everyday versatility without sacrificing style or durability."},
+    {"type":"textarea","id":"benefits","label":"Benefits List (|)","default":"100% Organic Materials|Lifetime Warranty Included|Free Express Shipping Today"},
+    {"type":"text","id":"cta_text","label":"CTA","default":"Add to Cart — Save 40%"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/cart/add"},
+    {"type":"text","id":"urgency","label":"Urgency Text","default":"🔥 Only 12 left in stock!"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F8FAFC"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0F172A"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#3B82F6"},
+    {"type":"range","id":"padding_y","label":"Top/Bottom Padding","min":20,"max":120,"step":10,"default":80}
+  ],
+  "presets": [{"name":"CRO · Card Showcase v4"}]
+}
+{% endschema %}

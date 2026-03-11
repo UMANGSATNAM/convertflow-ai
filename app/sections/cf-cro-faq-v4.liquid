@@ -1,0 +1,69 @@
+<style>
+.cf-cro-faq4{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-faq4-inner{max-width:900px;margin:0 auto}
+.cf-cro-faq4-head{text-align:center;margin-bottom:60px}
+.cf-cro-faq4 h2{font-size:clamp(32px,4vw,48px);font-weight:900;color:{{ section.settings.text_color }};margin:0 0 16px;letter-spacing:-0.02em;line-height:1.1}
+.cf-cro-faq4-sub{font-size:18px;color:{{ section.settings.text_color }};opacity:0.6;max-width:600px;margin:0 auto}
+.cf-cro-faq4-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.cf-cro-faq4-card{padding:32px;background:#fff;border-radius:20px;border:1px solid {{ section.settings.text_color }}08;box-shadow:0 10px 30px rgba(0,0,0,0.02);transition:0.3s}
+.cf-cro-faq4-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.06)}
+.cf-cro-faq4-icon{width:48px;height:48px;border-radius:12px;background:{{ section.settings.accent_color }}10;color:{{ section.settings.accent_color }};display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.cf-cro-faq4-icon svg{width:24px;height:24px}
+.cf-cro-faq4-q{font-size:18px;font-weight:800;color:{{ section.settings.text_color }};margin-bottom:12px;line-height:1.4}
+.cf-cro-faq4-a{font-size:15px;line-height:1.6;color:{{ section.settings.text_color }};opacity:0.75}
+.cf-cro-faq4-support{margin-top:48px;text-align:center;padding:32px;background:{{ section.settings.accent_color }}08;border-radius:24px}
+.cf-cro-faq4-support p{font-size:16px;font-weight:600;color:{{ section.settings.text_color }};margin:0 0 16px}
+.cf-cro-faq4-support a{display:inline-flex;padding:12px 28px;background:{{ section.settings.accent_color }};color:#fff;border-radius:100px;font-size:14px;font-weight:700;text-decoration:none;transition:0.2s}
+.cf-cro-faq4-support a:hover{opacity:0.9;transform:scale(1.02)}
+@media(max-width:768px){.cf-cro-faq4-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="cf-cro-faq4">
+  <div class="cf-cro-faq4-inner">
+    <div class="cf-cro-faq4-head">
+      <h2>{{ section.settings.heading }}</h2>
+      <p class="cf-cro-faq4-sub">{{ section.settings.subheading }}</p>
+    </div>
+    <div class="cf-cro-faq4-grid">
+      {%- for i in (1..4) -%}
+        {%- assign q = 'q_' | append: i -%}
+        {%- assign a = 'a_' | append: i -%}
+        {% if section.settings[q] != blank %}
+          <div class="cf-cro-faq4-card">
+            <div class="cf-cro-faq4-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+            <div class="cf-cro-faq4-q">{{ section.settings[q] }}</div>
+            <div class="cf-cro-faq4-a">{{ section.settings[a] }}</div>
+          </div>
+        {% endif %}
+      {%- endfor -%}
+    </div>
+    <div class="cf-cro-faq4-support">
+      <p>Still have questions? We're here 24/7.</p>
+      <a href="{{ section.settings.support_link }}">Contact Support</a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Grid FAQ v4",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Got Questions? We Got Answers."},
+    {"type":"text","id":"subheading","label":"Subheading","default":"Everything you need to know about our products and services."},
+    {"type":"text","id":"q_1","label":"Q1","default":"Is there a money-back guarantee?"},
+    {"type":"textarea","id":"a_1","label":"A1","default":"Yes. You have 30 days to try the product completely risk-free. If you don't love it, simply return it for a full refund—we even cover the return shipping costs."},
+    {"type":"text","id":"q_2","label":"Q2","default":"How long does shipping take?"},
+    {"type":"textarea","id":"a_2","label":"A2","default":"US orders arrive within 3-5 business days via standard shipping. Need it faster? Select Express Shipping at checkout for 1-2 day delivery."},
+    {"type":"text","id":"q_3","label":"Q3","default":"Are the materials eco-friendly?"},
+    {"type":"textarea","id":"a_3","label":"A3","default":"Absolutely. We use 100% sustainable, recycled, and organic materials whenever possible. Our packaging is also fully recyclable and plastic-free."},
+    {"type":"text","id":"q_4","label":"Q4","default":"Can I modify my order after placing it?"},
+    {"type":"textarea","id":"a_4","label":"A4","default":"Yes, but you need to act fast. We process orders within 1 hour. Contact support immediately, and if it hasn't shipped, we'll gladly make changes."},
+    {"type":"text","id":"support_link","label":"Support Link","default":"/pages/contact"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#F8FAFC"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#0F172A"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#8B5CF6"},
+    {"type":"range","id":"padding_y","label":"Top/Bottom Padding","min":20,"max":120,"step":10,"default":80}
+  ],
+  "presets": [{"name":"CRO · Grid FAQ v4"}]
+}
+{% endschema %}
