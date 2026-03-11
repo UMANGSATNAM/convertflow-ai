@@ -157,36 +157,127 @@
 
 {% schema %}
 {
-  "name": "03 · Organic Flow Products",
+  "name": "03 · Organic Flow Product",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#FDFBF7"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#4A4A4A"},
-    {"type":"color","id":"brand_color","label":"Brand Accent Color","default":"#A3B18A"},
-    {"type":"text","id":"title","label":"Title","default":"Our Best Sellers"},
-    {"type":"text","id":"subtitle","label":"Subtitle","default":"Loved by our community."},
-    {"type":"text","id":"btn_text","label":"Button Name","default":"Discover All"},
-    {"type":"url","id":"btn_link","label":"Link"},
-    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":3},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1100}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FDFBF7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#4A4A4A"
+    },
+    {
+      "type": "color",
+      "id": "brand_color",
+      "label": "Brand Accent Color",
+      "default": "#A3B18A"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Our Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Loved by our community."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Name",
+      "default": "Discover All"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1100
+    }
   ],
   "blocks": [
     {
       "type": "product",
       "name": "Product",
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"title","label":"Product Title","default":"Ashwagandha Root"},
-        {"type":"text","id":"price","label":"Price","default":"$34.00"},
-        {"type":"text","id":"badge","label":"Badge (Optional)","default":"Organic"},
-        {"type":"url","id":"url","label":"Product Link"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title",
+          "default": "Ashwagandha Root"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$34.00"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge (Optional)",
+          "default": "Organic"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Product Link"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "03 · Organic Flow Products",
-      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"}]
+      "name": "03 · Organic Flow Product",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
     }
   ]
 }

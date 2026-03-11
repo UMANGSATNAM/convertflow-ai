@@ -69,7 +69,7 @@
 
 {% schema %}
 {
-  "name": "06 · Stealth Category Grid",
+  "name": "06 · Stealth Category Gri",
   "settings": [
     {
       "type": "color",
@@ -149,38 +149,166 @@
       "label": "Corner Radius",
       "default": 0
     },
-    { "type": "header", "content": "Block 1" },
-    { "type": "image_picker", "id": "bg_1", "label": "Image" },
-    { "type": "text", "id": "label_1", "label": "Label", "default": "Performance" },
-    { "type": "url", "id": "link_1", "label": "Link" },
-    { "type": "header", "content": "Block 2" },
-    { "type": "image_picker", "id": "bg_2", "label": "Image" },
-    { "type": "text", "id": "label_2", "label": "Label", "default": "Suspension" },
-    { "type": "url", "id": "link_2", "label": "Link" },
-    { "type": "header", "content": "Block 3" },
-    { "type": "image_picker", "id": "bg_3", "label": "Image" },
-    { "type": "text", "id": "label_3", "label": "Label", "default": "Lighting" },
-    { "type": "url", "id": "link_3", "label": "Link" },
-    { "type": "header", "content": "Block 4" },
-    { "type": "image_picker", "id": "bg_4", "label": "Image" },
-    { "type": "text", "id": "label_4", "label": "Label", "default": "Interior" },
-    { "type": "url", "id": "link_4", "label": "Link" },
-    { "type": "header", "content": "Block 5" },
-    { "type": "image_picker", "id": "bg_5", "label": "Image" },
-    { "type": "text", "id": "label_5", "label": "Label", "default": "Exterior" },
-    { "type": "url", "id": "link_5", "label": "Link" },
-    { "type": "header", "content": "Block 6" },
-    { "type": "image_picker", "id": "bg_6", "label": "Image" },
-    { "type": "text", "id": "label_6", "label": "Label", "default": "Wheels" },
-    { "type": "url", "id": "link_6", "label": "Link" },
-    { "type": "header", "content": "Block 7" },
-    { "type": "image_picker", "id": "bg_7", "label": "Image" },
-    { "type": "text", "id": "label_7", "label": "Label", "default": "Audio" },
-    { "type": "url", "id": "link_7", "label": "Link" },
-    { "type": "header", "content": "Block 8" },
-    { "type": "image_picker", "id": "bg_8", "label": "Image" },
-    { "type": "text", "id": "label_8", "label": "Label", "default": "Tools" },
-    { "type": "url", "id": "link_8", "label": "Link" }
+    {
+      "type": "header",
+      "content": "Block 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_1",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_1",
+      "label": "Label",
+      "default": "Performance"
+    },
+    {
+      "type": "url",
+      "id": "link_1",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Block 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_2",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_2",
+      "label": "Label",
+      "default": "Suspension"
+    },
+    {
+      "type": "url",
+      "id": "link_2",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Block 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_3",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_3",
+      "label": "Label",
+      "default": "Lighting"
+    },
+    {
+      "type": "url",
+      "id": "link_3",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Block 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_4",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_4",
+      "label": "Label",
+      "default": "Interior"
+    },
+    {
+      "type": "url",
+      "id": "link_4",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Block 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_5",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_5",
+      "label": "Label",
+      "default": "Exterior"
+    },
+    {
+      "type": "url",
+      "id": "link_5",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Block 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_6",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_6",
+      "label": "Label",
+      "default": "Wheels"
+    },
+    {
+      "type": "url",
+      "id": "link_6",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Block 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_7",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_7",
+      "label": "Label",
+      "default": "Audio"
+    },
+    {
+      "type": "url",
+      "id": "link_7",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Block 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_8",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "label_8",
+      "label": "Label",
+      "default": "Tools"
+    },
+    {
+      "type": "url",
+      "id": "link_8",
+      "label": "Link"
+    }
   ]
 }
 {% endschema %}

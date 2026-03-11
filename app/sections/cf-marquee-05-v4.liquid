@@ -30,18 +30,86 @@
 
 {% schema %}
 {
-  "name": "04 · Luxury Cosmetics Marquee",
+  "name": "04 · Luxury Cosmetics Mar",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#1a1a1a"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},
-    {"type":"color","id":"accent_color","label":"Separator Color","default":"#d4af37"},
-    {"type":"range","id":"font_size","label":"Font Size","min":12,"max":28,"step":1,"default":18},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":5,"max":40,"step":1,"default":18},
-    {"type":"range","id":"speed","label":"Speed (seconds)","min":10,"max":80,"step":5,"default":40}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#e8d5b7"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Separator Color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Speed (seconds)",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "default": 40
+    }
   ],
   "blocks": [
-    {"type":"item","name":"Item","settings":[{"type":"text","id":"text","label":"Text","default":"Couture Formulas"}]}
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Couture Formulas"
+        }
+      ]
+    }
   ],
-  "presets": [{"name": "04 · Luxury Marquee","blocks": [{"type":"item"},{"type":"item"},{"type":"item"},{"type":"item"}]}]
+  "presets": [
+    {
+      "name": "04 · Luxury Marquee",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

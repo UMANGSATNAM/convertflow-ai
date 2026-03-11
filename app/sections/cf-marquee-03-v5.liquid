@@ -67,14 +67,53 @@
 
 {% schema %}
 {
-  "name": "05 · Glassmorphism Marquee",
+  "name": "05 · Glassmorphism Marque",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base (Alpha Applied Built-in)","default":"#222222"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
-    {"type":"color","id":"accent_color","label":"Icon/Separator Color","default":"#0066cc"},
-    {"type":"range","id":"text_size","label":"Text Size","min":16,"max":64,"step":2,"default":20},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":15},
-    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":25}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base (Alpha Applied Built-in)",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon/Separator Color",
+      "default": "#0066cc"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text Size",
+      "min": 16,
+      "max": 64,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Speed (Seconds)",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 25
+    }
   ],
   "blocks": [
     {
@@ -82,17 +121,28 @@
       "name": "Text Block",
       "limit": 6,
       "settings": [
-        {"type":"text","id":"text","label":"Text","default":"NEW INNOVATION DROP"}
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "NEW INNOVATION DROP"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "05 · Glassmorphism Marquee",
+      "name": "05 · Glassmorphism Marque",
       "blocks": [
-        {"type": "text"},
-        {"type": "text"},
-        {"type": "text"}
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        }
       ]
     }
   ]

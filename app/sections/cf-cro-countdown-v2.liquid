@@ -60,21 +60,97 @@
 
 {% schema %}
 {
-  "name": "CRO · Gradient Countdown v2",
+  "name": "Gradient Countdown v2",
   "settings": [
-    {"type":"text","id":"badge","label":"Badge","default":"SALE ENDING SOON"},
-    {"type":"text","id":"heading","label":"Heading","default":"Black Friday Blowout"},
-    {"type":"text","id":"subheading","label":"Subheading","default":"Up to 60% off sitewide — biggest sale of the year"},
-    {"type":"range","id":"days","label":"Days","min":0,"max":30,"step":1,"default":1},
-    {"type":"range","id":"hours","label":"Hours","min":0,"max":23,"step":1,"default":12},
-    {"type":"range","id":"minutes","label":"Minutes","min":0,"max":59,"step":1,"default":30},
-    {"type":"text","id":"coupon_code","label":"Coupon Code","default":"BLACKFRI60"},
-    {"type":"text","id":"cta_text","label":"CTA Text","default":"Shop the Sale"},
-    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/sale"},
-    {"type":"color","id":"bg_from","label":"Gradient From","default":"#7C3AED"},
-    {"type":"color","id":"bg_to","label":"Gradient To","default":"#E11D48"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":10,"default":60}
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "default": "SALE ENDING SOON"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Black Friday Blowout"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Up to 60% off sitewide — biggest sale of the year"
+    },
+    {
+      "type": "range",
+      "id": "days",
+      "label": "Days",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "hours",
+      "label": "Hours",
+      "min": 0,
+      "max": 23,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "minutes",
+      "label": "Minutes",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Coupon Code",
+      "default": "BLACKFRI60"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "Shop the Sale"
+    },
+    {
+      "type": "text",
+      "id": "cta_link",
+      "label": "CTA Link",
+      "default": "/collections/sale"
+    },
+    {
+      "type": "color",
+      "id": "bg_from",
+      "label": "Gradient From",
+      "default": "#7C3AED"
+    },
+    {
+      "type": "color",
+      "id": "bg_to",
+      "label": "Gradient To",
+      "default": "#E11D48"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    }
   ],
-  "presets": [{"name":"CRO · Gradient Countdown v2"}]
+  "presets": [
+    {
+      "name": "Gradient Countdown v2"
+    }
+  ]
 }
 {% endschema %}

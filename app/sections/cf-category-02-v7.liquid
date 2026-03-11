@@ -117,15 +117,56 @@
 
 {% schema %}
 {
-  "name": "07 · Split Monochrome Strip",
+  "name": "07 · Split Monochrome Str",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Global Background","default":"#F1F1F1"},
-    {"type":"color","id":"light_bg","label":"Stripe Light BG","default":"#ffffff"},
-    {"type":"color","id":"dark_bg","label":"Stripe Dark BG","default":"#000000"},
-    {"type":"color","id":"border_color","label":"Border Dividers","default":"#000000"},
-    {"type":"color","id":"text_color","label":"Blend Text Color (Use white)","default":"#ffffff"},
-    {"type":"range","id":"label_size","label":"Label Size","min":30,"max":150,"step":2,"default":100},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":0,"max":100,"step":5,"default":0}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Global Background",
+      "default": "#F1F1F1"
+    },
+    {
+      "type": "color",
+      "id": "light_bg",
+      "label": "Stripe Light BG",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dark_bg",
+      "label": "Stripe Dark BG",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Dividers",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Blend Text Color (Use white)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label Size",
+      "min": 30,
+      "max": 150,
+      "step": 2,
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    }
   ],
   "blocks": [
     {
@@ -133,19 +174,39 @@
       "name": "Category",
       "limit": 6,
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"label","label":"Label","default":"Footwear"},
-        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Footwear"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "default": "/collections/all"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "07 · Split Monochrome Strip",
+      "name": "07 · Split Monochrome Str",
       "blocks": [
-        {"type": "category"},
-        {"type": "category"},
-        {"type": "category"}
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
       ]
     }
   ]

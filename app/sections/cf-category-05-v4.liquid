@@ -32,4 +32,113 @@
     </div>
   </div>
 </div>
-{% schema %}{"name": "04 · Luxury Cosmetics Grid","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#1a1a1a"},{"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},{"type":"color","id":"accent_color","label":"Gold Accent","default":"#d4af37"},{"type":"color","id":"border_color","label":"Border Color","default":"#333"},{"type":"text","id":"title","label":"Title","default":"Les Collections"},{"type":"range","id":"cols","label":"Columns","min":2,"max":5,"step":1,"default":3},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}],"blocks": [{"type": "category","name": "Category","settings": [{"type":"text","id":"title","label":"Name","default":"Lip"},{"type":"text","id":"sub","label":"Subtext","default":"12 Shades"},{"type":"image_picker","id":"image","label":"Image"},{"type":"url","id":"link","label":"Link"}]}],"presets": [{"name": "04 · Luxury Grid","blocks": [{"type":"category"},{"type":"category"},{"type":"category"}]}]}{% endschema %}
+{% schema %}
+{
+  "name": "04 · Luxury Cosmetics Gri",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#e8d5b7"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Gold Accent",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#333"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Les Collections"
+    },
+    {
+      "type": "range",
+      "id": "cols",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Lip"
+        },
+        {
+          "type": "text",
+          "id": "sub",
+          "label": "Subtext",
+          "default": "12 Shades"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Luxury Grid",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

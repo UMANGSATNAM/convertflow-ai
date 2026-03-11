@@ -114,22 +114,100 @@
 {
   "name": "02 · Glam Influencer",
   "settings": [
-    {"type":"color","id":"top_bg","label":"Top Bar BG","default":"#f9a8d4"},
-    {"type":"color","id":"top_text","label":"Top Bar Text","default":"#831843"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#1e1b4b"},
-    {"type":"color","id":"accent_color","label":"Accent Color (Pink)","default":"#ec4899"},
-    {"type":"text","id":"logo_text","label":"Logo Text","default":"GLOW"},
-    {"type":"text","id":"top_text","label":"Announcement Text","default":"✨ Free Shipping on orders over $50"},
-    {"type":"text","id":"btn_text","label":"Button Text","default":"Shop Now"},
-    {"type":"url","id":"btn_link","label":"Button Link"},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "top_bg",
+      "label": "Top Bar BG",
+      "default": "#f9a8d4"
+    },
+    {
+      "type": "color",
+      "id": "top_text",
+      "label": "Top Bar Text",
+      "default": "#831843"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Pink)",
+      "default": "#ec4899"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "GLOW"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Announcement Text",
+      "default": "✨ Free Shipping on orders over $50"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
-      "type": "nav_item", "name": "Nav Item",
-      "settings": [{"type":"text","id":"label","label":"Label","default":"New In"},{"type":"url","id":"link","label":"Link"}]
+      "type": "nav_item",
+      "name": "Nav Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "New In"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
     }
   ],
-  "presets": [{"name": "02 · Glam Influencer Header","blocks": [{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"}]}]
+  "presets": [
+    {
+      "name": "02 · Glam Influencer Head",
+      "blocks": [
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

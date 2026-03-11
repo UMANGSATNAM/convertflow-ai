@@ -95,20 +95,89 @@
 {
   "name": "04 · Luxury Cosmetics",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#1a1a1a"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},
-    {"type":"color","id":"accent_color","label":"Accent Color (Gold)","default":"#d4af37"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#333333"},
-    {"type":"text","id":"logo_text","label":"Logo Text","default":"LUMIÈRE"},
-    {"type":"text","id":"top_text","label":"Announcement Text","default":"Complimentary Shipping on Orders Over $150"},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1400}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#e8d5b7"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Gold)",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#333333"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "LUMIÈRE"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Announcement Text",
+      "default": "Complimentary Shipping on Orders Over $150"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1400
+    }
   ],
   "blocks": [
     {
-      "type": "nav_item", "name": "Nav Item",
-      "settings": [{"type":"text","id":"label","label":"Label","default":"Collections"},{"type":"url","id":"link","label":"Link"}]
+      "type": "nav_item",
+      "name": "Nav Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Collections"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
     }
   ],
-  "presets": [{"name": "04 · Luxury Cosmetics Header","blocks": [{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"}]}]
+  "presets": [
+    {
+      "name": "04 · Luxury Cosmetics Hea",
+      "blocks": [
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

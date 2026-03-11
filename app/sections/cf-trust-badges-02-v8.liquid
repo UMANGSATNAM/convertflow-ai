@@ -94,9 +94,30 @@
 {
   "name": "08 · Polaroid Badges",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base (Corkboard)","default":"#FDE68A"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base (Corkboard)",
+      "default": "#FDE68A"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
@@ -104,19 +125,36 @@
       "name": "Trust Badge",
       "limit": 4,
       "settings": [
-        {"type":"html","id":"icon_svg","label":"Icon SVG"},
-        {"type":"text","id":"title","label":"Title","default":"No Fake Shit."}
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "Icon SVG"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "No Fake Shit."
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "08 · Polaroid Trust Badges",
+      "name": "08 · Polaroid Trust Badge",
       "blocks": [
-        {"type": "badge"},
-        {"type": "badge"},
-        {"type": "badge"},
-        {"type": "badge"}
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
       ]
     }
   ]

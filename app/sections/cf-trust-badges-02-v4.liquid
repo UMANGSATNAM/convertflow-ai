@@ -113,11 +113,39 @@
 {
   "name": "04 · Scrolling Monolith",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base","default":"#ffffff"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
-    {"type":"color","id":"accent_color","label":"Icon BG Color","default":"#000000"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#000000"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":2,"default":20}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icon BG Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 20
+    }
   ],
   "blocks": [
     {
@@ -125,20 +153,42 @@
       "name": "Trust Badge",
       "limit": 6,
       "settings": [
-        {"type":"html","id":"icon_svg","label":"Icon SVG"},
-        {"type":"text","id":"title","label":"Title","default":"FREE RETURNS"},
-        {"type":"text","id":"desc","label":"Description","default":"30 Day Policy"}
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "Icon SVG"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "FREE RETURNS"
+        },
+        {
+          "type": "text",
+          "id": "desc",
+          "label": "Description",
+          "default": "30 Day Policy"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "04 · Scrolling Monolith Badges",
+      "name": "04 · Scrolling Monolith B",
       "blocks": [
-        {"type": "badge"},
-        {"type": "badge"},
-        {"type": "badge"},
-        {"type": "badge"}
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
       ]
     }
   ]

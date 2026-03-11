@@ -38,4 +38,122 @@
     </div>
   </div>
 </div>
-{% schema %}{"name": "03 · Clean Beauty Products","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},{"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},{"type":"color","id":"accent_color","label":"Accent Color","default":"#22c55e"},{"type":"text","id":"title","label":"Title","default":"Clean Picks"},{"type":"text","id":"subtitle","label":"Subtitle","default":"Made with ingredients you can trust."},{"type":"range","id":"cols","label":"Columns","min":2,"max":5,"step":1,"default":4},{"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},{"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}],"blocks": [{"type": "product","name": "Product","settings": [{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"title","label":"Title","default":"Face Oil"},{"type":"text","id":"price","label":"Price","default":"$38.00"},{"type":"text","id":"badge","label":"Badge","default":"Organic"},{"type":"url","id":"url","label":"Link"}]}],"presets": [{"name": "03 · Clean Products","blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]}]}{% endschema %}
+{% schema %}
+{
+  "name": "03 · Clean Beauty Product",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f0fdf4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#14532d"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#22c55e"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Clean Picks"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Made with ingredients you can trust."
+    },
+    {
+      "type": "range",
+      "id": "cols",
+      "label": "Columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Face Oil"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$38.00"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Organic"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "03 · Clean Products",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

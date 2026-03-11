@@ -67,11 +67,48 @@
 {
   "name": "10 · Gamer RGB Sync",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base","default":"#0b0b0f"},
-    {"type":"range","id":"text_size","label":"Text Size","min":16,"max":72,"step":2,"default":32},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":60,"step":5,"default":20},
-    {"type":"range","id":"speed","label":"Scroll Speed (Seconds)","min":10,"max":60,"step":5,"default":20},
-    {"type":"range","id":"rgb_speed","label":"RGB Shift Speed (Seconds)","min":1,"max":10,"step":1,"default":3}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base",
+      "default": "#0b0b0f"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text Size",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Speed (Seconds)",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "rgb_speed",
+      "label": "RGB Shift Speed (Seconds)",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    }
   ],
   "blocks": [
     {
@@ -79,17 +116,28 @@
       "name": "Text Block",
       "limit": 6,
       "settings": [
-        {"type":"text","id":"text","label":"Text","default":"GEAR UP AND CONQUER"}
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "GEAR UP AND CONQUER"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "10 · Gamer RGB Sync Marquee",
+      "name": "10 · Gamer RGB Sync Marqu",
       "blocks": [
-        {"type": "text"},
-        {"type": "text"},
-        {"type": "text"}
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "text"
+        }
       ]
     }
   ]

@@ -17,4 +17,91 @@
     {% endfor %}
   </div>
 </div>
-{% schema %}{"name": "04 · Luxury Cosmetics Badges","settings": [{"type":"color","id":"bg_color","label":"Background","default":"#1a1a1a"},{"type":"color","id":"text_color","label":"Text Color","default":"#e8d5b7"},{"type":"color","id":"accent_color","label":"Gold Accent","default":"#d4af37"},{"type":"color","id":"border_color","label":"Border Color","default":"#333"},{"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40},{"type":"range","id":"max_width","label":"Max Width","min":600,"max":1400,"step":50,"default":1200}],"blocks": [{"type": "badge","name": "Badge","settings": [{"type":"text","id":"number","label":"Stat Number","default":"50+"},{"type":"text","id":"label","label":"Label","default":"Years of Expertise"}]}],"presets": [{"name": "04 · Luxury Badges","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]}{% endschema %}
+{% schema %}
+{
+  "name": "04 · Luxury Cosmetics Bad",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#e8d5b7"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Gold Accent",
+      "default": "#d4af37"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#333"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 600,
+      "max": 1400,
+      "step": 50,
+      "default": 1200
+    }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Stat Number",
+          "default": "50+"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Years of Expertise"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "04 · Luxury Badges",
+      "blocks": [
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

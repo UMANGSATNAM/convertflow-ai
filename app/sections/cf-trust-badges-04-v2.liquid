@@ -91,12 +91,48 @@
 {
   "name": "02 · Minimal Wellness",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#111827"},
-    {"type":"color","id":"accent_color","label":"Accent Color (Green)","default":"#10b981"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#f3f4f6"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":40},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Green)",
+      "default": "#10b981"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
@@ -104,15 +140,35 @@
       "name": "Badge",
       "limit": 4,
       "settings": [
-        {"type":"text","id":"title","label":"Title","default":"Clean Ingredients"},
-        {"type":"text","id":"desc","label":"Description","default":"Sourced from nature"}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Clean Ingredients"
+        },
+        {
+          "type": "text",
+          "id": "desc",
+          "label": "Description",
+          "default": "Sourced from nature"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "02 · Minimal Wellness Badges",
-      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+      "name": "02 · Minimal Wellness Bad",
+      "blocks": [
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
+      ]
     }
   ]
 }

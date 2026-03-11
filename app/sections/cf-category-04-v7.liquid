@@ -137,32 +137,116 @@
 {
   "name": "07 · Active Pulse Grid",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#000000"},
-    {"type":"color","id":"card_bg","label":"Card Background","default":"#111827"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#ffffff"},
-    {"type":"color","id":"accent_color","label":"Accent Color","default":"#f97316"},
-    {"type":"text","id":"title","label":"Title","default":"SHOP BY [GOAL]"},
-    {"type":"text","id":"btn_text","label":"Button Name","default":"View All Goals"},
-    {"type":"url","id":"btn_link","label":"Link"},
-    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#f97316"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "SHOP BY [GOAL]"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Name",
+      "default": "View All Goals"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
       "type": "category",
       "name": "Category",
       "settings": [
-        {"type":"text","id":"title","label":"Category Name","default":"Recovery"},
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"url","id":"link","label":"Link"}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Name",
+          "default": "Recovery"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "07 · Active Pulse Categories",
-      "blocks": [{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"}]
+      "name": "07 · Active Pulse Categor",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
     }
   ]
 }

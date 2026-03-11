@@ -153,34 +153,128 @@
 {
   "name": "04 · Clinical Products",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#f8fafc"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
-    {"type":"color","id":"accent_color","label":"Accent Color (Blue)","default":"#2563eb"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#e2e8f0"},
-    {"type":"text","id":"title","label":"Title","default":"CLINICALLY FORMULATED"},
-    {"type":"text","id":"btn_text","label":"View All Link","default":"View All →"},
-    {"type":"url","id":"btn_link","label":"Link"},
-    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Blue)",
+      "default": "#2563eb"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "CLINICALLY FORMULATED"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "View All Link",
+      "default": "View All →"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
       "type": "product",
       "name": "Product",
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"title","label":"Product Title","default":"Advanced Omega-3"},
-        {"type":"text","id":"price","label":"Price","default":"$45.00"},
-        {"type":"text","id":"rating","label":"Rating Text","default":"(124)"},
-        {"type":"url","id":"url","label":"Product Link"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title",
+          "default": "Advanced Omega-3"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$45.00"
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating Text",
+          "default": "(124)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Product Link"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "04 · Clinical Proof Products",
-      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]
+      "name": "04 · Clinical Proof Produ",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
     }
   ]
 }

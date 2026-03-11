@@ -125,34 +125,121 @@
 
 {% schema %}
 {
-  "name": "05 · Spa Serenity Products",
+  "name": "05 · Spa Serenity Product",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#F7F4F0"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#333333"},
-    {"type":"color","id":"accent_color","label":"Accent Color","default":"#8c7c61"},
-    {"type":"text","id":"title","label":"Title","default":"Curated Rituals"},
-    {"type":"text","id":"btn_text","label":"Button Name","default":"Discover More"},
-    {"type":"url","id":"btn_link","label":"Link"},
-    {"type":"range","id":"cols_desktop","label":"Cards Visible (Desktop)","min":2,"max":6,"step":1,"default":4},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F7F4F0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#8c7c61"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Curated Rituals"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Name",
+      "default": "Discover More"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Cards Visible (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
       "type": "product",
       "name": "Product",
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"title","label":"Product Title","default":"Lavender Bath Salt"},
-        {"type":"text","id":"price","label":"Price","default":"$32.00"},
-        {"type":"url","id":"url","label":"Product Link"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title",
+          "default": "Lavender Bath Salt"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$32.00"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Product Link"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "05 · Spa Serenity Products",
-      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]
+      "name": "05 · Spa Serenity Product",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
     }
   ]
 }

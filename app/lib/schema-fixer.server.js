@@ -3,7 +3,8 @@
  * 
  * 1. Strips all "t:" translations and converts them back to English keys.
  *    e.g. "t:settings.color_scheme" -> "Color scheme"
- * 2. This completely removes the dependency on the theme's locales
+ * 2. Truncates schema "name" and preset names to 25 characters max (Shopify limit).
+ * 3. This completely removes the dependency on the theme's locales
  *    so sections can be injected successfully into ANY theme.
  * 
  * @param {string} liquidContent The raw liquid file content
@@ -21,25 +22,47 @@ export function removeSchemaTranslations(liquidContent) {
     try {
         const schemaString = liquidContent.substring(startIndex + startToken.length, endIndex).trim();
 
-        // Catch "t:..." OR "en...." strings
+        // 1. Replace "t:..." and "en...." strings with plain English
         let fixedSchema = schemaString.replace(/"(?:t:|en\.)([^"]+)"/g, (match, p1) => {
-            // e.g. "settings.video.video_url" -> "Video url"
-            // e.g. "placeholders.collection_title" -> "Collection title"
             const parts = p1.split('.');
             let lastPart = parts[parts.length - 1];
 
-            // If it ends with "label" or "info" and has a previous part, use the previous part
-            if ((lastPart === 'label' || lastPart === 'info' || lastPart === 'title') && parts.length > 1) {
+            if ((lastPart === 'label' || lastPart === 'info' || lastPart === 'title' || lastPart === 'name') && parts.length > 1) {
                 lastPart = parts[parts.length - 2];
             }
 
-            // Basic English sentence case converter
             const EnglishName = lastPart
                 .replace(/_/g, ' ')
                 .replace(/^./, str => str.toUpperCase());
 
             return `"${EnglishName}"`;
         });
+
+        // 2. Parse and fix name lengths (max 25 characters for Shopify)
+        try {
+            const parsed = JSON.parse(fixedSchema);
+            let modified = false;
+
+            if (parsed.name && parsed.name.length > 25) {
+                parsed.name = parsed.name.substring(0, 25);
+                modified = true;
+            }
+
+            if (parsed.presets && Array.isArray(parsed.presets)) {
+                parsed.presets.forEach(preset => {
+                    if (preset.name && preset.name.length > 25) {
+                        preset.name = preset.name.substring(0, 25);
+                        modified = true;
+                    }
+                });
+            }
+
+            if (modified) {
+                fixedSchema = JSON.stringify(parsed, null, 2);
+            }
+        } catch {
+            // Schema may contain non-standard JSON, skip deep parse
+        }
 
         return liquidContent.substring(0, startIndex + startToken.length) +
             '\n' + fixedSchema + '\n' +
@@ -49,3 +72,4 @@ export function removeSchemaTranslations(liquidContent) {
         return liquidContent; // Return original on absolute failure
     }
 }
+

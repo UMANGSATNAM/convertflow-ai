@@ -103,10 +103,36 @@
 {
   "name": "04 · Polaroid Scatter",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base","default":"#111111"},
-    {"type":"color","id":"text_color","label":"Marker Ink Color","default":"#000000"},
-    {"type":"range","id":"label_size","label":"Label Size","min":16,"max":40,"step":2,"default":22},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":80}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Marker Ink Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label Size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "default": 80
+    }
   ],
   "blocks": [
     {
@@ -114,20 +140,42 @@
       "name": "Category",
       "limit": 5,
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"label","label":"Label","default":"Vintage"},
-        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Vintage"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "default": "/collections/all"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "04 · Polaroid Scatter Grid",
+      "name": "04 · Polaroid Scatter Gri",
       "blocks": [
-        {"type": "category"},
-        {"type": "category"},
-        {"type": "category"},
-        {"type": "category"}
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
       ]
     }
   ]

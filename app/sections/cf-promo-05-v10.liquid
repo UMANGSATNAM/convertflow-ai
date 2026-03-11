@@ -50,25 +50,102 @@
 
 {% schema %}
 {
-  "name": "10 · Sustainable Beauty Promo",
+  "name": "10 · Sustainable Beauty P",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background","default":"#f0fdf4"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},
-    {"type":"color","id":"accent_color","label":"Accent Color","default":"#16a34a"},
-    {"type":"image_picker","id":"image","label":"Image"},
-    {"type":"text","id":"title","label":"Title","default":"Good for You,\nGood for the Planet"},
-    {"type":"textarea","id":"desc","label":"Description","default":"Our refillable beauty line cuts plastic waste by 90% without compromising on performance."},
-    {"type":"text","id":"btn_text","label":"Button Text","default":"Make the Switch"},
-    {"type":"url","id":"btn_link","label":"Button Link"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f0fdf4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#14532d"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#16a34a"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Good for You,\nGood for the Planet"
+    },
+    {
+      "type": "textarea",
+      "id": "desc",
+      "label": "Description",
+      "default": "Our refillable beauty line cuts plastic waste by 90% without compromising on performance."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "Make the Switch"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
-      "type": "badge", "name": "Eco Badge",
-      "settings": [{"type":"text","id":"text","label":"Badge Text","default":"🌿 Carbon Neutral"}]
+      "type": "badge",
+      "name": "Eco Badge",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Badge Text",
+          "default": "🌿 Carbon Neutral"
+        }
+      ]
     }
   ],
-  "presets": [{"name": "10 · Sustainable Promo","blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]}]
+  "presets": [
+    {
+      "name": "10 · Sustainable Promo",
+      "blocks": [
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

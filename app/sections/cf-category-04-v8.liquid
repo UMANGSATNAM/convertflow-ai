@@ -128,30 +128,105 @@
 {
   "name": "08 · Holistic Aura Grid",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#F9F9F9"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#5B5B5B"},
-    {"type":"color","id":"accent_color","label":"Glow Color","default":"#CBD5CF"},
-    {"type":"text","id":"title","label":"Title","default":"Holistic Categories"},
-    {"type":"text","id":"subtitle","label":"Subtitle","default":"Nurture Your Needs"},
-    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":6,"step":1,"default":4},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1000}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F9F9F9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#5B5B5B"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Glow Color",
+      "default": "#CBD5CF"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Holistic Categories"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Nurture Your Needs"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1000
+    }
   ],
   "blocks": [
     {
       "type": "category",
       "name": "Category",
       "settings": [
-        {"type":"text","id":"title","label":"Category Name","default":"Mindfulness"},
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"url","id":"link","label":"Link"}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Name",
+          "default": "Mindfulness"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "08 · Holistic Aura Categories",
-      "blocks": [{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"}]
+      "name": "08 · Holistic Aura Catego",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
     }
   ]
 }

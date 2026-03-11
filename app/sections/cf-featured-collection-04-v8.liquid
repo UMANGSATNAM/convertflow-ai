@@ -165,35 +165,121 @@
 
 {% schema %}
 {
-  "name": "08 · Holistic Aura Collect",
+  "name": "08 · Holistic Aura Collec",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#F9F9F9"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#5B5B5B"},
-    {"type":"color","id":"accent_color","label":"Glow Color","default":"#CBD5CF"},
-    {"type":"text","id":"title","label":"Title","default":"Cultivate Balance"},
-    {"type":"text","id":"subtitle","label":"Subtitle","default":"Harmonious Blends"},
-    {"type":"text","id":"btn_text","label":"Button Name","default":"Discover More"},
-    {"type":"url","id":"btn_link","label":"Link"},
-    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":5,"step":1,"default":3},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1100}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F9F9F9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#5B5B5B"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Glow Color",
+      "default": "#CBD5CF"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Cultivate Balance"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Harmonious Blends"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Name",
+      "default": "Discover More"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1100
+    }
   ],
   "blocks": [
     {
       "type": "product",
       "name": "Product",
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"title","label":"Product Title","default":"Matcha Ritual"},
-        {"type":"text","id":"price","label":"Price","default":"$45.00"},
-        {"type":"url","id":"url","label":"Product Link"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Title",
+          "default": "Matcha Ritual"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$45.00"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Product Link"
+        }
       ]
     }
   ],
   "presets": [
     {
       "name": "08 · Holistic Products",
-      "blocks": [{"type":"product"},{"type":"product"},{"type":"product"}]
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
     }
   ]
 }

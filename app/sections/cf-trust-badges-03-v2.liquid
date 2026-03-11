@@ -80,14 +80,50 @@
 
 {% schema %}
 {
-  "name": "02 · Hacker Terminal Badges",
+  "name": "02 · Hacker Terminal Badg",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base","default":"#050505"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#d4d4d4"},
-    {"type":"color","id":"accent_color","label":"Terminal Green Accent","default":"#00ff41"},
-    {"type":"color","id":"border_color","label":"Lines/Brackets","default":"#333333"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":10,"max":100,"step":5,"default":40},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base",
+      "default": "#050505"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#d4d4d4"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Terminal Green Accent",
+      "default": "#00ff41"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Lines/Brackets",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
@@ -100,21 +136,48 @@
           "id": "icon",
           "label": "Icon",
           "options": [
-            {"value": "shield", "label": "Shield"},
-            {"value": "lock", "label": "Lock"},
-            {"value": "truck", "label": "Truck"},
-            {"value": "check", "label": "Checkmark"}
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "lock",
+              "label": "Lock"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "check",
+              "label": "Checkmark"
+            }
           ],
           "default": "check"
         },
-        {"type":"text","id":"title","label":"Text","default":"SYSTEM_SECURE"}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text",
+          "default": "SYSTEM_SECURE"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "02 · Hacker Terminal Badges",
-      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+      "name": "02 · Hacker Terminal Badg",
+      "blocks": [
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
+      ]
     }
   ]
 }

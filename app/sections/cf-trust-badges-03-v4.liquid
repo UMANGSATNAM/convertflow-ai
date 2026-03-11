@@ -116,11 +116,42 @@
 {
   "name": "04 · Glass Trust Pane",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base","default":"#0f172a"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#f8fafc"},
-    {"type":"color","id":"accent_color","label":"Accent Color","default":"#60a5fa"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base",
+      "default": "#0f172a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#60a5fa"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
@@ -133,22 +164,57 @@
           "id": "icon",
           "label": "Icon",
           "options": [
-            {"value": "shield", "label": "Shield"},
-            {"value": "zap", "label": "Lightning Fast"},
-            {"value": "truck", "label": "Truck"},
-            {"value": "smile", "label": "Face"}
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "zap",
+              "label": "Lightning Fast"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "smile",
+              "label": "Face"
+            }
           ],
           "default": "shield"
         },
-        {"type":"text","id":"title","label":"Title","default":"Secure Checkout"},
-        {"type":"text","id":"desc","label":"Description","default":"Fully encrypted integration"}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Secure Checkout"
+        },
+        {
+          "type": "text",
+          "id": "desc",
+          "label": "Description",
+          "default": "Fully encrypted integration"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "04 · Glassmorphism Trust Pane",
-      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+      "name": "04 · Glassmorphism Trust ",
+      "blocks": [
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
+      ]
     }
   ]
 }

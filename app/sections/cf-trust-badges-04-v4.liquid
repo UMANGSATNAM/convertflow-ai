@@ -78,12 +78,48 @@
 {
   "name": "04 · Clinical Proof",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#f8fafc"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#0f172a"},
-    {"type":"color","id":"accent_color","label":"Accent Color (Blue)","default":"#2563eb"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#e2e8f0"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#0f172a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Blue)",
+      "default": "#2563eb"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e2e8f0"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
@@ -91,15 +127,38 @@
       "name": "Badge",
       "limit": 4,
       "settings": [
-        {"type":"text","id":"title","label":"Title","default":"Scientifically Proven"},
-        {"type":"text","id":"desc","label":"Description","default":"Tested in medical labs."}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Scientifically Proven"
+        },
+        {
+          "type": "text",
+          "id": "desc",
+          "label": "Description",
+          "default": "Tested in medical labs."
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "04 · Clinical Proof Badges",
-      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+      "name": "04 · Clinical Proof Badge",
+      "blocks": [
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
+      ]
     }
   ]
 }

@@ -93,11 +93,42 @@
 {
   "name": "03 · Expansion Slices",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base","default":"#000000"},
-    {"type":"color","id":"text_color_base","label":"Label Base Color","default":"#888888"},
-    {"type":"color","id":"text_color_hover","label":"Label Hover Color","default":"#ffffff"},
-    {"type":"range","id":"label_size","label":"Label Size","min":20,"max":60,"step":2,"default":32},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":100,"step":5,"default":60}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color_base",
+      "label": "Label Base Color",
+      "default": "#888888"
+    },
+    {
+      "type": "color",
+      "id": "text_color_hover",
+      "label": "Label Hover Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label Size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    }
   ],
   "blocks": [
     {
@@ -105,20 +136,42 @@
       "name": "Category",
       "limit": 5,
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"label","label":"Label","default":"Outerwear"},
-        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Outerwear"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "default": "/collections/all"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "03 · Expansion Slices Grid",
+      "name": "03 · Expansion Slices Gri",
       "blocks": [
-        {"type": "category"},
-        {"type": "category"},
-        {"type": "category"},
-        {"type": "category"}
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
       ]
     }
   ]

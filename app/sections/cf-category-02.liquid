@@ -42,17 +42,68 @@
 
 {% schema %}
 {
-  "name": "02 · Streetwear Categories",
+  "name": "02 · Streetwear Categorie",
   "settings": [
-    {"type":"text","id":"title","label":"Title","default":"DEPARTMENTS"},
-    {"type":"range","id":"title_size","label":"Title Size","min":24,"max":80,"step":2,"default":48},
-    {"type":"text","id":"btn_label","label":"View All Label","default":"VIEW ALL"},
-    {"type":"text","id":"btn_link","label":"View All Link","default":"/collections/all"},
-    {"type":"color","id":"bg_color","label":"Background","default":"#000000"},
-    {"type":"color","id":"text_color","label":"Title Color","default":"#ffffff"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#ef4444"},
-    {"type":"color","id":"accent_color","label":"Tags / Accent","default":"#eab308"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60}
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "DEPARTMENTS"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title Size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "View All Label",
+      "default": "VIEW ALL"
+    },
+    {
+      "type": "text",
+      "id": "btn_link",
+      "label": "View All Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#ef4444"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Tags / Accent",
+      "default": "#eab308"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    }
   ],
   "blocks": [
     {
@@ -60,20 +111,54 @@
       "name": "Category",
       "limit": 8,
       "settings": [
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"text","id":"title","label":"Title","default":"Tees"},
-        {"type":"text","id":"link","label":"Link","default":"/collections/all"}
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Tees"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "default": "/collections/all"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "02 · Streetwear Categories",
+      "name": "02 · Streetwear Categorie",
       "blocks": [
-        {"type":"category","settings":{"title":"OUTERWEAR"}},
-        {"type":"category","settings":{"title":"TEES"}},
-        {"type":"category","settings":{"title":"BOTTOMS"}},
-        {"type":"category","settings":{"title":"HEADWEAR"}}
+        {
+          "type": "category",
+          "settings": {
+            "title": "OUTERWEAR"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "TEES"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "BOTTOMS"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "HEADWEAR"
+          }
+        }
       ]
     }
   ]

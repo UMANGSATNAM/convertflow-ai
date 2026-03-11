@@ -103,20 +103,89 @@
 {
   "name": "10 · Sustainable Beauty",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#f0fdf4"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#14532d"},
-    {"type":"color","id":"accent_color","label":"Accent Color (Green)","default":"#16a34a"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#dcfce7"},
-    {"type":"text","id":"logo_text","label":"Logo Text","default":"verdant"},
-    {"type":"text","id":"top_text","label":"Announcement Text","default":"Carbon Neutral Shipping · Refillable Packaging · 1% for the Planet"},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f0fdf4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#14532d"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Green)",
+      "default": "#16a34a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#dcfce7"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "verdant"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Announcement Text",
+      "default": "Carbon Neutral Shipping · Refillable Packaging · 1% for the Planet"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
-      "type": "nav_item", "name": "Nav Item",
-      "settings": [{"type":"text","id":"label","label":"Label","default":"Skincare"},{"type":"url","id":"link","label":"Link"}]
+      "type": "nav_item",
+      "name": "Nav Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Skincare"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
     }
   ],
-  "presets": [{"name": "10 · Sustainable Beauty Header","blocks": [{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"},{"type":"nav_item"}]}]
+  "presets": [
+    {
+      "name": "10 · Sustainable Beauty H",
+      "blocks": [
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        },
+        {
+          "type": "nav_item"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

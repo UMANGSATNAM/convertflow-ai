@@ -120,33 +120,119 @@
 
 {% schema %}
 {
-  "name": "09 · Supplements Categories",
+  "name": "09 · Supplements Categori",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Color","default":"#ffffff"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#18181b"},
-    {"type":"color","id":"border_color","label":"Border Color","default":"#f4f4f5"},
-    {"type":"color","id":"accent_color","label":"Accent Color (Red)","default":"#ef4444"},
-    {"type":"text","id":"title","label":"Title","default":"Find Your Formula"},
-    {"type":"text","id":"subtitle","label":"Subtitle","default":"Browse our scientifically backed categories."},
-    {"type":"range","id":"cols_desktop","label":"Columns (Desktop)","min":2,"max":4,"step":1,"default":3},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":40,"max":160,"step":5,"default":80},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":50,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#18181b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#f4f4f5"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Red)",
+      "default": "#ef4444"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Find Your Formula"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Browse our scientifically backed categories."
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 40,
+      "max": 160,
+      "step": 5,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
       "type": "category",
       "name": "Category",
       "settings": [
-        {"type":"text","id":"title","label":"Category Name","default":"Energy"},
-        {"type":"image_picker","id":"image","label":"Image"},
-        {"type":"url","id":"link","label":"Link"}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category Name",
+          "default": "Energy"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
       ]
     }
   ],
   "presets": [
     {
       "name": "09 · Supplements Grid",
-      "blocks": [{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"},{"type":"category"}]
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
     }
   ]
 }

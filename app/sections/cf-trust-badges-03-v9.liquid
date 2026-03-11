@@ -96,11 +96,42 @@
 {
   "name": "09 · Clean Matte Icons",
   "settings": [
-    {"type":"color","id":"bg_color","label":"Background Base","default":"#f9fafb"},
-    {"type":"color","id":"text_color","label":"Text Color","default":"#111827"},
-    {"type":"color","id":"icon_color","label":"Icon Accent Color","default":"#111827"},
-    {"type":"range","id":"padding_y","label":"Vertical Padding","min":20,"max":120,"step":5,"default":60},
-    {"type":"range","id":"max_width","label":"Max Width","min":800,"max":1600,"step":100,"default":1200}
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Base",
+      "default": "#f9fafb"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Accent Color",
+      "default": "#111827"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "default": 1200
+    }
   ],
   "blocks": [
     {
@@ -113,22 +144,57 @@
           "id": "icon",
           "label": "Icon",
           "options": [
-            {"value": "shield", "label": "Shield"},
-            {"value": "refresh", "label": "Refresh"},
-            {"value": "truck", "label": "Truck"},
-            {"value": "help", "label": "Help/Question"}
+            {
+              "value": "shield",
+              "label": "Shield"
+            },
+            {
+              "value": "refresh",
+              "label": "Refresh"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "help",
+              "label": "Help/Question"
+            }
           ],
           "default": "shield"
         },
-        {"type":"text","id":"title","label":"Title","default":"Warranty"},
-        {"type":"text","id":"desc","label":"Description","default":"2 years included"}
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Warranty"
+        },
+        {
+          "type": "text",
+          "id": "desc",
+          "label": "Description",
+          "default": "2 years included"
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "09 · Clean Matte Trust Badges",
-      "blocks": [{"type":"badge"},{"type":"badge"},{"type":"badge"},{"type":"badge"}]
+      "name": "09 · Clean Matte Trust Ba",
+      "blocks": [
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        },
+        {
+          "type": "badge"
+        }
+      ]
     }
   ]
 }
