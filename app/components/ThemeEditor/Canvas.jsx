@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useThemeEditor } from './ThemeEditorContext';
-import { useIframeBridge, EDITOR_EVENTS } from './useIframeBridge';
-import { Text, Spinner } from '@shopify/polaris';
+import { useIframeBridge, IFRAME_ACTIONS } from './useIframeBridge';
+import { Spinner } from '@shopify/polaris';
 
 export function Canvas() {
     const {
@@ -17,27 +17,38 @@ export function Canvas() {
     const iframeRef = useRef(null);
     const [html, setHtml] = useState('');
     const [loading, setLoading] = useState(false);
+    const prevBlocksLengthRef = useRef(0);
+    const prevSelectedRef = useRef(null);
+    const iframeReadyRef = useRef(false);
 
-    // 1. Setup Typed Iframe Bridge
-    const handleIframeClick = (blockId) => {
+    // ── 1. Setup OS 2.0 Iframe Bridge ──────────────────────────
+    const handleIframeClick = useCallback((blockId) => {
         setSelectedBlockId(blockId);
-    };
+    }, [setSelectedBlockId]);
 
-    const { dispatchToIframe, isReady } = useIframeBridge(
-        iframeRef,
-        handleIframeClick,
-        () => console.log("Iframe connected to Editor Bridge")
-    );
+    const handleIframeReady = useCallback(() => {
+        iframeReadyRef.current = true;
+        // Highlight the active section if one is selected
+        if (selectedBlockId) {
+            selectSection(selectedBlockId);
+        }
+    }, [selectedBlockId]);
 
-    // 2. Debounced Live Preview Generator
-    // Uses 300ms debounce to prevent freezing the UI when typing fast in Settings
-    useEffect(() => {
+    const {
+        selectSection,
+        deselectSection,
+        reorderSections: reorderIframe,
+        updateSetting,
+        removeSection: removeIframeSection,
+    } = useIframeBridge(iframeRef, handleIframeClick, handleIframeReady);
+
+    // ── 2. Full HTML Fetch (only on mount, add, or remove) ─────
+    const fetchFullPreview = useCallback(() => {
         setLoading(true);
 
-        // Construct payload
         let blocksToSend = [...blocks];
 
-        // Merge live typing settings
+        // Merge live settings for the active block
         if (activeBlock && settings) {
             const idx = blocksToSend.findIndex(b => b.id === activeBlock.id);
             if (idx !== -1) {
@@ -45,7 +56,7 @@ export function Canvas() {
             }
         }
 
-        // Temporarily insert a preview template if browsing library
+        // Insert preview template if browsing library
         if (previewTemplateId && !activeBlock) {
             blocksToSend.push({
                 id: 'preview-insert',
@@ -54,30 +65,69 @@ export function Canvas() {
             });
         }
 
-        const timer = setTimeout(() => {
-            const form = new FormData();
-            form.append("blocks", JSON.stringify(blocksToSend));
-            if (activeBlock) form.append("activeBlockId", activeBlock.id);
-            else if (previewTemplateId) form.append("activeBlockId", "preview-insert");
+        const form = new FormData();
+        form.append("blocks", JSON.stringify(blocksToSend));
+        if (activeBlock) form.append("activeBlockId", activeBlock.id);
+        else if (previewTemplateId) form.append("activeBlockId", "preview-insert");
 
-            fetch('/app/api/template-preview', { method: 'POST', body: form })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.html) setHtml(data.html);
-                })
-                .finally(() => setLoading(false));
-        }, 300); // 300ms Debounce
-
-        return () => clearTimeout(timer);
+        fetch('/app/api/template-preview', { method: 'POST', body: form })
+            .then(res => res.json())
+            .then(data => {
+                if (data.html) {
+                    setHtml(data.html);
+                    iframeReadyRef.current = false; // Reset — new srcDoc will re-init
+                }
+            })
+            .catch(console.error)
+            .finally(() => setLoading(false));
     }, [blocks, settings, activeBlock, previewTemplateId]);
 
+    // ── 3. Trigger full re-fetch when blocks change structurally ──
+    useEffect(() => {
+        const currentLen = blocks.length;
+        // Always fetch on mount, or when sections are added/removed
+        fetchFullPreview();
+        prevBlocksLengthRef.current = currentLen;
+    }, [blocks.length, previewTemplateId]);
+
+    // ── 4. Debounced setting changes → re-fetch (for now) ──────
+    // Future: use postMessage for CSS variable injection only
+    useEffect(() => {
+        if (!activeBlock || !settings || Object.keys(settings).length === 0) return;
+
+        const timer = setTimeout(() => {
+            fetchFullPreview();
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [settings]);
+
+    // ── 5. Section select sync → postMessage to iframe ─────────
+    useEffect(() => {
+        if (!iframeReadyRef.current) return;
+        
+        if (selectedBlockId && selectedBlockId !== prevSelectedRef.current) {
+            selectSection(selectedBlockId);
+        } else if (!selectedBlockId && prevSelectedRef.current) {
+            deselectSection();
+        }
+        prevSelectedRef.current = selectedBlockId;
+    }, [selectedBlockId, selectSection, deselectSection]);
+
+    // ── 6. Reorder sync → postMessage to iframe ────────────────
+    useEffect(() => {
+        if (!iframeReadyRef.current) return;
+        const order = blocks.map(b => b.id);
+        reorderIframe(order);
+    }, [blocks.map(b => b.id).join(',')]);
+
+    // ── Render ─────────────────────────────────────────────────
     return (
         <section className="flex-1 bg-polaris-bg p-6 overflow-hidden flex flex-col">
-            
             <div className="pb-2 w-full max-w-5xl mx-auto flex items-center justify-between">
-                <Text variant="bodySm" tone="subdued">
+                <span className="text-xs text-polaris-subdued">
                     {activeBlock ? `Editing: ${activeBlock.type}` : (previewTemplateId ? 'Previewing template' : 'Live Preview')}
-                </Text>
+                </span>
             </div>
 
             <div 

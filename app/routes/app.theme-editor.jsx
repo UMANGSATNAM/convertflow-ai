@@ -9,9 +9,8 @@ import { SidebarLeft } from "../components/ThemeEditor/SidebarLeft";
 import { SidebarRight } from "../components/ThemeEditor/SidebarRight";
 import { Canvas } from "../components/ThemeEditor/Canvas";
 import { useThemeEditor } from "../components/ThemeEditor/ThemeEditorContext";
-import { DesktopIcon, MobileIcon, HintIcon } from '@shopify/polaris-icons';
 
-// --- LOADER (Unchanged core logic) ---
+// --- LOADER ---
 export const loader = async ({ request }) => {
     const { session } = await authenticate.admin(request);
     const { shop, accessToken } = session;
@@ -39,14 +38,13 @@ export const loader = async ({ request }) => {
     return json({ themeId: theme.id, shop, pageBlocks, categories });
 };
 
-// --- ACTION (Unchanged core logic) ---
-// Keeping the backend Shopify API sync identical as it works
-export { action } from "./app.theme-editor.action"; // Note: We need to pull the action out
+// --- ACTION ---
+export { action } from "./app.theme-editor.action";
 
 import { AppProvider } from '@shopify/polaris';
 import '@shopify/polaris/build/esm/styles.css';
 
-// --- MAIN SHELL V2 ---
+// --- MAIN SHELL ---
 export default function ThemeEditorV2Shell() {
     return (
         <AppProvider i18n={{}}>
@@ -58,78 +56,96 @@ export default function ThemeEditorV2Shell() {
 }
 
 function ThemeEditorApp() {
-    const { device, setDevice, setActiveTab } = useThemeEditor();
+    const { device, setDevice, saveSettings, selectedBlockId, activeBlock } = useThemeEditor();
+    const navigate = useNavigate();
+
+    const handleSave = () => {
+        saveSettings();
+    };
+
+    const handleExit = () => {
+        navigate('/app');
+    };
 
     return (
-        <ThemeEditorProvider>
-            <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden h-screen flex flex-col font-display">
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-                <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-                <style dangerouslySetInnerHTML={{
-                    __html: `
-                    .sidebar-scroll::-webkit-scrollbar { width: 4px; }
-                    .sidebar-scroll::-webkit-scrollbar-thumb { background: #DFE3E8; border-radius: 10px; }
-                    .material-symbols-outlined { font-size: 20px; vertical-align: middle; }
-                    `
-                }}></style>
+        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden h-screen flex flex-col font-display">
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+            <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+                .sidebar-scroll::-webkit-scrollbar-thumb { background: #DFE3E8; border-radius: 10px; }
+                .material-symbols-outlined { font-size: 20px; vertical-align: middle; }
+                `
+            }}></style>
 
-                {/* Top Navigation Bar */}
-                <header className="h-12 bg-polaris-nav flex items-center justify-between px-3 shrink-0 z-50">
-                    <div className="flex items-center gap-3">
-                        <button className="text-white hover:bg-white/10 p-1.5 rounded transition-colors flex items-center gap-2">
-                            <span className="material-symbols-outlined">arrow_back</span>
-                            <span className="text-sm font-medium">Exit</span>
-                        </button>
-                        <div className="h-6 w-px bg-white/20 mx-1"></div>
-                        <div className="flex items-center gap-2 text-white/90">
-                            <span className="text-xs font-semibold uppercase tracking-wider">Dawn</span>
-                            <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded">Live</span>
-                        </div>
+            {/* Top Navigation Bar */}
+            <header className="h-12 bg-polaris-nav flex items-center justify-between px-3 shrink-0 z-50">
+                <div className="flex items-center gap-3">
+                    <button 
+                        onClick={handleExit}
+                        className="text-white hover:bg-white/10 p-1.5 rounded transition-colors flex items-center gap-2"
+                    >
+                        <span className="material-symbols-outlined">arrow_back</span>
+                        <span className="text-sm font-medium">Exit</span>
+                    </button>
+                    <div className="h-6 w-px bg-white/20 mx-1"></div>
+                    <div className="flex items-center gap-2 text-white/90">
+                        <span className="text-xs font-semibold uppercase tracking-wider">Dawn</span>
+                        <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded">Live</span>
                     </div>
+                </div>
 
-                    {/* Viewport Switcher */}
-                    <div className="flex items-center bg-white/10 rounded-lg p-0.5 border border-white/10">
-                        <button 
-                            onClick={() => setDevice('desktop')}
-                            className={`px-3 py-1 rounded-md text-white shadow-sm transition-colors ${device === 'desktop' ? 'bg-white/20' : 'text-white/60 hover:text-white'}`}
-                        >
-                            <span className="material-symbols-outlined">desktop_windows</span>
-                        </button>
-                        <button 
-                            onClick={() => setDevice('mobile')}
-                            className={`px-3 py-1 rounded-md text-white shadow-sm transition-colors ${device === 'mobile' ? 'bg-white/20' : 'text-white/60 hover:text-white'}`}
-                        >
-                            <span className="material-symbols-outlined">smartphone</span>
-                        </button>
-                        <button className="px-3 py-1 text-white/60 hover:text-white">
-                            <span className="material-symbols-outlined">fullscreen</span>
-                        </button>
-                    </div>
+                {/* Viewport Switcher */}
+                <div className="flex items-center bg-white/10 rounded-lg p-0.5 border border-white/10">
+                    <button 
+                        onClick={() => setDevice('desktop')}
+                        className={`px-3 py-1 rounded-md text-white shadow-sm transition-colors ${device === 'desktop' ? 'bg-white/20' : 'text-white/60 hover:text-white'}`}
+                    >
+                        <span className="material-symbols-outlined">desktop_windows</span>
+                    </button>
+                    <button 
+                        onClick={() => setDevice('mobile')}
+                        className={`px-3 py-1 rounded-md text-white shadow-sm transition-colors ${device === 'mobile' ? 'bg-white/20' : 'text-white/60 hover:text-white'}`}
+                    >
+                        <span className="material-symbols-outlined">smartphone</span>
+                    </button>
+                    <button className="px-3 py-1 text-white/60 hover:text-white">
+                        <span className="material-symbols-outlined">fullscreen</span>
+                    </button>
+                </div>
 
-                    <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 text-white/90 mr-4">
-                            <span className="text-sm font-medium">Inspector</span>
-                            <div className="w-8 h-4 bg-primary rounded-full relative cursor-pointer">
-                                <div className="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full"></div>
-                            </div>
-                        </div>
-                        <button className="bg-primary text-black px-4 py-1.5 rounded font-semibold text-sm hover:opacity-90 transition-opacity">
-                            Save
-                        </button>
-                    </div>
-                </header>
+                <div className="flex items-center gap-3">
+                    {/* Save Status Indicator */}
+                    {activeBlock && (
+                        <span className="text-xs text-white/60">
+                            Editing: {activeBlock.type}
+                        </span>
+                    )}
+                    <button 
+                        onClick={handleSave}
+                        disabled={!selectedBlockId}
+                        className={`px-4 py-1.5 rounded font-semibold text-sm transition-opacity ${
+                            selectedBlockId 
+                                ? 'bg-primary text-black hover:opacity-90 cursor-pointer' 
+                                : 'bg-white/20 text-white/40 cursor-not-allowed'
+                        }`}
+                    >
+                        Save
+                    </button>
+                </div>
+            </header>
 
-                <main className="flex flex-1 overflow-hidden">
-                    {/* Left Panel: Outline/DND */}
-                    <SidebarLeft />
+            <main className="flex flex-1 overflow-hidden">
+                {/* Left Panel: Outline/DND */}
+                <SidebarLeft />
 
-                    {/* Middle Panel: Iframe Canvas */}
-                    <Canvas />
+                {/* Middle Panel: Iframe Canvas */}
+                <Canvas />
 
-                    {/* Right Panel: Dynamic Schema Settings */}
-                    <SidebarRight />
-                </main>
-            </div>
-        </ThemeEditorProvider>
+                {/* Right Panel: Dynamic Schema Settings */}
+                <SidebarRight />
+            </main>
+        </div>
     );
 }

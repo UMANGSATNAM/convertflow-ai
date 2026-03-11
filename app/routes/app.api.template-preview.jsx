@@ -61,37 +61,129 @@ export const action = async ({ request }) => {
       img { max-width: 100%; height: auto; display: block; }
       a { text-decoration: none; color: inherit; }
       
-      .shopify-section { outline: 2px solid transparent; transition: outline 0.15s; position: relative; }
+      .shopify-section { outline: 2px solid transparent; transition: outline 0.2s ease, box-shadow 0.2s ease; position: relative; }
       .shopify-section:hover { outline: 2px solid #2c6ecb; outline-offset: -2px; cursor: pointer; z-index: 10; }
-      .shopify-section.active { outline: 3px solid #005bd3; outline-offset: -3px; z-index: 11; }
+      .shopify-section.active { outline: 3px solid #005bd3; outline-offset: -3px; z-index: 11; box-shadow: 0 0 0 4px rgba(0,91,211,0.15); }
       
-      /* Disable links and forms in the preview iframe to prevent Shopify routing errors */
-      a, form, button { pointer-events: none !important; }
+      /* Disable navigation in preview */
+      a[href], form, button:not(.cf-editor-btn) { pointer-events: none !important; }
+      .shopify-section { pointer-events: auto !important; }
     </style>
     <script>
-      // Cancel all click events on links to prevent 404 No Route Matches error
-      document.addEventListener('click', (e) => {
-        if (e.target.closest('a') || e.target.closest('form')) {
+      (function() {
+        'use strict';
+        
+        // ── State ──────────────────────────────────────────────
+        let activeBlockId = '${activeBlockId || ''}';
+        
+        // ── Helpers ────────────────────────────────────────────
+        function getSectionEl(blockId) {
+          return document.getElementById('shopify-section-' + blockId);
+        }
+        
+        function clearAllActive() {
+          document.querySelectorAll('.shopify-section.active').forEach(el => el.classList.remove('active'));
+        }
+        
+        function highlightSection(blockId) {
+          clearAllActive();
+          const el = getSectionEl(blockId);
+          if (el) {
+            el.classList.add('active');
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          activeBlockId = blockId;
+        }
+        
+        // ── Initial highlight ──────────────────────────────────
+        if (activeBlockId) {
+          requestAnimationFrame(() => highlightSection(activeBlockId));
+        }
+        
+        // ── Click handler (Iframe → Parent) ────────────────────
+        document.addEventListener('click', (e) => {
           e.preventDefault();
-        }
-      }, true);
-
-      // Highlight active block if provided
-      const activeId = '${activeBlockId || ''}';
-      if (activeId) {
-          const el = document.getElementById('shopify-section-' + activeId);
-          if (el) el.classList.add('active');
-      }
-
-      document.addEventListener('click', (e) => {
-        const section = e.target.closest('.shopify-section');
-        if (section) {
-            e.preventDefault();
-            e.stopPropagation();
+          e.stopPropagation();
+          const section = e.target.closest('.shopify-section');
+          if (section) {
             const blockId = section.id.replace('shopify-section-', '');
-            window.parent.postMessage({ type: 'SECTION_CLICK', id: blockId }, '*');
-        }
-      }, true);
+            highlightSection(blockId);
+            window.parent.postMessage({ type: 'SECTION_CLICKED', payload: { blockId } }, '*');
+          }
+        }, true);
+        
+        // ── Message handler (Parent → Iframe) ──────────────────
+        window.addEventListener('message', (event) => {
+          if (!event.data || !event.data.type) return;
+          const { type, payload } = event.data;
+          
+          switch (type) {
+            // ── Select: Highlight + Scroll ──────────────────────
+            case 'shopify:section:select': {
+              if (payload?.blockId) highlightSection(payload.blockId);
+              break;
+            }
+            
+            // ── Deselect: Remove all highlights ─────────────────
+            case 'shopify:section:deselect': {
+              clearAllActive();
+              activeBlockId = null;
+              break;
+            }
+            
+            // ── Reorder: Move DOM nodes to match new order ──────
+            case 'shopify:section:reorder': {
+              if (!payload?.order || !Array.isArray(payload.order)) break;
+              const container = document.body;
+              for (const blockId of payload.order) {
+                const el = getSectionEl(blockId);
+                if (el) container.appendChild(el);
+              }
+              break;
+            }
+            
+            // ── Setting Update: CSS Variable injection ──────────
+            case 'shopify:setting:update': {
+              if (payload?.key && payload?.value !== undefined) {
+                document.documentElement.style.setProperty('--' + payload.key, payload.value);
+              }
+              break;
+            }
+            
+            // ── Load: Inject new section HTML ───────────────────
+            case 'shopify:section:load': {
+              if (payload?.blockId && payload?.html) {
+                const existing = getSectionEl(payload.blockId);
+                if (existing) {
+                  existing.outerHTML = payload.html;
+                } else {
+                  document.body.insertAdjacentHTML('beforeend', payload.html);
+                }
+                // Re-highlight if this was the active block
+                if (activeBlockId === payload.blockId) {
+                  requestAnimationFrame(() => highlightSection(payload.blockId));
+                }
+              }
+              break;
+            }
+            
+            // ── Remove: Delete section DOM node ─────────────────
+            case 'shopify:section:remove': {
+              if (payload?.blockId) {
+                const el = getSectionEl(payload.blockId);
+                if (el) el.remove();
+                if (activeBlockId === payload.blockId) {
+                  activeBlockId = null;
+                }
+              }
+              break;
+            }
+          }
+        });
+        
+        // ── Signal ready to parent ─────────────────────────────
+        window.parent.postMessage({ type: 'IFRAME_READY', payload: {} }, '*');
+      })();
     </script>`;
 
   const fullHtml = `<!DOCTYPE html>
