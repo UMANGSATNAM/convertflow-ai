@@ -29,21 +29,55 @@ export const loader = async ({ request }) => {
   const storefrontUrl = `${storefrontBase}${storefrontPath}`;
 
   // ── Storefront password ─────────────────────────────────────────────
-  // Hardcoded here; move to a DB/env column later for multi-merchant
   const STOREFRONT_PASSWORD = "1";
 
   let html = "";
   try {
-    // ── Step 1: POST the password to get the session cookie ────────────
+    // ── Step 1: GET /password to extract the CSRF authenticity_token ───
     let sessionCookie = "";
     try {
+      const pwPageRes = await fetch(`${storefrontBase}/password`, {
+        method: "GET",
+        headers: {
+          "User-Agent": "Mozilla/5.0 ConvertFlow-AI/1.0",
+          "Accept": "text/html,application/xhtml+xml",
+        },
+        redirect: "follow",
+      });
+
+      const pwPageHtml = await pwPageRes.text();
+
+      // Extract the authenticity_token hidden input
+      let csrfToken = "";
+      const tokenMatch = pwPageHtml.match(/authenticity_token[^>]*value="([^"]+)"/);
+      if (tokenMatch) {
+        csrfToken = tokenMatch[1];
+      } else {
+        // Alternate pattern: name="authenticity_token" ... value="..."
+        const altMatch = pwPageHtml.match(/name="authenticity_token"\s+value="([^"]+)"/);
+        if (altMatch) csrfToken = altMatch[1];
+      }
+
+      // Grab initial cookies from GET response (e.g. _shopify_y session)
+      const initialCookies = pwPageRes.headers.get("set-cookie") || "";
+      const initialCookieValues = initialCookies
+        .split(/,(?=[^ ])/)
+        .map(c => c.split(";")[0].trim())
+        .filter(Boolean)
+        .join("; ");
+
+      console.log("[proxy] CSRF token:", csrfToken ? "found" : "NOT FOUND");
+      console.log("[proxy] Initial cookies:", initialCookieValues.slice(0, 100));
+
+      // ── Step 2: POST the password with the CSRF token ─────────────────
       const pwForm = new URLSearchParams({
         form_type: "storefront_password",
         utf8: "✓",
         password: STOREFRONT_PASSWORD,
+        ...(csrfToken ? { authenticity_token: csrfToken } : {}),
       });
 
-      const pwResponse = await fetch(`${storefrontBase}/password`, {
+      const pwPostRes = await fetch(`${storefrontBase}/password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -51,23 +85,26 @@ export const loader = async ({ request }) => {
           "Origin": storefrontBase,
           "Referer": `${storefrontBase}/password`,
           "Accept": "text/html,application/xhtml+xml",
+          ...(initialCookieValues ? { Cookie: initialCookieValues } : {}),
         },
         body: pwForm.toString(),
-        redirect: "manual", // capture the Set-Cookie before the redirect
+        redirect: "manual",
       });
 
-      // Look for the storefront password cookie in all set-cookie headers
-      // node-fetch returns them comma-joined; split carefully
-      const rawCookies = pwResponse.headers.get("set-cookie") || "";
-      const match = rawCookies.match(/_shopify_storefront_password=[^;,\s]+/);
-      if (match) {
-        sessionCookie = match[0];
-        console.log("[proxy] Got storefront cookie:", sessionCookie);
+      // Collect ALL cookies from the POST response
+      const postCookies = pwPostRes.headers.get("set-cookie") || "";
+      // Parse out the storefront password cookie
+      const pwCookieMatch = postCookies.match(/_shopify_storefront_password=[^;,\s]+/);
+      if (pwCookieMatch) {
+        sessionCookie = pwCookieMatch[0];
+        console.log("[proxy] Password cookie acquired:", sessionCookie.slice(0, 60));
       } else {
-        console.log("[proxy] No storefront cookie found, raw:", rawCookies.slice(0, 200));
+        // Even if no pw cookie, pass the session cookies we have
+        sessionCookie = initialCookieValues;
+        console.log("[proxy] No pw cookie; using initial cookies");
       }
     } catch (pwErr) {
-      console.warn("[proxy] Password POST failed:", pwErr.message);
+      console.warn("[proxy] Password bypass failed:", pwErr.message);
     }
 
     // ── Step 2: Fetch the storefront page ──────────────────────────────
