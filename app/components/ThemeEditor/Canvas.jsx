@@ -1,144 +1,123 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useThemeEditor } from './ThemeEditorContext';
-import { useIframeBridge } from './useIframeBridge';
 
 /**
- * Canvas — renders the live Shopify storefront in an iframe.
+ * Canvas — shows the live Shopify storefront in an iframe.
  *
- * Architecture: fetch() + srcDoc (NOT <iframe src=...>)
- * ─────────────────────────────────────────────────────────
- * Using <iframe src="/app/api/storefront-proxy"> fails because:
- *   - Shopify admin already embeds the whole app in an iframe
- *   - Railway/Shopify adds X-Frame-Options that block nested iframes
- *   => "refused to connect"
+ * Architecture: DIRECT IFRAME (no proxy, no srcDoc)
+ * ─────────────────────────────────────────────────────────────────────
+ * URL: https://SHOP/?preview_theme_id=THEME_ID
  *
- * Solution: React fetch() the proxy (same session context),
- * get back { html } JSON, set as iframe srcDoc.
+ * Why this works:
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  The browser naturally includes the user's .myshopify.com       │
+ * │  admin session cookies in the iframe request.                   │
+ * │  Shopify's ?preview_theme_id bypasses the storefront password   │
+ * │  for authenticated admin sessions — exactly like Shopify's own  │
+ * │  theme editor does.                                             │
+ * └─────────────────────────────────────────────────────────────────┘
  *
- * Auto-reload: watches `lastSavedAt` from context — any successful
- * server action bumps this timestamp → triggers a fresh proxy fetch.
+ * Auto-reload: watches lastSavedAt from context. After any section
+ * mutation succeeds, the themeId + timestamp makes a new src URL,
+ * which forces the iframe to reload — showing the updated theme.
+ *
+ * Cross-origin note: We can't inject a bridge script into the iframe
+ * (cross-origin restriction). Section selection highlighting is done
+ * via sidebar only. A full bridge requires a Shopify App Extension.
  */
 export function Canvas() {
     const {
-        blocks,
-        settings,
         activeBlock,
         selectedBlockId,
-        setSelectedBlockId,
         device,
         shop,
         templateFile,
-        fetcher,
-        lastSavedAt,
         themeId,
+        lastSavedAt,
+        fetcher,
     } = useThemeEditor();
 
     const iframeRef = useRef(null);
-    const [srcDoc, setSrcDoc] = useState('');
+    const [iframeKey, setIframeKey] = useState(0);
     const [loading, setLoading] = useState(true);
-    const iframeReadyRef = useRef(false);
-    const prevSelectedRef = useRef(null);
-    const abortRef = useRef(null);
 
-    // ── 1. Iframe Bridge ────────────────────────────────────────────────
-    const handleIframeClick = useCallback((blockId) => {
-        setSelectedBlockId(blockId);
-    }, [setSelectedBlockId]);
+    // ── Build the preview URL ───────────────────────────────────────────
+    // ?preview_theme_id tells Shopify which theme to render
+    // ?_fd=0 disables the storefront password check for admin sessions
+    const previewUrl = shop && themeId
+        ? `https://${shop}/?preview_theme_id=${themeId}&_fd=0`
+        : null;
 
-    const handleIframeReady = useCallback(() => {
-        iframeReadyRef.current = true;
-    }, []);
-
-    const { selectSection, deselectSection, reorderSections, loadSection, removeSection } =
-        useIframeBridge(iframeRef, handleIframeClick, handleIframeReady);
-
-    // ── 2. Fetch live storefront HTML via proxy ─────────────────────────
-    const fetchPreview = useCallback(() => {
-        if (abortRef.current) abortRef.current.abort();
-        const controller = new AbortController();
-        abortRef.current = controller;
-
-        setLoading(true);
-        iframeReadyRef.current = false;
-
-        const pageParam = templateFile?.includes('product') ? 'product' : 'home';
-        // Pass themeId so proxy uses ?preview_theme_id (exact theme being edited)
-        const themeParam = themeId ? `&themeId=${encodeURIComponent(themeId)}` : '';
-        const proxyUrl = `/app/api/storefront-proxy?page=${pageParam}${themeParam}&t=${Date.now()}`;
-
-        fetch(proxyUrl, { signal: controller.signal })
-            .then(res => {
-                if (!res.ok) throw new Error(`Proxy ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                if (data?.html) setSrcDoc(data.html);
-            })
-            .catch(err => {
-                if (err.name === 'AbortError') return;
-                console.error('[Canvas] preview error:', err);
-                setSrcDoc(`<html><body style="font-family:sans-serif;padding:40px;color:#555">
-                  <h2>Preview error</h2><p>${err.message}</p></body></html>`);
-            })
-            .finally(() => setLoading(false));
-    }, [templateFile]);
-
-    // ── 3. Initial fetch ────────────────────────────────────────────────
-    useEffect(() => {
-        fetchPreview();
-        return () => { if (abortRef.current) abortRef.current.abort(); };
-    }, [templateFile]);
-
-    // ── 4. Auto-reload when a section mutation completes ─────────────────
-    // lastSavedAt is bumped by ThemeEditorContext on every ok:true response
+    // ── Auto-reload after any section mutation ────────────────────────
     useEffect(() => {
         if (!lastSavedAt) return;
-        // Small delay so Shopify's CDN edge cache has time to propagate the new JSON
-        const t = setTimeout(fetchPreview, 600);
+        // Force iframe to reload by bumping the key (remounts <iframe>)
+        const t = setTimeout(() => {
+            setLoading(true);
+            setIframeKey(k => k + 1);
+        }, 800); // give Shopify CDN 800ms to propagate the JSON change
         return () => clearTimeout(t);
     }, [lastSavedAt]);
 
-    // ── 5. Listen for client-side password auto-submit success ───────────
-    useEffect(() => {
-        const handler = (e) => {
-            if (e.data?.type === 'CF_RELOAD_CANVAS') setTimeout(fetchPreview, 800);
-        };
-        window.addEventListener('message', handler);
-        return () => window.removeEventListener('message', handler);
-    }, [fetchPreview]);
+    const isSaving = fetcher?.state !== 'idle';
 
-    // ── 6. Section select sync → postMessage ────────────────────────────
-    useEffect(() => {
-        if (!iframeReadyRef.current) return;
-        if (selectedBlockId && selectedBlockId !== prevSelectedRef.current) {
-            selectSection(selectedBlockId);
-        } else if (!selectedBlockId && prevSelectedRef.current) {
-            deselectSection();
-        }
-        prevSelectedRef.current = selectedBlockId;
-    }, [selectedBlockId, selectSection, deselectSection]);
+    // Determine the page-specific URL
+    const pageUrl = previewUrl
+        ? templateFile?.includes('product')
+            ? previewUrl.replace('/?', '/products?')
+            : previewUrl
+        : null;
 
-    // Detect if a save is in flight (show progress bar without blanking preview)
-    const isSaving = fetcher.state !== 'idle';
-
-    // ── Render ──────────────────────────────────────────────────────────
     return (
-        <section style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f1f1f1', padding: '12px', overflow: 'hidden' }}>
+        <section style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            background: '#f1f1f1',
+            padding: '12px',
+            overflow: 'hidden',
+        }}>
             {/* Top bar */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, fontFamily: '-apple-system, sans-serif' }}>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: 8,
+                fontFamily: '-apple-system, sans-serif',
+            }}>
                 <span style={{ fontSize: 12, color: '#6b7280' }}>
-                    {activeBlock ? `✏️ Editing: ${activeBlock.type}` : `🌐 Live Preview — ${shop || 'your store'}`}
+                    {activeBlock
+                        ? `✏️ Editing: ${activeBlock.type}`
+                        : pageUrl
+                            ? `🌐 Live Preview — ${shop}`
+                            : 'Loading…'}
                 </span>
-                <button
-                    onClick={fetchPreview}
-                    style={{ fontSize: 11, color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
-                    title="Reload preview"
-                >
-                    ↺ Reload
-                </button>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    {pageUrl && (
+                        <a
+                            href={pageUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ fontSize: 11, color: '#2563eb', textDecoration: 'none' }}
+                            title="Open in new tab"
+                        >
+                            ↗ Open
+                        </a>
+                    )}
+                    <button
+                        onClick={() => { setLoading(true); setIframeKey(k => k + 1); }}
+                        style={{
+                            fontSize: 11, color: '#2563eb', background: 'none',
+                            border: 'none', cursor: 'pointer',
+                        }}
+                        title="Reload preview"
+                    >
+                        ↺ Reload
+                    </button>
+                </div>
             </div>
 
-            {/* Canvas frame */}
+            {/* iframe wrapper */}
             <div style={{
                 flex: 1,
                 background: '#fff',
@@ -151,9 +130,7 @@ export function Canvas() {
                 margin: device === 'mobile' ? '0 auto' : '0',
                 transition: 'width 0.3s ease',
             }}>
-
-                {/* ── Thin progress bar (saving / reloading) ──────────────
-                    Stays on top of existing preview — no blank screen */}
+                {/* Progress bar — visible while loading or saving */}
                 {(loading || isSaving) && (
                     <div style={{
                         position: 'absolute', top: 0, left: 0, right: 0, height: 3,
@@ -165,52 +142,40 @@ export function Canvas() {
                     }} />
                 )}
 
-                {/* Overlay message only on FIRST load (srcDoc is empty) */}
-                {loading && !srcDoc && (
-                    <div style={{
-                        position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.85)',
-                        display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        justifyContent: 'center', zIndex: 10, gap: 12, fontFamily: '-apple-system, sans-serif',
-                    }}>
-                        <div style={{ fontSize: 36 }}>🔄</div>
-                        <span style={{ fontSize: 13, color: '#6b7280' }}>Loading live theme preview…</span>
-                    </div>
-                )}
-
-                {/* Saving overlay (shows on top of existing preview — with opacity) */}
-                {isSaving && srcDoc && (
+                {pageUrl ? (
+                    <iframe
+                        key={iframeKey}
+                        ref={iframeRef}
+                        src={pageUrl}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            border: 'none',
+                            display: 'block',
+                            opacity: loading ? 0.5 : 1,
+                            transition: 'opacity 0.3s ease',
+                        }}
+                        title="Live theme preview"
+                        onLoad={() => setLoading(false)}
+                        onError={() => setLoading(false)}
+                        // No sandbox — browser cookies must flow freely for admin bypass
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    />
+                ) : (
                     <div style={{
                         position: 'absolute', inset: 0,
-                        background: 'rgba(255,255,255,0.25)',
-                        zIndex: 9, pointerEvents: 'none',
-                    }} />
-                )}
-
-                {srcDoc && (
-                    <iframe
-                        key={srcDoc.slice(0, 100)} // re-mount only when content fundamentally changes
-                        ref={iframeRef}
-                        srcDoc={srcDoc}
-                        style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-                        sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-popups-to-escape-sandbox"
-                        title="Live theme preview"
-                        onLoad={() => {
-                            // Re-select the active block after iframe reloads
-                            if (selectedBlockId) {
-                                setTimeout(() => selectSection(selectedBlockId), 300);
-                            }
-                        }}
-                    />
-                )}
-
-                {!srcDoc && !loading && (
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: '-apple-system, sans-serif' }}>
-                        <span style={{ fontSize: 13, color: '#9ca3af' }}>Preview not available</span>
+                        display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center',
+                        fontFamily: '-apple-system, sans-serif', gap: 8,
+                    }}>
+                        <div style={{ fontSize: 32 }}>🔄</div>
+                        <span style={{ fontSize: 13, color: '#6b7280' }}>
+                            Connecting to your store…
+                        </span>
                     </div>
                 )}
             </div>
 
-            {/* CSS animation for progress bar */}
             <style>{`
                 @keyframes cf-slide {
                     0%   { background-position: 200% 0 }
