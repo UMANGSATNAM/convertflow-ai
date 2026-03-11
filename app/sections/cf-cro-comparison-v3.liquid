@@ -1,0 +1,90 @@
+<style>
+.cf-cro-cmp3{width:100%;background:{{ section.settings.bg_color }};padding:{{ section.settings.padding_y }}px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cf-cro-cmp3-inner{max-width:900px;margin:0 auto;text-align:center}
+.cf-cro-cmp3 h2{font-size:clamp(24px,3vw,36px);font-weight:800;color:{{ section.settings.text_color }};margin:0 0 8px}
+.cf-cro-cmp3-sub{font-size:16px;color:{{ section.settings.text_color }};opacity:0.6;margin-bottom:40px}
+.cf-cro-cmp3-rows{display:flex;flex-direction:column;gap:12px;text-align:left}
+.cf-cro-cmp3-row{display:grid;grid-template-columns:1fr 120px 120px;gap:16px;align-items:center;padding:16px 20px;background:#fff;border-radius:12px;border:1px solid {{ section.settings.text_color }}06}
+.cf-cro-cmp3-row:first-child{background:{{ section.settings.text_color }}04;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:0.06em;color:{{ section.settings.text_color }}}
+.cf-cro-cmp3-feat{font-size:15px;font-weight:600;color:{{ section.settings.text_color }}}
+.cf-cro-cmp3-us,.cf-cro-cmp3-them{text-align:center;font-size:14px;font-weight:600}
+.cf-cro-cmp3-us{color:{{ section.settings.accent_color }}}
+.cf-cro-cmp3-them{color:{{ section.settings.text_color }};opacity:0.4}
+.cf-cro-cmp3-check{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%}
+.cf-cro-cmp3-us .cf-cro-cmp3-check{background:{{ section.settings.accent_color }}15;color:{{ section.settings.accent_color }}}
+.cf-cro-cmp3-them .cf-cro-cmp3-check{background:#FEE2E2;color:#E53E3E}
+.cf-cro-cmp3-bottom{display:flex;justify-content:center;gap:32px;margin-top:32px;padding:24px;background:{{ section.settings.accent_color }}08;border-radius:16px}
+.cf-cro-cmp3-score{text-align:center}
+.cf-cro-cmp3-score b{font-size:28px;display:block;color:{{ section.settings.text_color }}}
+.cf-cro-cmp3-score span{font-size:12px;color:{{ section.settings.text_color }};opacity:0.5}
+.cf-cro-cmp3-cta{margin-top:24px}
+.cf-cro-cmp3-btn{display:inline-flex;padding:14px 36px;background:{{ section.settings.accent_color }};color:#fff;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;transition:0.2s;box-shadow:0 4px 14px {{ section.settings.accent_color }}30}
+.cf-cro-cmp3-btn:hover{transform:translateY(-2px)}
+@media(max-width:600px){.cf-cro-cmp3-row{grid-template-columns:1fr 80px 80px;gap:8px;padding:12px}}
+</style>
+
+<div class="cf-cro-cmp3">
+  <div class="cf-cro-cmp3-inner">
+    <h2>{{ section.settings.heading }}</h2>
+    <p class="cf-cro-cmp3-sub">{{ section.settings.subheading }}</p>
+    <div class="cf-cro-cmp3-rows">
+      <div class="cf-cro-cmp3-row"><div>Feature</div><div style="text-align:center">{{ section.settings.brand }}</div><div style="text-align:center">{{ section.settings.competitor }}</div></div>
+      {%- for i in (1..6) -%}
+        {%- assign f = 'f_' | append: i -%}
+        {%- assign u = 'u_' | append: i -%}
+        {%- assign t = 't_' | append: i -%}
+        {% if section.settings[f] != blank %}
+          <div class="cf-cro-cmp3-row">
+            <div class="cf-cro-cmp3-feat">{{ section.settings[f] }}</div>
+            <div class="cf-cro-cmp3-us">{% if section.settings[u] == 'yes' %}<span class="cf-cro-cmp3-check">✓</span>{% elsif section.settings[u] == 'no' %}<span class="cf-cro-cmp3-check">✗</span>{% else %}{{ section.settings[u] }}{% endif %}</div>
+            <div class="cf-cro-cmp3-them">{% if section.settings[t] == 'yes' %}<span class="cf-cro-cmp3-check">✓</span>{% elsif section.settings[t] == 'no' %}<span class="cf-cro-cmp3-check">✗</span>{% else %}{{ section.settings[t] }}{% endif %}</div>
+          </div>
+        {% endif %}
+      {%- endfor -%}
+    </div>
+    <div class="cf-cro-cmp3-bottom">
+      <div class="cf-cro-cmp3-score"><b>{{ section.settings.our_score }}</b><span>Our Score</span></div>
+      <div class="cf-cro-cmp3-score"><b>{{ section.settings.their_score }}</b><span>Their Score</span></div>
+    </div>
+    <div class="cf-cro-cmp3-cta"><a href="{{ section.settings.cta_link }}" class="cf-cro-cmp3-btn">{{ section.settings.cta_text }} →</a></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CRO · Scorecard Compare v3",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"How We Stack Up"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"An honest, side-by-side look at the facts"},
+    {"type":"text","id":"brand","label":"Your Brand","default":"Us"},
+    {"type":"text","id":"competitor","label":"Competitor","default":"Them"},
+    {"type":"text","id":"f_1","label":"Feature 1","default":"Money-Back Guarantee"},
+    {"type":"text","id":"u_1","label":"Us 1","default":"yes"},
+    {"type":"text","id":"t_1","label":"Them 1","default":"no"},
+    {"type":"text","id":"f_2","label":"Feature 2","default":"Free Express Shipping"},
+    {"type":"text","id":"u_2","label":"Us 2","default":"yes"},
+    {"type":"text","id":"t_2","label":"Them 2","default":"no"},
+    {"type":"text","id":"f_3","label":"Feature 3","default":"Organic Ingredients"},
+    {"type":"text","id":"u_3","label":"Us 3","default":"yes"},
+    {"type":"text","id":"t_3","label":"Them 3","default":"no"},
+    {"type":"text","id":"f_4","label":"Feature 4","default":"24/7 Support"},
+    {"type":"text","id":"u_4","label":"Us 4","default":"yes"},
+    {"type":"text","id":"t_4","label":"Them 4","default":"no"},
+    {"type":"text","id":"f_5","label":"Feature 5","default":"Customer Rating"},
+    {"type":"text","id":"u_5","label":"Us 5","default":"4.9★"},
+    {"type":"text","id":"t_5","label":"Them 5","default":"3.6★"},
+    {"type":"text","id":"f_6","label":"Feature 6","default":"Price"},
+    {"type":"text","id":"u_6","label":"Us 6","default":"$39.99"},
+    {"type":"text","id":"t_6","label":"Them 6","default":"$79.99"},
+    {"type":"text","id":"our_score","label":"Our Score","default":"6/6"},
+    {"type":"text","id":"their_score","label":"Their Score","default":"1/6"},
+    {"type":"text","id":"cta_text","label":"CTA","default":"Shop with Confidence"},
+    {"type":"text","id":"cta_link","label":"CTA Link","default":"/collections/all"},
+    {"type":"color","id":"bg_color","label":"Background","default":"#ffffff"},
+    {"type":"color","id":"text_color","label":"Text Color","default":"#111111"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#16A34A"},
+    {"type":"range","id":"padding_y","label":"Padding","min":20,"max":100,"step":10,"default":60}
+  ],
+  "presets": [{"name":"CRO · Scorecard Compare v3"}]
+}
+{% endschema %}
