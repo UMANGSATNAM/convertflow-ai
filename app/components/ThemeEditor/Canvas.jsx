@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useThemeEditor } from './ThemeEditorContext';
-import { useIframeBridge, IFRAME_ACTIONS } from './useIframeBridge';
+import { useIframeBridge } from './useIframeBridge';
 import { Spinner } from '@shopify/polaris';
 
 export function Canvas() {
@@ -17,7 +17,6 @@ export function Canvas() {
     const iframeRef = useRef(null);
     const [html, setHtml] = useState('');
     const [loading, setLoading] = useState(false);
-    const prevBlocksLengthRef = useRef(0);
     const prevSelectedRef = useRef(null);
     const iframeReadyRef = useRef(false);
 
@@ -28,7 +27,6 @@ export function Canvas() {
 
     const handleIframeReady = useCallback(() => {
         iframeReadyRef.current = true;
-        // Highlight the active section if one is selected
         if (selectedBlockId) {
             selectSection(selectedBlockId);
         }
@@ -38,21 +36,26 @@ export function Canvas() {
         selectSection,
         deselectSection,
         reorderSections: reorderIframe,
-        updateSetting,
-        removeSection: removeIframeSection,
     } = useIframeBridge(iframeRef, handleIframeClick, handleIframeReady);
 
-    // ── 2. Full HTML Fetch (only on mount, add, or remove) ─────
-    const fetchFullPreview = useCallback(() => {
+    // ── 2. Create a stable key from blocks to detect ANY change ──
+    const blocksKey = useMemo(() => 
+        blocks.map(b => `${b.id}:${b.type}`).join('|'),
+        [blocks]
+    );
+
+    // ── 3. Full HTML Preview Fetch ─────────────────────────────
+    // Triggers on: mount, blocks change, preview template change
+    useEffect(() => {
         setLoading(true);
 
         let blocksToSend = [...blocks];
 
         // Merge live settings for the active block
-        if (activeBlock && settings) {
+        if (activeBlock && settings && Object.keys(settings).length > 0) {
             const idx = blocksToSend.findIndex(b => b.id === activeBlock.id);
             if (idx !== -1) {
-                blocksToSend[idx] = { ...blocksToSend[idx], settings: { ...settings } };
+                blocksToSend[idx] = { ...blocksToSend[idx], settings: { ...blocksToSend[idx].settings, ...settings } };
             }
         }
 
@@ -61,7 +64,7 @@ export function Canvas() {
             blocksToSend.push({
                 id: 'preview-insert',
                 type: previewTemplateId,
-                settings: { ...settings }
+                settings: {}
             });
         }
 
@@ -75,28 +78,40 @@ export function Canvas() {
             .then(data => {
                 if (data.html) {
                     setHtml(data.html);
-                    iframeReadyRef.current = false; // Reset — new srcDoc will re-init
+                    iframeReadyRef.current = false;
                 }
             })
-            .catch(console.error)
+            .catch(err => console.error('Preview fetch error:', err))
             .finally(() => setLoading(false));
-    }, [blocks, settings, activeBlock, previewTemplateId]);
+    }, [blocksKey, previewTemplateId]); // blocksKey = stable serialized key of all blocks
 
-    // ── 3. Trigger full re-fetch when blocks change structurally ──
-    useEffect(() => {
-        const currentLen = blocks.length;
-        // Always fetch on mount, or when sections are added/removed
-        fetchFullPreview();
-        prevBlocksLengthRef.current = currentLen;
-    }, [blocks.length, previewTemplateId]);
-
-    // ── 4. Debounced setting changes → re-fetch (for now) ──────
-    // Future: use postMessage for CSS variable injection only
+    // ── 4. Debounced setting changes → re-fetch ────────────────
     useEffect(() => {
         if (!activeBlock || !settings || Object.keys(settings).length === 0) return;
 
         const timer = setTimeout(() => {
-            fetchFullPreview();
+            setLoading(true);
+            const blocksToSend = blocks.map(b => {
+                if (b.id === activeBlock.id) {
+                    return { ...b, settings: { ...b.settings, ...settings } };
+                }
+                return b;
+            });
+
+            const form = new FormData();
+            form.append("blocks", JSON.stringify(blocksToSend));
+            form.append("activeBlockId", activeBlock.id);
+
+            fetch('/app/api/template-preview', { method: 'POST', body: form })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.html) {
+                        setHtml(data.html);
+                        iframeReadyRef.current = false;
+                    }
+                })
+                .catch(err => console.error('Settings preview error:', err))
+                .finally(() => setLoading(false));
         }, 400);
 
         return () => clearTimeout(timer);
@@ -113,13 +128,6 @@ export function Canvas() {
         }
         prevSelectedRef.current = selectedBlockId;
     }, [selectedBlockId, selectSection, deselectSection]);
-
-    // ── 6. Reorder sync → postMessage to iframe ────────────────
-    useEffect(() => {
-        if (!iframeReadyRef.current) return;
-        const order = blocks.map(b => b.id);
-        reorderIframe(order);
-    }, [blocks.map(b => b.id).join(',')]);
 
     // ── Render ─────────────────────────────────────────────────
     return (

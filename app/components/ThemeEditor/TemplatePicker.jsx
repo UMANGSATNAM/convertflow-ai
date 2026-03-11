@@ -3,7 +3,7 @@ import { useThemeEditor } from './ThemeEditorContext';
 import { getSectionsByCategory } from '../../lib/constants';
 
 export function TemplatePicker() {
-    const { categories, setActiveTab, addSection, setPreviewTemplateId } = useThemeEditor();
+    const { categories, setActiveTab, addSection, setPreviewTemplateId, previewTemplateId } = useThemeEditor();
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -23,6 +23,29 @@ export function TemplatePicker() {
     // Active category object
     const activeCategory = (categories || []).find(c => c.id === activeCategoryId);
 
+    // Handle clicking a section — show preview first
+    const handleSectionClick = (sec) => {
+        setPreviewTemplateId(sec.id);
+    };
+
+    // Handle confirming the add — inject into theme
+    const handleAddSection = (secId) => {
+        addSection(secId);
+        setPreviewTemplateId(null);
+        setActiveTab('sections');
+    };
+
+    // Handle going back — clear preview
+    const handleBack = () => {
+        setPreviewTemplateId(null);
+        if (activeCategoryId) {
+            setActiveCategoryId(null);
+            setSearchQuery('');
+        } else {
+            setActiveTab('sections');
+        }
+    };
+
     // -- Section Detail View --
     if (activeCategory) {
         return (
@@ -30,7 +53,7 @@ export function TemplatePicker() {
                 {/* Header with back button */}
                 <div className="p-3 border-b border-polaris-border flex items-center gap-2">
                     <button
-                        onClick={() => { setActiveCategoryId(null); setSearchQuery(''); }}
+                        onClick={handleBack}
                         className="text-polaris-subdued hover:text-polaris-text transition-colors"
                     >
                         <span className="material-symbols-outlined">arrow_back</span>
@@ -63,22 +86,47 @@ export function TemplatePicker() {
                     ) : (
                         <div className="p-2 space-y-1">
                             {filteredSections.map(sec => (
-                                <button
-                                    key={sec.id}
-                                    onClick={() => addSection(sec.id)}
-                                    onMouseEnter={() => setPreviewTemplateId(sec.id)}
-                                    onMouseLeave={() => setPreviewTemplateId(null)}
-                                    className="w-full flex items-center gap-3 p-2.5 hover:bg-polaris-bg rounded-lg group text-left transition-colors"
-                                >
-                                    <span className="material-symbols-outlined text-polaris-subdued group-hover:text-primary transition-colors">add_circle</span>
-                                    <div className="flex-1 min-w-0">
-                                        <span className="text-sm text-polaris-text block truncate">{sec.name}</span>
-                                    </div>
-                                </button>
+                                <div key={sec.id} className="flex items-center gap-1">
+                                    {/* Section name — click to preview */}
+                                    <button
+                                        onClick={() => handleSectionClick(sec)}
+                                        className={`flex-1 flex items-center gap-2 p-2.5 rounded-lg group text-left transition-colors ${
+                                            previewTemplateId === sec.id
+                                                ? 'bg-blue-50 border border-blue-200'
+                                                : 'hover:bg-polaris-bg'
+                                        }`}
+                                    >
+                                        <span className={`material-symbols-outlined transition-colors ${
+                                            previewTemplateId === sec.id ? 'text-primary' : 'text-polaris-subdued group-hover:text-primary'
+                                        }`}>visibility</span>
+                                        <span className="text-sm text-polaris-text truncate">{sec.name}</span>
+                                    </button>
+                                    
+                                    {/* Add button */}
+                                    <button
+                                        onClick={() => handleAddSection(sec.id)}
+                                        className="p-2 text-polaris-subdued hover:text-primary hover:bg-polaris-bg rounded-lg transition-colors shrink-0"
+                                        title="Add to page"
+                                    >
+                                        <span className="material-symbols-outlined">add_circle</span>
+                                    </button>
+                                </div>
                             ))}
                         </div>
                     )}
                 </div>
+
+                {/* Selected template action bar */}
+                {previewTemplateId && (
+                    <div className="p-3 border-t border-polaris-border bg-blue-50">
+                        <button
+                            onClick={() => handleAddSection(previewTemplateId)}
+                            className="w-full bg-primary text-black py-2 text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                        >
+                            + Add this section
+                        </button>
+                    </div>
+                )}
             </aside>
         );
     }
@@ -89,7 +137,7 @@ export function TemplatePicker() {
             {/* Header */}
             <div className="p-3 border-b border-polaris-border flex items-center gap-2">
                 <button
-                    onClick={() => setActiveTab('sections')}
+                    onClick={handleBack}
                     className="text-polaris-subdued hover:text-polaris-text transition-colors"
                 >
                     <span className="material-symbols-outlined">arrow_back</span>
