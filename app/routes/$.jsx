@@ -1,16 +1,11 @@
-import { json } from "@remix-run/node";
-
 /**
  * Catch-all "splat" route.
- * Handles rogue requests like "/&" that come from Shopify's embedded
- * auth redirects or malformed query strings.  Instead of crashing with
- * "No route matches URL", we return a silent 404.
+ * Silently absorbs rogue requests like "/&" that come from
+ * Shopify's embedded auth redirects. Returns an empty 200
+ * so nothing is logged to the console.
  */
-export const loader = async ({ request }) => {
-    const url = new URL(request.url);
-    console.warn(`[Splat Route] Caught unmatched URL: ${url.pathname}`);
-    // Return a 404 silently so the app doesn't crash
-    throw new Response("Not Found", { status: 404 });
+export const loader = async () => {
+    return new Response("", { status: 200 });
 };
 
 export default function CatchAll() {
