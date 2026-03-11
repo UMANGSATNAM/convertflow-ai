@@ -30,6 +30,7 @@ export function Canvas() {
         templateFile,
         fetcher,
         lastSavedAt,
+        themeId,
     } = useThemeEditor();
 
     const iframeRef = useRef(null);
@@ -61,7 +62,9 @@ export function Canvas() {
         iframeReadyRef.current = false;
 
         const pageParam = templateFile?.includes('product') ? 'product' : 'home';
-        const proxyUrl = `/app/api/storefront-proxy?page=${pageParam}&t=${Date.now()}`;
+        // Pass themeId so proxy uses ?preview_theme_id (exact theme being edited)
+        const themeParam = themeId ? `&themeId=${encodeURIComponent(themeId)}` : '';
+        const proxyUrl = `/app/api/storefront-proxy?page=${pageParam}${themeParam}&t=${Date.now()}`;
 
         fetch(proxyUrl, { signal: controller.signal })
             .then(res => {

@@ -25,11 +25,18 @@ export const loader = async ({ request }) => {
   const url = new URL(request.url);
   const page = url.searchParams.get("page") || "home";
   const activeBlockId = url.searchParams.get("activeBlockId") || "";
+  const themeId = url.searchParams.get("themeId") || "";
   const STOREFRONT_PASSWORD = "1";
 
   const pathMap = { home: "/", product: "/products", collection: "/collections/all", cart: "/cart" };
   const storefrontBase = `https://${shop}`;
-  const storefrontUrl = `${storefrontBase}${pathMap[page] || "/"}`;
+
+  // ?preview_theme_id= loads the EXACT theme being edited (not the published one)
+  // This is how Shopify's own theme editor works — also bypasses storefront password!
+  const previewSuffix = themeId ? `?preview_theme_id=${themeId}` : "";
+  const storefrontUrl = `${storefrontBase}${pathMap[page] || "/"}${previewSuffix}`;
+
+  console.log("[proxy] Fetching:", storefrontUrl);
 
   // ── Helper: get ALL Set-Cookie header values (Node 18+ getSetCookie) ──
   function getAllSetCookies(headers) {
