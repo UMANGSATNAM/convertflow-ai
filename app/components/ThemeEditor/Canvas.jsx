@@ -56,7 +56,9 @@ export function Canvas() {
     useEffect(() => {
         // Map templateFile to page param
         const pageParam = templateFile?.includes('product') ? 'product' : 'home';
-        const url = `/app/api/storefront-proxy?page=${pageParam}&t=${Date.now()}`;
+        // Pass shop so the proxy knows which storefront to fetch (no admin auth needed)
+        const shopParam = shop ? `&shop=${encodeURIComponent(shop)}` : '';
+        const url = `/app/api/storefront-proxy?page=${pageParam}${shopParam}&t=${Date.now()}`;
         setProxyUrl(url);
         setLoading(true);
         iframeReadyRef.current = false;
