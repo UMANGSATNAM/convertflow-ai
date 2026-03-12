@@ -211,13 +211,20 @@ const useEditorStore = create(
         setSwapTargetId:      (v) => set({ swapTargetId: v }),
         setSelectedBlockType: (v) => set({ selectedBlockType: v }),
 
-        /**
-         * Select a section/block in the sidebar.
-         * Also syncs the settings form with the selected block's settings.
-         */
         setSelectedBlockId: (blockId) => {
             const blocks = get().getActiveBlocks();
-            const block = blocks.find(b => b.id === blockId);
+            let block = blocks.find(b => b.id === blockId);
+            
+            // Search inside nested blocks if not found at top level
+            if (!block) {
+                for (const sec of blocks) {
+                    if (sec.blocks && sec.blocks[blockId]) {
+                        block = sec.blocks[blockId];
+                        break;
+                    }
+                }
+            }
+
             set({
                 selectedBlockId: blockId,
                 settings: block?.settings || {},

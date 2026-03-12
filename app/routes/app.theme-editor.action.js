@@ -48,6 +48,9 @@ function buildPageBlocks(idx) {
         id,
         type: sections[id]?.type || id,
         settings: sections[id]?.settings || {},
+        blocks: sections[id]?.blocks || {},
+        block_order: sections[id]?.block_order || [],
+        disabled: sections[id]?.disabled || false,
         isCf: id.startsWith('cf_'),
     }));
 }

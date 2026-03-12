@@ -60,17 +60,71 @@ function SectionIcon({ type, active }) {
     );
 }
 
-// ── Block row item ───────────────────────────────────────────────
-function BlockItem({ block, isActive, formatName, onSelect, onSwap, onDelete, onInsertAfter, dragHandleProps = {} }) {
+// ── Child Block Item ─────────────────────────────────────────────
+function SubBlockItem({ blockKey, block, isActive, formatName, onSelect, dragHandleProps = {} }) {
     const [hovered, setHovered] = useState(false);
     const { listeners, attributes } = dragHandleProps;
 
     return (
+        <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+            <div
+                onClick={(e) => { e.stopPropagation(); onSelect(); }}
+                style={{
+                    display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px 6px 42px',
+                    cursor: 'pointer', userSelect: 'none',
+                    background: isActive ? '#eef2ff' : hovered ? '#f9fafb' : 'transparent',
+                    borderLeft: isActive ? '3px solid #4f46e5' : '3px solid transparent',
+                    transition: 'all 0.1s',
+                }}
+            >
+                {/* Drag handle */}
+                <div {...listeners} {...attributes} style={{ cursor: 'grab', color: hovered && !isActive ? '#9ca3af' : 'transparent', flexShrink: 0, display: 'flex', alignItems: 'center', transition: 'color 0.1s' }}>
+                    <svg width="10" height="14" viewBox="0 0 8 16" fill="currentColor">
+                        <circle cx="2" cy="3" r="1.2"/><circle cx="6" cy="3" r="1.2"/>
+                        <circle cx="2" cy="8" r="1.2"/><circle cx="6" cy="8" r="1.2"/>
+                        <circle cx="2" cy="13" r="1.2"/><circle cx="6" cy="13" r="1.2"/>
+                    </svg>
+                </div>
+                
+                <div style={{ width: 5, height: 5, borderRadius: '50%', background: isActive ? '#4f46e5' : '#d1d5db', flexShrink: 0 }} />
+
+                <span style={{ fontSize: 12, fontWeight: isActive ? 600 : 500, color: isActive ? '#4f46e5' : '#4b5563', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                   {block.settings?.heading || block.settings?.title || formatName(block.type)}
+                </span>
+            </div>
+        </div>
+    );
+}
+
+function SortableSubBlockItem(props) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: props.blockKey });
+    return (
+        <div ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1, position: 'relative', zIndex: isDragging ? 2 : 1 }}>
+            <SubBlockItem {...props} dragHandleProps={{ listeners, attributes }} />
+        </div>
+    );
+}
+
+// ── Block row item ───────────────────────────────────────────────
+function BlockItem({ block, selectedBlockId, formatName, onSelectSection, onSelectBlock, onSwap, onDelete, onInsertAfter, onReorderBlocks, dragHandleProps = {} }) {
+    const [hovered, setHovered] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    const { listeners, attributes } = dragHandleProps;
+
+    const isActive = selectedBlockId === block.id;
+    const hasBlocks = block.block_order && block.block_order.length > 0;
+    
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    );
+
+    return (
         <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{ animation: 'cf-fade-in 0.2s ease' }}>
             <div
-                onClick={onSelect}
+                onClick={onSelectSection}
                 style={{
-                    display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px',
+                    display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px',
                     borderRadius: 10, cursor: 'pointer', userSelect: 'none',
                     background: isActive
                         ? 'linear-gradient(135deg, #4f46e5, #2563eb)'
@@ -86,6 +140,24 @@ function BlockItem({ block, isActive, formatName, onSelect, onSwap, onDelete, on
                         <circle cx="2" cy="8" r="1.2"/><circle cx="6" cy="8" r="1.2"/>
                         <circle cx="2" cy="13" r="1.2"/><circle cx="6" cy="13" r="1.2"/>
                     </svg>
+                </div>
+                
+                {/* Expand/Collapse Chevron (if blocks exist) */}
+                <div style={{ width: 14, height: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {hasBlocks && (
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); setExpanded(e => !e); }}
+                            style={{ 
+                                background: 'none', border: 'none', padding: 2, cursor: 'pointer', 
+                                color: isActive ? '#e0e7ff' : '#9ca3af',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                        >
+                           <svg width="10" height="10" viewBox="0 0 20 20" fill="currentColor" style={{ transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                               <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"/>
+                           </svg>
+                        </button>
+                    )}
                 </div>
 
                 {/* Section icon */}
@@ -122,6 +194,34 @@ function BlockItem({ block, isActive, formatName, onSelect, onSwap, onDelete, on
                     </button>
                 </div>
             </div>
+            
+            {/* Expanded Child Blocks */}
+            {hasBlocks && expanded && (
+                <div style={{ marginTop: 2, marginBottom: 4 }}>
+                    <DndContext 
+                        sensors={sensors} 
+                        collisionDetection={closestCenter} 
+                        onDragEnd={(e) => onReorderBlocks(block.id, e)}
+                    >
+                        <SortableContext items={block.block_order} strategy={verticalListSortingStrategy}>
+                            {block.block_order.map(key => {
+                                const childBlock = block.blocks[key];
+                                if (!childBlock) return null;
+                                return (
+                                    <SortableSubBlockItem 
+                                        key={key} 
+                                        blockKey={key} 
+                                        block={childBlock} 
+                                        isActive={selectedBlockId === key}
+                                        formatName={formatName}
+                                        onSelect={() => onSelectBlock(key)}
+                                    />
+                                );
+                            })}
+                        </SortableContext>
+                    </DndContext>
+                </div>
+            )}
 
             {/* Insert between divider */}
             {hovered && (
@@ -181,9 +281,11 @@ export function SidebarLeft() {
     const templateFile     = useEditorStore(selectTemplateFile);
     const setBlocks        = useEditorStore(s => s.setBlocks);
     const setSelectedBlockId = useEditorStore(s => s.setSelectedBlockId);
+    const setSelectedBlockType = useEditorStore(s => s.setSelectedBlockType);
     const setActiveTab     = useEditorStore(s => s.setActiveTab);
     const setTemplateFile  = useEditorStore(s => s.setTemplateFile);
     const reorderSections  = useEditorStore(s => s.reorderSections);
+    const reorderBlocks    = useEditorStore(s => s.reorderBlocks);
     const setInsertTargetId = useEditorStore(s => s.setInsertTargetId);
     const setSwapTargetId  = useEditorStore(s => s.setSwapTargetId);
     const removeSection    = useEditorStore(s => s.removeSection);
@@ -255,9 +357,28 @@ export function SidebarLeft() {
 
     const blockProps = (block) => ({
         block,
-        isActive: selectedBlockId === block.id,
+        selectedBlockId,
         formatName,
-        onSelect: () => setSelectedBlockId(block.id),
+        onSelectSection: () => {
+            setSelectedBlockType('section');
+            setSelectedBlockId(block.id);
+        },
+        onSelectBlock: (childBlockId) => {
+            setSelectedBlockType('block');
+            setSelectedBlockId(childBlockId);
+        },
+        onReorderBlocks: (sectionId, { active, over }) => {
+            if (!over || active.id === over.id) return;
+            const sec = blocks.find(b => b.id === sectionId);
+            if (!sec) return;
+            
+            const o = sec.block_order.indexOf(active.id);
+            const n = sec.block_order.indexOf(over.id);
+            const reordered = arrayMove(sec.block_order, o, n);
+            
+            reorderBlocks(sectionId, reordered);
+            setBlocks(items => items.map(b => b.id === sectionId ? { ...b, block_order: reordered } : b));
+        },
         onSwap: () => handleSwap(block.id),
         onDelete: () => handleDelete(block.id),
         onInsertAfter: () => handleInsertAfter(block.id),
