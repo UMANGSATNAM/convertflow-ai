@@ -2,13 +2,13 @@
  * AddSectionPopover.jsx — PREMIUM SECTION PICKER
  * ═══════════════════════════════════════════════════════════════
  *
- * This is the Phase 3 "killer feature" — a Shopify-style popover
- * that appears when the merchant clicks "+ Add section" or "Swap".
+ * Phase 4 upgrade: Live Visual Preview in the hover flyout
  *
  * Features:
  *  ✅ Category tabs on the left (scrollable)
  *  ✅ Section cards on the right with search
- *  ✅ Hover flyout preview box (200ms delay, fades in)
+ *  ✅ LIVE hover flyout preview (visual mockup per category)
+ *  ✅ Section metadata + tags in preview
  *  ✅ Context-aware filtering (swap vs insert vs add)
  *  ✅ Keyboard navigation (Esc to close)
  *  ✅ Smooth open/close animations
@@ -23,9 +23,8 @@ import useEditorStore, {
     selectSwapTargetId, selectActiveTab,
 } from './useEditorStore';
 import { getSectionsByCategory, SECTION_CATEGORIES, SECTION_FILES } from '../../lib/constants';
-import { PAGE_TEMPLATES } from '../../lib/page-templates';
 
-// ── Category icons (inline SVGs for zero dependencies) ───────
+// ── Category icons ───────────────────────────────────────────
 const CATEGORY_ICONS = {
     'cro-home': '🎯', 'cro-product': '🛒', header: '📐', marquee: '📢',
     promo: '🖼️', snack: '🏷️', category: '📦', feature: '🛍️',
@@ -39,15 +38,157 @@ const CATEGORY_COLORS = {
     announcement: '#eab308', hero: '#7c3aed', footer: '#6b7280',
 };
 
+// ── Section preview mockups (visual layouts per category) ────
+const LAYOUT_MOCKUPS = {
+    hero: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1, background: `linear-gradient(135deg, ${color}18, ${color}35)`, display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12 }}>
+                <div style={{ flex: 1 }}>
+                    <div style={{ height: 8, width: '70%', background: `${color}40`, borderRadius: 4, marginBottom: 6 }} />
+                    <div style={{ height: 6, width: '50%', background: `${color}25`, borderRadius: 3, marginBottom: 10 }} />
+                    <div style={{ height: 18, width: 52, background: color, borderRadius: 5, opacity: 0.7 }} />
+                </div>
+                <div style={{ width: 60, height: 50, background: `${color}20`, borderRadius: 8, flexShrink: 0 }} />
+            </div>
+        </div>
+    ),
+    header: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ height: 14, background: `${color}12`, display: 'flex', alignItems: 'center', padding: '0 10px', gap: 6 }}>
+                <div style={{ width: 20, height: 6, background: `${color}30`, borderRadius: 2 }} />
+                <div style={{ flex: 1 }} />
+                {[1,2,3].map(i => <div key={i} style={{ width: 16, height: 4, background: `${color}20`, borderRadius: 2 }} />)}
+            </div>
+            <div style={{ flex: 1, background: `linear-gradient(180deg, ${color}08, transparent)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '60%', height: 6, background: `${color}18`, borderRadius: 3 }} />
+            </div>
+        </div>
+    ),
+    announcement: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ height: 18, background: `linear-gradient(90deg, ${color}30, ${color}50)`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                <div style={{ width: 40, height: 5, background: '#fff', borderRadius: 2, opacity: 0.7 }} />
+                <div style={{ width: 5, height: 5, background: '#fff', borderRadius: '50%', opacity: 0.5 }} />
+            </div>
+            <div style={{ flex: 1, background: '#f9fafb' }} />
+        </div>
+    ),
+    marquee: (color) => (
+        <div style={{ width: '100%', height: '100%', background: `${color}08`, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', overflow: 'hidden' }}>
+            {[1,2,3,4,5].map(i => (
+                <div key={i} style={{ width: 40, height: 20, background: `${color}15`, borderRadius: 6, flexShrink: 0, border: `1px solid ${color}20` }} />
+            ))}
+        </div>
+    ),
+    promo: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', gap: 6, padding: 8, background: '#fafafa' }}>
+            <div style={{ flex: 1, background: `linear-gradient(135deg, ${color}15, ${color}30)`, borderRadius: 8 }} />
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4, justifyContent: 'center', padding: '0 6px' }}>
+                <div style={{ height: 6, width: '80%', background: `${color}30`, borderRadius: 3 }} />
+                <div style={{ height: 5, width: '60%', background: `${color}18`, borderRadius: 3 }} />
+                <div style={{ height: 14, width: 40, background: color, borderRadius: 4, opacity: 0.6, marginTop: 4 }} />
+            </div>
+        </div>
+    ),
+    feature: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: 8, background: '#fafafa', gap: 6 }}>
+            <div style={{ height: 6, width: '40%', background: `${color}30`, borderRadius: 3, alignSelf: 'center' }} />
+            <div style={{ flex: 1, display: 'flex', gap: 4 }}>
+                {[1,2,3].map(i => (
+                    <div key={i} style={{ flex: 1, background: `${color}10`, borderRadius: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3, border: `1px solid ${color}15` }}>
+                        <div style={{ width: 14, height: 14, background: `${color}20`, borderRadius: 4 }} />
+                        <div style={{ width: '60%', height: 3, background: `${color}20`, borderRadius: 2 }} />
+                    </div>
+                ))}
+            </div>
+        </div>
+    ),
+    category: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', padding: 8, background: '#fafafa', gap: 4 }}>
+            <div style={{ height: 5, width: '50%', background: `${color}25`, borderRadius: 3, alignSelf: 'center' }} />
+            <div style={{ flex: 1, display: 'flex', gap: 4, alignItems: 'center', justifyContent: 'center' }}>
+                {[1,2,3,4].map(i => (
+                    <div key={i} style={{ width: 28, height: 28, background: `${color}15`, borderRadius: '50%', border: `1.5px solid ${color}25` }} />
+                ))}
+            </div>
+        </div>
+    ),
+    trust: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '0 12px', background: `${color}06` }}>
+            {[1,2,3].map(i => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <div style={{ width: 12, height: 12, background: `${color}25`, borderRadius: '50%' }} />
+                    <div style={{ width: 22, height: 4, background: `${color}18`, borderRadius: 2 }} />
+                </div>
+            ))}
+        </div>
+    ),
+    snack: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', gap: 6, padding: 8, background: '#fafafa' }}>
+            {[1,2].map(i => (
+                <div key={i} style={{ flex: 1, background: `${color}10`, borderRadius: 8, display: 'flex', flexDirection: 'column', padding: 6, gap: 4, border: `1px solid ${color}15` }}>
+                    <div style={{ flex: 1, background: `${color}15`, borderRadius: 4 }} />
+                    <div style={{ height: 4, width: '70%', background: `${color}20`, borderRadius: 2 }} />
+                    <div style={{ height: 3, width: '50%', background: `${color}12`, borderRadius: 2 }} />
+                </div>
+            ))}
+        </div>
+    ),
+    footer: (color) => (
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1 }} />
+            <div style={{ height: '60%', background: `${color}12`, padding: '8px 12px', display: 'flex', gap: 8 }}>
+                {[1,2,3].map(i => (
+                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        <div style={{ height: 4, width: '60%', background: `${color}25`, borderRadius: 2 }} />
+                        <div style={{ height: 3, width: '80%', background: `${color}15`, borderRadius: 2 }} />
+                        <div style={{ height: 3, width: '50%', background: `${color}15`, borderRadius: 2 }} />
+                    </div>
+                ))}
+            </div>
+        </div>
+    ),
+};
+
+function getLayoutMockup(category, color) {
+    const catKey = category?.toLowerCase() || '';
+    for (const [key, fn] of Object.entries(LAYOUT_MOCKUPS)) {
+        if (catKey.includes(key)) return fn(color);
+    }
+    // Default: generic section mockup
+    return LAYOUT_MOCKUPS.promo(color);
+}
+
+// ── Section tags based on name/category ──────────────────────
+function getSectionTags(section) {
+    const tags = [];
+    const n = (section.name || '').toLowerCase();
+    const c = (section.category || '').toLowerCase();
+
+    if (n.includes('slider') || n.includes('carousel') || n.includes('swiper')) tags.push('Slider');
+    if (n.includes('grid')) tags.push('Grid');
+    if (n.includes('video')) tags.push('Video');
+    if (n.includes('countdown') || n.includes('timer')) tags.push('Timer');
+    if (n.includes('review') || n.includes('testimonial')) tags.push('Reviews');
+    if (n.includes('tab')) tags.push('Tabs');
+    if (n.includes('accordion') || n.includes('faq')) tags.push('FAQ');
+    if (n.includes('popup') || n.includes('modal')) tags.push('Popup');
+    if (n.includes('sticky') || n.includes('floating')) tags.push('Sticky');
+    if (c.includes('cro')) tags.push('CRO');
+
+    return tags.slice(0, 3); // Max 3 tags
+}
+
 // ═══════════════════════════════════════════════════════════════
-//  HOVER PREVIEW BOX (floats next to hovered item)
+//  HOVER PREVIEW BOX — Phase 4 upgrade with visual mockup
 // ═══════════════════════════════════════════════════════════════
 function HoverPreviewBox({ sectionId, sectionName, category, anchorRect, containerRect }) {
     if (!sectionId || !anchorRect || !containerRect) return null;
 
-    // Position the preview box to the right of the popover
-    const top = Math.max(8, Math.min(anchorRect.top - containerRect.top - 20, containerRect.height - 220));
+    const top = Math.max(8, Math.min(anchorRect.top - containerRect.top - 20, containerRect.height - 280));
     const color = CATEGORY_COLORS[category] || '#6b7280';
+    const tags = getSectionTags({ name: sectionName, category, id: sectionId });
+    const catInfo = SECTION_CATEGORIES.find(c => c.id === category);
 
     return (
         <div style={{
@@ -55,52 +196,72 @@ function HoverPreviewBox({ sectionId, sectionName, category, anchorRect, contain
             top,
             left: '100%',
             marginLeft: 12,
-            width: 280,
+            width: 300,
             background: '#fff',
-            borderRadius: 14,
+            borderRadius: 16,
             border: '1px solid #e5e7eb',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.15), 0 4px 20px rgba(0,0,0,0.08)',
+            boxShadow: '0 25px 60px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.08)',
             overflow: 'hidden',
             animation: 'cfPopIn 0.2s ease',
             zIndex: 200,
             pointerEvents: 'none',
         }}>
-            {/* Preview placeholder with gradient */}
+            {/* VISUAL MOCKUP — live layout preview */}
             <div style={{
-                height: 140,
-                background: `linear-gradient(135deg, ${color}15, ${color}30)`,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8,
+                height: 110,
+                position: 'relative',
+                overflow: 'hidden',
                 borderBottom: '1px solid #f3f4f6',
             }}>
+                {getLayoutMockup(category, color)}
+
+                {/* Category badge overlay */}
                 <div style={{
-                    width: 48, height: 48, borderRadius: 14,
-                    background: `linear-gradient(135deg, ${color}20, ${color}40)`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 22,
+                    position: 'absolute', top: 8, left: 8,
+                    display: 'flex', alignItems: 'center', gap: 5,
+                    padding: '3px 8px 3px 6px',
+                    background: 'rgba(255,255,255,0.92)',
+                    backdropFilter: 'blur(8px)',
+                    borderRadius: 6,
+                    border: '1px solid rgba(0,0,0,0.06)',
                 }}>
-                    {CATEGORY_ICONS[category] || '📦'}
+                    <span style={{ fontSize: 11 }}>{CATEGORY_ICONS[category] || '📦'}</span>
+                    <span style={{ fontSize: 9, fontWeight: 700, color, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        {(category || '').replace(/-/g, ' ')}
+                    </span>
                 </div>
-                <span style={{ fontSize: 11, color: color, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                    Preview
-                </span>
             </div>
 
-            {/* Info strip */}
+            {/* INFO SECTION */}
             <div style={{ padding: '12px 16px' }}>
-                <h4 style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 700, color: '#111827' }}>{sectionName}</h4>
-                <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>
-                    {SECTION_CATEGORIES.find(c => c.id === category)?.description || 'ConvertFlow section'}
+                <h4 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 700, color: '#111827' }}>{sectionName}</h4>
+                <p style={{ margin: '0 0 8px', fontSize: 11, color: '#9ca3af', lineHeight: 1.4 }}>
+                    {catInfo?.description || 'Premium ConvertFlow section'}
                 </p>
+
+                {/* Tags */}
+                {tags.length > 0 && (
+                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+                        {tags.map(tag => (
+                            <span key={tag} style={{
+                                fontSize: 9, fontWeight: 600, color: `${color}cc`,
+                                background: `${color}12`, padding: '2px 7px',
+                                borderRadius: 4, letterSpacing: '0.02em',
+                            }}>{tag}</span>
+                        ))}
+                    </div>
+                )}
+
+                {/* Add CTA */}
                 <div style={{
-                    marginTop: 10, display: 'flex', alignItems: 'center', gap: 6,
-                    padding: '6px 10px', background: '#f9fafb', borderRadius: 8,
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    padding: '7px 10px', background: `${color}08`,
+                    borderRadius: 8, border: `1px solid ${color}15`,
                 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} />
-                    <span style={{ fontSize: 10, color: '#6b7280', fontWeight: 500 }}>Click to add to your page</span>
+                    <svg width="12" height="12" viewBox="0 0 20 20" fill={color}>
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/>
+                    </svg>
+                    <span style={{ fontSize: 11, color, fontWeight: 600 }}>Click to add to your page</span>
                 </div>
             </div>
         </div>
@@ -112,6 +273,7 @@ function HoverPreviewBox({ sectionId, sectionName, category, anchorRect, contain
 // ═══════════════════════════════════════════════════════════════
 function SectionCard({ section, isSwapMode, onAdd, onHover, onLeave, isHovered }) {
     const color = CATEGORY_COLORS[section.category] || '#6b7280';
+    const tags = getSectionTags(section);
 
     return (
         <div
@@ -130,18 +292,18 @@ function SectionCard({ section, isSwapMode, onAdd, onHover, onLeave, isHovered }
                 transition: 'all 0.15s',
             }}
         >
-            {/* Icon */}
+            {/* Mini preview thumbnail */}
             <div style={{
-                width: 32, height: 32, borderRadius: 9,
-                background: `linear-gradient(135deg, ${color}15, ${color}25)`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0, fontSize: 14, transition: 'transform 0.15s',
-                transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+                width: 40, height: 32, borderRadius: 7, overflow: 'hidden',
+                background: `linear-gradient(135deg, ${color}10, ${color}20)`,
+                flexShrink: 0, transition: 'transform 0.15s',
+                transform: isHovered ? 'scale(1.06)' : 'scale(1)',
+                border: `1px solid ${color}15`,
             }}>
-                {CATEGORY_ICONS[section.category] || '📦'}
+                {getLayoutMockup(section.category, color)}
             </div>
 
-            {/* Name + niche tag */}
+            {/* Name + tags */}
             <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{
                     fontSize: 12.5, fontWeight: 600, color: '#1f2937',
@@ -149,6 +311,13 @@ function SectionCard({ section, isSwapMode, onAdd, onHover, onLeave, isHovered }
                 }}>
                     {section.name}
                 </div>
+                {tags.length > 0 && (
+                    <div style={{ display: 'flex', gap: 3, marginTop: 2 }}>
+                        {tags.slice(0, 2).map(tag => (
+                            <span key={tag} style={{ fontSize: 8, fontWeight: 600, color: '#9ca3af', background: '#f3f4f6', padding: '1px 4px', borderRadius: 3 }}>{tag}</span>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Add button (visible on hover) */}
@@ -221,7 +390,6 @@ export function AddSectionPopover({ open, onClose, mode = 'add' }) {
     // All sections, filtered
     const allSections = useMemo(() => {
         if (activeCat) return getSectionsByCategory(activeCat);
-        // Show all sections when no category selected
         return Object.entries(SECTION_FILES).map(([id, meta]) => ({ id, ...meta }));
     }, [activeCat]);
 
@@ -281,7 +449,7 @@ export function AddSectionPopover({ open, onClose, mode = 'add' }) {
                 position: 'fixed',
                 top: '50%', left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: 680, maxHeight: '80vh',
+                width: 720, maxHeight: '80vh',
                 background: '#fff',
                 borderRadius: 18,
                 border: '1px solid #e5e7eb',
@@ -317,7 +485,7 @@ export function AddSectionPopover({ open, onClose, mode = 'add' }) {
                             {isSwapMode ? 'Swap Section' : insertTargetId ? 'Insert Section' : 'Add Section'}
                         </h3>
                         <p style={{ margin: '2px 0 0', fontSize: 11, color: '#9ca3af' }}>
-                            {isSwapMode ? 'Choose a replacement section' : `${Object.keys(SECTION_FILES).length}+ premade sections available`}
+                            {isSwapMode ? 'Choose a replacement section' : `${Object.keys(SECTION_FILES).length}+ premade sections · Hover to preview`}
                         </p>
                     </div>
                     <button onClick={onClose} style={{
