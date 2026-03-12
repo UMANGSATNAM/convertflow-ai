@@ -18,7 +18,6 @@ export const loader = async ({ request }) => {
     const theme = await getActiveTheme(shop, accessToken);
     if (!theme) return json({ error: "No active theme found" });
 
-    // Determine which template to load (default: index.json)
     const url = new URL(request.url);
     const templateParam = url.searchParams.get('template') || 'index';
     const templateFile = templateParam === 'product' ? 'templates/product.json' : 'templates/index.json';
@@ -68,94 +67,99 @@ export default function ThemeEditorV2Shell() {
 }
 
 function ThemeEditorApp() {
-    const { device, setDevice, saveSettings, selectedBlockId, activeBlock, themeName } = useThemeEditor();
+    const { device, setDevice, saveSettings, selectedBlockId, activeBlock, themeName, blocks } = useThemeEditor();
     const navigate = useNavigate();
 
-    const handleSave = () => {
-        saveSettings();
-    };
-
-    const handleExit = () => {
-        navigate('/app');
-    };
-
     return (
-        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden h-screen flex flex-col font-display">
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-            <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                .sidebar-scroll::-webkit-scrollbar { width: 4px; }
-                .sidebar-scroll::-webkit-scrollbar-thumb { background: #DFE3E8; border-radius: 10px; }
-                .material-symbols-outlined { font-size: 20px; vertical-align: middle; }
-                `
-            }}></style>
-
-            {/* Top Navigation Bar */}
-            <header className="h-12 bg-polaris-nav flex items-center justify-between px-3 shrink-0 z-50">
-                <div className="flex items-center gap-3">
-                    <button 
-                        onClick={handleExit}
-                        className="text-white hover:bg-white/10 p-1.5 rounded transition-colors flex items-center gap-2"
+        <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', background: '#f4f6f8' }}>
+            {/* ─── TOP BAR ─── */}
+            <header style={{
+                height: 52,
+                background: '#fff',
+                borderBottom: '1px solid #ebebeb',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 12px',
+                flexShrink: 0,
+                zIndex: 100,
+                gap: 8,
+            }}>
+                {/* LEFT: Exit + Theme Name */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, minWidth: 200 }}>
+                    <button
+                        onClick={() => navigate('/app')}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, border: 'none', background: 'none', cursor: 'pointer', borderRadius: 6, color: '#303030' }}
+                        title="Exit editor"
                     >
-                        <span className="material-symbols-outlined">arrow_back</span>
-                        <span className="text-sm font-medium">Exit</span>
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.56l3.22 3.22a.75.75 0 11-1.06 1.06l-4.5-4.5a.75.75 0 010-1.06l4.5-4.5a.75.75 0 011.06 1.06L5.56 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" /></svg>
                     </button>
-                    <div className="h-6 w-px bg-white/20 mx-1"></div>
-                    <div className="flex items-center gap-2 text-white/90">
-                        <span className="text-xs font-semibold uppercase tracking-wider">{themeName || 'Dawn'}</span>
-                        <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded">Live</span>
+                    <div style={{ width: 1, height: 20, background: '#ebebeb', margin: '0 4px' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', padding: '4px 6px', borderRadius: 6 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: '#202223' }}>{themeName || 'Dawn'}</span>
+                        <span style={{ fontSize: 11, background: '#d1e8d1', color: '#0d6e3d', padding: '2px 7px', borderRadius: 10, fontWeight: 600 }}>Live</span>
+                        <svg width="12" height="12" viewBox="0 0 20 20" fill="#6d7175"><path fillRule="evenodd" d="M5.22 8.22a.75.75 0 000 1.06l4.25 4.25a.75.75 0 001.06 0l4.25-4.25a.75.75 0 00-1.06-1.06L10 11.94 6.28 8.22a.75.75 0 00-1.06 0z" /></svg>
                     </div>
+                    <div style={{ width: 1, height: 20, background: '#ebebeb', margin: '0 4px' }} />
+                    <button style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', border: 'none', background: 'none', cursor: 'pointer', borderRadius: 6, fontSize: 13, color: '#303030', fontWeight: 500 }}>
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" /></svg>
+                        Home page
+                        <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.22 8.22a.75.75 0 000 1.06l4.25 4.25a.75.75 0 001.06 0l4.25-4.25a.75.75 0 00-1.06-1.06L10 11.94 6.28 8.22a.75.75 0 00-1.06 0z" /></svg>
+                    </button>
                 </div>
 
-                {/* Viewport Switcher */}
-                <div className="flex items-center bg-white/10 rounded-lg p-0.5 border border-white/10">
-                    <button 
+                {/* CENTER: Viewport Switcher */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 2, background: '#f1f2f4', borderRadius: 8, padding: 3 }}>
+                    <button
                         onClick={() => setDevice('desktop')}
-                        className={`px-3 py-1 rounded-md text-white shadow-sm transition-colors ${device === 'desktop' ? 'bg-white/20' : 'text-white/60 hover:text-white'}`}
+                        title="Desktop"
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 30, border: 'none', borderRadius: 6, cursor: 'pointer', background: device === 'desktop' ? '#fff' : 'transparent', boxShadow: device === 'desktop' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', color: device === 'desktop' ? '#202223' : '#6d7175', transition: 'all 0.15s' }}
                     >
-                        <span className="material-symbols-outlined">desktop_windows</span>
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor"><path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2H9.5l.5 2H11.5a.75.75 0 010 1.5h-3a.75.75 0 010-1.5H9.5l.5-2H4a2 2 0 01-2-2V5zm2-.5a.5.5 0 00-.5.5v7a.5.5 0 00.5.5h12a.5.5 0 00.5-.5V5a.5.5 0 00-.5-.5H4z" /></svg>
                     </button>
-                    <button 
+                    <button
                         onClick={() => setDevice('mobile')}
-                        className={`px-3 py-1 rounded-md text-white shadow-sm transition-colors ${device === 'mobile' ? 'bg-white/20' : 'text-white/60 hover:text-white'}`}
+                        title="Mobile"
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 30, border: 'none', borderRadius: 6, cursor: 'pointer', background: device === 'mobile' ? '#fff' : 'transparent', boxShadow: device === 'mobile' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', color: device === 'mobile' ? '#202223' : '#6d7175', transition: 'all 0.15s' }}
                     >
-                        <span className="material-symbols-outlined">smartphone</span>
-                    </button>
-                    <button className="px-3 py-1 text-white/60 hover:text-white">
-                        <span className="material-symbols-outlined">fullscreen</span>
+                        <svg width="15" height="18" viewBox="0 0 14 20" fill="currentColor"><path d="M4 0a2 2 0 00-2 2v16a2 2 0 002 2h6a2 2 0 002-2V2a2 2 0 00-2-2H4zm0 1.5h6a.5.5 0 01.5.5v16a.5.5 0 01-.5.5H4a.5.5 0 01-.5-.5V2a.5.5 0 01.5-.5zm3 14.5a.75.75 0 100-1.5.75.75 0 000 1.5z" /></svg>
                     </button>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    {/* Save Status Indicator */}
-                    {activeBlock && (
-                        <span className="text-xs text-white/60">
-                            Editing: {activeBlock.type}
-                        </span>
-                    )}
-                    <button 
-                        onClick={handleSave}
+                {/* RIGHT: Undo / Redo / Save */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 200, justifyContent: 'flex-end' }}>
+                    <button title="Undo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, border: '1px solid #ebebeb', background: '#fff', cursor: 'pointer', borderRadius: 6, color: '#6d7175' }}>
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M7.793 2.232a.75.75 0 01-.025 1.06L3.622 7.25h10.003a5.375 5.375 0 010 10.75H10.75a.75.75 0 010-1.5h2.875a3.875 3.875 0 000-7.75H3.622l4.146 3.957a.75.75 0 01-1.036 1.085l-5.5-5.25a.75.75 0 010-1.085l5.5-5.25a.75.75 0 011.061.025z" clipRule="evenodd" /></svg>
+                    </button>
+                    <button title="Redo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, border: '1px solid #ebebeb', background: '#fff', cursor: 'pointer', borderRadius: 6, color: '#6d7175' }}>
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.207 2.232a.75.75 0 00.025 1.06l4.146 3.958H6.375a5.375 5.375 0 000 10.75H9.25a.75.75 0 000-1.5H6.375a3.875 3.875 0 010-7.75h10.003l-4.146 3.957a.75.75 0 001.036 1.085l5.5-5.25a.75.75 0 000-1.085l-5.5-5.25a.75.75 0 00-1.061.025z" clipRule="evenodd" /></svg>
+                    </button>
+                    <div style={{ width: 1, height: 20, background: '#ebebeb' }} />
+                    <button
+                        onClick={saveSettings}
                         disabled={!selectedBlockId}
-                        className={`px-4 py-1.5 rounded font-semibold text-sm transition-opacity ${
-                            selectedBlockId 
-                                ? 'bg-primary text-black hover:opacity-90 cursor-pointer' 
-                                : 'bg-white/20 text-white/40 cursor-not-allowed'
-                        }`}
+                        style={{
+                            height: 32,
+                            padding: '0 14px',
+                            background: selectedBlockId ? '#303030' : '#c9cccf',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: 6,
+                            fontSize: 13,
+                            fontWeight: 600,
+                            cursor: selectedBlockId ? 'pointer' : 'not-allowed',
+                            transition: 'background 0.15s',
+                        }}
                     >
                         Save
                     </button>
                 </div>
             </header>
 
-            <main className="flex flex-1 overflow-hidden">
-                {/* Left Panel: Outline/DND */}
+            {/* ─── BODY ─── */}
+            <main style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
                 <SidebarLeft />
-
-                {/* Middle Panel: Iframe Canvas */}
                 <Canvas />
-
-                {/* Right Panel: Dynamic Schema Settings */}
                 <SidebarRight />
             </main>
         </div>
