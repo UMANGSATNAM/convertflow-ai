@@ -279,7 +279,96 @@ export const action = async ({ request }) => {
             const idx = await getTemplate();
             idx.order = newOrder;
             await saveTemplate(idx);
-            return json({ ok: true, message: "Sections reordered!" });
+            return json({ ok: true, message: "Sections reordered!", pageBlocks: buildPageBlocks(idx) });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: toggle_section_visibility (hide/show a section)
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "toggle_section_visibility") {
+            const blockId = fd.get("blockId");
+            const hidden = fd.get("hidden") === "true";
+            const idx = await getTemplate();
+            if (idx.sections[blockId]) {
+                idx.sections[blockId].disabled = hidden;
+            }
+            await saveTemplate(idx);
+            return json({ ok: true, message: hidden ? "Section hidden" : "Section visible", pageBlocks: buildPageBlocks(idx) });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: add_block — add a block to a section
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "add_block") {
+            const sectionId = fd.get("sectionId"); // which section to add block to
+            const blockType = fd.get("blockType");  // the block's type
+            const settings = JSON.parse(fd.get("settings") || "{}");
+
+            const idx = await getTemplate();
+            const section = idx.sections[sectionId];
+            if (!section) return json({ ok: false, error: "Section not found" });
+
+            // Initialize blocks if they don't exist
+            section.blocks = section.blocks || {};
+            section.block_order = section.block_order || [];
+
+            const blockKey = `${blockType}_${Date.now().toString(36)}`;
+            section.blocks[blockKey] = { type: blockType, settings: sanitizeSettingsForTheme(settings) };
+            section.block_order.push(blockKey);
+
+            await saveTemplate(idx);
+            return json({ ok: true, message: `Block added`, pageBlocks: buildPageBlocks(idx), newBlockKey: blockKey });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: remove_block — remove a block from a section
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "remove_block") {
+            const sectionId = fd.get("sectionId");
+            const blockKey = fd.get("blockKey");
+
+            const idx = await getTemplate();
+            const section = idx.sections[sectionId];
+            if (!section) return json({ ok: false, error: "Section not found" });
+
+            delete section.blocks?.[blockKey];
+            section.block_order = (section.block_order || []).filter(k => k !== blockKey);
+
+            await saveTemplate(idx);
+            return json({ ok: true, message: "Block removed", pageBlocks: buildPageBlocks(idx) });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: reorder_blocks — change block order within a section
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "reorder_blocks") {
+            const sectionId = fd.get("sectionId");
+            const newOrder = JSON.parse(fd.get("blockOrder") || "[]");
+
+            const idx = await getTemplate();
+            const section = idx.sections[sectionId];
+            if (!section) return json({ ok: false, error: "Section not found" });
+
+            section.block_order = newOrder;
+            await saveTemplate(idx);
+            return json({ ok: true, message: "Blocks reordered", pageBlocks: buildPageBlocks(idx) });
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        // INTENT: update_block_settings — save block-level settings
+        // ═══════════════════════════════════════════════════════════
+        if (intent === "update_block_settings") {
+            const sectionId = fd.get("sectionId");
+            const blockKey = fd.get("blockKey");
+            const settings = JSON.parse(fd.get("settings") || "{}");
+
+            const idx = await getTemplate();
+            const section = idx.sections[sectionId];
+            if (!section || !section.blocks?.[blockKey]) return json({ ok: false, error: "Block not found" });
+
+            section.blocks[blockKey].settings = sanitizeSettingsForTheme(settings);
+            await saveTemplate(idx);
+            return json({ ok: true, message: "Block settings saved!" });
         }
 
         return json({ ok: false, error: "Unknown intent" });
@@ -288,3 +377,4 @@ export const action = async ({ request }) => {
         return json({ ok: false, error: e.message });
     }
 };
+

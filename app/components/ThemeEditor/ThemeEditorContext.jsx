@@ -219,7 +219,48 @@ export function ThemeEditorProvider({ children }) {
         );
     }, [templateFile, fetcher]);
 
-    // Undo/Redo that also updates server
+    // ── Section Visibility Toggle ─────────────────────────────────
+    const toggleSectionVisibility = useCallback((blockId, hidden) => {
+        fetcher.submit(
+            { intent: "toggle_section_visibility", blockId, hidden: String(hidden), templateFile },
+            { method: "post" }
+        );
+        // Optimistic update
+        setServerBlocks(prev => (prev || activeBlocks).map(b =>
+            b.id === blockId ? { ...b, disabled: hidden } : b
+        ));
+    }, [templateFile, fetcher, activeBlocks]);
+
+    // ── Block CRUD ────────────────────────────────────────────────
+    const addBlock = useCallback((sectionId, blockType, blockSettings = {}) => {
+        fetcher.submit(
+            { intent: "add_block", sectionId, blockType, settings: JSON.stringify(blockSettings), templateFile },
+            { method: "post" }
+        );
+    }, [templateFile, fetcher]);
+
+    const removeBlock = useCallback((sectionId, blockKey) => {
+        fetcher.submit(
+            { intent: "remove_block", sectionId, blockKey, templateFile },
+            { method: "post" }
+        );
+    }, [templateFile, fetcher]);
+
+    const reorderBlocks = useCallback((sectionId, blockOrder) => {
+        fetcher.submit(
+            { intent: "reorder_blocks", sectionId, blockOrder: JSON.stringify(blockOrder), templateFile },
+            { method: "post" }
+        );
+    }, [templateFile, fetcher]);
+
+    const saveBlockSettings = useCallback((sectionId, blockKey, blockSettings) => {
+        fetcher.submit(
+            { intent: "update_block_settings", sectionId, blockKey, settings: JSON.stringify(blockSettings), templateFile },
+            { method: "post" }
+        );
+    }, [templateFile, fetcher]);
+
+    // ── Undo/Redo ────────────────────────────────────────────────
     const handleUndo = useCallback(() => {
         undoBlocks();
         setServerBlocks(null);
@@ -246,7 +287,8 @@ export function ThemeEditorProvider({ children }) {
             hasUnsavedChanges,
             activeBlock,
             addSection, insertSection, swapSection, applyTitan,
-            removeSection, reorderSections,
+            removeSection, reorderSections, toggleSectionVisibility,
+            addBlock, removeBlock, reorderBlocks, saveBlockSettings,
             undo: handleUndo, redo: handleRedo, canUndo, canRedo,
             fetcher, categories, themeId, shop, themeName,
             lastSavedAt,
