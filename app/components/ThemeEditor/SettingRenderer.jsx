@@ -1,60 +1,92 @@
 import React from 'react';
 
-const label = (text) => (
-    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#6d7175', marginBottom: 5, textTransform: 'none', letterSpacing: 0 }}>
-        {text}
-    </label>
-);
+/* ── Shared Styles ─────────────────────────────────────────────── */
+const rowStyle = {
+    padding: '12px 16px',
+    borderBottom: '1px solid #f3f4f6',
+};
 
-const inputStyle = {
+const labelStyle = {
+    display: 'block',
+    fontSize: 11,
+    fontWeight: 700,
+    color: '#9ca3af',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    marginBottom: 7,
+};
+
+const inputBase = {
     width: '100%',
-    border: '1px solid #c9cccf',
-    borderRadius: 6,
-    padding: '7px 10px',
+    height: 42,
+    border: '1.5px solid #e5e7eb',
+    borderRadius: 10,
+    padding: '0 12px',
     fontSize: 13,
-    color: '#202223',
+    fontWeight: 500,
+    color: '#1f2937',
     outline: 'none',
+    background: '#fff',
     boxSizing: 'border-box',
     fontFamily: 'inherit',
-    background: '#fff',
     transition: 'border-color 0.15s, box-shadow 0.15s',
 };
 
-const wrapper = { padding: '0 16px 14px', borderBottom: '1px solid #ebebeb', marginBottom: 0 };
+const focusStyle = {
+    borderColor: '#4f46e5',
+    boxShadow: '0 0 0 3px rgba(79,70,229,0.12)',
+};
+
+const blurStyle = {
+    borderColor: '#e5e7eb',
+    boxShadow: 'none',
+};
 
 export function SettingRenderer({ setting, value, onChange }) {
     const v = value !== undefined ? value : (setting.default ?? '');
 
-    const focusStyle = { borderColor: '#005bd3', boxShadow: '0 0 0 2px rgba(0,91,211,0.2)' };
-    const blurStyle = { borderColor: '#c9cccf', boxShadow: 'none' };
-
     switch (setting.type) {
+        case 'header':
+            return (
+                <div style={{ padding: '14px 16px 8px', borderBottom: '1px solid #f3f4f6' }}>
+                    <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#374151', letterSpacing: '0.02em' }}>{setting.content || setting.label}</p>
+                </div>
+            );
+
+        case 'paragraph':
+            return (
+                <div style={{ padding: '6px 16px 10px', borderBottom: '1px solid #f3f4f6' }}>
+                    <p style={{ margin: 0, fontSize: 12, color: '#6b7280', lineHeight: 1.5 }}>{setting.content}</p>
+                </div>
+            );
+
         case 'text':
         case 'url':
             return (
-                <div style={wrapper}>
-                    {label(setting.label || setting.id)}
+                <div style={rowStyle}>
+                    <label style={labelStyle}>{setting.label || setting.id}</label>
                     <input
                         type="text"
                         value={v}
-                        onChange={(e) => onChange(setting.id, e.target.value)}
+                        onChange={e => onChange(setting.id, e.target.value)}
                         placeholder={setting.placeholder || (setting.type === 'url' ? 'https://' : '')}
-                        style={inputStyle}
+                        style={inputBase}
                         onFocus={e => Object.assign(e.target.style, focusStyle)}
                         onBlur={e => Object.assign(e.target.style, blurStyle)}
                     />
+                    {setting.info && <p style={{ margin: '6px 0 0', fontSize: 11, color: '#9ca3af' }}>{setting.info}</p>}
                 </div>
             );
 
         case 'textarea':
             return (
-                <div style={wrapper}>
-                    {label(setting.label || setting.id)}
+                <div style={rowStyle}>
+                    <label style={labelStyle}>{setting.label || setting.id}</label>
                     <textarea
                         value={v}
-                        onChange={(e) => onChange(setting.id, e.target.value)}
+                        onChange={e => onChange(setting.id, e.target.value)}
                         rows={3}
-                        style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.5 }}
+                        style={{ ...inputBase, height: 'auto', padding: '10px 12px', resize: 'vertical', lineHeight: 1.6 }}
                         onFocus={e => Object.assign(e.target.style, focusStyle)}
                         onBlur={e => Object.assign(e.target.style, blurStyle)}
                     />
@@ -63,16 +95,30 @@ export function SettingRenderer({ setting, value, onChange }) {
 
         case 'checkbox':
             return (
-                <div style={{ ...wrapper, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <input
-                        id={`chk-${setting.id}`}
-                        type="checkbox"
-                        checked={Boolean(v)}
-                        onChange={(e) => onChange(setting.id, e.target.checked)}
-                        style={{ width: 16, height: 16, accentColor: '#005bd3', cursor: 'pointer', flexShrink: 0 }}
-                    />
-                    <label htmlFor={`chk-${setting.id}`} style={{ fontSize: 13, color: '#202223', cursor: 'pointer', userSelect: 'none' }}>
+                <div style={{ ...rowStyle, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <label style={{ fontSize: 13, fontWeight: 500, color: '#1f2937', cursor: 'pointer', userSelect: 'none' }} htmlFor={`chk-${setting.id}`}>
                         {setting.label || setting.id}
+                    </label>
+                    {/* Toggle switch */}
+                    <label style={{ position: 'relative', width: 40, height: 22, cursor: 'pointer', flexShrink: 0 }}>
+                        <input
+                            id={`chk-${setting.id}`}
+                            type="checkbox"
+                            checked={Boolean(v)}
+                            onChange={e => onChange(setting.id, e.target.checked)}
+                            style={{ opacity: 0, width: 0, height: 0, position: 'absolute' }}
+                        />
+                        <div style={{
+                            position: 'absolute', inset: 0, borderRadius: 11,
+                            background: Boolean(v) ? '#4f46e5' : '#e5e7eb',
+                            transition: 'background 0.2s',
+                        }} />
+                        <div style={{
+                            position: 'absolute', top: 3, left: Boolean(v) ? 21 : 3,
+                            width: 16, height: 16, borderRadius: '50%', background: '#fff',
+                            boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+                            transition: 'left 0.2s',
+                        }} />
                     </label>
                 </div>
             );
@@ -80,31 +126,35 @@ export function SettingRenderer({ setting, value, onChange }) {
         case 'select':
         case 'text_alignment':
             return (
-                <div style={wrapper}>
-                    {label(setting.label || setting.id)}
+                <div style={rowStyle}>
+                    <label style={labelStyle}>{setting.label || setting.id}</label>
                     <div style={{ position: 'relative' }}>
                         <select
                             value={v}
-                            onChange={(e) => onChange(setting.id, e.target.value)}
-                            style={{ ...inputStyle, appearance: 'none', paddingRight: 28, cursor: 'pointer' }}
+                            onChange={e => onChange(setting.id, e.target.value)}
+                            style={{ ...inputBase, appearance: 'none', paddingRight: 36, cursor: 'pointer' }}
+                            onFocus={e => Object.assign(e.target.style, focusStyle)}
+                            onBlur={e => Object.assign(e.target.style, blurStyle)}
                         >
                             {(setting.options || []).map(opt => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>
                             ))}
                         </select>
-                        <span style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#6d7175' }}>
-                            <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" /></svg>
-                        </span>
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="#9ca3af" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                            <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/>
+                        </svg>
                     </div>
                 </div>
             );
 
         case 'range':
             return (
-                <div style={wrapper}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                        {label(setting.label || setting.id)}
-                        <span style={{ fontSize: 12, color: '#202223', fontWeight: 600 }}>{Number(v)}{setting.unit || ''}</span>
+                <div style={rowStyle}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                        <label style={{ ...labelStyle, marginBottom: 0 }}>{setting.label || setting.id}</label>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: '#4f46e5', background: '#eef2ff', padding: '2px 8px', borderRadius: 6 }}>
+                            {Number(v)}{setting.unit || ''}
+                        </span>
                     </div>
                     <input
                         type="range"
@@ -112,12 +162,12 @@ export function SettingRenderer({ setting, value, onChange }) {
                         max={setting.max || 100}
                         step={setting.step || 1}
                         value={Number(v)}
-                        onChange={(e) => onChange(setting.id, Number(e.target.value))}
-                        style={{ width: '100%', accentColor: '#005bd3', cursor: 'pointer' }}
+                        onChange={e => onChange(setting.id, Number(e.target.value))}
+                        style={{ width: '100%', accentColor: '#4f46e5', cursor: 'pointer', height: 6 }}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-                        <span style={{ fontSize: 10, color: '#8c9196' }}>{setting.min || 0}</span>
-                        <span style={{ fontSize: 10, color: '#8c9196' }}>{setting.max || 100}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+                        <span style={{ fontSize: 10, color: '#d1d5db' }}>{setting.min || 0}</span>
+                        <span style={{ fontSize: 10, color: '#d1d5db' }}>{setting.max || 100}</span>
                     </div>
                 </div>
             );
@@ -125,18 +175,20 @@ export function SettingRenderer({ setting, value, onChange }) {
         case 'color':
         case 'color_background':
             return (
-                <div style={wrapper}>
-                    {label(setting.label || setting.id)}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #c9cccf', borderRadius: 6, padding: '6px 10px', background: '#fff' }}>
-                        <div style={{ position: 'relative', width: 24, height: 24, borderRadius: 4, border: '1px solid rgba(0,0,0,0.12)', overflow: 'hidden', cursor: 'pointer', background: v || '#000', flexShrink: 0 }}>
+                <div style={rowStyle}>
+                    <label style={labelStyle}>{setting.label || setting.id}</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', border: '1.5px solid #e5e7eb', borderRadius: 10, background: '#fafafa', cursor: 'pointer' }}>
+                        {/* Swatch */}
+                        <div style={{ position: 'relative', width: 32, height: 32, borderRadius: 8, background: v || '#000', border: '2px solid rgba(0,0,0,0.08)', overflow: 'hidden', flexShrink: 0, cursor: 'pointer' }}>
                             <input
                                 type="color"
                                 value={v || '#000000'}
                                 onChange={e => onChange(setting.id, e.target.value)}
-                                style={{ position: 'absolute', inset: -8, width: '200%', height: '200%', cursor: 'pointer', border: 'none', padding: 0 }}
+                                style={{ position: 'absolute', inset: -6, width: '150%', height: '150%', cursor: 'pointer', border: 'none', padding: 0 }}
                             />
                         </div>
-                        <span style={{ fontSize: 13, color: '#202223', fontFamily: 'monospace' }}>{(v || '#000000').toUpperCase()}</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: '#374151', fontFamily: 'monospace' }}>{(v || '#000000').toUpperCase()}</span>
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="#d1d5db" style={{ marginLeft: 'auto' }}><path d="M13.586 3.586a2 2 0 012.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>
                     </div>
                 </div>
             );
@@ -144,29 +196,34 @@ export function SettingRenderer({ setting, value, onChange }) {
         case 'image_picker':
         case 'image':
             return (
-                <div style={wrapper}>
-                    {label(setting.label || setting.id)}
+                <div style={rowStyle}>
+                    <label style={labelStyle}>{setting.label || setting.id}</label>
                     {v ? (
-                        <div style={{ position: 'relative', border: '1px solid #c9cccf', borderRadius: 6, overflow: 'hidden', aspectRatio: '16/9', background: '#f1f2f4' }}>
+                        <div style={{ position: 'relative', border: '1.5px solid #e5e7eb', borderRadius: 10, overflow: 'hidden', aspectRatio: '16/9', background: '#f9fafb' }}>
                             <img src={v} alt="Selected" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             <button
                                 onClick={() => onChange(setting.id, '')}
-                                style={{ position: 'absolute', top: 6, right: 6, background: '#fff', border: '1px solid #c9cccf', borderRadius: 4, width: 24, height: 24, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d72c0d' }}
+                                style={{ position: 'absolute', top: 8, right: 8, width: 28, height: 28, background: 'rgba(255,255,255,0.95)', border: '1.5px solid #e5e7eb', borderRadius: 7, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626', boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}
                             >
-                                <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>
+                                <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/></svg>
                             </button>
                         </div>
                     ) : (
-                        <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1.5px dashed #c9cccf', borderRadius: 6, padding: '20px 12px', cursor: 'pointer', background: '#fafbfb', gap: 6 }}>
-                            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                        <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1.5px dashed #c7d2fe', borderRadius: 10, padding: '22px 12px', cursor: 'pointer', background: '#fafafa', gap: 8, transition: 'all 0.15s' }}
+                            onMouseOver={e => { e.currentTarget.style.background = '#eef2ff'; e.currentTarget.style.borderColor = '#a5b4fc'; }}
+                            onMouseOut={e => { e.currentTarget.style.background = '#fafafa'; e.currentTarget.style.borderColor = '#c7d2fe'; }}>
+                            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
                                 const file = e.target.files[0];
                                 if (!file) return;
                                 const reader = new FileReader();
                                 reader.onloadend = () => onChange(setting.id, reader.result);
                                 reader.readAsDataURL(file);
                             }} />
-                            <svg width="24" height="24" viewBox="0 0 20 20" fill="#8c9196"><path fillRule="evenodd" d="M1 5.25A2.25 2.25 0 013.25 3h13.5A2.25 2.25 0 0119 5.25v9.5A2.25 2.25 0 0116.75 17H3.25A2.25 2.25 0 011 14.75v-9.5zm1.5 5.81v3.69c0 .414.336.75.75.75h13.5a.75.75 0 00.75-.75v-2.69l-2.22-2.219a.75.75 0 00-1.06 0l-1.91 1.909.47.47a.75.75 0 11-1.06 1.06L6.53 8.091a.75.75 0 00-1.06 0l-2.97 2.97zM12 7a1 1 0 11-2 0 1 1 0 012 0z" clipRule="evenodd" /></svg>
-                            <span style={{ fontSize: 12, color: '#005bd3', fontWeight: 600 }}>Select image</span>
+                            <div style={{ width: 40, height: 40, background: '#e0e7ff', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                            </div>
+                            <span style={{ fontSize: 13, fontWeight: 600, color: '#4f46e5' }}>Upload image</span>
+                            <span style={{ fontSize: 11, color: '#9ca3af' }}>PNG, JPG up to 20MB</span>
                         </label>
                     )}
                 </div>
