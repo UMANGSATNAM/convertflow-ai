@@ -79,6 +79,11 @@ export function ThemeEditorProvider({ children }) {
     // Debounce ref for auto-save
     const autoSaveTimerRef = useRef(null);
 
+    // Direct preview reload callback – Canvas registers this so Context
+    // can call it immediately when a save succeeds (no render-cycle race).
+    const previewReloadRef = useRef(null);
+    const registerPreviewReload = useCallback((fn) => { previewReloadRef.current = fn; }, []);
+
     // Helper: find active block from the merged list
     const activeBlock = activeBlocks.find(b => b.id === selectedBlockId);
 
@@ -93,18 +98,33 @@ export function ThemeEditorProvider({ children }) {
     }, [selectedBlockId]);
 
     // ── Sync server action results ────────────────────────────────
+    // Track previous fetcher data to avoid double-firing
+    const prevFetcherData = useRef(null);
     useEffect(() => {
-        if (fetcher.state === 'idle' && fetcher.data?.ok) {
-            if (fetcher.data.pageBlocks) {
-                setServerBlocks(fetcher.data.pageBlocks);
-            }
-            if (fetcher.data.newBlockId) {
-                setSelectedBlockId(fetcher.data.newBlockId);
-            }
+        if (fetcher.state !== 'idle') return;
+        if (!fetcher.data) return;
+        // dedupe: only handle when data changes
+        if (fetcher.data === prevFetcherData.current) return;
+        prevFetcherData.current = fetcher.data;
+
+        if (fetcher.data.ok) {
+            if (fetcher.data.pageBlocks) setServerBlocks(fetcher.data.pageBlocks);
+            if (fetcher.data.newBlockId) setSelectedBlockId(fetcher.data.newBlockId);
             setLastSavedAt(Date.now());
             setHasUnsavedChanges(false);
-            shopify.toast.show(fetcher.data.message || 'Saved');
-        } else if (fetcher.state === 'idle' && fetcher.data?.error) {
+            shopify.toast.show(fetcher.data.message || 'Saved ✓');
+
+            // 🔑 Fire Canvas reload IMMEDIATELY — no render cycle gap
+            const intent = fetcher.data.intent;
+            if (intent !== 'reorder' && previewReloadRef.current) {
+                previewReloadRef.current({
+                    blockId: fetcher.data.blockId,
+                    sectionType: fetcher.data.sectionType,
+                    isRemove: intent === 'remove_section',
+                    isStructural: ['inject_section', 'insert_section', 'swap_section', 'apply_titan', 'reorder'].includes(intent),
+                });
+            }
+        } else if (fetcher.data.error) {
             shopify.toast.show(fetcher.data.error, { isError: true });
         }
     }, [fetcher.state, fetcher.data]);
@@ -291,7 +311,7 @@ export function ThemeEditorProvider({ children }) {
             addBlock, removeBlock, reorderBlocks, saveBlockSettings,
             undo: handleUndo, redo: handleRedo, canUndo, canRedo,
             fetcher, categories, themeId, shop, themeName,
-            lastSavedAt,
+            lastSavedAt, registerPreviewReload,
         }}>
             {children}
         </ThemeEditorContext.Provider>

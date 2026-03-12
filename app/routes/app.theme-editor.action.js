@@ -266,9 +266,10 @@ export const action = async ({ request }) => {
             const blockId = fd.get("blockId");
             const settings = JSON.parse(fd.get("settings") || "{}");
             const idx = await getTemplate();
+            const sectionType = idx.sections[blockId]?.type || blockId;
             if (idx.sections[blockId]) idx.sections[blockId].settings = sanitizeSettingsForTheme(settings);
             await saveTemplate(idx);
-            return json({ ok: true, message: "Settings saved to theme!" });
+            return json({ ok: true, intent, blockId, sectionType, message: "Settings saved ✓" });
         }
 
         // ═══════════════════════════════════════════════════════════
@@ -289,11 +290,10 @@ export const action = async ({ request }) => {
             const blockId = fd.get("blockId");
             const hidden = fd.get("hidden") === "true";
             const idx = await getTemplate();
-            if (idx.sections[blockId]) {
-                idx.sections[blockId].disabled = hidden;
-            }
+            const sectionType = idx.sections[blockId]?.type || blockId;
+            if (idx.sections[blockId]) idx.sections[blockId].disabled = hidden;
             await saveTemplate(idx);
-            return json({ ok: true, message: hidden ? "Section hidden" : "Section visible", pageBlocks: buildPageBlocks(idx) });
+            return json({ ok: true, intent, blockId, sectionType, message: hidden ? "Section hidden" : "Section visible", pageBlocks: buildPageBlocks(idx) });
         }
 
         // ═══════════════════════════════════════════════════════════
