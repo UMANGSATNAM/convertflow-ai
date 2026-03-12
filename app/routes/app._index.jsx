@@ -206,36 +206,7 @@ export default function AppIndex() {
             </main>
         </div>
 
-        {/* Quick Actions Banner */}
-        <div style={S.actionsCard}>
-          <div style={S.actionsLeft}>
-            <span style={{ fontWeight: 700, fontSize: 13, color: '#111' }}>🛠 Quick Actions</span>
-            <span style={{ fontSize: 12, color: '#6b7280' }}>Fix errors or clean sections from your live store</span>
-            {result?.intent === 'fix_all' && <span style={{ fontSize: 12, color: result.ok ? '#059669' : '#dc2626' }}>{result.ok ? result.message : result.error}</span>}
-            {result?.intent === 'remove_all_cf' && <span style={{ fontSize: 12, color: result.ok ? '#059669' : '#dc2626' }}>{result.ok ? result.message : result.error}</span>}
-          </div>
 
-          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-            <fetcher.Form method="post">
-              <input type="hidden" name="intent" value="fix_all" />
-              <button type="submit" disabled={fetcher.state !== 'idle'} style={S.warnBtn}>
-                {publishingIntent === 'fix_all' ? '⏳ Fixing...' : '⚡ Fix Translations'}
-              </button>
-            </fetcher.Form>
-            <fetcher.Form method="post">
-              <input type="hidden" name="intent" value="remove_all_cf" />
-              <button type="submit" disabled={fetcher.state !== 'idle'} style={S.dangerBtn}>
-                {publishingIntent === 'remove_all_cf' ? '⏳ Removing...' : '🗑 Remove All Injected'}
-              </button>
-            </fetcher.Form>
-            <fetcher.Form method="post">
-              <input type="hidden" name="intent" value="deps" />
-              <button type="submit" disabled={fetcher.state !== 'idle'} style={S.syncBtn}>
-                {publishingIntent === 'deps' ? '⏳ Syncing...' : '📦 Sync Theme Dependencies'}
-              </button>
-            </fetcher.Form>
-          </div>
-        </div>
         {/* Setup Progress / Installing */}
         {
           isSettingUp && (
