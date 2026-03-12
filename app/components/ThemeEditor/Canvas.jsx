@@ -27,17 +27,18 @@ export function Canvas() {
 
         const pageParam = templateFile?.includes('product') ? 'product' : 'home';
         const themeParam = themeId ? `&themeId=${encodeURIComponent(themeId)}` : '';
-        const proxyUrl = `/app/api/storefront-proxy?page=${pageParam}${themeParam}&t=${Date.now()}`;
+        const blockParam = selectedBlockId ? `&activeBlockId=${encodeURIComponent(selectedBlockId)}` : '';
+        const proxyUrl = `/app/api/storefront-proxy?page=${pageParam}${themeParam}${blockParam}&t=${Date.now()}`;
 
         fetch(proxyUrl, { signal: controller.signal })
             .then(r => { if (!r.ok) throw new Error(`Proxy ${r.status}`); return r.json(); })
             .then(data => { if (data?.html) setSrcDoc(data.html); })
             .catch(err => { if (err.name !== 'AbortError') console.error('[Canvas]', err); })
             .finally(() => setLoading(false));
-    }, [templateFile, themeId]);
+    }, [templateFile, themeId, selectedBlockId]);
 
     useEffect(() => { fetchPreview(); return () => abortRef.current?.abort(); }, [templateFile, themeId]);
-    useEffect(() => { if (!lastSavedAt) return; const t = setTimeout(fetchPreview, 800); return () => clearTimeout(t); }, [lastSavedAt]);
+    useEffect(() => { if (!lastSavedAt) return; const t = setTimeout(fetchPreview, 400); return () => clearTimeout(t); }, [lastSavedAt]);
 
     const prevSelectedRef = useRef(null);
     useEffect(() => {
