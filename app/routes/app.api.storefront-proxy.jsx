@@ -257,9 +257,31 @@ export const loader = async ({ request }) => {
     } else if (type === 'shopify:section:deselect') {
       clearHighlights();
       activeId = null;
+    } else if (type === 'shopify:section:load' && payload.blockId && payload.html) {
+      // ── THIS IS THE KEY: swap the section HTML live, no page reload ──
+      var existing = getSectionEl(payload.blockId);
+      var tmp = document.createElement('div');
+      tmp.innerHTML = payload.html;
+      var newSection = tmp.querySelector('.shopify-section') || tmp.firstElementChild;
+      if (newSection) {
+        if (existing) {
+          existing.replaceWith(newSection);
+        } else {
+          // New section: append before footer if possible
+          var footer = document.querySelector('.shopify-section[id*="footer"], footer, #shopify-section-footer');
+          if (footer) { footer.parentNode.insertBefore(newSection, footer); }
+          else { document.body.appendChild(newSection); }
+        }
+        // Re-label and re-highlight
+        labelSections();
+        if (activeId === payload.blockId) {
+          highlightSection(payload.blockId);
+        }
+        newSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     } else if (type === 'shopify:section:remove' && payload.blockId) {
       var el = getSectionEl(payload.blockId);
-      if (el) el.remove();
+      if (el) { el.style.transition = 'opacity 0.2s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 200); }
     }
   });
 

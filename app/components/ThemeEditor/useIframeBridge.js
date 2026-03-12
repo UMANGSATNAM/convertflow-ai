@@ -1,98 +1,82 @@
 import { useEffect, useRef, useCallback } from 'react';
 
-// ── Parent → Iframe Actions (OS 2.0 Lifecycle) ──────────────────
+// ── Parent → Iframe message types (Shopify OS 2.0 spec) ──────────
 export const IFRAME_ACTIONS = {
     SECTION_SELECT:   'shopify:section:select',
     SECTION_DESELECT: 'shopify:section:deselect',
     SECTION_REORDER:  'shopify:section:reorder',
     SECTION_LOAD:     'shopify:section:load',
     SECTION_REMOVE:   'shopify:section:remove',
-    SETTING_UPDATE:   'shopify:setting:update',
+    BLOCK_SELECT:     'shopify:block:select',
+    BLOCK_DESELECT:   'shopify:block:deselect',
 };
 
-// ── Iframe → Parent Events ──────────────────────────────────────
+// ── Iframe → Parent message types ────────────────────────────────
 export const EDITOR_EVENTS = {
     SECTION_CLICKED: 'SECTION_CLICKED',
     IFRAME_READY:    'IFRAME_READY',
 };
 
 /**
- * useIframeBridge — Full OS 2.0 postMessage bridge
- * 
- * Parent (React app) ↔ Child (Preview Iframe)
- * Handles bidirectional communication for live editing.
+ * useIframeBridge
+ * Full OS 2.0 postMessage bridge: Parent (React) ↔ Child (Iframe)
  */
-export function useIframeBridge(iframeRef, onSectionClick, onIframeReady) {
+export function useIframeBridge(iframeRef, { onSectionClick, onIframeReady } = {}) {
     const isReady = useRef(false);
 
-    // ── Send message to Iframe ──────────────────────────────────
-    const dispatchToIframe = useCallback((type, payload) => {
-        if (iframeRef.current && iframeRef.current.contentWindow) {
-            iframeRef.current.contentWindow.postMessage(
-                { type, payload },
-                '*'
-            );
+    // ── Send to iframe ────────────────────────────────────────────
+    const dispatch = useCallback((type, payload = {}) => {
+        try {
+            const win = iframeRef.current?.contentWindow;
+            if (win) win.postMessage({ type, payload }, '*');
+        } catch (e) {
+            console.warn('[IframeBridge] postMessage failed:', e.message);
         }
     }, [iframeRef]);
 
-    // ── Convenience dispatchers ─────────────────────────────────
-    const selectSection = useCallback((blockId) => {
-        dispatchToIframe(IFRAME_ACTIONS.SECTION_SELECT, { blockId });
-    }, [dispatchToIframe]);
+    // ── Convenience senders ───────────────────────────────────────
+    const selectSection   = useCallback((blockId) => dispatch(IFRAME_ACTIONS.SECTION_SELECT, { blockId }), [dispatch]);
+    const deselectSection = useCallback(() => dispatch(IFRAME_ACTIONS.SECTION_DESELECT, {}), [dispatch]);
+    const selectBlock     = useCallback((blockId, sectionId) => dispatch(IFRAME_ACTIONS.BLOCK_SELECT, { blockId, sectionId }), [dispatch]);
 
-    const deselectSection = useCallback(() => {
-        dispatchToIframe(IFRAME_ACTIONS.SECTION_DESELECT, {});
-    }, [dispatchToIframe]);
-
-    const reorderSections = useCallback((newOrder) => {
-        dispatchToIframe(IFRAME_ACTIONS.SECTION_REORDER, { order: newOrder });
-    }, [dispatchToIframe]);
-
-    const updateSetting = useCallback((key, value) => {
-        dispatchToIframe(IFRAME_ACTIONS.SETTING_UPDATE, { key, value });
-    }, [dispatchToIframe]);
-
+    /**
+     * loadSection - injects rendered HTML for a section without a full reload.
+     * Equivalent to Shopify's shopify:section:load event.
+     * @param {string} blockId - the section ID in the template (e.g. "cf-hero-1234")
+     * @param {string} html    - the full rendered section HTML
+     */
     const loadSection = useCallback((blockId, html) => {
-        dispatchToIframe(IFRAME_ACTIONS.SECTION_LOAD, { blockId, html });
-    }, [dispatchToIframe]);
+        dispatch(IFRAME_ACTIONS.SECTION_LOAD, { blockId, html });
+    }, [dispatch]);
 
     const removeSection = useCallback((blockId) => {
-        dispatchToIframe(IFRAME_ACTIONS.SECTION_REMOVE, { blockId });
-    }, [dispatchToIframe]);
+        dispatch(IFRAME_ACTIONS.SECTION_REMOVE, { blockId });
+    }, [dispatch]);
 
-    // ── Listen for messages from Iframe ─────────────────────────
+    // ── Listen for messages from iframe ───────────────────────────
     useEffect(() => {
-        const handleMessage = (event) => {
-            if (!event.data || !event.data.type) return;
+        const handler = (event) => {
+            if (!event.data?.type) return;
             const { type, payload } = event.data;
 
-            switch (type) {
-                case EDITOR_EVENTS.SECTION_CLICKED:
-                    if (onSectionClick && payload?.blockId) {
-                        onSectionClick(payload.blockId);
-                    }
-                    break;
-                case EDITOR_EVENTS.IFRAME_READY:
-                    isReady.current = true;
-                    if (onIframeReady) onIframeReady();
-                    break;
-                default:
-                    break;
+            if (type === EDITOR_EVENTS.SECTION_CLICKED && payload?.blockId) {
+                onSectionClick?.(payload.blockId);
+            } else if (type === EDITOR_EVENTS.IFRAME_READY) {
+                isReady.current = true;
+                onIframeReady?.();
             }
         };
-
-        window.addEventListener('message', handleMessage);
-        return () => window.removeEventListener('message', handleMessage);
+        window.addEventListener('message', handler);
+        return () => window.removeEventListener('message', handler);
     }, [onSectionClick, onIframeReady]);
 
     return {
-        dispatchToIframe,
         selectSection,
         deselectSection,
-        reorderSections,
-        updateSetting,
+        selectBlock,
         loadSection,
         removeSection,
-        isReady: isReady.current,
+        dispatch,
+        isReady,
     };
 }
