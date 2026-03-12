@@ -2,6 +2,23 @@ import { readFileSync, existsSync, readdirSync } from 'fs';
 import { resolve, extname } from 'path';
 import { removeSchemaTranslations } from './schema-fixer.server';
 
+/**
+ * Deep-merge source into target. Source values take precedence.
+ * Used to MERGE our CF locale keys INTO the existing theme locale
+ * without deleting any of the theme's own translation keys.
+ */
+function deepMerge(target, source) {
+    const out = { ...target };
+    for (const key of Object.keys(source)) {
+        if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+            out[key] = deepMerge(target[key] && typeof target[key] === 'object' ? target[key] : {}, source[key]);
+        } else {
+            out[key] = source[key];
+        }
+    }
+    return out;
+}
+
 const API_VERSION = '2025-01';
 
 /** Read a section file */
@@ -305,15 +322,31 @@ export async function installAllDeps(shop, accessToken) {
         if (results.snippets % 4 === 0) await new Promise(r => setTimeout(r, 200));
     }
 
-    // 2. Upload all locales
+    // 2. Merge locale files INTO existing theme locales (don't overwrite!)
     const localeFiles = listFiles('locales').filter(f => f.endsWith('.json'));
     for (const file of localeFiles) {
         try {
-            const content = readLocaleFile(file);
-            if (content) {
-                await uploadAsset(shop, accessToken, theme.id, `locales/${file}`, content);
-                results.locales++;
+            const cfContent = readLocaleFile(file);
+            if (!cfContent) continue;
+            const cfJson = JSON.parse(cfContent);
+
+            // Fetch existing theme locale
+            let existingJson = {};
+            const existingRes = await fetch(
+                `https://${shop}/admin/api/${API_VERSION}/themes/${theme.id}/assets.json?asset[key]=locales/${file}`,
+                { headers: { 'X-Shopify-Access-Token': accessToken } }
+            );
+            if (existingRes.ok) {
+                const d = await existingRes.json();
+                if (d.asset?.value) {
+                    try { existingJson = JSON.parse(d.asset.value); } catch { }
+                }
             }
+
+            // MERGE: existing theme keys first, our CF keys layered on top
+            const merged = deepMerge(existingJson, cfJson);
+            await uploadAsset(shop, accessToken, theme.id, `locales/${file}`, JSON.stringify(merged, null, 2));
+            results.locales++;
         } catch (e) { results.errors.push(e.message); }
         if (results.locales % 4 === 0) await new Promise(r => setTimeout(r, 200));
     }
