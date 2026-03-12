@@ -114,7 +114,7 @@ export function Canvas() {
                     }} />
                 )}
 
-                {/* First-load overlay */}
+                {/* First-load overlay ONLY (when no srcDoc exists yet) */}
                 {loading && !srcDoc && (
                     <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.9)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 10, gap: 12, fontFamily: '-apple-system, sans-serif' }}>
                         <div style={{ fontSize: 36 }}>🔄</div>
