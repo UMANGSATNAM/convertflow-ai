@@ -144,6 +144,9 @@ const useEditorStore = create(
         /** @type {import('@shopify/app-bridge-react').ShopifyGlobal | null} */
         _shopify: null,
 
+        /** Fetcher state synced from React ('idle' | 'submitting' | 'loading') */
+        _fetcherState: 'idle',
+
         /** Debounce timer ID for auto-save */
         _autoSaveTimer: null,
 

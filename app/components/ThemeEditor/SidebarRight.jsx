@@ -120,7 +120,9 @@ export function SidebarRight() {
         if (!editingBlock || !activeBlock) return;
         saveBlockSettings(activeBlock.id, editingBlock.key, blockSettings);
         setEditingBlock(null); // go back to section view
-        shopify?.toast?.show?.('Block saved');
+        // Toast via Zustand's injected shopify ref
+        const shopifyRef = useEditorStore.getState()._shopify;
+        shopifyRef?.toast?.show?.('Block saved');
     };
 
     // ── Empty state ───────────────────────────────────────────────
