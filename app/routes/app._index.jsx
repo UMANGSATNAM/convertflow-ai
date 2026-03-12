@@ -148,6 +148,9 @@ export default function AppIndex() {
                     <Link to="/app/theme-editor" className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-2xl shadow-primary/40 flex items-center justify-center gap-2" style={{ textDecoration: 'none' }}>
                                             Launch Theme Editor <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
                     </Link>
+                    <Link to="/app/theme-editor?tab=titan" className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white font-bold rounded-xl text-lg hover:bg-white/20 transition-colors flex items-center justify-center gap-2 backdrop-blur-sm border border-white/10" style={{ textDecoration: 'none' }}>
+                                            Browse Readymade Themes
+                    </Link>
                     </div>
                 </section>
                 
@@ -203,6 +206,46 @@ export default function AppIndex() {
                     </div>
                     </div>
                 </section>
+                
+                {/* --- READYMADE THEMES SECTION --- */}
+                <section className="max-w-7xl mx-auto px-6 mt-20 mb-10">
+                    <div className="flex items-end justify-between mb-8 border-b border-white/10 pb-4">
+                        <div>
+                            <h2 className="text-3xl font-bold text-white mb-2">Readymade Themes</h2>
+                            <p className="text-slate-400">Instantly transform your store with full-page, professionally designed layouts.</p>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {/* Maison Theme Card */}
+                        <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-primary/50 transition-colors group flex flex-col">
+                            <div className="aspect-[4/3] bg-slate-900 relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80" alt="Maison Theme Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                <div className="absolute top-4 right-4 z-20 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-white border border-white/20">
+                                    5 Sections
+                                </div>
+                                <div className="absolute bottom-4 left-4 z-20">
+                                    <h3 className="text-2xl font-serif italic text-white mb-1">Maison</h3>
+                                </div>
+                            </div>
+                            <div className="p-6 flex flex-col flex-1">
+                                <p className="text-sm text-slate-400 mb-6 flex-1">
+                                    A refined, editorial-style layout with warm neutrals and striking typography. Perfect for luxury, fashion, and modern homeware brands.
+                                </p>
+                                <Link 
+                                    to="/app/theme-editor?tab=titan&template=cf-maison-home" 
+                                    className="w-full py-3 bg-white/10 hover:bg-primary hover:text-white text-slate-200 font-semibold rounded-xl text-center transition-all flex items-center justify-center gap-2"
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                                    Apply Theme
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
             </main>
         </div>
 

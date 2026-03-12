@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useThemeEditor } from './ThemeEditorContext';
 import { getSectionsByCategory } from '../../lib/constants';
 import { PAGE_TEMPLATES } from '../../lib/page-templates';
@@ -15,10 +15,23 @@ export function TemplatePicker() {
 
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [hasAutoApplied, setHasAutoApplied] = useState(false);
 
     const isSwapMode = activeTab === 'swap';
     const isTitanMode = activeTab === 'titan';
     const isBusy = fetcher.state !== 'idle';
+
+    // Auto-apply template from URL if present
+    useEffect(() => {
+        if (isTitanMode && !hasAutoApplied) {
+            const params = new URLSearchParams(window.location.search);
+            const templateId = params.get('template');
+            if (templateId) {
+                applyTitan(templateId);
+                setHasAutoApplied(true);
+            }
+        }
+    }, [isTitanMode, hasAutoApplied, applyTitan]);
 
     // Get sections for the active category
     const activeSections = useMemo(() => {
