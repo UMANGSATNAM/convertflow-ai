@@ -1,0 +1,124 @@
+<style>
+  .cf-maison-story {
+    --bg-alt: #ece8e1;
+    --text: #1a1a1a;
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-mono: 'DM Mono', monospace;
+    display: flex;
+    background: var(--bg-alt);
+    color: var(--text);
+  }
+  .cf-maison-story-img {
+    flex: 1;
+    min-height: 70vh;
+    object-fit: cover;
+  }
+  .cf-maison-story-content {
+    flex: 1;
+    padding: 8rem 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 600px;
+  }
+  .cf-maison-story-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+  .cf-maison-story-title {
+    font-family: var(--font-serif);
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+  }
+  .cf-maison-story-title i { font-style: italic; }
+  .cf-maison-story-text {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4a4a4a;
+    margin-bottom: 3rem;
+  }
+  .cf-maison-story-link {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text);
+    border-bottom: 1px solid var(--text);
+    padding-bottom: 0.2rem;
+    align-self: flex-start;
+  }
+
+  @media (max-width: 900px) {
+    .cf-maison-story { flex-direction: column; }
+    .cf-maison-story-img { min-height: 50vh; }
+    .cf-maison-story-content { padding: 4rem 5%; }
+  }
+</style>
+
+<div class="cf-maison-story">
+  {% if section.settings.image %}
+    <img src="{{ section.settings.image | img_url: '1000x' }}" alt="Story" class="cf-maison-story-img">
+  {% else %}
+    <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=1000&q=80" alt="Studio" class="cf-maison-story-img">
+  {% endif %}
+  
+  <div class="cf-maison-story-content">
+    <span class="cf-maison-story-kicker">{{ section.settings.kicker | default: 'Our Philosophy' }}</span>
+    <h2 class="cf-maison-story-title">{{ section.settings.title | default: 'Design as an<br><i>Extension</i> of Self.' }}</h2>
+    <p class="cf-maison-story-text">{{ section.settings.text | default: 'We believe that the objects we live with shape our daily experience. Maison is an ongoing exploration of form, function, and the spaces in between. Every piece is considered, crafted, and designed to endure.' }}</p>
+    <a href="{{ section.settings.button_link | default: routes.root_url }}" class="cf-maison-story-link">{{ section.settings.button_label | default: 'Read the Journal' }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Maison Story",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Our Philosophy"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title",
+      "default": "Design as an<br><i>Extension</i> of Self."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We believe that the objects we live with shape our daily experience. Maison is an ongoing exploration of form, function, and the spaces in between. Every piece is considered, crafted, and designed to endure."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Read the Journal"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Maison Story"
+    }
+  ]
+}
+{% endschema %}

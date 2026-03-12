@@ -1,0 +1,74 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap');
+
+  .cf-maison-header {
+    --bg: #f5f2ec;
+    --text: #1a1a1a;
+    --border: #dcd7ce;
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-mono: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cf-maison-header-nav { display: flex; gap: 2rem; }
+  .cf-maison-header-nav a {
+    text-decoration: none;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cf-maison-header-logo {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .cf-maison-header-actions { display: flex; gap: 1.5rem; }
+  .cf-maison-header-actions svg { width: 20px; height: 20px; stroke: var(--text); stroke-width: 1.5; fill: none; }
+</style>
+
+<div class="cf-maison-header">
+  <nav class="cf-maison-header-nav">
+    <a href="{{ routes.collections_url }}">Shop</a>
+    <a href="/pages/about">Journal</a>
+  </nav>
+  <a href="{{ routes.root_url }}" class="cf-maison-header-logo">{{ section.settings.logo_text | default: shop.name }}</a>
+  <div class="cf-maison-header-actions">
+    <a href="{{ routes.search_url }}">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </a>
+    <a href="{{ routes.cart_url }}">
+      <svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Maison Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "Maison"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Maison Header"
+    }
+  ]
+}
+{% endschema %}

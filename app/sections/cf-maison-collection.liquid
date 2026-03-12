@@ -1,0 +1,148 @@
+<style>
+  .cf-maison-collection {
+    --bg: #f5f2ec;
+    --text: #1a1a1a;
+    --border: #dcd7ce;
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-mono: 'DM Mono', monospace;
+    background: var(--bg);
+    padding: 8rem 5%;
+    color: var(--text);
+  }
+  .cf-maison-collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2rem;
+  }
+  .cf-maison-collection-title {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 300;
+  }
+  .cf-maison-collection-link {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text);
+    border-bottom: 1px solid var(--text);
+    padding-bottom: 0.2rem;
+  }
+  .cf-maison-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem 2rem;
+  }
+  .cf-maison-card { text-decoration: none; color: var(--text); display: block; group }
+  .cf-maison-card-img-wrap {
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background: var(--bg-alt);
+    aspect-ratio: 3/4;
+  }
+  .cf-maison-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .cf-maison-card:hover .cf-maison-card-img { transform: scale(1.05); }
+  .cf-maison-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .cf-maison-card-title { text-transform: uppercase; letter-spacing: 0.05em; }
+  
+  @media (max-width: 900px) { .cf-maison-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) {
+    .cf-maison-grid { grid-template-columns: 1fr; }
+    .cf-maison-collection-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+</style>
+
+<div class="cf-maison-collection">
+  <div class="cf-maison-collection-header">
+    <h2 class="cf-maison-collection-title">{{ section.settings.title | default: 'Curated Selection' }}</h2>
+    <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="cf-maison-collection-link">{{ section.settings.button_label | default: 'View Archives' }}</a>
+  </div>
+  
+  <div class="cf-maison-grid">
+    {% assign product_count = 0 %}
+    {% for product in collections[section.settings.collection].products limit: section.settings.limit %}
+      <a href="{{ product.url }}" class="cf-maison-card">
+        <div class="cf-maison-card-img-wrap">
+          <img src="{{ product.featured_image | img_url: '600x' }}" alt="{{ product.title }}" class="cf-maison-card-img">
+        </div>
+        <div class="cf-maison-card-meta">
+          <span class="cf-maison-card-title">{{ product.title }}</span>
+          <span class="cf-maison-card-price">{{ product.price | money }}</span>
+        </div>
+      </a>
+      {% assign product_count = product_count | plus: 1 %}
+    {% endfor %}
+
+    {% if product_count == 0 %}
+      {% for i in (1..3) %}
+        <a href="#" class="cf-maison-card">
+          <div class="cf-maison-card-img-wrap">
+            <img src="https://images.unsplash.com/photo-1596207147772-e1cbfa18cb6a?w=800&q=80" alt="Placeholder" class="cf-maison-card-img">
+          </div>
+          <div class="cf-maison-card-meta">
+            <span class="cf-maison-card-title">Maison Object {{ i }}</span>
+            <span class="cf-maison-card-price">$240.00</span>
+          </div>
+        </a>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Maison Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Curated Selection"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "View Archives"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Products to show",
+      "default": 3
+    }
+  ],
+  "presets": [
+    {
+      "name": "Maison Collection",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

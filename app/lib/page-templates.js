@@ -1,71 +1,80 @@
 export const PAGE_TEMPLATES = [
+  // ─── MAISON THEME ───────────────────────────────────────────────────
+  {
+    id: "cf-maison-home",
+    type: "home",
+    name: "Maison Theme",
+    description: "A refined, editorial-style layout with warm neutrals and striking typography. Perfect for luxury and modern brands.",
+    sections: ["cf-maison-header", "cf-maison-hero", "cf-maison-collection", "cf-maison-story", "cf-maison-footer"]
+  },
+
   // ─── 10 HOME PAGE TEMPLATES ───────────────────────────────────────
   {
     id: "cf-home-ultimate",
-    type: "page",
+    type: "home",
     name: "The Ultimate D2C Home",
     description: "High-contrast, high-urgency layout designed for maximum conversions on flagship stores.",
     sections: ["cf-cro-hero-v3", "cf-cro-benefits-v2", "cf-cro-offer-grid-v4", "cf-cro-social-proof-v3", "cf-cro-faq-v4"]
   },
   {
     id: "cf-home-minimal",
-    type: "page",
+    type: "home",
     name: "Clean & Minimalist",
     description: "Stripped back whitespace-heavy design putting focus entirely on your value proposition.",
     sections: ["cf-cro-hero-v4", "cf-cro-social-proof-v4", "cf-cro-comparison-v4", "cf-cro-countdown-v4"]
   },
   {
     id: "cf-home-aggressive",
-    type: "page",
+    type: "home",
     name: "Aggressive Sale Event",
     description: "Built for BFCM and flash sales. Starts with urgency and aggressive offer stacking.",
     sections: ["cf-cro-countdown-v2", "cf-cro-hero", "cf-cro-offer-grid-v3", "cf-cro-social-proof-v2", "cf-cro-faq"]
   },
   {
     id: "cf-home-story",
-    type: "page",
+    type: "home",
     name: "Story-Driven Brand",
     description: "Perfect for founder-led brands. Focuses heavily on social proof and emotional benefits.",
     sections: ["cf-cro-hero-v2", "cf-cro-social-proof-v3", "cf-cro-benefits-v4", "cf-cro-comparison-v2", "cf-cro-faq-v2"]
   },
   {
     id: "cf-home-bundle",
-    type: "page",
+    type: "home",
     name: "Bundle-First Homepage",
     description: "Bypasses the traditional collection grid in favor of direct-to-bundle sales.",
     sections: ["cf-cro-benefits", "cf-cro-offer-grid-v4", "cf-cro-bundle-v4", "cf-cro-social-proof-v4", "cf-cro-faq-v3"]
   },
   {
     id: "cf-home-trust",
-    type: "page",
+    type: "home",
     name: "Authority & Trust",
     description: "Leads with massive social proof to establish credibility before pitching the product.",
     sections: ["cf-cro-social-proof-v3", "cf-cro-hero-v4", "cf-cro-benefits-v3", "cf-cro-offer-grid-v2", "cf-cro-comparison-v4"]
   },
   {
     id: "cf-home-fast",
-    type: "page",
+    type: "home",
     name: "Fast-Action Funnel",
     description: "Short-form landing page designed to capture impulse buyers under 30 seconds.",
     sections: ["cf-cro-countdown-v3", "cf-cro-hero-v3", "cf-cro-offer-grid-v3", "cf-cro-social-proof", "cf-cro-faq-v4"]
   },
   {
     id: "cf-home-clean",
-    type: "page",
+    type: "home",
     name: "SaaS-Style Commerce",
     description: "Clean, professional, B2B/tech-inspired layout with clear features and pricing tables.",
     sections: ["cf-cro-hero-v2", "cf-cro-benefits-v4", "cf-cro-offer-grid-v4", "cf-cro-faq-v4", "cf-cro-comparison-v4"]
   },
   {
     id: "cf-home-social",
-    type: "page",
+    type: "home",
     name: "Social Commerce",
     description: "Image-heavy, review-heavy layout optimized for TikTok and Instagram ad traffic.",
     sections: ["cf-cro-hero-v4", "cf-cro-social-proof-v2", "cf-cro-social-proof-v4", "cf-cro-benefits-v3", "cf-cro-offer-grid-v4"]
   },
   {
     id: "cf-home-hybrid",
-    type: "page",
+    type: "home",
     name: "The Hybrid Funnel",
     description: "A balanced mix of brand storytelling and direct-response urgency.",
     sections: ["cf-cro-hero-v3", "cf-cro-countdown-v4", "cf-cro-offer-grid-v4", "cf-cro-social-proof-v4", "cf-cro-faq-v2"]

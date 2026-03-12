@@ -9,7 +9,8 @@ export const SECTION_CATEGORIES = [
     { id: 'feature', name: 'Featured Collections', description: 'Product grids and sliders', icon: 'ShoppingBag' },
     { id: 'trust', name: 'Trust Badges', description: 'Guarantees and value props', icon: 'Shield' },
     { id: 'announcement', name: 'Announcement Bars', description: '10 creative announcement styles', icon: 'Megaphone' },
-    { id: 'hero', name: 'Hero Sections', description: '10 premium hero banners', icon: 'Image' }
+    { id: 'hero', name: 'Hero Sections', description: '10 premium hero banners', icon: 'Image' },
+    { id: 'footer', name: 'Footers', description: 'Footers and bottom branding', icon: 'Layout' }
 ];
 
 // ── Auto-generate expansion entries for niches 02–05 ─────────────────
@@ -65,6 +66,7 @@ export const SECTION_FILES = {
     'cf-head-11-v10': { category: 'header', name: '11 · Men\'s Header (v10)', file: 'cf-head-11-v10.liquid' },
     'cf-head-12': { category: 'header', name: '12 · Women\'s Header', file: 'cf-head-12.liquid' },
     'cf-head-13': { category: 'header', name: '13 · Brand Header', file: 'cf-head-13.liquid' },
+    'cf-maison-header': { category: 'header', name: 'Maison · Header', file: 'cf-maison-header.liquid' },
 
     'cf-marquee-01': { category: 'marquee', name: '01 · Luxury Marquee', file: 'cf-marquee-01.liquid' },
     'cf-marquee-02': { category: 'marquee', name: '02 · Streetwear Marquee', file: 'cf-marquee-02.liquid' },
@@ -111,6 +113,7 @@ export const SECTION_FILES = {
     'cf-promo-11-v10': { category: 'promo', name: '11 · Men\'s Promo (v10)', file: 'cf-promo-11-v10.liquid' },
     'cf-promo-12': { category: 'promo', name: '12 · Women\'s Promo', file: 'cf-promo-12.liquid' },
     'cf-promo-13': { category: 'promo', name: '13 · Brand Promo', file: 'cf-promo-13.liquid' },
+    'cf-maison-story': { category: 'promo', name: 'Maison · Brand Story', file: 'cf-maison-story.liquid' },
 
     'cf-snack-01': { category: 'snack', name: '01 · Luxury Snack', file: 'cf-snack-01.liquid' },
     'cf-snack-02': { category: 'snack', name: '02 · Streetwear Snack', file: 'cf-snack-02.liquid' },
@@ -157,6 +160,7 @@ export const SECTION_FILES = {
     'cf-cat-11-v10': { category: 'category', name: '11 · Men\'s Category (v10)', file: 'cf-cat-11-v10.liquid' },
     'cf-cat-12': { category: 'category', name: '12 · Women\'s Category', file: 'cf-cat-12.liquid' },
     'cf-category-13': { category: 'category', name: '13 · Brand Categories', file: 'cf-cat-13.liquid' },
+    'cf-maison-collection': { category: 'category', name: 'Maison · Collection Grid', file: 'cf-maison-collection.liquid' },
 
     'cf-feature-01': { category: 'feature', name: '01 · Luxury Lookbook', file: 'cf-feature-01.liquid' },
     'cf-feature-02': { category: 'feature', name: '02 · Streetwear Drop', file: 'cf-feature-02.liquid' },
@@ -225,6 +229,9 @@ export const SECTION_FILES = {
     'cf-hero-08': { category: 'hero', name: '08 · Dark SaaS Hero', file: 'cf-hero-08.liquid' },
     'cf-hero-09': { category: 'hero', name: '09 · Flash Sale Hero', file: 'cf-hero-09.liquid' },
     'cf-hero-10': { category: 'hero', name: '10 · Product Showcase Hero', file: 'cf-hero-10.liquid' },
+    'cf-maison-hero': { category: 'hero', name: 'Maison · Hero', file: 'cf-maison-hero.liquid' },
+    'cf-maison-footer': { category: 'footer', name: 'Maison · Footer', file: 'cf-maison-footer.liquid' },
+    
     'cf-cat-01-v10': { category: 'category', name: '01 · Luxury Category (v10)', file: 'cf-cat-01-v10.liquid' },
     'cf-cat-01-v2': { category: 'category', name: '01 · Luxury Category (v2)', file: 'cf-cat-01-v2.liquid' },
     'cf-cat-01-v3': { category: 'category', name: '01 · Luxury Category (v3)', file: 'cf-cat-01-v3.liquid' },
