@@ -38,12 +38,16 @@ export const loader = async ({ request }) => {
     // We'll try sectionId first as the type, then the blockId itself.
 
     const storefrontBase = `https://${shop}`;
-    const previewParam   = themeId ? `&preview_theme_id=${themeId}` : "";
+    const renderUrl = new URL(`${storefrontBase}`);
+    renderUrl.searchParams.set('sections', sectionId);
+    if (themeId) renderUrl.searchParams.set('preview_theme_id', themeId);
+    
+    // Shopify cache busters
+    renderUrl.searchParams.set('_t', Date.now().toString());
+    renderUrl.searchParams.set('_fd', '0');
+    renderUrl.searchParams.set('pb', '0');
 
-    // Shopify Section Rendering API endpoint
-    const renderUrl = `${storefrontBase}/sections?sections=${encodeURIComponent(sectionId)}${previewParam}`;
-
-    console.log("[render-section] Fetching:", renderUrl);
+    console.log("[render-section] Fetching:", renderUrl.toString());
 
     try {
         const res = await fetch(renderUrl, {

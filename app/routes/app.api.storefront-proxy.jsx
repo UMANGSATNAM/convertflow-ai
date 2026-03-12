@@ -40,7 +40,8 @@ export const loader = async ({ request }) => {
 
     const storefrontBase = `https://${shop}`;
     const path = pathMap[page] || "/";
-    const previewParam = themeId ? `?preview_theme_id=${themeId}` : "";
+    const cacheBuster = `&_t=${Date.now()}&_fd=0&pb=0`;
+    const previewParam = themeId ? `?preview_theme_id=${themeId}${cacheBuster}` : `?${cacheBuster.substring(1)}`;
     const storefrontUrl = `${storefrontBase}${path}${previewParam}`;
 
     console.log("[proxy] Fetching:", storefrontUrl);
@@ -87,16 +88,22 @@ export const loader = async ({ request }) => {
             console.log("[proxy] Status:", response.status, "for", tryUrl);
 
             if (!response.ok) {
-                if (response.status === 401) {
-                    return json({ html: errorHtml(shop, "Store is password protected. Go to Shopify Admin → Online Store → Preferences and disable the password.", themeId) });
+                if (response.status === 401 || response.status === 403) {
+                    if (html && html.includes("passwordPage")) {
+                        return json({ html: errorHtml(shop, "Store is password protected. Go to Shopify Admin → Online Store → Preferences and disable the password.", themeId) });
+                    }
                 }
                 continue;
             }
 
             html = await response.text();
 
-            // Detect password page
-            if (html.includes("Storefront.PasswordPage") || html.includes("storefront_password") || html.includes("store-password")) {
+            // Strictly detect Shopify's password page metadata to avoid false positives
+            const isPasswordPage = html.includes('template-password') || 
+                                   html.includes('id="password"') || 
+                                   html.includes('action="/password"');
+                                   
+            if (isPasswordPage) {
                 return json({ html: errorHtml(shop, "Store is password protected. Please disable it in Shopify Admin → Online Store → Preferences → Password protection.", themeId) });
             }
 
