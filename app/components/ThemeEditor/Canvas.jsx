@@ -271,6 +271,13 @@ export function Canvas() {
                 </div>
             </div>
 
+            {/* Resolution label (mobile only) */}
+            {isMobile && (
+                <div style={{ textAlign: 'center', padding: '4px 0 8px', flexShrink: 0 }}>
+                    <span style={{ fontSize: 10, color: '#9ca3af', fontWeight: 500, fontFamily: "'SF Mono', 'Fira Code', monospace" }}>375 × 812</span>
+                </div>
+            )}
+
             <style>{`
                 @keyframes cf-spin     { to { transform: rotate(360deg); } }
                 @keyframes cf-progress { 0%{width:0;left:0}55%{width:65%;left:15%}100%{width:0;left:100%} }
