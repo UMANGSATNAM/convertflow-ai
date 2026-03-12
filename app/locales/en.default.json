@@ -416,11 +416,16 @@
       "filter": "Filter by topic"
     }
   },
-  "portfolio": {
-    "filter": "Filter",
-    "close": "Close",
-    "tab_all": "Tab to show all galleries",
-    "tab": "Tab to filter gallery"
+  "blocks": {
+    "contact_form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone number",
+      "comment": "Comment"
+    },
+    "email_signup": {
+      "placeholder": "Email address"
+    }
   },
   "sections": {
     "header": {
@@ -431,8 +436,10 @@
         "other": "{{ count }} items"
       }
     },
-    "term_condition": "Terms & conditions",
     "cart": {
+      "empty": "Your cart is empty",
+      "login_html": "Log in to check out faster.",
+      "continue_shopping": "Continue shopping",
       "title": "Your cart",
       "caption": "Cart items",
       "checkout": "Checkout",

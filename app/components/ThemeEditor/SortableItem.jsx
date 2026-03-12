@@ -46,19 +46,28 @@ export function SortableItem(props) {
                     {props.isCf && (
                         <span className="text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded font-medium">CF</span>
                     )}
-                    {/* Swap button — visible on hover */}
-                    {props.onSwap && (
-                        <button
-                            onClick={(e) => { e.stopPropagation(); props.onSwap(); }}
-                            className="opacity-0 group-hover:opacity-100 p-1 text-polaris-subdued hover:text-primary transition-all"
-                            title="Swap with ConvertFlow section"
-                        >
-                            <span className="material-symbols-outlined text-base">swap_horiz</span>
-                        </button>
-                    )}
-                    <span className={`material-symbols-outlined text-polaris-subdued transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                        visibility
-                    </span>
+
+                    {/* Action buttons — visible on hover */}
+                    <div className={`flex items-center transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                        {props.onSwap && (
+                            <button
+                                onClick={(e) => { e.stopPropagation(); props.onSwap(); }}
+                                className="p-1 text-polaris-subdued hover:text-primary transition-all rounded hover:bg-white/50"
+                                title="Replace section"
+                            >
+                                <span className="material-symbols-outlined text-[18px]">swap_horiz</span>
+                            </button>
+                        )}
+                        {props.onDelete && (
+                            <button
+                                onClick={(e) => { e.stopPropagation(); props.onDelete(); }}
+                                className="p-1 text-polaris-subdued hover:text-red-600 transition-all rounded hover:bg-red-50"
+                                title="Delete section"
+                            >
+                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 

@@ -22,7 +22,8 @@ export function SidebarLeft() {
         blocks, setBlocks, selectedBlockId, setSelectedBlockId,
         activeTab, setActiveTab, reorderSections,
         setInsertTargetId, setSwapTargetId,
-        templateFile, setTemplateFile
+        templateFile, setTemplateFile,
+        removeSection
     } = useThemeEditor();
 
     // Slide-over Template Picker (for add, insert-at, swap, or titan)
@@ -119,14 +120,29 @@ export function SidebarLeft() {
                     {block.isCf && (
                         <span className="text-[10px] text-primary bg-primary/10 px-1.5 py-0.5 rounded font-medium">CF</span>
                     )}
-                    {/* Swap button — visible on hover */}
-                    <button
-                        onClick={(e) => { e.stopPropagation(); handleSwap(block.id); }}
-                        className="opacity-0 group-hover:opacity-100 p-1 text-polaris-subdued hover:text-primary transition-all"
-                        title="Swap section"
-                    >
-                        <span className="material-symbols-outlined text-base">swap_horiz</span>
-                    </button>
+                    {/* Action buttons (Replace & Delete) — visible on hover */}
+                    <div className="opacity-0 group-hover:opacity-100 flex items-center transition-opacity">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); handleSwap(block.id); }}
+                            className="p-1 text-polaris-subdued hover:text-primary transition-all rounded hover:bg-polaris-bg"
+                            title="Replace section"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">swap_horiz</span>
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (window.confirm("Delete this section?")) {
+                                    setBlocks(prev => prev.filter(b => b.id !== block.id));
+                                    removeSection(block.id);
+                                }
+                            }}
+                            className="p-1 text-polaris-subdued hover:text-red-600 transition-all rounded hover:bg-red-50"
+                            title="Delete section"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">delete</span>
+                        </button>
+                    </div>
                 </div>
             </button>
 
@@ -207,6 +223,12 @@ export function SidebarLeft() {
                                         isCf={block.isCf}
                                         onClick={() => setSelectedBlockId(block.id)}
                                         onSwap={() => handleSwap(block.id)}
+                                        onDelete={() => {
+                                            if (window.confirm("Delete this section?")) {
+                                                setBlocks(prev => prev.filter(b => b.id !== block.id));
+                                                removeSection(block.id);
+                                            }
+                                        }}
                                         onInsertAfter={() => handleInsertAfter(block.id)}
                                     />
                                 ))}
