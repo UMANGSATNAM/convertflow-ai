@@ -145,10 +145,11 @@ export default function AppIndex() {
                                         Experience the future of e-commerce design. Generate high-converting sections in seconds natively in your Theme Editor.
                                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <Link to="/app/theme-editor" className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-2xl shadow-primary/40 flex items-center justify-center gap-2" style={{ textDecoration: 'none' }}>
-                                            Launch Theme Editor <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+                    <Link to="/app/builder" className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-2xl shadow-primary/40 flex items-center justify-center gap-2" style={{ textDecoration: 'none' }}>
+                                            <Icon source={MagicIcon} tone="inherit" />
+                                            Start Live Editor
                     </Link>
-                    <Link to="/app/theme-editor?tab=titan" className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white font-bold rounded-xl text-lg hover:bg-white/20 transition-colors flex items-center justify-center gap-2 backdrop-blur-sm border border-white/10" style={{ textDecoration: 'none' }}>
+                    <Link to="/app/builder?tab=titan" className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white font-bold rounded-xl text-lg hover:bg-white/20 transition-colors flex items-center justify-center gap-2 backdrop-blur-sm border border-white/10" style={{ textDecoration: 'none' }}>
                                             Browse Readymade Themes
                     </Link>
                     </div>
@@ -234,7 +235,7 @@ export default function AppIndex() {
                                     A refined, editorial-style layout with warm neutrals and striking typography. Perfect for luxury, fashion, and modern homeware brands.
                                 </p>
                                 <Link 
-                                    to="/app/theme-editor?tab=titan&template=cf-maison-home" 
+                                    to="/app/builder?tab=titan&template=cf-maison-home" 
                                     className="w-full py-3 bg-white/10 hover:bg-primary hover:text-white text-slate-200 font-semibold rounded-xl text-center transition-all flex items-center justify-center gap-2"
                                     style={{ textDecoration: 'none' }}
                                 >
