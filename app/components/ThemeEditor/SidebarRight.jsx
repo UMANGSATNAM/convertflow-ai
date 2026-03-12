@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useThemeEditor } from './ThemeEditorContext';
+import useEditorStore, { selectSettings, selectSelectedBlockId, selectHasUnsavedChanges } from './useEditorStore';
 import { SettingRenderer } from './SettingRenderer';
 
 // ── Mini hook: load schema for a section type ────────────────────
@@ -39,7 +39,7 @@ const P = {
 // ── Block row within a section ────────────────────────────────────
 function BlockRow({ block, sectionId, blockSchema, onEditBlock, active }) {
     const [hovered, setHovered] = useState(false);
-    const { removeBlock } = useThemeEditor();
+    const removeBlock = useEditorStore(s => s.removeBlock);
     const name = blockSchema?.name || titleCase(block.type);
     return (
         <div
@@ -77,12 +77,27 @@ function BlockRow({ block, sectionId, blockSchema, onEditBlock, active }) {
 
 // ── Main SidebarRight ─────────────────────────────────────────────
 export function SidebarRight() {
-    const {
-        activeBlock, selectedBlockId, setSelectedBlockId,
-        settings, updateSettings, saveSettings, removeSection,
-        hasUnsavedChanges, toggleSectionVisibility, addBlock, saveBlockSettings,
-        fetcher, templateFile
-    } = useThemeEditor();
+    // 🔑 Zustand selectors — only re-render when these specific slices change
+    const selectedBlockId  = useEditorStore(selectSelectedBlockId);
+    const settings         = useEditorStore(selectSettings);
+    const hasUnsavedChanges = useEditorStore(selectHasUnsavedChanges);
+    const fetcherState     = useEditorStore(s => s._fetcherState);
+    const templateFile     = useEditorStore(s => s.templateFile);
+
+    // Actions (stable references, no re-render)
+    const setSelectedBlockId      = useEditorStore(s => s.setSelectedBlockId);
+    const updateSettings          = useEditorStore(s => s.updateSettings);
+    const saveSettings            = useEditorStore(s => s.saveSettings);
+    const removeSection           = useEditorStore(s => s.removeSection);
+    const toggleSectionVisibility = useEditorStore(s => s.toggleSectionVisibility);
+    const addBlock                = useEditorStore(s => s.addBlock);
+    const saveBlockSettings       = useEditorStore(s => s.saveBlockSettings);
+
+    // Compute activeBlock from the store
+    const activeBlock = useEditorStore(s => {
+        const blocks = s._serverBlocks ?? s.blocks;
+        return blocks.find(b => b.id === s.selectedBlockId) || null;
+    });
 
     const { schema, loading } = useSectionSchema(activeBlock?.type);
 

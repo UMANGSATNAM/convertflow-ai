@@ -1,24 +1,28 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useThemeEditor } from './ThemeEditorContext';
+import useEditorStore, { selectSelectedBlockId, selectDevice, selectTemplateFile, selectThemeId } from './useEditorStore';
 import { useIframeBridge } from './useIframeBridge';
 
 /**
  * Canvas — live preview iframe.
  *
- * Reload strategy (most-reliable-first):
- *  1. Full proxy reload → when template/themeId changes (first load, template switch)
- *  2. Section Rendering API + postMessage → on settings save (no full reload)
- *  3. postMessage remove → on section delete
- *  4. Fallback: full proxy reload if Section Rendering API returns empty
- *
- * Registered via `registerPreviewReload` in Context so the reload fires
- * IMMEDIATELY when the server action completes — zero React render-cycle gap.
+ * Now reads from ZUSTAND SELECTORS instead of Context.
+ * registerPreviewReload is called on the store directly.
  */
 export function Canvas() {
-    const {
-        activeBlock, selectedBlockId, setSelectedBlockId,
-        device, templateFile, themeId, fetcher, registerPreviewReload,
-    } = useThemeEditor();
+    // 🔑 Selector-based subscriptions
+    const selectedBlockId   = useEditorStore(selectSelectedBlockId);
+    const device            = useEditorStore(selectDevice);
+    const templateFile      = useEditorStore(selectTemplateFile);
+    const themeId           = useEditorStore(selectThemeId);
+    const fetcherState      = useEditorStore(s => s._fetcherState);
+    const registerPreviewReload = useEditorStore(s => s.registerPreviewReload);
+    const setSelectedBlockId    = useEditorStore(s => s.setSelectedBlockId);
+
+    // Compute activeBlock via selector
+    const activeBlock = useEditorStore(s => {
+        const blocks = s._serverBlocks ?? s.blocks;
+        return blocks.find(b => b.id === s.selectedBlockId) || null;
+    });
 
     const iframeRef   = useRef(null);
     const iframeReady = useRef(false);
@@ -136,7 +140,7 @@ export function Canvas() {
     }, [selectedBlockId, selectSection, deselectSection]);
 
     const isMobile = device === 'mobile';
-    const isSaving = fetcher?.state !== 'idle';
+    const isSaving = fetcherState !== 'idle' && fetcherState !== undefined;
 
     const formatSectionName = (type) => (type || '').replace(/^cf[-_]/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 

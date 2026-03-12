@@ -4,13 +4,20 @@ import { authenticate } from "../shopify.server";
 import { getActiveTheme, getThemeAsset } from "../lib/shopify.server";
 import { SECTION_FILES, getCategoriesWithCounts } from "../lib/constants";
 
-import { ThemeEditorProvider } from "../components/ThemeEditor/ThemeEditorContext";
+import { EditorStoreProvider } from "../components/ThemeEditor/EditorStoreProvider";
+import useEditorStore, {
+    selectSelectedBlockId,
+    selectDevice,
+    selectHasUnsavedChanges,
+} from "../components/ThemeEditor/useEditorStore";
 import { SidebarLeft } from "../components/ThemeEditor/SidebarLeft";
 import { SidebarRight } from "../components/ThemeEditor/SidebarRight";
 import { Canvas } from "../components/ThemeEditor/Canvas";
-import { useThemeEditor } from "../components/ThemeEditor/ThemeEditorContext";
 import { AppProvider } from '@shopify/polaris';
 
+// ═══════════════════════════════════════════════════════════════
+//  LOADER — fetches theme data from Shopify (unchanged)
+// ═══════════════════════════════════════════════════════════════
 export const loader = async ({ request }) => {
     const { session } = await authenticate.admin(request);
     const { shop, accessToken } = session;
@@ -33,6 +40,9 @@ export const loader = async ({ request }) => {
                 id,
                 type: sections[id]?.type || id,
                 settings: sections[id]?.settings || {},
+                blocks: sections[id]?.blocks || {},
+                block_order: sections[id]?.block_order || [],
+                disabled: sections[id]?.disabled || false,
                 isCf: id.startsWith('cf_'),
             }));
         }
@@ -50,23 +60,40 @@ export const loader = async ({ request }) => {
 
 export { action } from "./app.theme-editor.action";
 
+// ═══════════════════════════════════════════════════════════════
+//  SHELL — wraps the app in EditorStoreProvider (replaces ThemeEditorProvider)
+// ═══════════════════════════════════════════════════════════════
 export default function ThemeEditorShell() {
     return (
         <AppProvider i18n={{}}>
-            <ThemeEditorProvider>
+            <EditorStoreProvider>
                 <ThemeEditorApp />
-            </ThemeEditorProvider>
+            </EditorStoreProvider>
         </AppProvider>
     );
 }
 
+// ═══════════════════════════════════════════════════════════════
+//  THE EDITOR — now reads from Zustand selectors instead of Context
+// ═══════════════════════════════════════════════════════════════
 function ThemeEditorApp() {
-    const {
-        device, setDevice, saveSettings, selectedBlockId,
-        themeName, undo, redo, canUndo, canRedo, hasUnsavedChanges, fetcher
-    } = useThemeEditor();
+    // 🔑 Selector-based subscriptions: only re-render when THESE values change
+    const device           = useEditorStore(selectDevice);
+    const selectedBlockId  = useEditorStore(selectSelectedBlockId);
+    const hasUnsavedChanges = useEditorStore(selectHasUnsavedChanges);
+    const fetcherState     = useEditorStore(s => s._fetcherState);
+    const themeName        = useEditorStore(s => s.themeName);
+
+    // Actions don't cause re-renders (they're stable references)
+    const setDevice    = useEditorStore(s => s.setDevice);
+    const saveSettings = useEditorStore(s => s.saveSettings);
+    const undo         = useEditorStore(s => s.undo);
+    const redo         = useEditorStore(s => s.redo);
+    const canUndo      = useEditorStore(s => s.canUndo);
+    const canRedo      = useEditorStore(s => s.canRedo);
+
     const navigate = useNavigate();
-    const isSaving = fetcher?.state !== 'idle';
+    const isSaving = fetcherState !== 'idle' && fetcherState !== undefined;
 
     return (
         <>
@@ -91,16 +118,9 @@ function ThemeEditorApp() {
             }}>
                 {/* ─── TOP BAR ─── */}
                 <header style={{
-                    height: 56,
-                    background: '#fff',
-                    borderBottom: '1px solid #e5e7eb',
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '0 16px',
-                    gap: 12,
-                    flexShrink: 0,
-                    zIndex: 100,
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                    height: 56, background: '#fff', borderBottom: '1px solid #e5e7eb',
+                    display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12,
+                    flexShrink: 0, zIndex: 100, boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 }}>
                     {/* LEFT: Logo + Theme Name */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 180 }}>
@@ -110,7 +130,6 @@ function ThemeEditorApp() {
                             onMouseOver={e => e.currentTarget.style.background = '#f3f4f6'}
                             onMouseOut={e => e.currentTarget.style.background = 'none'}
                         >
-                            {/* CF Logo pill */}
                             <div style={{ width: 28, height: 28, background: 'linear-gradient(135deg, #5b00d1, #2563eb)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                                 <span style={{ color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '-0.5px' }}>CF</span>
                             </div>
@@ -124,7 +143,7 @@ function ThemeEditorApp() {
                         </div>
                     </div>
 
-                    {/* CENTER: Device Toggle + Page Indicator */}
+                    {/* CENTER: Device Toggle */}
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
                         <div style={{ display: 'flex', alignItems: 'center', padding: 3, background: '#f3f4f6', borderRadius: 10, gap: 2 }}>
                             {[
@@ -144,14 +163,9 @@ function ThemeEditorApp() {
                                         boxShadow: device === opt.id ? '0 1px 4px rgba(0,0,0,0.10)' : 'none',
                                         transition: 'all 0.15s',
                                     }}
-                                >
-                                    {opt.icon}
-                                    <span>{opt.label}</span>
-                                </button>
+                                >{opt.icon}<span>{opt.label}</span></button>
                             ))}
                         </div>
-
-                        {/* Live indicator */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#6b7280' }}>
                             <span style={{ width: 7, height: 7, borderRadius: '50%', background: isSaving ? '#f59e0b' : '#22c55e', display: 'inline-block', boxShadow: isSaving ? '0 0 0 3px rgba(245,158,11,0.2)' : '0 0 0 3px rgba(34,197,94,0.2)' }} />
                             {isSaving ? 'Saving…' : 'Live Preview'}
@@ -161,8 +175,8 @@ function ThemeEditorApp() {
                     {/* RIGHT: Undo / Redo / Save */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 180, justifyContent: 'flex-end' }}>
                         {[
-                            { fn: undo, enabled: canUndo, title: 'Undo (Ctrl+Z)', icon: <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M7.793 2.232a.75.75 0 01-.025 1.06L3.622 7.25h10.003a5.375 5.375 0 010 10.75H10.75a.75.75 0 010-1.5h2.875a3.875 3.875 0 000-7.75H3.622l4.146 3.957a.75.75 0 01-1.036 1.085l-5.5-5.25a.75.75 0 010-1.085l5.5-5.25a.75.75 0 011.061.025z"/></svg> },
-                            { fn: redo, enabled: canRedo, title: 'Redo (Ctrl+Y)', icon: <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.207 2.232a.75.75 0 00.025 1.06l4.146 3.958H6.375a5.375 5.375 0 000 10.75H9.25a.75.75 0 000-1.5H6.375a3.875 3.875 0 010-7.75h10.003l-4.146 3.957a.75.75 0 001.036 1.085l5.5-5.25a.75.75 0 000-1.085l-5.5-5.25a.75.75 0 00-1.061.025z"/></svg> },
+                            { fn: undo, enabled: canUndo(), title: 'Undo (Ctrl+Z)', icon: <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M7.793 2.232a.75.75 0 01-.025 1.06L3.622 7.25h10.003a5.375 5.375 0 010 10.75H10.75a.75.75 0 010-1.5h2.875a3.875 3.875 0 000-7.75H3.622l4.146 3.957a.75.75 0 01-1.036 1.085l-5.5-5.25a.75.75 0 010-1.085l5.5-5.25a.75.75 0 011.061.025z"/></svg> },
+                            { fn: redo, enabled: canRedo(), title: 'Redo (Ctrl+Y)', icon: <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.207 2.232a.75.75 0 00.025 1.06l4.146 3.958H6.375a5.375 5.375 0 000 10.75H9.25a.75.75 0 000-1.5H6.375a3.875 3.875 0 010-7.75h10.003l-4.146 3.957a.75.75 0 001.036 1.085l5.5-5.25a.75.75 0 000-1.085l-5.5-5.25a.75.75 0 00-1.061.025z"/></svg> },
                         ].map((btn, i) => (
                             <button
                                 key={i}
@@ -171,7 +185,8 @@ function ThemeEditorApp() {
                                 title={btn.title}
                                 style={{
                                     width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff', cursor: btn.enabled ? 'pointer' : 'not-allowed',
+                                    border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff',
+                                    cursor: btn.enabled ? 'pointer' : 'not-allowed',
                                     color: btn.enabled ? '#374151' : '#d1d5db', transition: 'all 0.15s',
                                 }}
                                 onMouseOver={e => { if (btn.enabled) e.currentTarget.style.background = '#f9fafb'; }}
@@ -194,7 +209,6 @@ function ThemeEditorApp() {
                                 cursor: (selectedBlockId && !isSaving) ? 'pointer' : 'not-allowed',
                                 transition: 'all 0.2s',
                                 boxShadow: selectedBlockId ? '0 2px 8px rgba(0,0,0,0.15)' : 'none',
-                                letterSpacing: '0.01em',
                             }}
                         >
                             {isSaving ? 'Saving…' : hasUnsavedChanges ? '💾 Save Changes' : 'Save'}

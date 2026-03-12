@@ -3,8 +3,9 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useThemeEditor } from './ThemeEditorContext';
+import useEditorStore, { selectBlocks, selectSelectedBlockId, selectActiveTab, selectTemplateFile } from './useEditorStore';
 import { TemplatePicker } from './TemplatePicker';
+
 
 // ── Section icon colors ──────────────────────────────────────────
 const SECTION_ICON_COLORS = {
@@ -174,12 +175,19 @@ function SectionGroup({ label, count, color, children }) {
 
 // ── Main SidebarLeft ─────────────────────────────────────────────
 export function SidebarLeft() {
-    const {
-        blocks, setBlocks, selectedBlockId, setSelectedBlockId,
-        activeTab, setActiveTab, reorderSections,
-        setInsertTargetId, setSwapTargetId,
-        templateFile, setTemplateFile, removeSection
-    } = useThemeEditor();
+    // 🔑 Selector-based subscriptions (no full-sidebar re-render)
+    const blocks           = useEditorStore(selectBlocks);
+    const selectedBlockId  = useEditorStore(selectSelectedBlockId);
+    const activeTab        = useEditorStore(selectActiveTab);
+    const templateFile     = useEditorStore(selectTemplateFile);
+    const setBlocks        = useEditorStore(s => s.setBlocks);
+    const setSelectedBlockId = useEditorStore(s => s.setSelectedBlockId);
+    const setActiveTab     = useEditorStore(s => s.setActiveTab);
+    const setTemplateFile  = useEditorStore(s => s.setTemplateFile);
+    const reorderSections  = useEditorStore(s => s.reorderSections);
+    const setInsertTargetId = useEditorStore(s => s.setInsertTargetId);
+    const setSwapTargetId  = useEditorStore(s => s.setSwapTargetId);
+    const removeSection    = useEditorStore(s => s.removeSection);
 
     if (activeTab === 'add' || activeTab === 'titan' || activeTab === 'swap') return <TemplatePicker />;
 

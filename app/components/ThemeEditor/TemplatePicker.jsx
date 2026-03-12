@@ -1,17 +1,26 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useThemeEditor } from './ThemeEditorContext';
+import useEditorStore, { selectCategories, selectActiveTab, selectPreviewTemplateId, selectInsertTargetId, selectSwapTargetId } from './useEditorStore';
 import { getSectionsByCategory } from '../../lib/constants';
 import { PAGE_TEMPLATES } from '../../lib/page-templates';
 
 export function TemplatePicker() {
-    const {
-        categories, activeTab, setActiveTab,
-        addSection, insertSection, swapSection, applyTitan,
-        setPreviewTemplateId, previewTemplateId,
-        insertTargetId, setInsertTargetId,
-        swapTargetId, setSwapTargetId,
-        fetcher
-    } = useThemeEditor();
+    // 🔑 Zustand selectors
+    const categories       = useEditorStore(selectCategories);
+    const activeTab        = useEditorStore(selectActiveTab);
+    const previewTemplateId = useEditorStore(selectPreviewTemplateId);
+    const insertTargetId   = useEditorStore(selectInsertTargetId);
+    const swapTargetId     = useEditorStore(selectSwapTargetId);
+    const fetcherState     = useEditorStore(s => s._fetcherState);
+
+    // Actions (stable refs)
+    const setActiveTab         = useEditorStore(s => s.setActiveTab);
+    const addSection           = useEditorStore(s => s.addSection);
+    const insertSection        = useEditorStore(s => s.insertSection);
+    const swapSection          = useEditorStore(s => s.swapSection);
+    const applyTitan           = useEditorStore(s => s.applyTitan);
+    const setPreviewTemplateId = useEditorStore(s => s.setPreviewTemplateId);
+    const setInsertTargetId    = useEditorStore(s => s.setInsertTargetId);
+    const setSwapTargetId      = useEditorStore(s => s.setSwapTargetId);
 
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -19,7 +28,7 @@ export function TemplatePicker() {
 
     const isSwapMode = activeTab === 'swap';
     const isTitanMode = activeTab === 'titan';
-    const isBusy = fetcher.state !== 'idle';
+    const isBusy = fetcherState !== 'idle' && fetcherState !== undefined;
 
     // Auto-apply template from URL if present
     useEffect(() => {
