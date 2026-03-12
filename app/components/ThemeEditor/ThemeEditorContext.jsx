@@ -1,80 +1,180 @@
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useFetcher, useLoaderData } from '@remix-run/react';
 import { useAppBridge } from '@shopify/app-bridge-react';
 
 const ThemeEditorContext = createContext(null);
+
+// ── Undo/Redo history manager ─────────────────────────────────────
+function useHistory(initialState) {
+    const [history, setHistory] = useState([initialState]);
+    const [cursor, setCursor] = useState(0);
+
+    const current = history[cursor];
+
+    const push = useCallback((newState) => {
+        setHistory(prev => {
+            const trimmed = prev.slice(0, cursor + 1);
+            return [...trimmed, newState].slice(-50); // keep max 50 history items
+        });
+        setCursor(prev => Math.min(prev + 1, 49));
+    }, [cursor]);
+
+    const undo = useCallback(() => {
+        if (cursor > 0) setCursor(c => c - 1);
+    }, [cursor]);
+
+    const redo = useCallback(() => {
+        if (cursor < history.length - 1) setCursor(c => c + 1);
+    }, [cursor, history.length]);
+
+    const canUndo = cursor > 0;
+    const canRedo = cursor < history.length - 1;
+
+    return { current, push, undo, redo, canUndo, canRedo, setCurrent: push };
+}
 
 export function ThemeEditorProvider({ children }) {
     const { pageBlocks: initBlocks, categories, themeId, shop, themeName, templateFile: initTemplateFile } = useLoaderData();
     const fetcher = useFetcher();
     const shopify = useAppBridge();
 
-    // Core State
-    const [blocks, setBlocks] = useState(initBlocks || []);
+    // ── History-aware blocks state ────────────────────────────────
+    const {
+        current: blocks,
+        push: pushHistory,
+        undo: undoBlocks,
+        redo: redoBlocks,
+        canUndo,
+        canRedo,
+    } = useHistory(initBlocks || []);
+
+    // We also need a mutable setter for non-history updates (server sync)
+    const [serverBlocks, setServerBlocks] = useState(null); // override when server returns
+    const activeBlocks = serverBlocks !== null ? serverBlocks : blocks;
+
+    const setBlocks = useCallback((updaterOrValue) => {
+        const newVal = typeof updaterOrValue === 'function' ? updaterOrValue(activeBlocks) : updaterOrValue;
+        pushHistory(newVal);
+        setServerBlocks(null);
+    }, [activeBlocks, pushHistory]);
+
     const [templateFile, setTemplateFile] = useState(initTemplateFile || 'templates/index.json');
 
-    // UI State
-    const [activeTab, setActiveTab] = useState('sections'); // 'sections' | 'add' | 'titan'
+    // ── UI State ──────────────────────────────────────────────────
+    const [activeTab, setActiveTab] = useState('sections');
     const [selectedBlockId, setSelectedBlockId] = useState(null);
+    const [selectedBlockType, setSelectedBlockType] = useState(null); // 'section' | 'block'
     const [previewTemplateId, setPreviewTemplateId] = useState(null);
     const [device, setDevice] = useState('desktop');
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-    // Insert-at targeting: which block to insert AFTER
+    // Insert/Swap targeting
     const [insertTargetId, setInsertTargetId] = useState(null);
-
-    // Swap targeting: which block to swap out
     const [swapTargetId, setSwapTargetId] = useState(null);
 
-    // Form State for Active Block
+    // ── Settings form state ───────────────────────────────────────
     const [settings, setSettings] = useState({});
-
-    // Timestamp bumped on every successful server action → triggers Canvas re-fetch
     const [lastSavedAt, setLastSavedAt] = useState(null);
 
-    // Helper mapping
-    const activeBlock = blocks.find(b => b.id === selectedBlockId);
+    // Debounce ref for auto-save
+    const autoSaveTimerRef = useRef(null);
 
-    // Sync state with server action results
+    // Helper: find active block from the merged list
+    const activeBlock = activeBlocks.find(b => b.id === selectedBlockId);
+
+    // ── Sync settings when block changes ─────────────────────────
+    useEffect(() => {
+        if (activeBlock) {
+            setSettings(activeBlock.settings || {});
+        } else {
+            setSettings({});
+        }
+        setHasUnsavedChanges(false);
+    }, [selectedBlockId]);
+
+    // ── Sync server action results ────────────────────────────────
     useEffect(() => {
         if (fetcher.state === 'idle' && fetcher.data?.ok) {
             if (fetcher.data.pageBlocks) {
-                setBlocks(fetcher.data.pageBlocks);
+                setServerBlocks(fetcher.data.pageBlocks);
             }
             if (fetcher.data.newBlockId) {
                 setSelectedBlockId(fetcher.data.newBlockId);
             }
-            // Bump timestamp → Canvas will auto-reload the live preview
             setLastSavedAt(Date.now());
-            shopify.toast.show(fetcher.data.message || 'Theme updated');
+            setHasUnsavedChanges(false);
+            shopify.toast.show(fetcher.data.message || 'Saved');
         } else if (fetcher.state === 'idle' && fetcher.data?.error) {
             shopify.toast.show(fetcher.data.error, { isError: true });
         }
     }, [fetcher.state, fetcher.data]);
 
-    // ── Actions ────────────────────────────────────────────────
+    // ── Keyboard shortcuts ────────────────────────────────────────
+    useEffect(() => {
+        const handler = (e) => {
+            const tag = document.activeElement?.tagName;
+            const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(tag);
+            if (isInput) return;
 
-    const updateSettings = useCallback((newSettings) => {
-        setSettings(prev => ({ ...prev, ...newSettings }));
+            if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                undoBlocks();
+            } else if ((e.metaKey || e.ctrlKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+                e.preventDefault();
+                redoBlocks();
+            } else if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+                e.preventDefault();
+                if (selectedBlockId) saveSettings();
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [undoBlocks, redoBlocks, selectedBlockId]);
+
+    // ── Actions ───────────────────────────────────────────────────
+
+    const updateSettings = useCallback((newValues) => {
+        setSettings(prev => ({ ...prev, ...newValues }));
+        setHasUnsavedChanges(true);
+
+        // Debounce auto-save (2 second delay)
+        if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = setTimeout(() => {
+            saveSettingsRef.current?.();
+        }, 2000);
     }, []);
+
+    // Use a ref so the debounced fn always has access to latest state
+    const saveSettingsRef = useRef(null);
 
     const saveSettings = useCallback(() => {
         if (!selectedBlockId) return;
+        const currentSettings = settings;
         fetcher.submit(
-            { intent: "update_settings", blockId: selectedBlockId, settings: JSON.stringify(settings), templateFile },
+            { intent: "update_settings", blockId: selectedBlockId, settings: JSON.stringify(currentSettings), templateFile },
             { method: "post" }
         );
-    }, [selectedBlockId, settings, templateFile, fetcher]);
+        setHasUnsavedChanges(false);
 
-    /** Original add — appends to bottom */
-    const addSection = useCallback((templateId) => {
+        // Also optimistically update local blocks
+        setServerBlocks(prev => {
+            const base = prev || activeBlocks;
+            return base.map(b => b.id === selectedBlockId ? { ...b, settings: currentSettings } : b);
+        });
+    }, [selectedBlockId, settings, templateFile, fetcher, activeBlocks]);
+
+    // Keep ref in sync
+    useEffect(() => { saveSettingsRef.current = saveSettings; }, [saveSettings]);
+
+    const addSection = useCallback((sectionId) => {
         fetcher.submit(
-            { intent: "inject_section", sectionId: templateId, placement: "bottom", trustedOrder: JSON.stringify(blocks.map(b => b.id)), templateFile },
+            { intent: "inject_section", sectionId, placement: "bottom", trustedOrder: JSON.stringify(activeBlocks.map(b => b.id)), templateFile },
             { method: "post" }
         );
         setInsertTargetId(null);
-    }, [blocks, templateFile, fetcher]);
+        setActiveTab('sections');
+    }, [activeBlocks, templateFile, fetcher]);
 
-    /** NEW: Insert a section AFTER a specific block */
     const insertSection = useCallback((sectionId, afterBlockId) => {
         fetcher.submit(
             { intent: "insert_at", sectionId, afterBlockId: afterBlockId || '', settings: '{}', templateFile },
@@ -84,7 +184,6 @@ export function ThemeEditorProvider({ children }) {
         setActiveTab('sections');
     }, [templateFile, fetcher]);
 
-    /** NEW: Swap a section in-place */
     const swapSection = useCallback((targetBlockId, newSectionId) => {
         fetcher.submit(
             { intent: "swap_section", targetBlockId, newSectionId, templateFile },
@@ -94,7 +193,6 @@ export function ThemeEditorProvider({ children }) {
         setActiveTab('sections');
     }, [templateFile, fetcher]);
 
-    /** NEW: Apply a full Titan template */
     const applyTitan = useCallback((titanId) => {
         fetcher.submit(
             { intent: "apply_titan", titanId, templateFile },
@@ -109,7 +207,10 @@ export function ThemeEditorProvider({ children }) {
             { method: "post" }
         );
         if (selectedBlockId === blockId) setSelectedBlockId(null);
-    }, [selectedBlockId, templateFile, fetcher]);
+
+        // Optimistic update
+        setServerBlocks(prev => (prev || activeBlocks).filter(b => b.id !== blockId));
+    }, [selectedBlockId, templateFile, fetcher, activeBlocks]);
 
     const reorderSections = useCallback((newOrderArray) => {
         fetcher.submit(
@@ -118,22 +219,37 @@ export function ThemeEditorProvider({ children }) {
         );
     }, [templateFile, fetcher]);
 
+    // Undo/Redo that also updates server
+    const handleUndo = useCallback(() => {
+        undoBlocks();
+        setServerBlocks(null);
+    }, [undoBlocks]);
+
+    const handleRedo = useCallback(() => {
+        redoBlocks();
+        setServerBlocks(null);
+    }, [redoBlocks]);
+
     return (
         <ThemeEditorContext.Provider value={{
-            blocks, setBlocks,
+            blocks: activeBlocks,
+            setBlocks,
             templateFile, setTemplateFile,
             activeTab, setActiveTab,
             selectedBlockId, setSelectedBlockId,
+            selectedBlockType, setSelectedBlockType,
             previewTemplateId, setPreviewTemplateId,
             insertTargetId, setInsertTargetId,
             swapTargetId, setSwapTargetId,
             device, setDevice,
-            settings, updateSettings, setSettings, saveSettings,
+            settings, setSettings, updateSettings, saveSettings,
+            hasUnsavedChanges,
             activeBlock,
             addSection, insertSection, swapSection, applyTitan,
             removeSection, reorderSections,
+            undo: handleUndo, redo: handleRedo, canUndo, canRedo,
             fetcher, categories, themeId, shop, themeName,
-            lastSavedAt
+            lastSavedAt,
         }}>
             {children}
         </ThemeEditorContext.Provider>
