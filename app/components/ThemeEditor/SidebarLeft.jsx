@@ -5,57 +5,57 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import useEditorStore, { selectBlocks, selectSelectedBlockId, selectActiveTab, selectTemplateFile } from './useEditorStore';
 import { TemplatePicker } from './TemplatePicker';
-
+import { AddSectionPopover } from './AddSectionPopover';
 
 // ── Section icon colors ──────────────────────────────────────────
 const SECTION_ICON_COLORS = {
-    header: { bg: '#ede9fe', color: '#7c3aed' },
-    hero: { bg: '#dbeafe', color: '#2563eb' },
-    footer: { bg: '#fce7f3', color: '#db2777' },
-    announcement: { bg: '#fef9c3', color: '#ca8a04' },
-    banner: { bg: '#dbeafe', color: '#2563eb' },
-    collection: { bg: '#dcfce7', color: '#16a34a' },
-    product: { bg: '#ffedd5', color: '#ea580c' },
-    image: { bg: '#f0fdf4', color: '#15803d' },
-    text: { bg: '#f1f5f9', color: '#475569' },
-    rich: { bg: '#f1f5f9', color: '#475569' },
-    featured: { bg: '#ecfdf5', color: '#059669' },
-    cf: { bg: '#eef2ff', color: '#4f46e5' },
-    default: { bg: '#f3f4f6', color: '#6b7280' },
+    header: { bg: '#ede9fe', color: '#7c3aed', icon: '📐' },
+    hero: { bg: '#dbeafe', color: '#2563eb', icon: '🌟' },
+    footer: { bg: '#fce7f3', color: '#db2777', icon: '🦶' },
+    announcement: { bg: '#fef9c3', color: '#ca8a04', icon: '📣' },
+    announce: { bg: '#fef9c3', color: '#ca8a04', icon: '📣' },
+    banner: { bg: '#dbeafe', color: '#2563eb', icon: '🖼️' },
+    collection: { bg: '#dcfce7', color: '#16a34a', icon: '📦' },
+    category: { bg: '#dcfce7', color: '#16a34a', icon: '📦' },
+    cat: { bg: '#dcfce7', color: '#16a34a', icon: '📦' },
+    product: { bg: '#ffedd5', color: '#ea580c', icon: '🛒' },
+    image: { bg: '#f0fdf4', color: '#15803d', icon: '🖼️' },
+    text: { bg: '#f1f5f9', color: '#475569', icon: '📝' },
+    rich: { bg: '#f1f5f9', color: '#475569', icon: '📝' },
+    featured: { bg: '#ecfdf5', color: '#059669', icon: '🛍️' },
+    feat: { bg: '#ecfdf5', color: '#059669', icon: '🛍️' },
+    feature: { bg: '#ecfdf5', color: '#059669', icon: '🛍️' },
+    marquee: { bg: '#e0f2fe', color: '#0284c7', icon: '📢' },
+    promo: { bg: '#dbeafe', color: '#3b82f6', icon: '🖼️' },
+    snack: { bg: '#d1fae5', color: '#10b981', icon: '🏷️' },
+    trust: { bg: '#ccfbf1', color: '#14b8a6', icon: '🛡️' },
+    cro: { bg: '#fee2e2', color: '#ef4444', icon: '🎯' },
+    cf: { bg: '#eef2ff', color: '#4f46e5', icon: '⚡' },
+    maison: { bg: '#faf5ff', color: '#a855f7', icon: '✨' },
+    default: { bg: '#f3f4f6', color: '#6b7280', icon: '📦' },
 };
 
-function getSectionColor(type) {
+function getSectionMeta(type) {
     const t = (type || '').toLowerCase();
-    if (t.includes('cf')) return SECTION_ICON_COLORS.cf;
+    // Priority order: specific matches first
     for (const [key, val] of Object.entries(SECTION_ICON_COLORS)) {
-        if (t.includes(key)) return val;
+        if (key !== 'default' && t.includes(key)) return val;
     }
     return SECTION_ICON_COLORS.default;
 }
 
-function SectionIcon({ type }) {
-    const { bg, color } = getSectionColor(type);
+function SectionIcon({ type, active }) {
+    const meta = getSectionMeta(type);
+    if (active) {
+        return (
+            <div style={{ width: 28, height: 28, borderRadius: 7, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14 }}>
+                {meta.icon}
+            </div>
+        );
+    }
     return (
-        <div style={{ width: 28, height: 28, borderRadius: 7, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="14" height="14" viewBox="0 0 20 20" fill={color}>
-                <path fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z" clipRule="evenodd" />
-            </svg>
-        </div>
-    );
-}
-
-// ── DragHandle ───────────────────────────────────────────────────
-function DragHandle({ listeners, attributes, visible }) {
-    return (
-        <div {...listeners} {...attributes} style={{
-            cursor: 'grab', color: visible ? '#9ca3af' : 'transparent', display: 'flex', alignItems: 'center', flexShrink: 0,
-            transition: 'color 0.1s', padding: '0 2px',
-        }}>
-            <svg width="12" height="16" viewBox="0 0 8 16" fill="currentColor">
-                <circle cx="2" cy="3" r="1.2"/><circle cx="6" cy="3" r="1.2"/>
-                <circle cx="2" cy="8" r="1.2"/><circle cx="6" cy="8" r="1.2"/>
-                <circle cx="2" cy="13" r="1.2"/><circle cx="6" cy="13" r="1.2"/>
-            </svg>
+        <div style={{ width: 28, height: 28, borderRadius: 7, background: meta.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14 }}>
+            {meta.icon}
         </div>
     );
 }
@@ -89,23 +89,20 @@ function BlockItem({ block, isActive, formatName, onSelect, onSwap, onDelete, on
                 </div>
 
                 {/* Section icon */}
-                {isActive ? (
-                    <div style={{ width: 28, height: 28, borderRadius: 7, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="rgba(255,255,255,0.9)">
-                            <path fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z" clipRule="evenodd"/>
-                        </svg>
-                    </div>
-                ) : (
-                    <SectionIcon type={block.type} />
-                )}
+                <SectionIcon type={block.type} active={isActive} />
 
                 {/* Name */}
                 <span style={{ flex: 1, fontSize: 13, fontWeight: isActive ? 700 : 500, color: isActive ? '#fff' : '#1f2937', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {formatName(block.type)}
                 </span>
 
+                {/* Disabled badge */}
+                {block.disabled && !isActive && (
+                    <span style={{ fontSize: 9, background: '#fef9c3', color: '#ca8a04', padding: '2px 5px', borderRadius: 4, fontWeight: 700, flexShrink: 0 }}>OFF</span>
+                )}
+
                 {/* CF badge */}
-                {block.isCf && !isActive && (
+                {block.isCf && !isActive && !block.disabled && (
                     <span style={{ fontSize: 9, background: '#eef2ff', color: '#4f46e5', padding: '2px 5px', borderRadius: 4, fontWeight: 700, letterSpacing: '0.05em', flexShrink: 0 }}>CF</span>
                 )}
 
@@ -173,9 +170,11 @@ function SectionGroup({ label, count, color, children }) {
     );
 }
 
-// ── Main SidebarLeft ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+//  MAIN SIDEBAR LEFT
+// ═══════════════════════════════════════════════════════════════
 export function SidebarLeft() {
-    // 🔑 Selector-based subscriptions (no full-sidebar re-render)
+    // 🔑 Zustand selectors
     const blocks           = useEditorStore(selectBlocks);
     const selectedBlockId  = useEditorStore(selectSelectedBlockId);
     const activeTab        = useEditorStore(selectActiveTab);
@@ -189,7 +188,12 @@ export function SidebarLeft() {
     const setSwapTargetId  = useEditorStore(s => s.setSwapTargetId);
     const removeSection    = useEditorStore(s => s.removeSection);
 
-    if (activeTab === 'add' || activeTab === 'titan' || activeTab === 'swap') return <TemplatePicker />;
+    // Popover state (local — doesn't belong in Zustand)
+    const [popoverOpen, setPopoverOpen] = useState(false);
+    const [popoverMode, setPopoverMode] = useState('add'); // 'add' | 'swap'
+
+    // Titan templates still use the old TemplatePicker
+    if (activeTab === 'titan') return <TemplatePicker />;
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -200,7 +204,7 @@ export function SidebarLeft() {
         const header = [], template = [], footer = [];
         for (const block of blocks) {
             const t = (block.type || block.id || '').toLowerCase();
-            if (t.includes('header') || t.includes('announcement')) header.push(block);
+            if (t.includes('header') || t.includes('announcement') || t.includes('announce')) header.push(block);
             else if (t.includes('footer')) footer.push(block);
             else template.push(block);
         }
@@ -221,8 +225,27 @@ export function SidebarLeft() {
     const formatName = (type) => (type || '')
         .replace(/^cf[-_]/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
-    const handleInsertAfter = (id) => { setInsertTargetId(id); setActiveTab('add'); };
-    const handleSwap = (id) => { setSwapTargetId(id); setActiveTab('swap'); };
+    // ── Popover handlers ──────────────────────────────────────
+    const handleInsertAfter = (id) => {
+        setInsertTargetId(id);
+        setPopoverMode('add');
+        setPopoverOpen(true);
+    };
+    const handleSwap = (id) => {
+        setSwapTargetId(id);
+        setPopoverMode('swap');
+        setPopoverOpen(true);
+    };
+    const handleAddNew = () => {
+        setInsertTargetId(null);
+        setPopoverMode('add');
+        setPopoverOpen(true);
+    };
+    const handleClosePopover = () => {
+        setPopoverOpen(false);
+        setInsertTargetId(null);
+        setSwapTargetId(null);
+    };
     const handleDelete = (id) => {
         if (window.confirm('Remove this section from the page?')) {
             setBlocks(prev => prev.filter(b => b.id !== id));
@@ -241,95 +264,105 @@ export function SidebarLeft() {
     });
 
     return (
-        <aside style={{ width: 268, minWidth: 268, height: '100%', background: '#fff', borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden' }}>
+        <>
+            <aside style={{ width: 268, minWidth: 268, height: '100%', background: '#fff', borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden' }}>
 
-            {/* Page selector */}
-            <div style={{ padding: '14px 14px 10px' }}>
-                <div style={{ position: 'relative' }}>
-                    <select
-                        value={templateFile}
-                        onChange={e => {
-                            setTemplateFile(e.target.value);
-                            window.location.href = `/app/theme-editor?template=${e.target.value === 'templates/product.json' ? 'product' : 'index'}`;
-                        }}
-                        style={{
-                            width: '100%', appearance: 'none', background: '#f9fafb',
-                            border: '1.5px solid #e5e7eb', borderRadius: 10,
-                            padding: '10px 36px 10px 14px', fontSize: 13, fontWeight: 600,
-                            color: '#1f2937', cursor: 'pointer', outline: 'none',
-                            transition: 'border-color 0.15s',
-                        }}
-                        onFocus={e => e.target.style.borderColor = '#4f46e5'}
-                        onBlur={e => e.target.style.borderColor = '#e5e7eb'}
-                    >
-                        <option value="templates/index.json">🏠 Home page</option>
-                        <option value="templates/product.json">🛍️ Product page</option>
-                    </select>
-                    <svg width="14" height="14" viewBox="0 0 20 20" fill="#9ca3af" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/>
-                    </svg>
+                {/* Page selector */}
+                <div style={{ padding: '14px 14px 10px' }}>
+                    <div style={{ position: 'relative' }}>
+                        <select
+                            value={templateFile}
+                            onChange={e => {
+                                setTemplateFile(e.target.value);
+                                window.location.href = `/app/theme-editor?template=${e.target.value === 'templates/product.json' ? 'product' : 'index'}`;
+                            }}
+                            style={{
+                                width: '100%', appearance: 'none', background: '#f9fafb',
+                                border: '1.5px solid #e5e7eb', borderRadius: 10,
+                                padding: '10px 36px 10px 14px', fontSize: 13, fontWeight: 600,
+                                color: '#1f2937', cursor: 'pointer', outline: 'none',
+                                fontFamily: 'inherit', transition: 'border-color 0.15s',
+                            }}
+                            onFocus={e => e.target.style.borderColor = '#4f46e5'}
+                            onBlur={e => e.target.style.borderColor = '#e5e7eb'}
+                        >
+                            <option value="templates/index.json">🏠 Home page</option>
+                            <option value="templates/product.json">🛍️ Product page</option>
+                        </select>
+                        <svg width="14" height="14" viewBox="0 0 20 20" fill="#9ca3af" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+                            <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/>
+                        </svg>
+                    </div>
                 </div>
-            </div>
 
-            {/* Sections tree */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '0 6px 12px' }}>
-                {headerBlocks.length > 0 && (
-                    <SectionGroup label="Header" count={headerBlocks.length} color="#7c3aed">
-                        {headerBlocks.map(block => <BlockItem key={block.id} {...blockProps(block)} />)}
+                {/* Sections tree */}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '0 6px 12px' }}>
+                    {headerBlocks.length > 0 && (
+                        <SectionGroup label="Header" count={headerBlocks.length} color="#7c3aed">
+                            {headerBlocks.map(block => <BlockItem key={block.id} {...blockProps(block)} />)}
+                        </SectionGroup>
+                    )}
+
+                    <SectionGroup label="Template" count={templateBlocks.length} color="#2563eb">
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                            <SortableContext items={templateBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+                                {templateBlocks.map(block => <SortableBlockItem key={block.id} {...blockProps(block)} />)}
+                            </SortableContext>
+                        </DndContext>
+
+                        {/* ✨ Add Section — now opens the premium popover */}
+                        <button
+                            onClick={handleAddNew}
+                            style={{
+                                width: '100%', height: 44, margin: '6px 0 2px',
+                                border: '1.5px dashed #c7d2fe', borderRadius: 10,
+                                background: 'transparent', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+                                fontSize: 13, fontWeight: 600, color: '#4f46e5',
+                                fontFamily: 'inherit', transition: 'all 0.2s',
+                            }}
+                            onMouseOver={e => { e.currentTarget.style.background = '#eef2ff'; e.currentTarget.style.borderStyle = 'solid'; }}
+                            onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderStyle = 'dashed'; }}
+                        >
+                            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/></svg>
+                            Add Section
+                        </button>
                     </SectionGroup>
-                )}
 
-                <SectionGroup label="Template" count={templateBlocks.length} color="#2563eb">
-                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                        <SortableContext items={templateBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                            {templateBlocks.map(block => <SortableBlockItem key={block.id} {...blockProps(block)} />)}
-                        </SortableContext>
-                    </DndContext>
+                    {footerBlocks.length > 0 && (
+                        <SectionGroup label="Footer" count={footerBlocks.length} color="#db2777">
+                            {footerBlocks.map(block => <BlockItem key={block.id} {...blockProps(block)} />)}
+                        </SectionGroup>
+                    )}
+                </div>
 
-                    {/* Add Section */}
+                {/* Apply Template Button */}
+                <div style={{ padding: '10px 14px 14px', borderTop: '1px solid #f3f4f6' }}>
                     <button
-                        onClick={() => { setInsertTargetId(null); setActiveTab('add'); }}
+                        onClick={() => setActiveTab('titan')}
                         style={{
-                            width: '100%', height: 44, margin: '6px 0 2px',
-                            border: '1.5px dashed #c7d2fe', borderRadius: 10,
-                            background: 'transparent', cursor: 'pointer',
+                            width: '100%', height: 42, border: 'none', borderRadius: 10,
+                            background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                            color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                            fontFamily: 'inherit',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-                            fontSize: 13, fontWeight: 600, color: '#4f46e5',
+                            boxShadow: '0 2px 10px rgba(79,70,229,0.35)',
                             transition: 'all 0.2s',
                         }}
-                        onMouseOver={e => { e.currentTarget.style.background = '#eef2ff'; e.currentTarget.style.borderStyle = 'solid'; }}
-                        onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderStyle = 'dashed'; }}
+                        onMouseOver={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(79,70,229,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                        onMouseOut={e => { e.currentTarget.style.boxShadow = '0 2px 10px rgba(79,70,229,0.35)'; e.currentTarget.style.transform = 'none'; }}
                     >
-                        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/></svg>
-                        Add Section
+                        ✨ Apply Readymade Template
                     </button>
-                </SectionGroup>
+                </div>
+            </aside>
 
-                {footerBlocks.length > 0 && (
-                    <SectionGroup label="Footer" count={footerBlocks.length} color="#db2777">
-                        {footerBlocks.map(block => <BlockItem key={block.id} {...blockProps(block)} />)}
-                    </SectionGroup>
-                )}
-            </div>
-
-            {/* Apply Template Button */}
-            <div style={{ padding: '10px 14px 14px', borderTop: '1px solid #f3f4f6' }}>
-                <button
-                    onClick={() => setActiveTab('titan')}
-                    style={{
-                        width: '100%', height: 42, border: 'none', borderRadius: 10,
-                        background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
-                        color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-                        boxShadow: '0 2px 10px rgba(79,70,229,0.35)',
-                        transition: 'all 0.2s',
-                    }}
-                    onMouseOver={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(79,70,229,0.5)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                    onMouseOut={e => { e.currentTarget.style.boxShadow = '0 2px 10px rgba(79,70,229,0.35)'; e.currentTarget.style.transform = 'none'; }}
-                >
-                    ✨ Apply Readymade Template
-                </button>
-            </div>
-        </aside>
+            {/* ✨ THE PREMIUM POPOVER — renders as a portal over the entire editor */}
+            <AddSectionPopover
+                open={popoverOpen}
+                onClose={handleClosePopover}
+                mode={popoverMode}
+            />
+        </>
     );
 }
