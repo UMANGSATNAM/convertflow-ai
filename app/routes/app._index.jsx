@@ -146,7 +146,7 @@ export default function AppIndex() {
                                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link to="/app/builder" className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-xl text-lg hover:scale-[1.02] transition-transform shadow-2xl shadow-primary/40 flex items-center justify-center gap-2" style={{ textDecoration: 'none' }}>
-                                            <Icon source={MagicIcon} tone="inherit" />
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
                                             Start Live Editor
                     </Link>
                     <Link to="/app/builder?tab=titan" className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white font-bold rounded-xl text-lg hover:bg-white/20 transition-colors flex items-center justify-center gap-2 backdrop-blur-sm border border-white/10" style={{ textDecoration: 'none' }}>

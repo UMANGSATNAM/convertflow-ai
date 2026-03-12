@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useRouteError } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import { getActiveTheme, getThemeAsset } from "../lib/shopify.server";
 import { StoreBuilder } from "../components/builder/StoreBuilder";
@@ -45,4 +45,16 @@ export default function BuilderRoute() {
             <StoreBuilder pageBlocks={pageBlocks} />
         </AppProvider>
     );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  console.error("BuilderRoute Error:", error);
+  return (
+    <div style={{ padding: "20px", color: "red" }}>
+      <h2>Error Loading Builder</h2>
+      <pre>{error.message || JSON.stringify(error)}</pre>
+      {error.stack && <pre>{error.stack}</pre>}
+    </div>
+  );
 }
