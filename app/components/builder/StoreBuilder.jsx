@@ -273,46 +273,58 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
 
             {/* ─── BODY ─── */}
             <main style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-                <Sidebar 
-                    blocks={pageBlocks} 
-                    categories={categories}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                    activeBlockId={activeBlockId} 
-                    setActiveBlockId={setActiveBlockId}
-                    activeCategoryId={activeCategoryId}
-                    setActiveCategoryId={setActiveCategoryId}
-                    selectedTemplateId={selectedTemplateId}
-                    setSelectedTemplateId={setSelectedTemplateId}
-                    onRemoveBlock={handleRemove}
-                />
+                {/* ─── LEFT SIDEBAR (Conditional View) ─── */}
+                <div style={{
+                    width: 320, minWidth: 320, height: '100%',
+                    background: '#ffffff', borderRight: '1px solid #e5e7eb',
+                    display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden'
+                }}>
+                    {(activeBlockId || selectedTemplateId) ? (
+                        <PropertiesPanel 
+                            selectedBlockId={activeBlockId} 
+                            selectedTemplateId={selectedTemplateId}
+                            onClearSelection={() => {
+                                setActiveBlockId(null);
+                                setSelectedTemplateId(null);
+                                setSettings({});
+                            }}
+                            templateSchema={templateSchema}
+                            settings={settings}
+                            setSettings={setSettings}
+                            placement={placement}
+                            setPlacement={setPlacement}
+                        />
+                    ) : (
+                        <Sidebar 
+                            blocks={pageBlocks} 
+                            categories={categories}
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
+                            activeBlockId={activeBlockId} 
+                            setActiveBlockId={setActiveBlockId}
+                            activeCategoryId={activeCategoryId}
+                            setActiveCategoryId={setActiveCategoryId}
+                            selectedTemplateId={selectedTemplateId}
+                            setSelectedTemplateId={setSelectedTemplateId}
+                            onRemoveBlock={handleRemove}
+                        />
+                    )}
+                </div>
                 
-                <Canvas 
-                    device={device} 
-                    previewHtml={previewHtml} 
-                    previewLoading={previewLoading} 
-                    activeBlockId={activeBlockId}
-                    sectionUpdate={sectionUpdate}
-                    onBlockSelect={(blockId) => {
-                        setActiveBlockId(blockId);
-                        setActiveTab('page');
-                    }}
-                />
-                
-                <PropertiesPanel 
-                    selectedBlockId={activeBlockId} 
-                    selectedTemplateId={selectedTemplateId}
-                    onClearSelection={() => {
-                        setActiveBlockId(null);
-                        setSelectedTemplateId(null);
-                        setSettings({});
-                    }}
-                    templateSchema={templateSchema}
-                    settings={settings}
-                    setSettings={setSettings}
-                    placement={placement}
-                    setPlacement={setPlacement}
-                />
+                {/* ─── RIGHT CANVAS (Preview) ─── */}
+                <div style={{ flex: 1, position: 'relative', display: 'flex', overflow: 'hidden' }}>
+                    <Canvas 
+                        device={device} 
+                        previewHtml={previewHtml} 
+                        previewLoading={previewLoading} 
+                        activeBlockId={activeBlockId}
+                        sectionUpdate={sectionUpdate}
+                        onBlockSelect={(blockId) => {
+                            setActiveBlockId(blockId);
+                            setActiveTab('page');
+                        }}
+                    />
+                </div>
             </main>
         </div>
     );
