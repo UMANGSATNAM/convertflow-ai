@@ -13,9 +13,10 @@ export function Canvas({ device, shop, themeId, onBlockSelect, activeBlockId, on
     const [loading, setLoading] = useState(true);
     const [bridge, setBridge] = useState(null);
 
-    // Build the real storefront preview URL (same technique Shopify uses)
+    // Use the proxy route — fetches the real store server-side and strips X-Frame-Options.
+    // Direct embedding of the storefront is blocked by Shopify's X-Frame-Options: DENY header.
     const previewUrl = shop && themeId
-        ? `https://${shop}?preview_theme_id=${themeId}`
+        ? `/app/api/proxy-preview?themeId=${themeId}`
         : null;
 
     // Initialize the PostMessage Bridge
