@@ -13,10 +13,10 @@ export function Canvas({ device, shop, themeId, onBlockSelect, activeBlockId, on
     const [loading, setLoading] = useState(true);
     const [bridge, setBridge] = useState(null);
 
-    // Use the proxy route — fetches the real store server-side and strips X-Frame-Options.
-    // Direct embedding of the storefront is blocked by Shopify's X-Frame-Options: DENY header.
+    // Use full-preview route — fetches store HTML server-side using the authenticated Admin session.
+    // proxy-preview caused accounts.shopify.com redirect because preview_theme_id needs browser cookies.
     const previewUrl = shop && themeId
-        ? `/app/api/proxy-preview?themeId=${themeId}`
+        ? `/app/api/full-preview?shop=${shop}&themeId=${themeId}`
         : null;
 
     // Initialize the PostMessage Bridge
