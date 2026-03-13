@@ -142,39 +142,35 @@ export function Sidebar({
                                     <div 
                                         key={block.id}
                                         onClick={() => {
-                                            if (block.isCf) {
-                                                setActiveBlockId(block.id);
-                                                setSelectedTemplateId(null);
-                                            }
+                                            setActiveBlockId(block.id);
+                                            setSelectedTemplateId(null);
                                         }}
                                         style={{ 
                                             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                            padding: '8px 12px', borderRadius: 6, cursor: block.isCf ? 'pointer' : 'default',
+                                            padding: '8px 12px', borderRadius: 6, cursor: 'pointer',
                                             background: isActive ? '#eef2ff' : 'transparent',
                                             color: isActive ? '#4f46e5' : '#374151',
                                             fontWeight: isActive ? 500 : 400,
                                             marginBottom: 2
                                         }}
-                                        onMouseOver={e => { if(!isActive && block.isCf) e.currentTarget.style.background = '#f9fafb' }}
+                                        onMouseOver={e => { if(!isActive) e.currentTarget.style.background = '#f9fafb' }}
                                         onMouseOut={e => { if(!isActive) e.currentTarget.style.background = 'transparent' }}
                                     >
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                             <span style={{ color: isActive ? '#4f46e5' : '#9ca3af', display: 'flex' }}>
                                                 {block.isCf ? <Palette size={14} /> : <Layout size={14} />}
                                             </span>
-                                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160 }}>
-                                                {label}
+                                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160, textTransform: 'capitalize' }}>
+                                                {label.replace(/[-_]/g, ' ')}
                                             </span>
                                         </div>
-                                        {block.isCf && (
-                                            <button 
-                                                onClick={(e) => { e.stopPropagation(); onRemoveBlock(block.id); }}
-                                                style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: 2, display: 'flex' }}
-                                                title="Remove section"
-                                            >
-                                                <X size={14} />
-                                            </button>
-                                        )}
+                                        <button 
+                                            onClick={(e) => { e.stopPropagation(); onRemoveBlock(block.id); }}
+                                            style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: 2, display: 'flex', opacity: isActive ? 1 : 0.5 }}
+                                            title="Remove section"
+                                        >
+                                            <X size={14} />
+                                        </button>
                                     </div>
                                 );
                             })}

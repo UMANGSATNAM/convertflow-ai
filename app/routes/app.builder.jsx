@@ -42,6 +42,7 @@ export const loader = async ({ request }) => {
             themeName: theme.name || 'Dawn',
         });
     } catch (err) {
+        if (err instanceof Response) throw err; // Re-throw Remix/Shopify responses (like auth redirects)
         console.error("LOADER CRASH:", err);
         throw new Response(err.stack || err.message || "Unknown error occurred", {
             status: 500,
