@@ -122,11 +122,12 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
 
 
     // ─── 4. Actions ───
-    const handleInject = () => {
-        if (!selectedTemplateId) return;
+    const handleInject = (templateIdOverride) => {
+        const idToInject = templateIdOverride || selectedTemplateId;
+        if (!idToInject) return;
         const form = new FormData();
         form.append("intent", "inject_section");
-        form.append("sectionId", selectedTemplateId);
+        form.append("sectionId", idToInject);
         form.append("settings", JSON.stringify(settings));
         form.append("placement", placement);
         fetcher.submit(form, { method: "post" });
@@ -284,7 +285,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                     setActiveCategoryId={setActiveCategoryId}
                     selectedTemplateId={selectedTemplateId}
                     setSelectedTemplateId={setSelectedTemplateId}
-                    onRemoveBlock={handleRemove}
+                    onInject={handleInject}
                 />
                 
                 <Canvas 
@@ -312,6 +313,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                     setSettings={setSettings}
                     placement={placement}
                     setPlacement={setPlacement}
+                    onRemoveBlock={handleRemove}
                 />
             </main>
         </div>

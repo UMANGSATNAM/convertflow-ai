@@ -1,43 +1,42 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { EditorPostMessageBridge } from './architect/IframeBridge';
 
 export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, activeBlockId, sectionUpdate }) {
     const iframeRef = useRef(null);
+    const [bridge, setBridge] = useState(null);
     
-    // Listen for messages from the iframe
+    // Initialize the PostMessage Bridge
     useEffect(() => {
-        const handleMessage = (event) => {
-            if (!event.data || !event.data.type) return;
-            if (event.data.type === 'SECTION_CLICKED' || event.data.type === 'SECTION_CLICK') {
-                const blockId = event.data.payload?.blockId || event.data.id;
-                if (blockId && onBlockSelect) {
-                    onBlockSelect(blockId);
-                }
-            }
+        const newBridge = new EditorPostMessageBridge(iframeRef, onBlockSelect);
+        newBridge.connect();
+        setBridge(newBridge);
+
+        return () => {
+            newBridge.disconnect();
         };
-        window.addEventListener('message', handleMessage);
-        return () => window.removeEventListener('message', handleMessage);
     }, [onBlockSelect]);
 
     // Send selection updates to the iframe
     useEffect(() => {
-        if (iframeRef.current && iframeRef.current.contentWindow) {
+        if (bridge) {
             if (activeBlockId) {
-                iframeRef.current.contentWindow.postMessage({ type: 'shopify:section:select', payload: { blockId: activeBlockId } }, '*');
+                // Ensure the bridge uses the legacy payload format until the Iframe script is fully updated
+                bridge.sendMessageToIframe({ type: 'shopify:section:select', payload: { blockId: activeBlockId } });
             } else {
-                iframeRef.current.contentWindow.postMessage({ type: 'shopify:section:deselect' }, '*');
+                bridge.sendMessageToIframe({ type: 'shopify:section:deselect' });
             }
         }
-    }, [activeBlockId, previewHtml]); // resend if HTML reloads
+    }, [activeBlockId, previewHtml, bridge]); // resend if HTML reloads
 
     // Send targeted HTML block updates to the iframe
     useEffect(() => {
-        if (iframeRef.current && iframeRef.current.contentWindow && sectionUpdate) {
-            iframeRef.current.contentWindow.postMessage({ 
+        if (bridge && sectionUpdate) {
+            bridge.sendMessageToIframe({ 
                 type: 'shopify:section:load', 
                 payload: { blockId: sectionUpdate.blockId, html: sectionUpdate.html } 
-            }, '*');
+            });
         }
-    }, [sectionUpdate]);
+    }, [sectionUpdate, bridge]);
 
     // Calculate dimensions based on selected device toggle
     const getDeviceDimensions = () => {
