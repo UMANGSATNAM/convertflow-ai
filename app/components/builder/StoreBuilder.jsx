@@ -136,6 +136,10 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
             color: '#111827',
             overflow: 'hidden',
         }}>
+            <style>{`
+                body, html { margin: 0; padding: 0; height: 100vh; overflow: hidden; }
+                #root, #app { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+            `}</style>
             {/* ─── TOP HEADER ─── */}
             <header style={{
                 height: 56, background: '#ffffff', borderBottom: '1px solid #e5e7eb',
