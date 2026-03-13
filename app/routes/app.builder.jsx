@@ -8,38 +8,46 @@ import { StoreBuilder } from "../components/builder/StoreBuilder";
 import { AppProvider } from '@shopify/polaris';
 
 export const loader = async ({ request }) => {
-    const { session } = await authenticate.admin(request);
-    const { shop, accessToken } = session;
-
-    const theme = await getActiveTheme(shop, accessToken);
-    if (!theme) return json({ error: "No active theme found" });
-
-    let pageBlocks = [];
     try {
-        const templateStr = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
-        if (templateStr) {
-            const templateJson = JSON.parse(templateStr);
-            const sections = templateJson.sections || {};
-            const order = templateJson.order || Object.keys(sections);
-            pageBlocks = order.map(id => ({
-                id,
-                name: sections[id]?.type || id,
-                type: sections[id]?.type || id,
-                settings: sections[id]?.settings || {},
-                isCf: id.startsWith('cf_'),
-            }));
-        }
-    } catch (e) { /* ignore */ }
+        const { session } = await authenticate.admin(request);
+        const { shop, accessToken } = session;
 
-    const categories = getCategoriesWithCounts();
+        const theme = await getActiveTheme(shop, accessToken);
+        if (!theme) return json({ error: "No active theme found" });
 
-    return json({
-        themeId: theme.id,
-        shop,
-        pageBlocks,
-        categories,
-        themeName: theme.name || 'Dawn',
-    });
+        let pageBlocks = [];
+        try {
+            const templateStr = await getThemeAsset(shop, accessToken, theme.id, 'templates/index.json');
+            if (templateStr) {
+                const templateJson = JSON.parse(templateStr);
+                const sections = templateJson.sections || {};
+                const order = templateJson.order || Object.keys(sections);
+                pageBlocks = order.map(id => ({
+                    id,
+                    name: sections[id]?.type || id,
+                    type: sections[id]?.type || id,
+                    settings: sections[id]?.settings || {},
+                    isCf: id.startsWith('cf_'),
+                }));
+            }
+        } catch (e) { /* ignore */ }
+
+        const categories = getCategoriesWithCounts();
+
+        return json({
+            themeId: theme.id,
+            shop,
+            pageBlocks,
+            categories,
+            themeName: theme.name || 'Dawn',
+        });
+    } catch (err) {
+        console.error("LOADER CRASH:", err);
+        throw new Response(err.stack || err.message || "Unknown error occurred", {
+            status: 500,
+            statusText: "Server Error"
+        });
+    }
 };
 
 export const action = async ({ request }) => {
@@ -152,7 +160,7 @@ export function ErrorBoundary() {
   return (
     <div style={{ padding: "20px", color: "red" }}>
       <h2>Error Loading Builder</h2>
-      <pre>{error.message || JSON.stringify(error)}</pre>
+      <pre>{error.data || error.message || JSON.stringify(error)}</pre>
       {error.stack && <pre>{error.stack}</pre>}
     </div>
   );
