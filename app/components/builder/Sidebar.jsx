@@ -60,9 +60,9 @@ export function Sidebar({
     const cfCats = categories || [];
 
     return (
-        <div style={{
-            width: '100%', height: '100%',
-            background: '#ffffff',
+        <aside style={{
+            width: 310, minWidth: 310, height: '100%',
+            background: '#ffffff', borderRight: '1px solid #e5e7eb',
             display: 'flex', flexShrink: 0, overflow: 'hidden'
         }}>
             {/* ─── LEFT MINI RAIL ─── */}
@@ -232,6 +232,6 @@ export function Sidebar({
                     )}
                 </div>
             </div>
-        </div>
+        </aside>
     );
 }

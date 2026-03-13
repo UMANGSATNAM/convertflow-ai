@@ -11,22 +11,55 @@ export function PropertiesPanel({
     placement, 
     setPlacement 
 }) {
-    if (!selectedBlockId && !selectedTemplateId) return null;
+    // If nothing selected, show the empty state instructions
+    if (!selectedBlockId && !selectedTemplateId) {
+        return (
+            <aside style={{
+                width: 320, minWidth: 320, height: '100%',
+                background: '#ffffff', borderLeft: '1px solid #e5e7eb',
+                display: 'flex', flexDirection: 'column', flexShrink: 0,
+                color: '#374151', padding: '24px 20px'
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                
+                <h3 style={{ fontSize: 14, fontWeight: 700, margin: '0 0 12px', color: '#111827' }}>Add elements</h3>
+                <p style={{ fontSize: 13, lineHeight: 1.5, color: '#4b5563', margin: '0 0 32px' }}>
+                    Select, drag, and drop your element variants of choice into the canvas.
+                </p>
+
+                <h4 style={{ fontSize: 12, fontWeight: 700, margin: '0 0 8px', color: '#111827' }}>ConvertFlow elements</h4>
+                <p style={{ fontSize: 12, lineHeight: 1.5, color: '#6b7280', margin: '0 0 32px' }}>
+                    ConvertFlow elements are the building blocks you can inject into any theme. They include a variety of functions to elevate your storefront's conversion rate.
+                </p>
+
+                <h4 style={{ fontSize: 12, fontWeight: 700, margin: '0 0 8px', color: '#111827' }}>Shopify elements</h4>
+                <p style={{ fontSize: 12, lineHeight: 1.5, color: '#6b7280', margin: 0 }}>
+                    Shopify elements directly display content from Shopify like product and collection information, blog posts, meta data, etc.
+                </p>
+            </aside>
+        );
+    }
 
     return (
-        <div style={{
-            width: '100%', height: '100%',
+        <aside style={{
+            width: 320, minWidth: 320, height: '100%',
+            background: '#ffffff', borderLeft: '1px solid #e5e7eb',
             display: 'flex', flexDirection: 'column', flexShrink: 0, overflow: 'hidden'
         }}>
-            <div style={{ padding: '16px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <button onClick={onClearSelection} style={{ background: 'transparent', border: '1px solid #e5e7eb', borderRadius: 4, cursor: 'pointer', color: '#4b5563', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-                </button>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>
                         {templateSchema.name || (selectedBlockId ? 'Edit Section' : 'Customize Section')}
                     </h3>
+                    <p style={{ fontSize: 13, color: '#6b7280', margin: 0, wordBreak: 'break-all' }}>
+                        ID: {(selectedBlockId || selectedTemplateId).slice(0, 16)}...
+                    </p>
                 </div>
+                <button onClick={onClearSelection} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 4 }}>
+                    <X size={16} />
+                </button>
             </div>
 
             <div style={{ flex: 1, overflowY: 'auto', padding: '0 0 24px 0' }}>
@@ -70,7 +103,7 @@ export function PropertiesPanel({
                     </div>
                 )}
             </div>
-        </div>
+        </aside>
     );
 }
 
