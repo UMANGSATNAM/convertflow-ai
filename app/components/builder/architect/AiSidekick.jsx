@@ -63,7 +63,12 @@ export function AiSidekick({ themeColors = {}, themeFont = 'sans-serif', onSecti
                 <BlockStack gap="400">
                     {/* Prompt Input */}
                     <BlockStack gap="200">
-                        <Text as="h3" variant="headingSm">✨ AI Section Generator</Text>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5"/>
+                            </svg>
+                            <Text as="h3" variant="headingSm">AI Section Generator</Text>
+                        </div>
                         <Text as="p" variant="bodySm" color="subdued">
                             Describe the section you want in plain language. The AI will generate the code.
                         </Text>
@@ -100,7 +105,7 @@ export function AiSidekick({ themeColors = {}, themeFont = 'sans-serif', onSecti
                     {/* Result Preview */}
                     {result && !loading && (
                         <BlockStack gap="300">
-                            <Banner title={`✓ Generated: ${result.sectionName}`} tone="success">
+                            <Banner title={`Generated: ${result.sectionName}`} tone="success">
                                 <p>{result.schema.length} settings created. Ready to inject.</p>
                             </Banner>
 

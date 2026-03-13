@@ -86,9 +86,11 @@ export function Sidebar({
                         <button
                             onClick={onAiClick}
                             title="AI Section Generator"
-                            style={{ background: 'linear-gradient(135deg, #818cf8, #c084fc)', border: 'none', borderRadius: 6, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 14 }}
+                            style={{ background: 'linear-gradient(135deg, #818cf8, #c084fc)', border: 'none', borderRadius: 6, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                         >
-                            ✨
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+                            </svg>
                         </button>
                     </div>
                 </div>

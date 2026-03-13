@@ -332,8 +332,17 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                         zIndex: 200, overflowY: 'auto', display: 'flex', flexDirection: 'column'
                     }}>
                         <div style={{ padding: '16px 20px 12px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>✨ AI Section Generator</span>
-                            <button onClick={() => setShowAi(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 18, lineHeight: 1 }}>×</button>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <div style={{ width: 22, height: 22, background: 'linear-gradient(135deg, #818cf8, #c084fc)', borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+                                    </svg>
+                                </div>
+                                <span style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>AI Section Generator</span>
+                            </div>
+                            <button onClick={() => setShowAi(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, borderRadius: 4 }}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
                         </div>
                         <AiSidekick
                             onSectionGenerated={(schema, liquidHtml, sectionName) => {
