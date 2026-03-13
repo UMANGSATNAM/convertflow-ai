@@ -200,5 +200,5 @@ ${bodyHtml}
 </body>
 </html>`;
 
-  return json({ html: fullHtml });
+  return json({ html: fullHtml, sectionHtml: bodyHtml });
 };

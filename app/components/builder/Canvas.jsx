@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, activeBlockId }) {
+export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, activeBlockId, sectionUpdate }) {
     const iframeRef = useRef(null);
     
     // Listen for messages from the iframe
@@ -28,6 +28,16 @@ export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, act
             }
         }
     }, [activeBlockId, previewHtml]); // resend if HTML reloads
+
+    // Send targeted HTML block updates to the iframe
+    useEffect(() => {
+        if (iframeRef.current && iframeRef.current.contentWindow && sectionUpdate) {
+            iframeRef.current.contentWindow.postMessage({ 
+                type: 'shopify:section:load', 
+                payload: { blockId: sectionUpdate.blockId, html: sectionUpdate.html } 
+            }, '*');
+        }
+    }, [sectionUpdate]);
 
     // Calculate dimensions based on selected device toggle
     const getDeviceDimensions = () => {

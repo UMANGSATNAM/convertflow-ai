@@ -22,6 +22,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
     const [settings, setSettings] = useState({});
     const [placement, setPlacement] = useState('bottom');
     const [previewHtml, setPreviewHtml] = useState('');
+    const [sectionUpdate, setSectionUpdate] = useState(null);
     const [previewLoading, setPreviewLoading] = useState(false);
     const [toast, setToast] = useState(null);
     const previewTimerRef = useRef(null);
@@ -34,28 +35,41 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
             setTimeout(() => setToast(null), 3000);
         }
         if (fetcher.data?.newBlockId) {
+            // Re-fetch full preview when a new block is added to accurately show new layout
+            fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`)
+                .then(r => r.text())
+                .then(html => setPreviewHtml(html));
+            
             setActiveBlockId(fetcher.data.newBlockId);
             setActiveTab('page');
         }
-    }, [fetcher.data]);
+    }, [fetcher.data, shop, themeId]);
 
-    // ─── 2. Fetch Live Preview ───
+    // ─── 2. Fetch Live Preview (Full Page) ───
+    // Re-fetch only initially or when page blocks change length
+    useEffect(() => {
+        const fetchFullPreview = async () => {
+            setPreviewLoading(true);
+            try {
+                const res = await fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`);
+                if (res.ok) {
+                    const html = await res.text();
+                    setPreviewHtml(html);
+                }
+            } catch (e) {} finally { setPreviewLoading(false); }
+        };
+        fetchFullPreview();
+    }, [pageBlocks.length, shop, themeId]);
+
+    // ─── 2.5 Fetch Section Updates (On Setting Edit or Template Select) ───
     useEffect(() => {
         const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
+        if (!targetId && !selectedTemplateId) return;
 
-        setPreviewLoading(true);
+        // Don't show global loading spinner for instant localized updates
         clearTimeout(previewTimerRef.current);
         previewTimerRef.current = setTimeout(async () => {
             try {
-                if (!targetId) {
-                    const res = await fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`);
-                    if (res.ok) {
-                        const html = await res.text();
-                        setPreviewHtml(html);
-                    }
-                    return;
-                }
-
                 const form = new FormData();
                 form.append("sectionId", targetId);
                 if (activeBlockId) form.append("blockId", activeBlockId);
@@ -63,11 +77,17 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                 const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.html) setPreviewHtml(data.html);
+                    if (activeBlockId && data.sectionHtml) {
+                        // Send just the section HTML to be injected cleanly
+                        setSectionUpdate({ blockId: activeBlockId, html: data.sectionHtml, dt: Date.now() });
+                    } else if (selectedTemplateId && data.html) {
+                        // If they are previewing a fresh template BEFORE adding it, show it standalone
+                        setPreviewHtml(data.html);
+                    }
                 }
-            } catch (e) { } finally { setPreviewLoading(false); }
-        }, 350);
-    }, [selectedTemplateId, activeBlockId, settings, pageBlocks, shop, themeId]);
+            } catch (e) { }
+        }, 300);
+    }, [selectedTemplateId, activeBlockId, settings, pageBlocks]);
 
     // ─── 3. Fetch Schema ───
     useEffect(() => {
@@ -265,6 +285,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                     previewHtml={previewHtml} 
                     previewLoading={previewLoading} 
                     activeBlockId={activeBlockId}
+                    sectionUpdate={sectionUpdate}
                     onBlockSelect={(blockId) => {
                         setActiveBlockId(blockId);
                         setActiveTab('page');
