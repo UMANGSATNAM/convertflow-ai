@@ -27,13 +27,15 @@ export function removeSchemaTranslations(liquidContent) {
             const parts = p1.split('.');
             let lastPart = parts[parts.length - 1];
 
-            if ((lastPart === 'label' || lastPart === 'info' || lastPart === 'title' || lastPart === 'name') && parts.length > 1) {
+            // If it ends in generic keys, use the previous part for context
+            if ((lastPart === 'label' || lastPart === 'info' || lastPart === 'title' || lastPart === 'name' || lastPart === 'content') && parts.length > 1) {
                 lastPart = parts[parts.length - 2];
             }
 
+            // Convert something like "layout_type" to "Layout Type"
             const EnglishName = lastPart
-                .replace(/_/g, ' ')
-                .replace(/^./, str => str.toUpperCase());
+                .replace(/[-_]/g, ' ')
+                .replace(/\b\w/g, str => str.toUpperCase());
 
             return `"${EnglishName}"`;
         });
