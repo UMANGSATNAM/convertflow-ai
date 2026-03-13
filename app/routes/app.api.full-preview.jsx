@@ -40,34 +40,74 @@ export const loader = async ({ request }) => {
       bodyHtml += renderSectionHtml(type, settings, blockId);
     }
 
-    // Add our interactive wrapper script and global CSS resets
     const interactiveScript = `
-        <style>
-          *, *::before, *::after { box-sizing: border-box; }
-          body { 
-            margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; 
-            min-height: 100vh; background: #fff;
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; min-height: 100vh; background: #fff; }
+      img { max-width: 100%; height: auto; display: block; }
+      a { text-decoration: none; color: inherit; }
+      
+      .shopify-section { outline: 2px solid transparent; transition: outline 0.2s ease, box-shadow 0.2s ease; position: relative; }
+      .shopify-section:hover { outline: 2px solid #2c6ecb; outline-offset: -2px; cursor: pointer; z-index: 10; }
+      .shopify-section.active { outline: 3px solid #005bd3; outline-offset: -3px; z-index: 11; box-shadow: 0 0 0 4px rgba(0,91,211,0.15); }
+      
+      /* Disable navigation in preview */
+      a[href], form, button:not(.cf-editor-btn) { pointer-events: none !important; }
+      .shopify-section { pointer-events: auto !important; }
+    </style>
+    <script>
+      (function() {
+        'use strict';
+        let activeBlockId = '';
+        
+        function getSectionEl(blockId) { return document.getElementById('shopify-section-' + blockId); }
+        function clearAllActive() { document.querySelectorAll('.shopify-section.active').forEach(el => el.classList.remove('active')); }
+        function highlightSection(blockId) {
+          clearAllActive();
+          const el = getSectionEl(blockId);
+          if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+          activeBlockId = blockId;
+        }
+        
+        document.addEventListener('click', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          const section = e.target.closest('.shopify-section');
+          if (section) {
+            const blockId = section.id.replace('shopify-section-', '');
+            highlightSection(blockId);
+            window.parent.postMessage({ type: 'SECTION_CLICKED', payload: { blockId } }, '*');
           }
-          img { max-width: 100%; height: auto; display: block; }
-          a { text-decoration: none; color: inherit; }
-
-          .shopify-section:hover {
-             outline: 2px solid #2c6ecb !important;
-             outline-offset: -2px;
-             cursor: pointer !important;
+        }, true);
+        
+        window.addEventListener('message', (event) => {
+          if (!event.data || !event.data.type) return;
+          const { type, payload } = event.data;
+          switch (type) {
+            case 'shopify:section:select': if (payload?.blockId) highlightSection(payload.blockId); break;
+            case 'shopify:section:deselect': clearAllActive(); activeBlockId = null; break;
+            case 'shopify:section:reorder':
+              if (!payload?.order || !Array.isArray(payload.order)) break;
+              payload.order.forEach(id => { const el = getSectionEl(id); if (el) document.body.appendChild(el); });
+              break;
+            case 'shopify:section:load':
+              if (payload?.blockId && payload?.html) {
+                const existing = getSectionEl(payload.blockId);
+                if (existing) existing.outerHTML = payload.html;
+                else document.body.insertAdjacentHTML('beforeend', payload.html);
+                if (activeBlockId === payload.blockId) requestAnimationFrame(() => highlightSection(payload.blockId));
+              }
+              break;
+            case 'shopify:section:remove':
+              if (payload?.blockId) {
+                const el = getSectionEl(payload.blockId);
+                if (el) el.remove();
+                if (activeBlockId === payload.blockId) activeBlockId = null;
+              }
+              break;
           }
-        </style>
-        <script>
-          document.addEventListener('click', (e) => {
-            const section = e.target.closest('.shopify-section');
-            if (section) {
-                e.preventDefault();
-                e.stopPropagation();
-                const blockId = section.id.replace('shopify-section-', '');
-                window.parent.postMessage({ type: 'SECTION_CLICK', id: blockId }, '*');
-            }
-          }, true);
-        </script>`;
+        });
+      })();
+    </script>`;
 
     const fullHtml = `<!DOCTYPE html>
         <html>

@@ -1,13 +1,63 @@
 import React, { useState } from 'react';
+import { Layout, Palette, ChevronRight, X, Image as ImageIcon, MessageSquare, Grid, Award, Type, Mail, Camera, Play, HelpCircle, Zap, ShoppingBag, Megaphone } from "lucide-react";
+import { SECTION_FILES } from '../../lib/constants';
 
-export function Sidebar({ blocks = [], selectedBlockId, onSelectBlock }) {
-    const [hoveredId, setHoveredId] = useState(null);
-    const [activeTab, setActiveTab] = useState('elements'); // 'elements' or 'shopify'
-    const [expandedCategories, setExpandedCategories] = useState({ 'media': true, 'advanced': true, 'social': true });
+const SVG_ICONS = {
+    layout: <Layout size={14} />,
+    announcement: <Megaphone size={14} />,
+    image: <ImageIcon size={14} />,
+    shoppingBag: <ShoppingBag size={14} />,
+    grid: <Grid size={14} />,
+    message: <MessageSquare size={14} />,
+    award: <Award size={14} />,
+    type: <Type size={14} />,
+    mail: <Mail size={14} />,
+    camera: <Camera size={14} />,
+    play: <Play size={14} />,
+    help: <HelpCircle size={14} />,
+    zap: <Zap size={14} />,
+    default: <Layout size={14} />
+};
+
+const CAT_SVG = {
+    header: SVG_ICONS.layout,
+    announcement: SVG_ICONS.announcement,
+    hero: SVG_ICONS.image,
+    product: SVG_ICONS.shoppingBag,
+    collection: SVG_ICONS.grid,
+    testimonial: SVG_ICONS.message,
+    brand: SVG_ICONS.award,
+    content: SVG_ICONS.type,
+    newsletter: SVG_ICONS.mail,
+    social: SVG_ICONS.camera,
+    video: SVG_ICONS.play,
+    faq: SVG_ICONS.help,
+    banner: SVG_ICONS.zap,
+    footer: SVG_ICONS.layout,
+    default: SVG_ICONS.default
+};
+
+export function Sidebar({ 
+    blocks = [], 
+    categories = [],
+    activeTab, 
+    setActiveTab,
+    activeBlockId, 
+    setActiveBlockId,
+    activeCategoryId,
+    setActiveCategoryId,
+    selectedTemplateId,
+    setSelectedTemplateId,
+    onRemoveBlock
+}) {
+    const [expandedCategories, setExpandedCategories] = useState({});
 
     const toggleCategory = (cat) => {
         setExpandedCategories(prev => ({ ...prev, [cat]: !prev[cat] }));
     };
+
+    // Filter themes to only show CF categories
+    const cfCats = categories || [];
 
     return (
         <aside style={{
@@ -20,22 +70,26 @@ export function Sidebar({ blocks = [], selectedBlockId, onSelectBlock }) {
                 width: 48, background: '#ffffff', borderRight: '1px solid #e5e7eb',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12px 0', gap: 16
             }}>
-                <button style={{ background: '#eef2ff', color: '#4f46e5', border: 'none', borderRadius: 6, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                <button 
+                    onClick={() => setActiveTab('elements')}
+                    style={{ background: activeTab === 'elements' ? '#eef2ff' : 'transparent', color: activeTab === 'elements' ? '#4f46e5' : '#9ca3af', border: 'none', borderRadius: 6, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 </button>
-                <button style={{ background: 'transparent', color: '#9ca3af', border: 'none', borderRadius: 6, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                <button 
+                    onClick={() => setActiveTab('page')}
+                    style={{ background: activeTab === 'page' ? '#eef2ff' : 'transparent', color: activeTab === 'page' ? '#4f46e5' : '#9ca3af', border: 'none', borderRadius: 6, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
-                </button>
-                <button style={{ background: 'transparent', color: '#9ca3af', border: 'none', borderRadius: 6, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 </button>
             </div>
 
             {/* ─── MAIN SIDEBAR AREA ─── */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                
                 {/* Header & Search */}
                 <div style={{ padding: '16px 16px 12px' }}>
-                    <h3 style={{ fontSize: 13, fontWeight: 700, color: '#111827', margin: '0 0 12px' }}>Elements</h3>
+                    <h3 style={{ fontSize: 13, fontWeight: 700, color: '#111827', margin: '0 0 12px' }}>
+                        {activeTab === 'elements' ? 'Add Elements' : 'Page Outline'}
+                    </h3>
                     
                     <div style={{ position: 'relative', marginBottom: 16 }}>
                         <svg style={{ position: 'absolute', left: 10, top: 8, color: '#9ca3af' }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -61,110 +115,125 @@ export function Sidebar({ blocks = [], selectedBlockId, onSelectBlock }) {
                                 boxShadow: activeTab === 'elements' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
                             }}
                         >
-                            AppMate <span style={{ background: '#e5e7eb', color: '#4b5563', padding: '1px 6px', borderRadius: 10, fontSize: 10, marginLeft: 4 }}>29</span>
+                            Library
                         </button>
                         <button 
-                            onClick={() => setActiveTab('shopify')}
+                            onClick={() => setActiveTab('page')}
                             style={{ 
                                 flex: 1, padding: '6px 0', fontSize: 12, fontWeight: 600, border: 'none', borderRadius: 4, cursor: 'pointer',
-                                background: activeTab === 'shopify' ? '#ffffff' : 'transparent',
-                                color: activeTab === 'shopify' ? '#111827' : '#6b7280',
-                                boxShadow: activeTab === 'shopify' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
+                                background: activeTab === 'page' ? '#ffffff' : 'transparent',
+                                color: activeTab === 'page' ? '#111827' : '#6b7280',
+                                boxShadow: activeTab === 'page' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
                             }}
                         >
-                            Shopify <span style={{ background: '#e5e7eb', color: '#4b5563', padding: '1px 6px', borderRadius: 10, fontSize: 10, marginLeft: 4 }}>37</span>
+                            Page <span style={{ background: '#e5e7eb', color: '#4b5563', padding: '1px 6px', borderRadius: 10, fontSize: 10, marginLeft: 4 }}>{blocks.length}</span>
                         </button>
                     </div>
                 </div>
 
-                {/* Elements Accordion List */}
                 <div style={{ flex: 1, overflowY: 'auto', padding: '0 0 20px', fontSize: 13, color: '#374151' }}>
-                    
-                    {/* Basic Layout (Divider) */}
-                    <div style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><line x1="4" y1="12" x2="20" y2="12"/></svg>
-                        Divider
-                    </div>
-
-                    {/* Category: Media */}
-                    <div style={{ borderTop: '1px solid #f3f4f6' }}>
-                        <button 
-                            onClick={() => toggleCategory('media')}
-                            style={{ width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: 'none', fontSize: 12, fontWeight: 600, color: '#111827', cursor: 'pointer' }}
-                        >
-                            Media
-                            <svg style={{ transform: expandedCategories['media'] ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', color: '#9ca3af' }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </button>
-                        {expandedCategories['media'] && (
-                            <div style={{ padding: '0 8px 8px' }}>
-                                {[
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>, label: 'Image' },
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>, label: 'YouTube video' },
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>, label: 'Vimeo video' },
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>, label: 'HTML video' },
-                                ].map(item => (
-                                    <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', marginBottom: 2 }} 
-                                         onMouseOver={e => e.currentTarget.style.background = '#f3f4f6'} onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
-                                        <span style={{ color: '#6b7280', display: 'flex' }}>{item.icon}</span>
-                                        {item.label}
+                    {activeTab === 'page' && (
+                        <div style={{ padding: '8px 16px' }}>
+                            {blocks.length === 0 && <div style={{ color: '#9ca3af', textAlign: 'center', marginTop: 20 }}>No elements on page</div>}
+                            {blocks.map((block) => {
+                                const isActive = block.id === activeBlockId;
+                                const label = block.isCf ? (SECTION_FILES[block.type]?.name || block.type) : block.type;
+                                return (
+                                    <div 
+                                        key={block.id}
+                                        onClick={() => {
+                                            if (block.isCf) {
+                                                setActiveBlockId(block.id);
+                                                setSelectedTemplateId(null);
+                                            }
+                                        }}
+                                        style={{ 
+                                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                            padding: '8px 12px', borderRadius: 6, cursor: block.isCf ? 'pointer' : 'default',
+                                            background: isActive ? '#eef2ff' : 'transparent',
+                                            color: isActive ? '#4f46e5' : '#374151',
+                                            fontWeight: isActive ? 500 : 400,
+                                            marginBottom: 2
+                                        }}
+                                        onMouseOver={e => { if(!isActive && block.isCf) e.currentTarget.style.background = '#f9fafb' }}
+                                        onMouseOut={e => { if(!isActive) e.currentTarget.style.background = 'transparent' }}
+                                    >
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                            <span style={{ color: isActive ? '#4f46e5' : '#9ca3af', display: 'flex' }}>
+                                                {block.isCf ? <Palette size={14} /> : <Layout size={14} />}
+                                            </span>
+                                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160 }}>
+                                                {label}
+                                            </span>
+                                        </div>
+                                        {block.isCf && (
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); onRemoveBlock(block.id); }}
+                                                style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: 2, display: 'flex' }}
+                                                title="Remove section"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        )}
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
 
-                    {/* Category: Advanced */}
-                    <div style={{ borderTop: '1px solid #f3f4f6' }}>
-                        <button 
-                            onClick={() => toggleCategory('advanced')}
-                            style={{ width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: 'none', fontSize: 12, fontWeight: 600, color: '#111827', cursor: 'pointer' }}
-                        >
-                            Advanced
-                            <svg style={{ transform: expandedCategories['advanced'] ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', color: '#9ca3af' }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </button>
-                        {expandedCategories['advanced'] && (
-                            <div style={{ padding: '0 8px 8px' }}>
-                                {[
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>, label: 'QRCODE', active: true },
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>, label: 'Table' },
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, label: 'Countdown' },
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>, label: 'Google Map' },
-                                ].map(item => (
-                                    <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', marginBottom: 2, background: item.active ? '#e5e7eb' : 'transparent', fontWeight: item.active ? 600 : 400 }} 
-                                         onMouseOver={e => { if(!item.active) e.currentTarget.style.background = '#f3f4f6' }} onMouseOut={e => { if(!item.active) e.currentTarget.style.background = 'transparent' }}>
-                                        <span style={{ color: '#6b7280', display: 'flex' }}>{item.icon}</span>
-                                        {item.label}
+                    {activeTab === 'elements' && (
+                        <div>
+                            {cfCats.map(cat => {
+                                const isExpanded = expandedCategories[cat.id];
+                                const templates = Object.entries(SECTION_FILES).filter(([_, m]) => m.category === cat.id);
+                                
+                                return (
+                                    <div key={cat.id} style={{ borderBottom: '1px solid #f9fafb' }}>
+                                        <button 
+                                            onClick={() => toggleCategory(cat.id)}
+                                            style={{ width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: 'none', fontSize: 12, fontWeight: 600, color: '#111827', cursor: 'pointer' }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <span style={{ color: '#6b7280', display: 'flex' }}>{CAT_SVG[cat.id] || CAT_SVG.default}</span>
+                                                {cat.name}
+                                            </div>
+                                            <svg style={{ transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', color: '#9ca3af' }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+                                        </button>
+                                        
+                                        {isExpanded && (
+                                            <div style={{ padding: '0 8px 8px' }}>
+                                                {templates.map(([id, meta]) => {
+                                                    const isSelected = selectedTemplateId === id;
+                                                    return (
+                                                        <div 
+                                                            key={id} 
+                                                            onClick={() => {
+                                                                setSelectedTemplateId(id);
+                                                                setActiveBlockId(null);
+                                                            }}
+                                                            style={{ 
+                                                                display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', marginBottom: 2,
+                                                                background: isSelected ? '#eef2ff' : 'transparent',
+                                                                color: isSelected ? '#4f46e5' : '#374151',
+                                                                fontWeight: isSelected ? 500 : 400
+                                                            }} 
+                                                            onMouseOver={e => { if(!isSelected) e.currentTarget.style.background = '#f9fafb' }} 
+                                                            onMouseOut={e => { if(!isSelected) e.currentTarget.style.background = 'transparent' }}
+                                                        >
+                                                            <span style={{ color: isSelected ? '#4f46e5' : '#9ca3af', display: 'flex' }}>
+                                                                <Palette size={14} />
+                                                            </span>
+                                                            {meta.name}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                    
-                    {/* Category: Social */}
-                    <div style={{ borderTop: '1px solid #f3f4f6' }}>
-                        <button 
-                            onClick={() => toggleCategory('social')}
-                            style={{ width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'transparent', border: 'none', fontSize: 12, fontWeight: 600, color: '#111827', cursor: 'pointer' }}
-                        >
-                            Social
-                            <svg style={{ transform: expandedCategories['social'] ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', color: '#9ca3af' }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
-                        </button>
-                        {expandedCategories['social'] && (
-                            <div style={{ padding: '0 8px 8px' }}>
-                                {[
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>, label: 'Instagram feed' },
-                                    { icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>, label: 'Facebook like & share' },
-                                ].map(item => (
-                                    <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 6, cursor: 'pointer', marginBottom: 2 }} 
-                                         onMouseOver={e => e.currentTarget.style.background = '#f3f4f6'} onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
-                                        <span style={{ color: '#6b7280', display: 'flex' }}>{item.icon}</span>
-                                        {item.label}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </div>
         </aside>
