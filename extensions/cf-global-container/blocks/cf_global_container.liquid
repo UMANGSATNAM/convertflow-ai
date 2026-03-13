@@ -1,0 +1,57 @@
+{% comment %}
+  ConvertFlow AI — Global Container App Embed Block
+  
+  This is a Theme App Extension (App Embed Block) that places a secure
+  container into the merchant's storefront. ConvertFlow AI sections are
+  injected inside this container, ensuring merchant theme files are NEVER
+  modified directly.
+  
+  The merchant enables this once via:
+  Shopify Admin → Online Store → Themes → Customize → App Embeds → CF AI Global Container
+{% endcomment %}
+
+<div 
+  id="cf-ai-global-container"
+  class="cf-ai-global-container"
+  data-block-id="{{ block.id }}"
+  aria-label="ConvertFlow AI Sections Container"
+  {{ block.shopify_attributes }}
+>
+  {% comment %}
+    Sections are injected here by the ConvertFlow AI app at runtime.
+    The placeholder is intentionally empty — the CF app hydrates it via API.
+  {% endcomment %}
+</div>
+
+{% schema %}
+{
+  "name": "CF AI Global Container",
+  "target": "body",
+  "settings": [
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Container Position",
+      "default": "after_header",
+      "options": [
+        { "value": "after_header", "label": "After Header" },
+        { "value": "before_footer", "label": "Before Footer" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .cf-ai-global-container {
+    width: 100%;
+    position: relative;
+    /* All injected sections are scoped within this container */
+  }
+
+  /* Ensure our App sections don't bleed into the merchant's global styles */
+  .cf-ai-global-container [id^="cf-section-"] {
+    box-sizing: border-box;
+    font-family: inherit;
+  }
+</style>

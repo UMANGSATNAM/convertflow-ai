@@ -42,6 +42,7 @@ export function PolarisSchemaGenerator({
   onBlockAdd, 
   onBlockRemove,
   onBlockReorder,
+  bridge,
   level = 0
 }) {
   
@@ -59,6 +60,7 @@ export function PolarisSchemaGenerator({
               setting={setting}
               value={settingsData[setting.id] !== undefined ? settingsData[setting.id] : setting.default}
               onChange={(val) => onSettingChange(setting.id, val)}
+              bridge={bridge}
             />
           ))}
         </BlockStack>
@@ -194,15 +196,28 @@ function BlockItem({ blockData, blockSchema, index, onSettingChange, onRemove, l
 // INPUT TYPE ROUTER
 // Maps Shopify liquid setting types to Polaris Components
 // ----------------------------------------------------------------------------
-function SettingInput({ setting, value, onChange }) {
+function SettingInput({ setting, value, onChange, bridge }) {
   
+  // Helper: fire CSS live sync for instant 0-reload preview updates
+  const liveSync = (val) => {
+    if (bridge && bridge.sendLiveCssUpdate) {
+      // Map setting ID to a CSS custom property
+      bridge.sendLiveCssUpdate(`--cf-setting-${setting.id}`, String(val));
+    }
+  };
+
+  const handleChange = (val) => {
+    onChange(val);
+    liveSync(val);
+  };
+
   // TEXT & TEXTAREA
   if (setting.type === 'text' || setting.type === 'textarea') {
     return (
       <TextField
         label={setting.label}
         value={value || ''}
-        onChange={onChange}
+        onChange={onChange}  // text changes don't need CSS sync
         multiline={setting.type === 'textarea' ? 4 : false}
         helpText={setting.info}
         autoComplete="off"
@@ -210,13 +225,13 @@ function SettingInput({ setting, value, onChange }) {
     );
   }
 
-  // RANGE SLIDER
+  // RANGE SLIDER — fires CSS live sync on every drag
   if (setting.type === 'range') {
     return (
       <RangeSlider
         label={setting.label}
         value={Number(value) || setting.min}
-        onChange={onChange}
+        onChange={handleChange}
         min={setting.min}
         max={setting.max}
         step={setting.step}
@@ -258,12 +273,8 @@ function SettingInput({ setting, value, onChange }) {
     );
   }
 
-  // COLOR / COLOR_BACKGROUND
+  // COLOR / COLOR_BACKGROUND — fires CSS live sync on every picker change
   if (setting.type === 'color' || setting.type === 'color_background') {
-    // Polaris ColorPicker is complex (requires HSB). 
-    // For a 1:1 replica, Shopify actually uses a native hex input disguised as a swatch,
-    // integrated with a complex popover.
-    // For this blueprint, we simulate the layout.
     return (
        <BlockStack gap="100">
          <Text as="span" variant="bodyMd">{setting.label}</Text>
@@ -277,7 +288,7 @@ function SettingInput({ setting, value, onChange }) {
              <input 
                type="color" 
                value={value || '#000000'}
-               onChange={(e) => onChange(e.target.value)}
+               onChange={(e) => handleChange(e.target.value)}
                style={{ opacity: 0, width: '100%', height: '100%', cursor: 'pointer', position: 'absolute' }}
              />
            </div>

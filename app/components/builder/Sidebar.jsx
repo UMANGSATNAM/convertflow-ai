@@ -44,7 +44,8 @@ export function Sidebar({
     setActiveBlockId,
     selectedTemplateId,
     setSelectedTemplateId,
-    onInject
+    onInject,
+    onAiClick
 }) {
     const [expandedCategories, setExpandedCategories] = useState({});
     const [showLibrary, setShowLibrary] = useState(false);
@@ -76,15 +77,19 @@ export function Sidebar({
             {/* ─── MAIN SIDEBAR AREA ─── */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                 
-                {/* Header & Search */}
+                {/* Header */}
                 <div style={{ padding: '16px 16px 12px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                         <h3 style={{ fontSize: 13, fontWeight: 700, color: '#111827', margin: 0 }}>
                             Template
                         </h3>
-                        <span style={{ color: '#6b7280' }}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                        </span>
+                        <button
+                            onClick={onAiClick}
+                            title="AI Section Generator"
+                            style={{ background: 'linear-gradient(135deg, #818cf8, #c084fc)', border: 'none', borderRadius: 6, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 14 }}
+                        >
+                            ✨
+                        </button>
                     </div>
                 </div>
 

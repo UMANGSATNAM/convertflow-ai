@@ -13,7 +13,8 @@ export function PropertiesPanel({
     setSettings, 
     placement, 
     setPlacement,
-    onRemoveBlock
+    onRemoveBlock,
+    bridge
 }) {
     // If nothing selected, show the empty state instructions
     if (!selectedBlockId && !selectedTemplateId) {
@@ -102,6 +103,7 @@ export function PropertiesPanel({
                                 onSettingChange={(id, val) => setSettings(prev => ({ ...prev, [id]: val }))}
                                 onBlockAdd={(type) => { console.log('Add block:', type) }}
                                 onBlockRemove={(id) => { console.log('Remove block:', id) }}
+                                bridge={bridge}
                             />
                         </div>
                     </AppProvider>

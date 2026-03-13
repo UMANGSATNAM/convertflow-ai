@@ -3,6 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import { Sidebar } from './Sidebar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { Canvas } from './Canvas';
+import { AiSidekick } from './architect/AiSidekick';
 
 export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categories }) {
     const fetcher = useFetcher();
@@ -16,6 +17,8 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
     const [activeBlockId, setActiveBlockId] = useState(null);
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [selectedTemplateId, setSelectedTemplateId] = useState(null);
+    const [showAi, setShowAi] = useState(false);
+    const bridgeRef = useRef(null);
 
     // Settings & Live Preview State
     const [templateSchema, setTemplateSchema] = useState({ settings: [], name: '' });
@@ -286,6 +289,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                     selectedTemplateId={selectedTemplateId}
                     setSelectedTemplateId={setSelectedTemplateId}
                     onInject={handleInject}
+                    onAiClick={() => setShowAi(true)}
                 />
                 
                 <Canvas 
@@ -294,6 +298,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                     previewLoading={previewLoading} 
                     activeBlockId={activeBlockId}
                     sectionUpdate={sectionUpdate}
+                    onBridgeReady={(b) => { bridgeRef.current = b; }}
                     onBlockSelect={(blockId) => {
                         setActiveBlockId(blockId);
                         setActiveTab('page');
@@ -314,7 +319,35 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                     placement={placement}
                     setPlacement={setPlacement}
                     onRemoveBlock={handleRemove}
+                    bridge={bridgeRef.current}
                 />
+
+                {/* ─── AI SIDEKICK DRAWER ─── */}
+                {showAi && (
+                    <div style={{
+                        position: 'absolute', right: 0, top: 56, bottom: 0,
+                        width: 340, background: '#ffffff',
+                        borderLeft: '1px solid #e5e7eb',
+                        boxShadow: '-4px 0 20px rgba(0,0,0,0.08)',
+                        zIndex: 200, overflowY: 'auto', display: 'flex', flexDirection: 'column'
+                    }}>
+                        <div style={{ padding: '16px 20px 12px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: '#111827' }}>✨ AI Section Generator</span>
+                            <button onClick={() => setShowAi(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 18, lineHeight: 1 }}>×</button>
+                        </div>
+                        <AiSidekick
+                            onSectionGenerated={(schema, liquidHtml, sectionName) => {
+                                // Store the AI schema temporarily and preview it
+                                setTemplateSchema({ settings: schema, name: sectionName });
+                                const defaults = {};
+                                schema.forEach(s => { if (s.default !== undefined) defaults[s.id] = s.default; });
+                                setSettings(defaults);
+                                setSelectedTemplateId(`ai_${sectionName}`);
+                                setShowAi(false);
+                            }}
+                        />
+                    </div>
+                )}
             </main>
         </div>
     );

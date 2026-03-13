@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { EditorPostMessageBridge } from './architect/IframeBridge';
 
-export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, activeBlockId, sectionUpdate }) {
+export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, activeBlockId, sectionUpdate, onBridgeReady }) {
     const iframeRef = useRef(null);
     const [bridge, setBridge] = useState(null);
     
@@ -10,6 +10,7 @@ export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, act
         const newBridge = new EditorPostMessageBridge(iframeRef, onBlockSelect);
         newBridge.connect();
         setBridge(newBridge);
+        if (onBridgeReady) onBridgeReady(newBridge); // Expose bridge to parent
 
         return () => {
             newBridge.disconnect();

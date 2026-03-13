@@ -1,0 +1,31 @@
+# Shopify App Embed Block — ConvertFlow AI Global Container
+# 
+# This extension injects a global container into the merchant's theme.
+# This container is the host for all ConvertFlow AI sections, ensuring
+# our code NEVER touches the merchant's theme files directly.
+#
+# The merchant enables this once from the Shopify Theme Editor → App Embeds.
+# After that, the ConvertFlow AI sections appear inside the container.
+
+api_version = "2025-01"
+
+[[extensions]]
+type = "theme"
+name = "CF AI Global Container"
+handle = "cf-global-container"
+
+  [extensions.development]
+  root_dir = "."
+
+  [[extensions.settings.fields]]
+  key = "position"
+  type = "select"
+  label = "Container Position"
+  default = "after_header"
+  [extensions.settings.fields.options]
+  label = "After Header"
+  value = "after_header"
+
+  [[extensions.settings.fields.options]]
+  label = "Before Footer"
+  value = "before_footer"
