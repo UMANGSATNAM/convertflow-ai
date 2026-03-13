@@ -8,8 +8,8 @@ export const loader = async ({ request }) => {
     const url = new URL(request.url);
     const themeId = url.searchParams.get("themeId");
 
-    // Fetch the actual storefront HTML for the active theme
-    const storefrontUrl = `https://${shop}/?preview_theme_id=${themeId || ''}&pb=0`;
+    // Fetch the actual storefront HTML for the active theme, adding timestamp to bust cache
+    const storefrontUrl = `https://${shop}/?preview_theme_id=${themeId || ''}&pb=0&t=${Date.now()}`;
     const response = await fetch(storefrontUrl);
     let html = await response.text();
 

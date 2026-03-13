@@ -4,10 +4,9 @@ import { readSectionFile } from "../lib/shopify.server";
 import { simulateLiquidRendering } from "../lib/liquid-preview.server";
 import { SECTION_FILES } from "../lib/constants";
 
-// Helper to render a single section
 function renderSectionHtml(sectionType, settings, blockId) {
   const raw = readSectionFile(sectionType + '.liquid') || readSectionFile(sectionType);
-  if (!raw) return '';
+  if (!raw) return null;
   const html = simulateLiquidRendering(raw, settings, blockId);
   return `<div id="shopify-section-${blockId}" class="shopify-section">${html}</div>`;
 }
@@ -34,11 +33,13 @@ export const action = async ({ request }) => {
       bodyHtml += renderSectionHtml(b.type, b.settings || {}, b.id);
     }
   } else if (sectionId) {
-    // Render SINGLE TEMPLATE preview (e.g., hovering in template library)
+    // Render SINGLE TEMPLATE preview
     let settings = {};
     try { settings = JSON.parse(formData.get("settings") || "{}"); } catch { }
     const blockId = formData.get("blockId") || 'preview-section';
-    bodyHtml = renderSectionHtml(sectionId, settings, blockId);
+    const html = renderSectionHtml(sectionId, settings, blockId);
+    if (html === null) return json({ ignored: true, message: "Native section locally simulated rendering not supported." });
+    bodyHtml = html;
   } else if (categoryId) {
     // Render MULTIPLE TEMPLATES for Visual Grid Picker
     const templates = Object.entries(SECTION_FILES).filter(([_, meta]) => meta.category === categoryId);

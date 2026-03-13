@@ -35,18 +35,23 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
             setTimeout(() => setToast(null), 3000);
         }
         if (fetcher.data?.newBlockId) {
-            // Re-fetch full preview when a new block is added to accurately show new layout
+            // Re-fetch full preview when a new block is added
             fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`)
                 .then(r => r.text())
                 .then(html => setPreviewHtml(html));
             
             setActiveBlockId(fetcher.data.newBlockId);
             setActiveTab('page');
+        } else if (fetcher.data?.message === "Settings saved to theme!" || fetcher.data?.message === "Section removed") {
+            // Re-fetch full preview for native sections that were saved, or sections that were removed
+            fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`)
+                .then(r => r.text())
+                .then(html => setPreviewHtml(html));
         }
     }, [fetcher.data, shop, themeId]);
 
     // ─── 2. Fetch Live Preview (Full Page) ───
-    // Re-fetch only initially or when page blocks change length
+    // Fetch on initial load. Re-fetches are handled in the fetcher hook above.
     useEffect(() => {
         const fetchFullPreview = async () => {
             setPreviewLoading(true);
@@ -59,7 +64,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
             } catch (e) {} finally { setPreviewLoading(false); }
         };
         fetchFullPreview();
-    }, [pageBlocks.length, shop, themeId]);
+    }, [shop, themeId]);
 
     // ─── 2.5 Fetch Section Updates (On Setting Edit or Template Select) ───
     useEffect(() => {
@@ -77,6 +82,8 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                 const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
                 if (res.ok) {
                     const data = await res.json();
+                    if (data.ignored) return; // Prevent erasing native sections during live typing
+
                     if (activeBlockId && data.sectionHtml) {
                         // Send just the section HTML to be injected cleanly
                         setSectionUpdate({ blockId: activeBlockId, html: data.sectionHtml, dt: Date.now() });

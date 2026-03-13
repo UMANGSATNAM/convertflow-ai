@@ -119,7 +119,7 @@ export const action = async ({ request }) => {
                 settings: idx.sections[id]?.settings || {},
                 isCf: id.startsWith('cf_'),
             }));
-            return json({ ok: true, pageBlocks: newBlocks });
+            return json({ ok: true, message: "Section removed", pageBlocks: newBlocks });
         }
 
         if (intent === "update_settings") {
