@@ -1,102 +1,119 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { EditorPostMessageBridge } from './architect/IframeBridge';
 
-export function Canvas({ device, previewHtml, previewLoading, onBlockSelect, activeBlockId, sectionUpdate, onBridgeReady }) {
+/**
+ * Canvas — Real Store Preview
+ * 
+ * Shows the merchant's ACTUAL storefront inside an iframe using Shopify's
+ * preview_theme_id parameter. This is exactly how the native Shopify Theme
+ * Editor works. No fake HTML. No generated preview. Real store, real data.
+ */
+export function Canvas({ device, shop, themeId, onBlockSelect, activeBlockId, onBridgeReady, iframeKey }) {
     const iframeRef = useRef(null);
+    const [loading, setLoading] = useState(true);
     const [bridge, setBridge] = useState(null);
-    
+
+    // Build the real storefront preview URL (same technique Shopify uses)
+    const previewUrl = shop && themeId
+        ? `https://${shop}?preview_theme_id=${themeId}`
+        : null;
+
     // Initialize the PostMessage Bridge
     useEffect(() => {
         const newBridge = new EditorPostMessageBridge(iframeRef, onBlockSelect);
         newBridge.connect();
         setBridge(newBridge);
-        if (onBridgeReady) onBridgeReady(newBridge); // Expose bridge to parent
+        if (onBridgeReady) onBridgeReady(newBridge);
 
-        return () => {
-            newBridge.disconnect();
-        };
+        return () => { newBridge.disconnect(); };
     }, [onBlockSelect]);
 
-    // Send selection updates to the iframe
+    // When a block is selected in the sidebar, scroll to + highlight it in the iframe
     useEffect(() => {
-        if (bridge) {
-            if (activeBlockId) {
-                // Ensure the bridge uses the legacy payload format until the Iframe script is fully updated
-                bridge.sendMessageToIframe({ type: 'shopify:section:select', payload: { blockId: activeBlockId } });
-            } else {
-                bridge.sendMessageToIframe({ type: 'shopify:section:deselect' });
-            }
-        }
-    }, [activeBlockId, previewHtml, bridge]); // resend if HTML reloads
-
-    // Send targeted HTML block updates to the iframe
-    useEffect(() => {
-        if (bridge && sectionUpdate) {
-            bridge.sendMessageToIframe({ 
-                type: 'shopify:section:load', 
-                payload: { blockId: sectionUpdate.blockId, html: sectionUpdate.html } 
+        if (!bridge) return;
+        if (activeBlockId) {
+            bridge.sendMessageToIframe({
+                type: 'shopify:section:select',
+                detail: { sectionId: activeBlockId }
             });
+        } else {
+            bridge.sendMessageToIframe({ type: 'shopify:section:deselect' });
         }
-    }, [sectionUpdate, bridge]);
+    }, [activeBlockId, bridge]);
 
-    // Calculate dimensions based on selected device toggle
-    const getDeviceDimensions = () => {
-        switch (device) {
-            case 'mobile': return { width: 375, height: 812 };
-            case 'tablet': return { width: 768, height: 1024 };
-            case 'desktop': 
-            default: return { width: '100%', height: '100%' };
-        }
-    };
-
-    const dims = getDeviceDimensions();
+    // Device dimensions
+    const dims = {
+        mobile: { width: 390, height: 844, radius: 40, border: '10px solid #1a1a2e' },
+        tablet: { width: 820, height: 1180, radius: 20, border: '8px solid #1a1a2e' },
+        desktop: { width: '100%', height: '100%', radius: 0, border: 'none' },
+    }[device] || { width: '100%', height: '100%', radius: 0, border: 'none' };
 
     return (
         <section style={{
             flex: 1, height: '100%',
-            background: '#eef2ff', // Light blue-gray PageFly background
-            display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-            overflowY: 'auto', overflowX: 'hidden', padding: 20,
-            position: 'relative'
+            background: device === 'desktop' ? '#f1f3f5' : '#2d2d2d',
+            display: 'flex', alignItems: device === 'desktop' ? 'stretch' : 'center',
+            justifyContent: 'center',
+            overflowY: 'auto', overflowX: 'hidden',
+            padding: device === 'desktop' ? 0 : 32,
+            position: 'relative',
+            transition: 'background 0.3s'
         }}>
-            {/* The responsive "Iframe" container */}
             <div style={{
                 width: dims.width,
-                minHeight: device !== 'desktop' ? dims.height : 'calc(100vh - 100px)',
+                height: device !== 'desktop' ? dims.height : '100%',
+                minHeight: device === 'desktop' ? '100%' : undefined,
                 background: '#ffffff',
-                boxShadow: device !== 'desktop' ? '0 10px 40px rgba(0,0,0,0.1)' : 'none',
-                borderRadius: device !== 'desktop' ? 16 : 0,
-                border: device !== 'desktop' ? '8px solid #f8fafc' : 'none',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                display: 'flex', flexDirection: 'column',
+                boxShadow: device !== 'desktop' ? '0 24px 80px rgba(0,0,0,0.4)' : 'none',
+                borderRadius: dims.radius,
+                border: dims.border,
                 overflow: 'hidden',
-                position: 'relative'
+                position: 'relative',
+                flexShrink: 0,
+                transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                display: 'flex', flexDirection: 'column',
             }}>
-                
-                {!previewHtml && (
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff' }}>
-                        <div style={{ width: 24, height: 24, border: '2px solid #e5e7eb', borderTopColor: '#4f46e5', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                        <p style={{ marginTop: 16, color: '#6b7280', fontSize: 13, fontWeight: 500 }}>Loading visual canvas...</p>
-                        <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                {/* Loading overlay */}
+                {loading && (
+                    <div style={{
+                        position: 'absolute', inset: 0, zIndex: 10,
+                        background: '#fff', display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center', gap: 16
+                    }}>
+                        <div style={{
+                            width: 36, height: 36, borderRadius: '50%',
+                            border: '3px solid #e5e7eb', borderTopColor: '#5c6ac4',
+                            animation: 'spin 0.8s linear infinite'
+                        }}/>
+                        <p style={{ color: '#6b7280', fontSize: 13, margin: 0 }}>Loading store preview…</p>
+                        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
                     </div>
-                )}
-                
-                {previewLoading && previewHtml && (
-                    <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255, 255, 255, 0.4)', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(1px)' }}>
-                        <div style={{ width: 24, height: 24, border: '2px solid #e5e7eb', borderTopColor: '#4f46e5', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                    </div>
-                )}
-                
-                {previewHtml && (
-                    <iframe
-                        ref={iframeRef}
-                        srcDoc={previewHtml}
-                        style={{ width: '100%', height: '100%', flex: 1, border: 'none', transition: 'opacity 0.2s', backgroundColor: '#fff', opacity: previewLoading ? 0.5 : 1 }}
-                        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-                        title="Live Preview"
-                    />
                 )}
 
+                {/* No store configured */}
+                {!previewUrl && (
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, textAlign: 'center' }}>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        <p style={{ color: '#9ca3af', marginTop: 16, fontSize: 14 }}>Store preview unavailable</p>
+                    </div>
+                )}
+
+                {/* THE REAL STORE IFRAME */}
+                {previewUrl && (
+                    <iframe
+                        key={iframeKey}
+                        ref={iframeRef}
+                        src={previewUrl}
+                        style={{
+                            width: '100%', flex: 1, border: 'none',
+                            opacity: loading ? 0 : 1,
+                            transition: 'opacity 0.4s ease',
+                        }}
+                        onLoad={() => setLoading(false)}
+                        title="Live Store Preview"
+                        allow="same-origin"
+                    />
+                )}
             </div>
         </section>
     );

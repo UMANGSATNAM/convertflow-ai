@@ -20,15 +20,14 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
     const [showAi, setShowAi] = useState(false);
     const bridgeRef = useRef(null);
 
-    // Settings & Live Preview State
+    // Settings state
     const [templateSchema, setTemplateSchema] = useState({ settings: [], name: '' });
     const [settings, setSettings] = useState({});
     const [placement, setPlacement] = useState('bottom');
-    const [previewHtml, setPreviewHtml] = useState('');
-    const [sectionUpdate, setSectionUpdate] = useState(null);
-    const [previewLoading, setPreviewLoading] = useState(false);
     const [toast, setToast] = useState(null);
-    const previewTimerRef = useRef(null);
+    // iframeKey is bumped after inject/remove to force the real iframe to reload
+    const [iframeKey, setIframeKey] = useState(0);
+    const saveTimerRef = useRef(null);
 
     // ─── 1. Handle Fetcher Data Sync ───
     useEffect(() => {
@@ -38,68 +37,17 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
             setTimeout(() => setToast(null), 3000);
         }
         if (fetcher.data?.newBlockId) {
-            // Re-fetch full preview when a new block is added
-            fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`)
-                .then(r => r.text())
-                .then(html => setPreviewHtml(html));
-            
+            // A new section was injected — bump iframeKey to reload the real store
+            setIframeKey(k => k + 1);
             setActiveBlockId(fetcher.data.newBlockId);
             setActiveTab('page');
-        } else if (fetcher.data?.message === "Settings saved to theme!" || fetcher.data?.message === "Section removed") {
-            // Re-fetch full preview for native sections that were saved, or sections that were removed
-            fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`)
-                .then(r => r.text())
-                .then(html => setPreviewHtml(html));
+        } else if (fetcher.data?.message === 'Section removed') {
+            setIframeKey(k => k + 1);
         }
-    }, [fetcher.data, shop, themeId]);
+    }, [fetcher.data]);
 
-    // ─── 2. Fetch Live Preview (Full Page) ───
-    // Fetch on initial load. Re-fetches are handled in the fetcher hook above.
-    useEffect(() => {
-        const fetchFullPreview = async () => {
-            setPreviewLoading(true);
-            try {
-                const res = await fetch(`/app/api/full-preview?shop=${shop}&themeId=${themeId}`);
-                if (res.ok) {
-                    const html = await res.text();
-                    setPreviewHtml(html);
-                }
-            } catch (e) {} finally { setPreviewLoading(false); }
-        };
-        fetchFullPreview();
-    }, [shop, themeId]);
 
-    // ─── 2.5 Fetch Section Updates (On Setting Edit or Template Select) ───
-    useEffect(() => {
-        const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
-        if (!targetId && !selectedTemplateId) return;
-
-        // Don't show global loading spinner for instant localized updates
-        clearTimeout(previewTimerRef.current);
-        previewTimerRef.current = setTimeout(async () => {
-            try {
-                const form = new FormData();
-                form.append("sectionId", targetId);
-                if (activeBlockId) form.append("blockId", activeBlockId);
-                form.append("settings", JSON.stringify(settings));
-                const res = await fetch('/app/api/template-preview', { method: 'POST', body: form });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.ignored) return; // Prevent erasing native sections during live typing
-
-                    if (activeBlockId && data.sectionHtml) {
-                        // Send just the section HTML to be injected cleanly
-                        setSectionUpdate({ blockId: activeBlockId, html: data.sectionHtml, dt: Date.now() });
-                    } else if (selectedTemplateId && data.html) {
-                        // If they are previewing a fresh template BEFORE adding it, show it standalone
-                        setPreviewHtml(data.html);
-                    }
-                }
-            } catch (e) { }
-        }, 300);
-    }, [selectedTemplateId, activeBlockId, settings, pageBlocks]);
-
-    // ─── 3. Fetch Schema ───
+    // ─── 3. Fetch Schema for selected section ───
     useEffect(() => {
         const targetId = activeBlockId ? pageBlocks.find(b => b.id === activeBlockId)?.type : selectedTemplateId;
         if (!targetId) return;
@@ -135,7 +83,7 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
         form.append("placement", placement);
         fetcher.submit(form, { method: "post" });
         setSelectedTemplateId(null);
-        setPreviewHtml('');
+        // Don't clear the iframe — the fetcher effect will bump iframeKey after success
     };
 
     const handleRemove = (blockId) => {
@@ -160,6 +108,21 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
         form.append("settings", JSON.stringify(settings));
         fetcher.submit(form, { method: "post" });
     };
+
+    // ─── Debounced Auto-Save Settings → Theme API ───
+    // Every settings change saves to the real theme after 800ms.
+    // The iframe uses ?preview_theme_id= so it always shows the latest saved values.
+    useEffect(() => {
+        if (!activeBlockId || Object.keys(settings).length === 0) return;
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = setTimeout(() => {
+            const form = new FormData();
+            form.append('intent', 'update_settings');
+            form.append('blockId', activeBlockId);
+            form.append('settings', JSON.stringify(settings));
+            fetcher.submit(form, { method: 'post' });
+        }, 800);
+    }, [settings, activeBlockId]);
 
     const isBusy = fetcher.state !== 'idle';
 
@@ -293,11 +256,11 @@ export function StoreBuilder({ pageBlocks: initBlocks = [], themeId, shop, categ
                 />
                 
                 <Canvas 
-                    device={device} 
-                    previewHtml={previewHtml} 
-                    previewLoading={previewLoading} 
+                    device={device}
+                    shop={shop}
+                    themeId={themeId}
+                    iframeKey={iframeKey}
                     activeBlockId={activeBlockId}
-                    sectionUpdate={sectionUpdate}
                     onBridgeReady={(b) => { bridgeRef.current = b; }}
                     onBlockSelect={(blockId) => {
                         setActiveBlockId(blockId);
