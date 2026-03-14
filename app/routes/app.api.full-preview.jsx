@@ -122,6 +122,13 @@ export const loader = async ({ request }) => {
                     if (target) target.remove();
                 }
             }
+            else if (data.type === 'theme_editor:css_variable_update') {
+                // Instantly apply CSS variables sent from color pickers and sliders
+                const target = data.scope === ':root' ? document.documentElement : document.getElementById(data.scope) || document.documentElement;
+                if (target && data.variable && data.value) {
+                    target.style.setProperty(data.variable, data.value);
+                }
+            }
         });
       })();
     </script>

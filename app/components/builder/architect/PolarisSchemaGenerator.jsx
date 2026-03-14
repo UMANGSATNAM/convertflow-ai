@@ -337,10 +337,36 @@ function SettingInput({ setting, value, onChange, bridge }) {
      );
   }
 
+  // HEADER
+  if (setting.type === 'header') {
+     return (
+        <Box paddingBlockStart="300" paddingBlockEnd="100">
+          <Text variant="headingSm" as="h3">{setting.content || setting.label}</Text>
+          {setting.info && <Text variant="bodySm" tone="subdued">{setting.info}</Text>}
+        </Box>
+     );
+  }
+
+  // SHOP REFERENCES (collection, product, page, blog, etc)
+  if (['collection', 'product', 'page', 'blog', 'article'].includes(setting.type)) {
+     return (
+        <BlockStack gap="100">
+           <Text as="span" variant="bodyMd">{setting.label}</Text>
+           <Button fullWidth onClick={() => alert(`Select a ${setting.type} (Opens Admin resource picker)`)}>
+              Select {setting.type}
+           </Button>
+           {value && <Text variant="bodySm" tone="subdued">Selected ID: {value}</Text>}
+        </BlockStack>
+     );
+  }
+
   // Fallback for unsupported types
   return (
-    <Text as="p" color="critical">
-      Unsupported setting type: {setting.type}
-    </Text>
+    <BlockStack gap="100">
+      <Text as="span" variant="bodyMd">{setting.label || setting.id}</Text>
+      <Text as="p" tone="critical" variant="bodySm">
+        Preview only ({setting.type})
+      </Text>
+    </BlockStack>
   );
 }
