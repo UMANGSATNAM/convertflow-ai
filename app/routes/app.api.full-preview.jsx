@@ -1,12 +1,19 @@
 import { json } from "@remix-run/node";
-import { authenticate } from "../shopify.server";
+import { unauthenticated } from "../shopify.server";
 
 export const loader = async ({ request }) => {
   try {
-    const { session } = await authenticate.admin(request);
-    const { shop } = session;
     const url = new URL(request.url);
+    const shop = url.searchParams.get("shop");
     const themeId = url.searchParams.get("themeId");
+
+    if (!shop) {
+        return new Response("Missing shop parameter", { status: 400 });
+    }
+
+    // Use unauthenticated admin to avoid throwing 302 redirects to /auth/login
+    // when requested from inside an iframe without a Bearer token
+    await unauthenticated.admin(shop);
 
     // Fetch the actual storefront HTML for the active theme, adding timestamp to bust cache
     const storefrontUrl = `https://${shop}/?preview_theme_id=${themeId || ''}&pb=0&t=${Date.now()}`;
