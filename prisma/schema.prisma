@@ -45,6 +45,8 @@ model Shop {
 
   customizations      Customization[]
   subscription_history SubscriptionHistory[]
+  library_items       LibraryItem[]
+  push_histories      PushHistory[]
 
   @@map("shops")
 }
@@ -94,4 +96,41 @@ model SubscriptionHistory {
   shop            Shop     @relation(fields: [shop_id], references: [id], onDelete: Cascade)
 
   @@map("subscription_history")
+}
+
+model LibraryItem {
+  id              Int      @id @default(autoincrement())
+  shopId          Int      @map("shop_id")
+  name            String
+  tags            Json?    @map("tags")
+  liquidCode      String   @map("liquid_code") @db.Text
+  cssCode         String   @map("css_code") @db.Text
+  schemaCode      String   @map("schema_code") @db.Text
+  previewUrl      String?  @map("preview_url")
+  usageCount      Int      @default(0) @map("usage_count")
+  shareToken      String?  @unique @map("share_token")
+  shareExpiresAt  DateTime? @map("share_expires_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  shop            Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  pushHistories   PushHistory[]
+
+  @@map("library_items")
+}
+
+model PushHistory {
+  id              Int      @id @default(autoincrement())
+  shopId          Int      @map("shop_id")
+  libraryItemId   Int      @map("library_item_id")
+  targetThemeId   String   @map("target_theme_id")
+  targetThemeName String   @map("target_theme_name")
+  pushedAt        DateTime @default(now()) @map("pushed_at")
+  status          String
+  errorMessage    String?  @map("error_message") @db.Text
+  backupLiquid    String?  @map("backup_liquid") @db.Text
+
+  shop            Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  libraryItem     LibraryItem @relation(fields: [libraryItemId], references: [id], onDelete: Cascade)
+
+  @@map("push_history")
 }
