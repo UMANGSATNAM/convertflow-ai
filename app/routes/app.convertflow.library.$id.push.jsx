@@ -1,7 +1,7 @@
 import { json } from "@remix-run/node";
-import { authenticate } from "../../shopify.server";
-import { updateThemeAsset } from "../../services/convertflow.server";
-import db from "../../db.server";
+import { authenticate } from "../shopify.server";
+import { updateThemeAsset } from "../services/convertflow.server";
+import db from "../db.server";
 
 export const action = async ({ request, params }) => {
   const { admin, session } = await authenticate.admin(request);

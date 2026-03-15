@@ -1,10 +1,10 @@
 import { json } from "@remix-run/node";
-import { authenticate } from "../../shopify.server";
+import { authenticate } from "../shopify.server";
 import {
   getThemeAsset,
   extractWithClaude,
   runThemeCheck,
-} from "../../services/convertflow.server";
+} from "../services/convertflow.server";
 
 export const action = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
